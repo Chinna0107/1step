@@ -9,7 +9,7 @@ import {
   FaExchangeAlt, FaPlane, FaShoppingCart, FaCouch, FaCar,
   FaFingerprint, FaMapMarkerAlt, FaChartBar, FaBuilding
 } from 'react-icons/fa'
-import bannerImg from '../assets/icons png/Money Spot Logo.png'
+import bannerImg from '../assets/icons png/MS Logo.png'
 import './Home.css'
 
 gsap.registerPlugin(ScrollTrigger)
