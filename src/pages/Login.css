@@ -388,6 +388,52 @@
   text-decoration: underline;
 }
 
+/* ── Contact Strip ── */
+.login-contact-strip {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.lcs-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.lcs-wa {
+  background: #e8fdf0;
+  color: #16a34a;
+  border: 1.5px solid #bbf7d0;
+}
+.lcs-wa:hover {
+  background: #25D366;
+  color: #fff;
+  border-color: #25D366;
+  transform: translateY(-2px);
+}
+
+.lcs-call {
+  background: rgba(64,32,112,0.07);
+  color: var(--ms-purple);
+  border: 1.5px solid rgba(64,32,112,0.2);
+}
+.lcs-call:hover {
+  background: var(--ms-purple);
+  color: #fff;
+  border-color: var(--ms-purple);
+  transform: translateY(-2px);
+}
+
 /* ── Super Admin ── */
 .superadmin-card {
   border-top: 4px solid var(--ms-crimson) !important;

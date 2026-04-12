@@ -1,0 +1,71 @@
+.floating-contact {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9999;
+}
+
+.fc-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #fff;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  white-space: nowrap;
+}
+
+.fc-btn span {
+  max-width: 0;
+  overflow: hidden;
+  transition: max-width 0.35s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.fc-btn:hover span {
+  max-width: 120px;
+  opacity: 1;
+}
+
+.fc-btn:hover {
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+}
+
+.fc-whatsapp {
+  background: #25D366;
+  box-shadow: 0 6px 24px rgba(37,211,102,0.4);
+}
+
+.fc-whatsapp:hover {
+  box-shadow: 0 12px 32px rgba(37,211,102,0.55);
+}
+
+.fc-call {
+  background: linear-gradient(135deg, #402070, #c02040);
+  box-shadow: 0 6px 24px rgba(64,32,112,0.4);
+}
+
+.fc-call:hover {
+  box-shadow: 0 12px 32px rgba(192,32,64,0.5);
+}
+
+@media (max-width: 600px) {
+  .floating-contact {
+    bottom: 20px;
+    right: 16px;
+    gap: 10px;
+  }
+  .fc-btn {
+    padding: 11px 14px;
+    font-size: 13px;
+  }
+}

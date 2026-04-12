@@ -127,6 +127,10 @@ export default function LoginEmployee() {
           <span>·</span>
           <Link to="/login/superadmin">Super Admin</Link>
         </div>
+        <div className="login-contact-strip">
+          <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
+          <a href="tel:+919866440477" className="lcs-btn lcs-call">📞 Call Us</a>
+        </div>
       </div>
       </div>
     </div>

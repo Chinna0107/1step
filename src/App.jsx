@@ -12,6 +12,7 @@ import LoginEmployee from './pages/LoginEmployee'
 import LoginSuperAdmin from './pages/LoginSuperAdmin'
 import FAQ from './pages/FAQ'
 import TermsConditions from './pages/TermsConditions'
+import FloatingContact from './components/FloatingContact'
 import './App.css'
 
 const loginRoutes = [
@@ -32,6 +33,7 @@ function Layout({ children }) {
       <Header />
       <main>{children}</main>
       <Footer />
+      <FloatingContact />
     </>
   )
 }
