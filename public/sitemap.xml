@@ -23,6 +23,17 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://moneyspotfintech.com/faq</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://moneyspotfintech.com/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
   <!-- Product Pages -->
   <url>
     <loc>https://moneyspotfintech.com/product/spot-cash</loc>

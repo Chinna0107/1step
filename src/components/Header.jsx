@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import logoImg from '../assets/icons png/MS Logo.png'
+import fullLogoImg from '../assets/icons png/Full Logo.png'
+import nameImg from '../assets/icons png/Money Spot Logo.png'
 import './Header.css'
 
 const navLinks = [
@@ -8,6 +10,8 @@ const navLinks = [
   { to: '/what-we-do', label: 'What We Do', icon: '💼' },
   { to: '/about',      label: 'About Us',   icon: '👥' },
   { to: '/contact',    label: 'Contact',    icon: '📞' },
+  { to: '/faq',        label: 'FAQ',        icon: '❓' },
+  { to: '/terms',      label: 'T&C',        icon: '📄' },
 ]
 
 export default function Header() {
@@ -23,8 +27,8 @@ export default function Header() {
       <header className="header">
         <div className="header-inner">
           <Link to="/" className="logo">
-            <img src={logoImg} alt="MoneySpot Logo" className="logo-img" />
-            <span className="logo-money">Money</span><span className="logo-spot">Spot</span>
+            <img src={logoImg} alt="MoneySpot" className="logo-full-img" />
+            <img src={nameImg} alt="MoneySpot" className="logo-name-img" />
           </Link>
 
           {/* ── Desktop nav ── */}
@@ -63,13 +67,8 @@ export default function Header() {
         {/* Drawer header */}
         <div className="nav-mobile-header">
           <div className="nav-mobile-brand">
-            <img src={logoImg} alt="logo" className="nav-mobile-logo" />
-            <div>
-              <span className="nav-mobile-name">
-                <span className="logo-money">Money</span><span className="logo-spot">Spot</span>
-              </span>
-              <span className="nav-mobile-tagline">Smart Finance</span>
-            </div>
+            <img src={logoImg} alt="MoneySpot" className="nav-mobile-full-logo" />
+            <img src={nameImg} alt="MoneySpot" className="nav-mobile-name-img" />
           </div>
           <button className="nav-mobile-close" onClick={close}>✕</button>
         </div>

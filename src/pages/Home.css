@@ -683,11 +683,14 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--ms-purple), var(--ms-crimson));
-  color: #fff;
-  display: grid;
-  place-items: center;
-  font-weight: 700;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.testi-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .testi-author strong {
@@ -898,4 +901,135 @@
     border-right: none !important;
     border-top: 1px solid rgba(255,255,255,0.07) !important;
   }
+}
+
+/* GOOGLE REVIEWS */
+.google-reviews-section {
+  padding: 64px 24px 70px;
+  background: linear-gradient(180deg, #f8fafc, #eef2ff 60%, #f8fafc);
+}
+
+.google-rating-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 20px 32px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.07);
+}
+
+.google-logo {
+  height: 28px;
+  object-fit: contain;
+}
+
+.google-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.google-score-num {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--ms-purple);
+  line-height: 1;
+}
+
+.google-score-stars {
+  display: flex;
+  gap: 2px;
+  color: #FBBC05;
+}
+
+.google-score-count {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.google-reviews-grid {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.google-review-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(15,23,42,0.06);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.google-review-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(15,23,42,0.12);
+}
+
+.gr-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gr-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.gr-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gr-meta strong {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ms-purple);
+}
+
+.gr-meta span {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.gr-google-logo {
+  height: 18px;
+  object-fit: contain;
+  opacity: 0.85;
+  margin-left: auto;
+}
+
+.gr-stars {
+  display: flex;
+  gap: 2px;
+  color: #FBBC05;
+}
+
+.gr-text {
+  font-size: 13.5px;
+  color: #475569;
+  line-height: 1.65;
+  margin: 0;
 }

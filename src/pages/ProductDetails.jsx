@@ -7,7 +7,7 @@ import {
   FaMoneyBillWave, FaBuilding, FaShieldAlt, FaUniversity,
   FaChartBar, FaIdCard, FaLock, FaClock, FaGem,
   FaBullseye, FaStar, FaCheckCircle, FaArrowRight,
-  FaClipboardList, FaSearch
+  FaClipboardList, FaSearch, FaMapMarkerAlt, FaChartLine
 } from 'react-icons/fa'
 import './ProductDetails.css'
 
@@ -21,15 +21,20 @@ const products = [
     Icon: FaBolt,
     title: 'Spot Cash on Credit Card',
     tagline: 'Convert your credit limit into instant cash',
-    desc: 'Unlock the power of your credit card. Get instant cash transferred directly to your bank account within minutes using your existing credit limit.',
-    features: ['Instant Bank Transfer', 'Cash in Minutes', 'All Cards Accepted', 'POS Machine Available'],
+    desc: 'Unlock the power of your credit card. Get instant cash transferred directly to your bank account within minutes using your existing credit limit. Whether you need funds for an emergency, a business opportunity, or a personal expense — MoneySpot makes it effortless, fast, and completely secure.',
+    features: [
+      { Icon: FaExchangeAlt, label: 'Instant Bank Transfer' },
+      { Icon: FaBolt,        label: 'Cash in Minutes' },
+      { Icon: FaCreditCard,  label: 'All Cards Accepted' },
+      { Icon: FaShieldAlt,   label: 'POS Machine Available' },
+    ],
     categories: ['Travel', 'Grocery', 'Furniture', 'Insurance'],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',
     gradient: 'linear-gradient(135deg,#060d1a,#1a365d 60%,#2b4a8a)',
     accent: '#2b77e6',
-    detailedDesc: 'Our Spot Cash on Credit Card service revolutionizes how you access your credit limit. Instead of traditional cash advances with high fees, we provide instant cash transfers directly to your bank account. Perfect for emergency funds, business expenses, or any situation where you need immediate access to cash.',
+    detailedDesc: 'MoneySpot Spot Cash on Credit Card gives you instant access to your unused credit limit — without the hassle of traditional cash advances. We use a secure POS machine facility to process your transaction on the spot, transferring the amount directly to your bank account within minutes. No lengthy paperwork, no waiting periods, no hidden charges. Whether you are facing an unexpected expense, need working capital for your business, or simply want liquidity without breaking your savings — we have got you covered. Our service supports all major credit cards from HDFC, ICICI, SBI, Axis, Kotak, and more. With 10,000+ satisfied customers and over ₹50 Cr processed, MoneySpot is your most trusted financial partner.',
     benefits: ['No hidden fees or charges', 'Direct bank transfer within 2 minutes', 'Accepted by all major credit card providers', 'Available 24/7 through our POS network', 'Secure SSL encryption for all transactions', 'No impact on your credit score'],
-    howItWorks: ['Apply online or visit our nearest center', 'Present your valid credit card', 'Choose the amount you need (up to your available limit)', 'Complete biometric verification', 'Receive instant transfer to your bank account'],
+    howItWorks: ['Visit our nearest MoneySpot center or contact us', 'Present your valid credit card', 'Choose the amount you need up to your available limit', 'Receive instant transfer to your bank account'],
     requirements: ['Valid credit card with available limit', 'Government-issued ID proof', 'Active bank account for transfer', 'Minimum age of 21 years'],
   },
   {
@@ -38,7 +43,12 @@ const products = [
     title: 'Credit Card Bill Payment',
     tagline: "Don't miss your due date!",
     desc: 'Pay any credit card bill instantly — any amount, any bank, zero hassle. Avoid late fees and protect your CIBIL score with on-time payments.',
-    features: ['Instant Bill Clearance', 'Any Amount – No Limits', 'Avoid Late Fees & Interest', 'Cashback / Reward Points'],
+    features: [
+      { Icon: FaBolt,         label: 'Instant Bill Clearance' },
+      { Icon: FaMoneyBillWave, label: 'Any Amount – No Limits' },
+      { Icon: FaShieldAlt,    label: 'Avoid Late Fees & Interest' },
+      { Icon: FaStar,         label: 'Cashback / Reward Points' },
+    ],
     badge: '100% Secure | Trusted | Transparent',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',
     gradient: 'linear-gradient(135deg,#060d1a,#065f46 60%,#0d7a58)',
@@ -54,7 +64,12 @@ const products = [
     title: 'Instant Money Transfer (DMT)',
     tagline: 'Send money to any bank in seconds',
     desc: 'Transfer money 24×7 to any bank account across India using IMPS. Fast, reliable, and available round the clock with the lowest charges.',
-    features: ['24×7 Service', 'Instant IMPS Transfer', 'All Banks Supported', 'Low Charges'],
+    features: [
+      { Icon: FaClock,         label: '24×7 Service' },
+      { Icon: FaBolt,          label: 'Instant IMPS Transfer' },
+      { Icon: FaUniversity,    label: 'All Banks Supported' },
+      { Icon: FaMoneyBillWave, label: 'Low Charges' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png',
     gradient: 'linear-gradient(135deg,#060d1a,#3b1a7a 60%,#5b21b6)',
     accent: '#8b5cf6',
@@ -69,7 +84,12 @@ const products = [
     title: 'Aadhaar Cash Withdrawal',
     tagline: 'Withdraw cash with just your Aadhaar',
     desc: 'No ATM card? No problem. Withdraw cash from your bank account using your Aadhaar number and biometric fingerprint — available at our nearest point.',
-    features: ['No ATM Card Needed', 'Biometric Authentication', 'Instant Disbursement', 'Available Nearby'],
+    features: [
+      { Icon: FaFingerprint,  label: 'No ATM Card Needed' },
+      { Icon: FaLock,         label: 'Biometric Authentication' },
+      { Icon: FaBolt,         label: 'Instant Disbursement' },
+      { Icon: FaMapMarkerAlt, label: 'Available Nearby' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png',
     gradient: 'linear-gradient(135deg,#060d1a,#7a3200 60%,#92400e)',
     accent: '#f59e0b',
@@ -84,7 +104,12 @@ const products = [
     title: 'Personal Loans',
     tagline: 'Quick disbursal with minimal docs',
     desc: 'Get personal loans with fast approval and minimal documentation. Competitive interest rates tailored to your profile.',
-    features: ['Fast Approval', 'Minimal Documentation', 'Competitive Rates', 'Flexible Tenure'],
+    features: [
+      { Icon: FaBolt,         label: 'Fast Approval' },
+      { Icon: FaCheckCircle,  label: 'Minimal Documentation' },
+      { Icon: FaChartLine,    label: 'Competitive Rates' },
+      { Icon: FaClock,        label: 'Flexible Tenure' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_20_dpj7hw.png',
     gradient: 'linear-gradient(135deg,#060d1a,#3b1a7a 60%,#5b21b6)',
     accent: '#7c3aed',
@@ -99,7 +124,12 @@ const products = [
     title: 'Business Loans',
     tagline: 'Fuel your business growth',
     desc: 'Tailored business loan solutions to help you scale, expand, and achieve your entrepreneurial goals with ease.',
-    features: ['High Loan Amounts', 'Flexible Repayment', 'Quick Processing', 'All Business Types'],
+    features: [
+      { Icon: FaMoneyBillWave, label: 'High Loan Amounts' },
+      { Icon: FaClock,         label: 'Flexible Repayment' },
+      { Icon: FaBolt,          label: 'Quick Processing' },
+      { Icon: FaUniversity,    label: 'All Business Types' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_21_rfhylr.png',
     gradient: 'linear-gradient(135deg,#060d1a,#7a3200 60%,#92400e)',
     accent: '#d97706',
@@ -114,7 +144,12 @@ const products = [
     title: 'Insurance Services',
     tagline: 'Protect what matters most',
     desc: 'Life, health, and vehicle insurance from top providers at the best rates. Comprehensive coverage for you and your family.',
-    features: ['Life Insurance', 'Health Insurance', 'Vehicle Insurance', 'Best Rates'],
+    features: [
+      { Icon: FaShieldAlt,    label: 'Life Insurance' },
+      { Icon: FaCheckCircle,  label: 'Health Insurance' },
+      { Icon: FaClock,        label: 'Vehicle Insurance' },
+      { Icon: FaStar,         label: 'Best Rates' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_23_ebzlts.png',
     gradient: 'linear-gradient(135deg,#060d1a,#065f46 60%,#0d7a58)',
     accent: '#10b981',
@@ -129,7 +164,12 @@ const products = [
     title: 'Cash Deposit',
     tagline: 'Quick & secure cash deposits',
     desc: 'Quick and secure cash deposit services to any bank account across India with instant confirmation.',
-    features: ['Instant Deposit', 'All Banks Supported', 'Secure Process', 'Low Charges'],
+    features: [
+      { Icon: FaBolt,         label: 'Instant Deposit' },
+      { Icon: FaUniversity,   label: 'All Banks Supported' },
+      { Icon: FaLock,         label: 'Secure Process' },
+      { Icon: FaMoneyBillWave, label: 'Low Charges' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png',
     gradient: 'linear-gradient(135deg,#060d1a,#1a365d 60%,#2b4a8a)',
     accent: '#2b77e6',
@@ -144,7 +184,12 @@ const products = [
     title: 'CIBIL Score Check & Repair',
     tagline: 'Know & improve your credit score',
     desc: 'Know your credit score and get expert guidance to improve it for better loan eligibility and financial health.',
-    features: ['Instant Score Check', 'Expert Guidance', 'Score Improvement', 'Free Consultation'],
+    features: [
+      { Icon: FaBolt,        label: 'Instant Score Check' },
+      { Icon: FaGem,         label: 'Expert Guidance' },
+      { Icon: FaChartBar,    label: 'Score Improvement' },
+      { Icon: FaCheckCircle, label: 'Free Consultation' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986813/Layer_26_nxw11o.png',
     gradient: 'linear-gradient(135deg,#060d1a,#7a0a2a 60%,#9b1239)',
     accent: '#f43f5e',
@@ -159,7 +204,12 @@ const products = [
     title: 'New Credit Cards',
     tagline: 'Best cards for your profile',
     desc: 'Apply for the best credit cards matching your spending profile and get instant approval from top banks.',
-    features: ['All Major Banks', 'Instant Approval', 'Best Rewards', 'Zero Annual Fee Options'],
+    features: [
+      { Icon: FaUniversity,  label: 'All Major Banks' },
+      { Icon: FaBolt,        label: 'Instant Approval' },
+      { Icon: FaStar,        label: 'Best Rewards' },
+      { Icon: FaCheckCircle, label: 'Zero Annual Fee Options' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',
     gradient: 'linear-gradient(135deg,#060d1a,#1a365d 60%,#2b4a8a)',
     accent: '#2b77e6',
@@ -174,7 +224,12 @@ const products = [
     title: 'Bank Account Opening',
     tagline: 'Zero-hassle account setup',
     desc: 'Open a savings or current account with leading banks hassle-free with minimal documentation and doorstep service.',
-    features: ['Zero Balance Options', 'All Major Banks', 'Quick Processing', 'Doorstep Service'],
+    features: [
+      { Icon: FaCheckCircle, label: 'Zero Balance Options' },
+      { Icon: FaUniversity,  label: 'All Major Banks' },
+      { Icon: FaBolt,        label: 'Quick Processing' },
+      { Icon: FaMapMarkerAlt, label: 'Doorstep Service' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_25_z5scod.png',
     gradient: 'linear-gradient(135deg,#060d1a,#065f46 60%,#0d7a58)',
     accent: '#10b981',
@@ -312,7 +367,7 @@ export default function ProductDetails() {
               <ul>
                 {product.features.map((f, i) => (
                   <li key={i}>
-                    <span className="check"><FaCheckCircle size={11} /></span>{f}
+                    <span className="check"><f.Icon size={11} /></span>{f.label}
                   </li>
                 ))}
               </ul>

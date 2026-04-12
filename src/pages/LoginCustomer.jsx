@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import logoImg from '../assets/icons png/MS Logo.png'
 import fullLogoImg from '../assets/icons png/Full Logo.png'
+import nameImg from '../assets/icons png/Money Spot Logo.png'
 import bannerImg from '../assets/icons png/MS Logo.png'
 import './Login.css'
 
@@ -58,9 +59,7 @@ export default function LoginCustomer() {
       <div className="login-card">
         <div className="login-logo">
           <img src={logoImg} alt="MoneySpot" className="login-logo-img" />
-          <div className="login-logo-text">
-            <span className="logo-money">Money</span><span className="logo-spot">Spot</span>
-          </div>
+          <img src={nameImg} alt="MoneySpot" className="login-name-img" />
         </div>
 
         <h2>Customer Login</h2>
@@ -71,7 +70,7 @@ export default function LoginCustomer() {
             <label>PAN Number</label>
             <input
               required
-              placeholder="ABCDE1234F"
+              placeholder="PXXPKXXXXD"
               maxLength={10}
               value={form.pan}
               onChange={e => setForm({ ...form, pan: e.target.value.toUpperCase() })}
@@ -82,7 +81,7 @@ export default function LoginCustomer() {
             <input
               required
               type="tel"
-              placeholder="+91 XXXXX XXXXX"
+              placeholder="XXXXXXXXX0"
               maxLength={10}
               value={form.mobile}
               onChange={e => setForm({ ...form, mobile: e.target.value.replace(/\D/g, '') })}

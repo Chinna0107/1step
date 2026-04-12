@@ -1,0 +1,189 @@
+.tc-page {
+  min-height: 100vh;
+  background: var(--grad-dark);
+  color: var(--text-primary);
+  overflow-x: hidden;
+}
+
+/* ── Hero ── */
+.tc-hero {
+  position: relative;
+  text-align: center;
+  padding: 110px 24px 90px;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ms-bg) 0%, var(--ms-navy) 60%, var(--ms-purple) 100%);
+}
+
+.tc-hero::before {
+  content: '';
+  position: absolute;
+  top: -80px; left: -80px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(64,32,112,0.28), transparent 65%);
+  filter: blur(40px);
+  animation: tc-orb-drift 9s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+.tc-hero::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; right: -60px;
+  width: 360px; height: 360px;
+  background: radial-gradient(circle, rgba(192,32,64,0.22), transparent 65%);
+  filter: blur(40px);
+  animation: tc-orb-drift 12s ease-in-out infinite alternate-reverse;
+  pointer-events: none;
+}
+
+.tc-hero-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.tc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(64,32,112,0.4);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212,175,55,0.3);
+  padding: 8px 20px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ms-gold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  box-shadow: 0 0 20px rgba(212,175,55,0.15);
+}
+
+.tc-hero h1 {
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  color: var(--text-primary);
+}
+
+.tc-gold {
+  background: linear-gradient(90deg, var(--ms-gold), var(--ms-crimson-light), var(--ms-gold));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: tc-shimmer 4s linear infinite;
+}
+
+.tc-hero p {
+  font-size: 1rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ── Content ── */
+.tc-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 80px 24px 100px;
+}
+
+.tc-intro {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--ms-gold);
+  border-radius: 1.5rem;
+  padding: 1.75rem 2rem;
+  font-size: 0.97rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin-bottom: 3rem;
+  box-shadow: var(--glass-shadow);
+}
+
+/* ── Sections ── */
+.tc-sections {
+  background: var(--glass-bg);
+  backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  border-radius: 2rem;
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  position: relative;
+}
+
+.tc-sections::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ms-purple), var(--ms-crimson), var(--ms-gold));
+  background-size: 200% 100%;
+  animation: tc-line-sweep 3s linear infinite;
+}
+
+.tc-section {
+  padding: 2rem 2.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background 0.25s ease;
+}
+
+.tc-section:last-child { border-bottom: none; }
+
+.tc-section:hover {
+  background: rgba(64,32,112,0.15);
+}
+
+.tc-section h2 {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ms-gold);
+  margin-bottom: 0.875rem;
+  letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tc-section h2::before {
+  content: '';
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ms-crimson);
+  flex-shrink: 0;
+}
+
+.tc-section p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
+/* ── Keyframes ── */
+@keyframes tc-orb-drift {
+  0%   { transform: translate(0,0) scale(0.95); }
+  100% { transform: translate(20px,20px) scale(1.05); }
+}
+
+@keyframes tc-shimmer {
+  0%   { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes tc-line-sweep {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+@media (max-width: 768px) {
+  .tc-hero { padding: 80px 20px 60px; }
+  .tc-content { padding: 50px 16px 70px; }
+  .tc-section { padding: 1.5rem; }
+  .tc-intro { padding: 1.25rem; }
+}

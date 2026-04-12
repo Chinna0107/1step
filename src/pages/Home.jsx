@@ -5,9 +5,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   FaBolt, FaLock, FaCheckCircle, FaClock, FaRocket, FaShieldAlt,
   FaMoneyBillWave, FaHandshake, FaMobileAlt, FaTrophy, FaStar,
-  FaArrowRight, FaUsers, FaChartLine
+  FaArrowRight, FaUsers, FaChartLine, FaUniversity, FaCreditCard,
+  FaExchangeAlt, FaPlane, FaShoppingCart, FaCouch, FaCar,
+  FaFingerprint, FaMapMarkerAlt
 } from 'react-icons/fa'
-import bannerImg from '../assets/icons png/MS Logo.png'
+import bannerImg from '../assets/icons png/Money Spot Logo.png'
 import './Home.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -18,8 +20,18 @@ const products = [
     title: 'Spot Cash on Credit Card',
     tagline: 'Convert your credit limit into instant cash',
     desc: 'Unlock the power of your credit card. Get instant cash transferred directly to your bank account within minutes using your existing credit limit.',
-    features: ['Instant Bank Transfer', 'Cash in Minutes', 'All Cards Accepted', 'POS Machine Available'],
-    categories: ['Travel', 'Grocery', 'Furniture', 'Insurance'],
+    features: [
+      { icon: FaExchangeAlt, label: 'Instant Bank Transfer' },
+      { icon: FaBolt,        label: 'Cash in Minutes' },
+      { icon: FaCreditCard,  label: 'All Cards Accepted' },
+      { icon: FaMobileAlt,   label: 'POS Machine Available' },
+    ],
+    categories: [
+      { icon: FaPlane,        label: 'Travel' },
+      { icon: FaShoppingCart, label: 'Grocery' },
+      { icon: FaCouch,        label: 'Furniture' },
+      { icon: FaShieldAlt,    label: 'Insurance' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_14_hfozvc.png',
     accent: 'var(--ms-purple)',
   },
@@ -28,28 +40,43 @@ const products = [
     title: 'Credit Card Bill Payment',
     tagline: "Don't miss your due date!",
     desc: 'Pay any credit card bill instantly — any amount, any bank, zero hassle. Avoid late fees and protect your CIBIL score with on-time payments.',
-    features: ['Instant Bill Clearance', 'Any Amount – No Limits', 'Avoid Late Fees & Interest', 'Cashback / Reward Points'],
+    features: [
+      { icon: FaBolt,          label: 'Instant Bill Clearance' },
+      { icon: FaMoneyBillWave, label: 'Any Amount – No Limits' },
+      { icon: FaShieldAlt,     label: 'Avoid Late Fees & Interest' },
+      { icon: FaStar,          label: 'Cashback / Reward Points' },
+    ],
     badge: '100% Secure | Trusted | Transparent',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_18_kwkkgx.png',
     accent: 'var(--ms-crimson)',
   },
   {
-    slug: 'personal-loans',
-    title: 'Personal Loans',
-    tagline: 'Quick disbursal with minimal docs',
-    desc: 'Get personal loans with fast approval and minimal documentation. Competitive interest rates tailored to your profile.',
-    features: ['Fast Approval', 'Minimal Documentation', 'Competitive Rates', 'Flexible Tenure'],
-    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_20_dpj7hw.png',
-    accent: '#7c3aed',
+    slug: 'aadhaar-withdrawal',
+    title: 'Aadhaar Cash Withdrawal',
+    tagline: 'No ATM card? No problem',
+    desc: 'Withdraw cash from your bank account using just your Aadhaar number and biometric fingerprint — no ATM card needed.',
+    features: [
+      { icon: FaFingerprint,  label: 'No ATM Card Needed' },
+      { icon: FaLock,         label: 'Biometric Authentication' },
+      { icon: FaBolt,         label: 'Instant Disbursement' },
+      { icon: FaMapMarkerAlt, label: 'Available Nearby' },
+    ],
+    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png',
+    accent: '#f59e0b',
   },
   {
-    slug: 'business-loans',
-    title: 'Business Loans',
-    tagline: 'Fuel your business growth',
-    desc: 'Tailored business loan solutions to help you scale, expand, and achieve your entrepreneurial goals with ease.',
-    features: ['High Loan Amounts', 'Flexible Repayment', 'Quick Processing', 'All Business Types'],
-    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_21_rfhylr.png',
-    accent: '#d97706',
+    slug: 'cash-deposit',
+    title: 'Cash Deposit',
+    tagline: 'Quick & secure cash deposits',
+    desc: 'Quick and secure cash deposit services to any bank account across India with instant confirmation and real-time tracking.',
+    features: [
+      { icon: FaBolt,          label: 'Instant Deposit' },
+      { icon: FaUniversity,    label: 'All Banks Supported' },
+      { icon: FaLock,          label: 'Secure Process' },
+      { icon: FaMoneyBillWave, label: 'Low Charges' },
+    ],
+    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png',
+    accent: '#2b77e6',
   },
 ]
 
@@ -70,19 +97,28 @@ const whyUs = [
 ]
 
 const moreServices = [
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_25_z5scod.png', label: 'Insurance Services',   desc: 'Life, health & vehicle cover',      slug: 'insurance' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png', label: 'Aadhaar Services',      desc: 'Aadhaar-based cash withdrawal',     slug: 'aadhaar-withdrawal' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png', label: 'Cash Deposit',      desc: 'Quick & secure cash deposits',      slug: 'cash-deposit' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986813/Layer_26_nxw11o.png', label: 'CIBIL Score',           desc: 'Know & improve your score',         slug: 'cibil-score' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png', label: 'New Credit Cards',        desc: 'Best cards for your profile',       slug: 'new-credit-card' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_23_ebzlts.png', label: 'Bank Account Opening', desc: 'Zero-hassle account setup',         slug: 'bank-account' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_20_dpj7hw.png', label: 'Personal Loans',      desc: 'Quick disbursal with minimal docs',  slug: 'personal-loans' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_21_rfhylr.png', label: 'Business Loans',     desc: 'Fuel your business growth',          slug: 'business-loans' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_25_z5scod.png', label: 'Bank Account Opening', desc: 'Zero-hassle account setup',         slug: 'bank-account' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986813/Layer_26_nxw11o.png', label: 'CIBIL Score',          desc: 'Know & improve your score',         slug: 'cibil-score' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',   label: 'New Credit Cards',    desc: 'Best cards for your profile',       slug: 'new-credit-card' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_23_ebzlts.png', label: 'Insurance Services',  desc: 'Life, health & vehicle cover',      slug: 'insurance' },
 ]
 
 const testimonials = [
-  { name: 'Ravi Kumar',    role: 'Business Owner',       text: 'Got ₹50,000 cash from my credit card in just 10 minutes! MoneySpot is a lifesaver.', rating: 5 },
-  { name: 'Priya Sharma',  role: 'Salaried Professional',text: 'Paid my credit card bill instantly. No more late fees. Highly recommend!', rating: 5 },
-  { name: 'Mohammed Ali',  role: 'Freelancer',           text: 'DMT service is super fast. Sent money to my family at midnight — worked perfectly!', rating: 5 },
-  { name: 'Sunita Reddy',  role: 'Homemaker',            text: 'Aadhaar withdrawal saved me when I forgot my ATM card. Amazing service!', rating: 5 },
+  { name: 'Ravi Kumar',    role: 'Business Owner',        text: 'Got ₹50,000 cash from my credit card in just 10 minutes! MoneySpot is a lifesaver.', rating: 5, avatar: 'https://ui-avatars.com/api/?name=Ravi+Kumar&background=402070&color=fff&size=80&bold=true' },
+  { name: 'Priya Sharma',  role: 'Salaried Professional', text: 'Paid my credit card bill instantly. No more late fees. Highly recommend!', rating: 5, avatar: 'https://ui-avatars.com/api/?name=Priya+Sharma&background=c02040&color=fff&size=80&bold=true' },
+  { name: 'Mohammed Ali',  role: 'Freelancer',            text: 'DMT service is super fast. Sent money to my family at midnight — worked perfectly!', rating: 5, avatar: 'https://ui-avatars.com/api/?name=Mohammed+Ali&background=1a365d&color=fff&size=80&bold=true' },
+  { name: 'Sunita Reddy',  role: 'Homemaker',             text: 'Aadhaar withdrawal saved me when I forgot my ATM card. Amazing service!', rating: 5, avatar: 'https://ui-avatars.com/api/?name=Sunita+Reddy&background=065f46&color=fff&size=80&bold=true' },
+]
+
+const googleReviews = [
+  { name: 'Arjun Mehta',     rating: 5, time: '2 weeks ago',  text: 'Excellent service! Got instant cash on my credit card within minutes. The staff was very professional and the process was smooth. Highly recommended!', avatar: 'https://ui-avatars.com/api/?name=Arjun+Mehta&background=4285F4&color=fff&size=80&bold=true' },
+  { name: 'Deepa Nair',      rating: 5, time: '1 month ago',  text: 'Best fintech service in the area. Paid my HDFC credit card bill instantly. Zero hidden charges. Will definitely use again!', avatar: 'https://ui-avatars.com/api/?name=Deepa+Nair&background=EA4335&color=fff&size=80&bold=true' },
+  { name: 'Suresh Babu',     rating: 5, time: '3 weeks ago',  text: 'MoneySpot helped me with a personal loan quickly. Minimal documentation and fast disbursal. Great team!', avatar: 'https://ui-avatars.com/api/?name=Suresh+Babu&background=34A853&color=fff&size=80&bold=true' },
+  { name: 'Kavitha Rao',     rating: 5, time: '2 months ago', text: 'Used Aadhaar withdrawal service when I was in an emergency. Super fast and secure. Thank you MoneySpot!', avatar: 'https://ui-avatars.com/api/?name=Kavitha+Rao&background=FBBC05&color=000&size=80&bold=true' },
+  { name: 'Rahul Verma',     rating: 5, time: '1 week ago',   text: 'DMT transfer was done in seconds. 24/7 availability is a huge plus. Best money transfer service I have used.', avatar: 'https://ui-avatars.com/api/?name=Rahul+Verma&background=402070&color=fff&size=80&bold=true' },
+  { name: 'Anitha Krishnan', rating: 4, time: '5 weeks ago',  text: 'Very reliable service for credit card bill payments. Quick confirmation and digital receipt. Would recommend to everyone.', avatar: 'https://ui-avatars.com/api/?name=Anitha+Krishnan&background=c02040&color=fff&size=80&bold=true' },
 ]
 
 function Counter({ value, prefix = '', suffix = '' }) {
@@ -382,8 +418,8 @@ export default function Home() {
               <FaRocket size={12} /> Fast · Secure · Trusted
             </div>
             <h1 className="hero-title-anim">
-              Your One-Stop<br />
-              <span className="gradient-text">Financial Solution</span>
+              One Spot For All Your<br />
+              <span className="gradient-text">Financial Needs</span>
             </h1>
             <p className="hero-sub-anim">
               Instant cash, bill payments, money transfers & more —
@@ -496,15 +532,19 @@ export default function Home() {
 
                 <ul style={S.features}>
                   {p.features.map(f => (
-                    <li key={f} style={S.featureItem}>
-                      <span style={S.check}>✦</span>{f}
+                    <li key={f.label} style={S.featureItem}>
+                      <f.icon size={13} style={S.check} />{f.label}
                     </li>
                   ))}
                 </ul>
 
                 {p.categories && (
                   <div style={S.cats}>
-                    {p.categories.map(c => <span key={c} style={S.cat}>{c}</span>)}
+                    {p.categories.map(c => (
+                      <span key={c.label} style={{ ...S.cat, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                        <c.icon size={11} />{c.label}
+                      </span>
+                    ))}
                   </div>
                 )}
 
@@ -594,12 +634,51 @@ export default function Home() {
               </div>
               <p className="testi-text">"{t.text}"</p>
               <div className="testi-author">
-                <div className="testi-avatar">{t.name[0]}</div>
+                <div className="testi-avatar">
+                  <img src={t.avatar} alt={t.name} />
+                </div>
                 <div>
                   <strong>{t.name}</strong>
                   <span>{t.role}</span>
                 </div>
               </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ═══ GOOGLE REVIEWS ═══ */}
+      <section className="google-reviews-section">
+        <div className="section-title">
+          <div className="section-pill">Google Reviews</div>
+          <h2>Rated on Google</h2>
+          <p>See what people are saying about us</p>
+        </div>
+        <div className="google-rating-bar">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" className="google-logo" />
+          <div className="google-score">
+            <span className="google-score-num">4.9</span>
+            <div className="google-score-stars">
+              {[...Array(5)].map((_, i) => <FaStar key={i} size={18} />)}
+            </div>
+            <span className="google-score-count">Based on 200+ reviews</span>
+          </div>
+        </div>
+        <div className="google-reviews-grid">
+          {googleReviews.map(r => (
+            <div className="google-review-card" key={r.name}>
+              <div className="gr-header">
+                <img src={r.avatar} alt={r.name} className="gr-avatar" />
+                <div className="gr-meta">
+                  <strong>{r.name}</strong>
+                  <span>{r.time}</span>
+                </div>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" alt="Google" className="gr-google-logo" />
+              </div>
+              <div className="gr-stars">
+                {[...Array(r.rating)].map((_, i) => <FaStar key={i} size={13} />)}
+              </div>
+              <p className="gr-text">{r.text}</p>
             </div>
           ))}
         </div>

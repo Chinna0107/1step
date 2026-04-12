@@ -10,6 +10,8 @@ import ProductDetails from './pages/ProductDetails'
 import LoginCustomer from './pages/LoginCustomer'
 import LoginEmployee from './pages/LoginEmployee'
 import LoginSuperAdmin from './pages/LoginSuperAdmin'
+import FAQ from './pages/FAQ'
+import TermsConditions from './pages/TermsConditions'
 import './App.css'
 
 const loginRoutes = [
@@ -46,6 +48,8 @@ export default function App() {
         <Route path="/what-we-do" element={<Layout><WhatWeDo /></Layout>} />
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/faq" element={<Layout><FAQ /></Layout>} />
+        <Route path="/terms" element={<Layout><TermsConditions /></Layout>} />
         <Route path="/product/:slug" element={<Layout><ProductDetails /></Layout>} />
       </Routes>
     </BrowserRouter>

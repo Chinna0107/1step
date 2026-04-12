@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import logoImg from '../assets/icons png/MS Logo.png'
 import fullLogoImg from '../assets/icons png/Full Logo.png'
+import nameImg from '../assets/icons png/Money Spot Logo.png'
 import bannerImg from '../assets/icons png/MS Logo.png'
 import './Login.css'
 
@@ -64,9 +65,7 @@ export default function LoginSuperAdmin() {
       <div className="login-card superadmin-card">
         <div className="login-logo">
           <img src={logoImg} alt="MoneySpot" className="login-logo-img" />
-          <div className="login-logo-text">
-            <span className="logo-money">Money</span><span className="logo-spot">Spot</span>
-          </div>
+          <img src={nameImg} alt="MoneySpot" className="login-name-img" />
         </div>
 
         <div className="superadmin-badge">
@@ -81,13 +80,13 @@ export default function LoginSuperAdmin() {
             <form onSubmit={handleCredentials}>
               <div className="form-group">
                 <label>Admin Email</label>
-                <input required type="email" placeholder="admin@moneyspot.in"
+                <input required type="email" placeholder="admin@moneyspotfintech.com"
                   value={form.email}
                   onChange={e => setForm({ ...form, email: e.target.value })} />
               </div>
               <div className="form-group">
                 <label>Password</label>
-                <input required type="password" placeholder="Enter password"
+                <input required type="password" placeholder="Enter your password"
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })} />
               </div>

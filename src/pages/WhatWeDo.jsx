@@ -5,7 +5,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import {
   FaBolt, FaCreditCard, FaExchangeAlt, FaFingerprint,
   FaMoneyBillWave, FaBuilding, FaUniversity, FaChartBar,
-  FaIdCard, FaShieldAlt, FaCheckCircle, FaArrowRight
+  FaIdCard, FaShieldAlt, FaCheckCircle, FaArrowRight,
+  FaMapMarkerAlt, FaClock, FaLock, FaStar
 } from 'react-icons/fa'
 import './WhatWeDo.css'
 
@@ -18,7 +19,12 @@ const products = [
     title: 'Spot Cash on Credit Card',
     tagline: 'Instant cash from your credit limit',
     desc: 'Convert your unused credit card limit into instant cash. We support all major banks and cards with POS machine facility.',
-    points: ['Instant Bank Transfer', 'Cash in Minutes', 'All Cards Accepted', 'POS Machine Available'],
+    points: [
+      { Icon: FaExchangeAlt, label: 'Instant Bank Transfer' },
+      { Icon: FaBolt,        label: 'Cash in Minutes' },
+      { Icon: FaCreditCard,  label: 'All Cards Accepted' },
+      { Icon: FaShieldAlt,   label: 'POS Machine Available' },
+    ],
     categories: ['Travel', 'Grocery', 'Furniture', 'Insurance'],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_14_hfozvc.png',
     accent: '#2b77e6',
@@ -29,7 +35,12 @@ const products = [
     title: 'Credit Card Bill Payment',
     tagline: 'Never miss your due date again',
     desc: 'Pay any amount on any credit card instantly with zero hassle. Avoid late fees and protect your CIBIL score.',
-    points: ['Instant Bill Clearance', 'Any Amount – No Limits', 'Avoid Late Fees & Interest', 'Cashback / Reward Points'],
+    points: [
+      { Icon: FaBolt,         label: 'Instant Bill Clearance' },
+      { Icon: FaMoneyBillWave, label: 'Any Amount – No Limits' },
+      { Icon: FaShieldAlt,    label: 'Avoid Late Fees & Interest' },
+      { Icon: FaStar,         label: 'Cashback / Reward Points' },
+    ],
     badge: '100% Secure | Trusted | Transparent',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_18_kwkkgx.png',
     accent: '#10b981',
@@ -40,7 +51,12 @@ const products = [
     title: 'Instant Money Transfer (DMT)',
     tagline: 'Send money anywhere in seconds',
     desc: 'Send money to any bank account across India in seconds using IMPS. Available 24×7 with the lowest charges.',
-    points: ['24×7 Service', 'Instant IMPS Transfer', 'All Banks Supported', 'Low Charges'],
+    points: [
+      { Icon: FaClock,        label: '24×7 Service' },
+      { Icon: FaBolt,         label: 'Instant IMPS Transfer' },
+      { Icon: FaUniversity,   label: 'All Banks Supported' },
+      { Icon: FaMoneyBillWave, label: 'Low Charges' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png',
     accent: '#8b5cf6',
   },
@@ -50,7 +66,12 @@ const products = [
     title: 'Aadhaar Cash Withdrawal',
     tagline: 'No ATM card? No problem',
     desc: 'Withdraw cash from your bank account using just your Aadhaar card and biometric fingerprint — no ATM card needed.',
-    points: ['No ATM Card Needed', 'Biometric Authentication', 'Instant Disbursement', 'Available Nearby'],
+    points: [
+      { Icon: FaFingerprint,  label: 'No ATM Card Needed' },
+      { Icon: FaLock,         label: 'Biometric Authentication' },
+      { Icon: FaBolt,         label: 'Instant Disbursement' },
+      { Icon: FaMapMarkerAlt, label: 'Available Nearby' },
+    ],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png',
     accent: '#f59e0b',
   },
@@ -137,9 +158,6 @@ export default function WhatWeDo() {
                 <div className="wwd-card-img-wrap">
                   <img src={p.img} alt={p.title} loading="lazy" />
                   <div className="wwd-card-img-overlay" />
-                  <div className="wwd-card-img-badge" style={{ background: p.accent }}>
-                    <p.Icon size={13} /> {p.tagline}
-                  </div>
                 </div>
               </div>
               <div className="wwd-card-content">
@@ -150,11 +168,11 @@ export default function WhatWeDo() {
                 <p className="wwd-card-desc">{p.desc}</p>
                 <ul className="wwd-card-points">
                   {p.points.map(pt => (
-                    <li key={pt}>
+                    <li key={pt.label}>
                       <span className="wwd-check" style={{ background: `${p.accent}22`, borderColor: `${p.accent}55`, color: p.accent }}>
-                        <FaCheckCircle size={12} />
+                        <pt.Icon size={12} />
                       </span>
-                      {pt}
+                      {pt.label}
                     </li>
                   ))}
                 </ul>
