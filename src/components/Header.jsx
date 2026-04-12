@@ -1,9 +1,19 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { FaCheckCircle } from 'react-icons/fa'
 import logoImg from '../assets/icons png/MS Logo.png'
 import fullLogoImg from '../assets/icons png/Full Logo.png'
 import nameImg from '../assets/icons png/Money Spot Logo.png'
 import './Header.css'
+
+const trustItems = [
+  '120+ Bank & NBFC Partners',
+  '10,000+ Happy Customers',
+  'Authorised Fintech Service Provider',
+  'Instant Cash Transfers 24/7',
+  '100% Secure & Trusted',
+  'Zero Hidden Charges',
+]
 
 const navLinks = [
   { to: '/',           label: 'Home',      icon: '🏠' },
@@ -24,6 +34,18 @@ export default function Header() {
 
   return (
     <>
+      {/* ── Trust Bar ── */}
+      <div className="trust-bar">
+        <div className="trust-track">
+          {[...trustItems, ...trustItems].map((item, i) => (
+            <span key={i} className="trust-item">
+              <FaCheckCircle className="trust-check" />
+              {item}
+            </span>
+          ))}
+        </div>
+      </div>
+
       <header className="header">
         <div className="header-inner">
           <Link to="/" className="logo">

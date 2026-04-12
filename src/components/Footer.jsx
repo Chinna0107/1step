@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
+import { FaQuestionCircle, FaFileContract, FaUserShield } from 'react-icons/fa'
 import {
   FaWhatsapp, FaInstagram, FaFacebookF, FaTwitter,
   FaHome, FaBolt, FaInfoCircle, FaPhone, FaEnvelope,
   FaMapMarkerAlt, FaClock, FaCreditCard, FaExchangeAlt, FaFingerprint,
-  FaHeadset
+  FaHeadset, FaShieldAlt
 } from 'react-icons/fa'
 import './Footer.css'
 
@@ -56,6 +57,13 @@ export default function Footer() {
         </div>
 
         <div className="footer-links">
+          <h4>Policies</h4>
+          <Link to="/faq"><FaQuestionCircle size={13} /> FAQ</Link>
+          <Link to="/terms"><FaFileContract size={13} /> Terms & Conditions</Link>
+          <Link to="/privacy"><FaUserShield size={13} /> Privacy Policy</Link>
+        </div>
+
+        <div className="footer-links">
           <h4>Contact</h4>
           <a href={`tel:${PHONE}`}><FaPhone size={13} /> {PHONE_DISPLAY}</a>
           <a href="mailto:support@moneyspot.in"><FaEnvelope size={13} /> support@moneyspot.in</a>
@@ -67,6 +75,10 @@ export default function Footer() {
       </div>
 
       <div className="footer-bottom">
+        <div className="footer-disclaimer">
+          <FaShieldAlt size={13} className="footer-disclaimer-icon" />
+          <p>All services are subject to KYC and compliance guidelines. Money Spot acts as a service provider / banking correspondent.</p>
+        </div>
         <p>© {new Date().getFullYear()} MoneySpot. All rights reserved. | Fast · Secure · Trusted</p>
         <p className="footer-zewo">Developed with <span className="footer-heart"></span><b>passion   </b> by <span className="footer-zewo-brand"><a href="https://zewo.in" target="_blank" rel="noopener noreferrer">Zewo</a></span></p>
       </div>

@@ -2,22 +2,45 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import {
+  FaTrophy, FaCreditCard, FaExchangeAlt, FaShieldAlt, FaHome,
+  FaRocket, FaLock, FaLightbulb, FaHandshake,
+  FaGlobe, FaChartLine, FaMedal, FaHeart,
+  FaBolt, FaUserCheck, FaChartBar, FaSyncAlt,
+  FaArrowRight, FaCheckCircle, FaMapMarkerAlt
+} from 'react-icons/fa'
 import './About.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const values = [
-  { icon: '⚡', title: 'Speed', desc: 'Transactions completed in minutes, not days. No waiting, no delays.' },
-  { icon: '🔒', title: 'Security', desc: '100% secure and encrypted financial operations with bank-grade protection.' },
-  { icon: '🤝', title: 'Trust', desc: 'Transparent processes with zero hidden charges. What you see is what you pay.' },
-  { icon: '🌐', title: 'Accessibility', desc: 'Services available 24×7 across all platforms, anytime anywhere.' },
+const highlights = [
+  { value: '10,000+', label: 'Happy Customers' },
+  { value: '120+',    label: 'Bank & NBFC Partners' },
+  { value: '₹50Cr+',  label: 'Transactions Processed' },
+  { value: '24/7',    label: 'Customer Support' },
 ]
 
-const highlights = [
-  { value: '10,000+', label: 'Customers Served' },
-  { value: '₹50Cr+', label: 'Transactions Processed' },
-  { value: '5+', label: 'Years of Experience' },
-  { value: '24/7', label: 'Customer Support' },
+const missionPoints = [
+  { Icon: FaRocket,    text: 'Provide quick and hassle-free financial solutions' },
+  { Icon: FaLock,      text: 'Ensure safe & secure transactions with full trust' },
+  { Icon: FaLightbulb, text: 'Educate customers for better financial decisions' },
+  { Icon: FaHandshake, text: 'Build long-term relationships through honesty & support' },
+]
+
+const visionPoints = [
+  { Icon: FaGlobe,     text: 'Expand across multiple locations' },
+  { Icon: FaChartLine, text: 'Empower customers with financial growth' },
+  { Icon: FaMedal,     text: 'Set new standards in service quality & trust' },
+  { Icon: FaHeart,     text: 'Become the first choice for every financial need' },
+]
+
+const values = [
+  { Icon: FaLock,      title: 'Trust & Transparency',          desc: 'We believe in clear communication and honest services — no hidden surprises.' },
+  { Icon: FaBolt,      title: 'Speed & Efficiency',            desc: 'Fast processing with minimal delays to save your valuable time.' },
+  { Icon: FaUserCheck, title: 'Customer First Approach',       desc: 'Every service is designed keeping customer satisfaction as our top priority.' },
+  { Icon: FaShieldAlt, title: 'Security & Compliance',         desc: 'Strict KYC & safety protocols to protect every transaction.' },
+  { Icon: FaChartBar,  title: 'Professional Excellence',       desc: 'Experienced team delivering high-quality and reliable financial solutions.' },
+  { Icon: FaSyncAlt,   title: 'Continuous Growth & Innovation',desc: 'We constantly upgrade our services to meet modern financial needs.' },
 ]
 
 export default function About() {
@@ -25,128 +48,155 @@ export default function About() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.about-hero-badge',
-        { opacity: 0, y: -30, scale: 0.8 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.7)' })
-      gsap.fromTo('.about-hero h1',
-        { opacity: 0, y: 60 },
-        { opacity: 1, y: 0, duration: 0.9, delay: 0.2, ease: 'power4.out' })
-      gsap.fromTo('.about-hero p',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.7, delay: 0.45, ease: 'power3.out' })
-      gsap.to('.about-particle', {
-        y: 'random(-25,25)', x: 'random(-15,15)',
-        duration: 'random(2,4)', repeat: -1, yoyo: true,
-        ease: 'sine.inOut', stagger: { each: 0.4, from: 'random' },
-      })
+      gsap.fromTo('.about-hero-badge', { opacity: 0, y: -30, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'back.out(1.7)' })
+      gsap.fromTo('.about-hero-title', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.9, delay: 0.2, ease: 'power4.out' })
+      gsap.fromTo('.about-hero-sub',   { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.4, ease: 'power3.out' })
+      gsap.fromTo('.about-hero-tags .about-tag', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, delay: 0.6, ease: 'back.out(1.4)' })
+      gsap.to('.about-orb', { y: 'random(-30,30)', x: 'random(-20,20)', duration: 'random(4,8)', repeat: -1, yoyo: true, ease: 'sine.inOut', stagger: { each: 0.5, from: 'random' } })
     }, heroRef)
     return () => ctx.revert()
   }, [])
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.fromTo('.about-text',
-        { opacity: 0, x: -60 },
-        { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out',
-          scrollTrigger: { trigger: '.about-text', start: 'top 82%' } })
-      gsap.fromTo('.highlight',
-        { opacity: 0, y: 50, scale: 0.85 },
-        { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.12, ease: 'back.out(1.4)',
-          scrollTrigger: { trigger: '.about-highlights', start: 'top 82%' } })
-      gsap.fromTo('.value-card',
-        { opacity: 0, y: 60, rotateX: 15 },
-        { opacity: 1, y: 0, rotateX: 0, duration: 0.7, stagger: 0.12, ease: 'power3.out',
-          scrollTrigger: { trigger: '.values-grid', start: 'top 82%' } })
-      gsap.fromTo('.mission-inner',
-        { opacity: 0, scale: 0.9, y: 40 },
-        { opacity: 1, scale: 1, y: 0, duration: 0.9, ease: 'back.out(1.3)',
-          scrollTrigger: { trigger: '.mission-inner', start: 'top 82%' } })
-      gsap.fromTo('.about-cta-strip h3, .about-cta-strip p, .about-cta-btns',
-        { opacity: 0, y: 30 },
-        { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out',
-          scrollTrigger: { trigger: '.about-cta-strip', start: 'top 85%' } })
+      gsap.fromTo('.highlight', { opacity: 0, y: 40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: 'back.out(1.4)', scrollTrigger: { trigger: '.about-highlights', start: 'top 85%' } })
+      gsap.fromTo('.about-story-text', { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.about-story-text', start: 'top 82%' } })
+      gsap.fromTo('.mission-point', { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.mission-points', start: 'top 85%' } })
+      gsap.fromTo('.vision-point', { opacity: 0, x: 30 }, { opacity: 1, x: 0, duration: 0.5, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.vision-points', start: 'top 85%' } })
+      gsap.fromTo('.value-card', { opacity: 0, y: 50, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.6, stagger: 0.1, ease: 'back.out(1.3)', scrollTrigger: { trigger: '.values-grid', start: 'top 82%' } })
     })
     return () => ctx.revert()
   }, [])
-
-  const particles = [
-    { left: '10%', top: '20%', w: 6, h: 6, delay: 0 },
-    { left: '85%', top: '15%', w: 4, h: 4, delay: 0.5 },
-    { left: '70%', top: '70%', w: 8, h: 8, delay: 1 },
-    { left: '20%', top: '75%', w: 5, h: 5, delay: 1.5 },
-    { left: '50%', top: '40%', w: 3, h: 3, delay: 0.8 },
-  ]
 
   return (
     <div className="about">
 
       {/* ── Hero ── */}
       <section className="about-hero" ref={heroRef}>
-        <div className="about-hero-particles">
-          {particles.map((p, i) => (
-            <div key={i} className="about-particle" style={{
-              left: p.left, top: p.top,
-              width: p.w, height: p.h,
-              animationDelay: `${p.delay}s`,
-            }} />
-          ))}
+        <div className="about-hero-bg">
+          <div className="about-orb about-orb-1" />
+          <div className="about-orb about-orb-2" />
+          <div className="about-orb about-orb-3" />
+          <div className="about-grid-lines" />
         </div>
-        <div className="about-hero-content">
-          <div className="about-hero-badge">🏆 Trusted Financial Partner</div>
-          <h1>About <span className="brand-gradient">MoneySpot</span></h1>
-          <p>Empowering individuals and businesses with fast, reliable, and transparent financial services since day one.</p>
+        <div className="about-hero-inner">
+          <div className="about-hero-badge"><FaTrophy size={13} /> Trusted Financial Partner</div>
+          <h1 className="about-hero-title">
+            Money Spot<br />
+            <span className="about-gold-text">Fintech Services</span>
+          </h1>
+          <p className="about-hero-sub">
+            At Money Spot, we are committed to simplifying financial services for individuals and businesses across India.
+            We operate as a trusted <strong>Business Correspondent & Financial Service Partner</strong>, connecting customers
+            with <strong>120+ Banks & NBFCs</strong> to deliver fast, transparent, and reliable solutions.
+          </p>
+          <div className="about-hero-tags">
+            {[
+              { Icon: FaCreditCard,   label: 'Credit Card Services to Loans' },
+              { Icon: FaExchangeAlt,  label: 'Instant Money Transfers' },
+              { Icon: FaShieldAlt,    label: 'Insurance & Financial Support' },
+              { Icon: FaHome,         label: 'One Roof for All Needs' },
+            ].map(({ Icon, label }) => (
+              <div className="about-tag" key={label}>
+                <Icon size={13} /> {label}
+              </div>
+            ))}
+          </div>
+          <div className="about-hero-quote">
+            <span>"One Spot for All Your Financial Needs"</span>
+          </div>
         </div>
       </section>
 
-      {/* ── Story ── */}
-      <section className="about-section">
-        <div className="about-story">
-          <div className="about-text">
-            <h2>Our Story</h2>
-            <p>MoneySpot was founded with a single mission — to make financial services accessible, fast, and transparent for everyone. We understand that money matters are time-sensitive, and delays can be costly.</p>
-            <p>From converting credit card limits to instant cash, to helping customers pay bills on time and transfer money in seconds, we've built a platform that puts your financial needs first.</p>
-            <p>With a growing network of trusted partners and a dedicated team, MoneySpot has served thousands of customers across Hyderabad and beyond.</p>
+      {/* ── Stats ── */}
+      <div className="about-stats-bar">
+        <div className="about-highlights">
+          {highlights.map(h => (
+            <div className="highlight" key={h.label}>
+              <strong>{h.value}</strong>
+              <span>{h.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Mission & Vision ── */}
+      <section className="about-mv-section">
+        <div className="about-mv-inner">
+
+          {/* Mission */}
+          <div className="about-mv-card mission-card">
+            <div className="about-mv-icon-wrap mission-icon">
+              <FaRocket size={28} />
+            </div>
+            <h2>Our Mission</h2>
+            <p className="about-mv-lead">
+              Our mission is to make financial services <strong>simple, accessible, and transparent</strong> for every customer.
+            </p>
+            <ul className="mission-points">
+              {missionPoints.map(({ Icon, text }) => (
+                <li key={text} className="mission-point">
+                  <span className="mv-point-icon"><Icon size={15} /></span>
+                  {text}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="about-highlights">
-            {highlights.map(h => (
-              <div className="highlight" key={h.label}>
-                <strong>{h.value}</strong>
-                <span>{h.label}</span>
+
+          {/* Vision */}
+          <div className="about-mv-card vision-card">
+            <div className="about-mv-icon-wrap vision-icon">
+              <FaGlobe size={28} />
+            </div>
+            <h2>Our Vision</h2>
+            <p className="about-mv-lead">
+              To become <strong>India's most trusted and customer-friendly</strong> financial service network, delivering innovative, reliable, and transparent fintech solutions.
+            </p>
+            <ul className="vision-points">
+              {visionPoints.map(({ Icon, text }) => (
+                <li key={text} className="vision-point">
+                  <span className="mv-point-icon"><Icon size={15} /></span>
+                  {text}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ── Core Values ── */}
+      <section className="about-values-section">
+        <div className="about-values-inner">
+          <div className="about-section-header">
+            <div className="about-pill">Core Values</div>
+            <h2>What We Stand For</h2>
+            <p>The principles that guide every service we deliver</p>
+          </div>
+          <div className="values-grid">
+            {values.map(v => (
+              <div className="value-card" key={v.title}>
+                <div className="value-icon-wrap">
+                  <v.Icon size={22} />
+                </div>
+                <h3>{v.title}</h3>
+                <p>{v.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Values ── */}
-      <section className="about-values-section">
-        <h2>Our Core Values</h2>
-        <div className="values-grid">
-          {values.map(v => (
-            <div className="value-card" key={v.title}>
-              <span className="value-card-icon">{v.icon}</span>
-              <h3>{v.title}</h3>
-              <p>{v.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Mission ── */}
-      <section className="about-mission">
-        <div className="mission-inner">
-          <h2>Our Mission</h2>
-          <p>To be the most trusted financial services partner — delivering speed, security, and simplicity in every transaction, for every customer, every single time.</p>
-        </div>
-      </section>
-
-      {/* ── CTA Strip ── */}
-      <section className="about-cta-strip">
-        <h3>Ready to Experience the Difference?</h3>
-        <p>Join 10,000+ satisfied customers who trust MoneySpot for their financial needs.</p>
-        <div className="about-cta-btns">
-          <Link to="/contact" className="btn-about-primary">Get in Touch</Link>
-          <Link to="/what-we-do" className="btn-about-outline">Explore Services →</Link>
+      {/* ── CTA ── */}
+      <section className="about-cta">
+        <div className="about-cta-glow" />
+        <div className="about-cta-inner">
+          <h2>Ready to Experience the Difference?</h2>
+          <p>Join 10,000+ satisfied customers who trust MoneySpot for their financial needs.</p>
+          <div className="about-cta-btns">
+            <Link to="/contact" className="btn-about-primary">Get in Touch <FaArrowRight size={13} /></Link>
+            <Link to="/what-we-do" className="btn-about-outline">Explore Services <FaArrowRight size={13} /></Link>
+          </div>
         </div>
       </section>
 

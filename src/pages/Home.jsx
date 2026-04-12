@@ -7,7 +7,7 @@ import {
   FaMoneyBillWave, FaHandshake, FaMobileAlt, FaTrophy, FaStar,
   FaArrowRight, FaUsers, FaChartLine, FaUniversity, FaCreditCard,
   FaExchangeAlt, FaPlane, FaShoppingCart, FaCouch, FaCar,
-  FaFingerprint, FaMapMarkerAlt
+  FaFingerprint, FaMapMarkerAlt, FaChartBar, FaBuilding
 } from 'react-icons/fa'
 import bannerImg from '../assets/icons png/Money Spot Logo.png'
 import './Home.css'
@@ -415,15 +415,16 @@ export default function Home() {
         <div className="hero-inner">
           <div className="hero-text">
             <div className="hero-badge-anim hero-badge">
-              <FaRocket size={12} /> Fast · Secure · Trusted
+              <FaRocket size={12} /> Authorised Fintech Service Provider
             </div>
             <h1 className="hero-title-anim">
               One Spot For All Your<br />
               <span className="gradient-text">Financial Needs</span>
             </h1>
             <p className="hero-sub-anim">
-              Instant cash, bill payments, money transfers & more —
-              all at your fingertips, 24×7.
+              India's trusted <strong>Business Correspondent & Financial Service Partner</strong> —
+              connecting you with <strong>120+ Banks & NBFCs</strong> for instant cash,
+              bill payments, money transfers, loans, insurance & more. All under one roof, 24×7.
             </p>
             <div className="hero-btns-anim hero-btns">
               <Link to="/what-we-do" className="btn-hero-primary">
@@ -431,26 +432,93 @@ export default function Home() {
               </Link>
               <Link to="/contact" className="btn-hero-outline">Contact Us</Link>
             </div>
-            <div className="hero-trust-anim hero-trust">
-              <span><FaLock size={12} /> 100% Secure</span>
-              <span><FaBolt size={12} /> Instant Transfer</span>
-              <span><FaTrophy size={12} /> Trusted by 10K+</span>
+            <div className="hero-trust-anim hero-feature-strip">
+              <div className="hero-feature-item">
+                <div className="hero-feature-icon"><FaBolt size={16} /></div>
+                <div className="hero-feature-text">
+                  <strong>Instant Transfer</strong>
+                  <span>Cash in under 2 mins</span>
+                </div>
+              </div>
+              <div className="hero-feature-divider" />
+              <div className="hero-feature-item">
+                <div className="hero-feature-icon"><FaLock size={16} /></div>
+                <div className="hero-feature-text">
+                  <strong>100% Secure</strong>
+                  <span>Bank-grade encryption</span>
+                </div>
+              </div>
+              <div className="hero-feature-divider" />
+              <div className="hero-feature-item">
+                <div className="hero-feature-icon"><FaUsers size={16} /></div>
+                <div className="hero-feature-text">
+                  <strong>10,000+ Customers</strong>
+                  <span>Trusted across India</span>
+                </div>
+              </div>
             </div>
           </div>
 
           <div className="hero-img-anim hero-visual">
             <div className="hero-ring" />
             <div className="hero-ring hero-ring-2" />
-            <div className="hero-img-wrap">
-              <img src={bannerImg} alt="MoneySpot Financial Services" />
-              <div className="hero-img-glow" />
-              <div className="hero-img-badge badge-top">
-                <FaBolt size={12} /> Instant Transfer
+
+            {/* ── Business Banner ── */}
+            <div className="hero-banner-card">
+
+              {/* Top brand strip */}
+              <div className="hbc-brand">
+                <div className="hbc-brand-dot" />
+                <span className="hbc-brand-name">MoneySpot</span>
+                <span className="hbc-brand-tag">Fintech Services</span>
               </div>
-              <div className="hero-img-badge badge-bottom">
-                <FaCheckCircle size={12} /> 10,000+ Customers
+
+              {/* Central logo */}
+              <div className="hbc-center">
+                <div className="hbc-logo-ring hbc-ring-1" />
+                <div className="hbc-logo-ring hbc-ring-2" />
+                <div className="hbc-logo-wrap">
+                  <img src={bannerImg} alt="MoneySpot" />
+                </div>
               </div>
+
+              {/* Service pills grid */}
+              <div className="hbc-services">
+                {[
+                  { Icon: FaCreditCard,   label: 'Spot Cash',       color: '#2b77e6' },
+                  { Icon: FaBolt,         label: 'Bill Payment',    color: '#10b981' },
+                  { Icon: FaExchangeAlt,  label: 'Money Transfer',  color: '#8b5cf6' },
+                  { Icon: FaMoneyBillWave,label: 'Personal Loans',  color: '#7c3aed' },
+                  { Icon: FaBuilding,     label: 'Business Loans',  color: '#d97706' },
+                  { Icon: FaShieldAlt,    label: 'Insurance',       color: '#10b981' },
+                  { Icon: FaChartBar,     label: 'CIBIL Score',     color: '#f43f5e' },
+                  { Icon: FaFingerprint,  label: 'Aadhaar Cash',    color: '#f59e0b' },
+                  { Icon: FaUniversity,   label: 'Cash Deposit',    color: '#2b77e6' },
+                ].map(({ Icon, label, color }) => (
+                  <div className="hbc-svc" key={label} style={{ '--svc-color': color }}>
+                    <div className="hbc-svc-icon"><Icon size={13} /></div>
+                    <span>{label}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom trust bar */}
+              <div className="hbc-trust">
+                <span><FaLock size={10} /> KYC Verified</span>
+                <span><FaBolt size={10} /> Instant</span>
+                <span><FaUsers size={10} /> 10K+ Customers</span>
+                <span><FaTrophy size={10} /> 120+ Partners</span>
+              </div>
+
             </div>
+
+            {/* Advantage chips */}
+            <div className="hero-adv hero-adv-tl"><span className="hero-adv-icon"><FaLock size={11} /></span><span>100% Secure</span></div>
+            <div className="hero-adv hero-adv-tr"><span className="hero-adv-icon"><FaBolt size={11} /></span><span>Instant Cash</span></div>
+            <div className="hero-adv hero-adv-ml"><span className="hero-adv-icon"><FaUsers size={11} /></span><span>10K+ Customers</span></div>
+            <div className="hero-adv hero-adv-mr"><span className="hero-adv-icon"><FaTrophy size={11} /></span><span>120+ Partners</span></div>
+            <div className="hero-adv hero-adv-bl"><span className="hero-adv-icon"><FaClock size={11} /></span><span>24/7 Support</span></div>
+            <div className="hero-adv hero-adv-br"><span className="hero-adv-icon"><FaShieldAlt size={11} /></span><span>KYC Verified</span></div>
           </div>
         </div>
 

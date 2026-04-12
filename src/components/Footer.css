@@ -28,7 +28,7 @@
   margin: 0 auto;
   padding: 56px 24px 36px;
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
   gap: 40px;
 }
 
@@ -140,10 +140,39 @@
 .footer-links span:hover { color: rgba(255,255,255,0.85); }
 .footer-links span:hover svg { color: var(--ms-gold); transform: scale(1.2) rotate(-8deg); }
 
+.footer-disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(212,175,55,0.06);
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 10px;
+  padding: 10px 16px;
+  margin-bottom: 14px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+
+.footer-disclaimer-icon {
+  color: #d4af37;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.footer-disclaimer p {
+  font-size: 11.5px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+  margin: 0;
+}
+
+
 .footer-bottom {
   border-top: 1px solid rgba(212,175,55,0.1);
   text-align: center;
-  padding: 18px 24px;
+  padding: 20px 24px;
   font-size: 13px;
   color: rgba(255,255,255,0.35);
   position: relative;

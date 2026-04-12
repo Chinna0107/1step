@@ -41,6 +41,7 @@
   display: flex;
   align-items: center;
   overflow: hidden;
+  padding-top: 118px;
 }
 
 .pd-particles {

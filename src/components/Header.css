@@ -1,9 +1,56 @@
 /* ═══════════════════════════════════════════
+   TRUST BAR
+═══════════════════════════════════════════ */
+.trust-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1001;
+  height: 34px;
+  background: linear-gradient(90deg, #0a0518 0%, #1a0a3d 40%, #2a0a28 70%, #0a0518 100%);
+  border-bottom: 1px solid rgba(212,175,55,0.18);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.trust-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  white-space: nowrap;
+  animation: trust-scroll 28s linear infinite;
+  will-change: transform;
+}
+
+@keyframes trust-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.trust-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+  letter-spacing: 0.03em;
+  padding: 0 2.5rem;
+  border-right: 1px solid rgba(212,175,55,0.15);
+}
+
+.trust-check {
+  color: #d4af37;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════
    HEADER — PREMIUM DARK
 ═══════════════════════════════════════════ */
 .header {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 34px; left: 0; right: 0;
   z-index: 1000;
   background: linear-gradient(180deg, rgba(8,4,22,0.98) 0%, rgba(13,7,30,0.95) 100%);
   backdrop-filter: blur(28px) saturate(180%);
