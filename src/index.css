@@ -1,0 +1,56 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+/* ═══════════════════════════════════════════════
+   MONEYSPOT BRAND PALETTE — extracted from MS Logo
+   Primary Purple : #402070
+   Crimson Red    : #c02040
+   Gold Accent    : #d4af37
+   ═══════════════════════════════════════════════ */
+:root {
+  --ms-purple:       #402070;
+  --ms-purple-dark:  #2a1050;
+  --ms-purple-light: #5c30a0;
+  --ms-purple-glow:  rgba(64,32,112,0.6);
+  --ms-crimson:      #c02040;
+  --ms-crimson-light:#e03060;
+  --ms-crimson-glow: rgba(192,32,64,0.5);
+  --ms-gold:         #d4af37;
+  --ms-gold-light:   #f0cc55;
+  --ms-gold-glow:    rgba(212,175,55,0.45);
+  --ms-navy:         #180c38;
+  --ms-bg:           #0c0620;
+
+  /* Glass system */
+  --glass-bg:        rgba(255,255,255,0.06);
+  --glass-border:    rgba(255,255,255,0.12);
+  --glass-shadow:    0 8px 32px rgba(0,0,0,0.35);
+  --glass-shadow-hover: 0 20px 60px rgba(0,0,0,0.5);
+
+  /* Text */
+  --text-primary:    #ffffff;
+  --text-secondary:  rgba(255,255,255,0.78);
+  --text-muted:      rgba(255,255,255,0.48);
+
+  /* Gradients */
+  --grad-brand:      linear-gradient(135deg, var(--ms-purple) 0%, var(--ms-crimson) 100%);
+  --grad-gold:       linear-gradient(135deg, var(--ms-gold) 0%, var(--ms-gold-light) 100%);
+  --grad-dark:       linear-gradient(135deg, var(--ms-bg) 0%, var(--ms-navy) 50%, var(--ms-purple) 100%);
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  color: #374151;
+  background: #fff;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+p { margin: 0; }
+h1, h2, h3, h4 { margin: 0; }

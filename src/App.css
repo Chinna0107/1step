@@ -1,0 +1,9 @@
+* { box-sizing: border-box; }
+
+main {
+  padding-top: 84px;
+}
+
+@media (max-width: 768px) {
+  main { padding-top: 62px; }
+}
