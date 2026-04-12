@@ -7,7 +7,8 @@ import {
   FaMoneyBillWave, FaBuilding, FaShieldAlt, FaUniversity,
   FaChartBar, FaIdCard, FaLock, FaClock, FaGem,
   FaBullseye, FaStar, FaCheckCircle, FaArrowRight,
-  FaClipboardList, FaSearch, FaMapMarkerAlt, FaChartLine
+  FaClipboardList, FaSearch, FaMapMarkerAlt, FaChartLine,
+  FaWhatsapp, FaPhone
 } from 'react-icons/fa'
 import './ProductDetails.css'
 
@@ -315,6 +316,8 @@ export default function ProductDetails() {
             <div className="product-hero-actions">
               <Link to="/contact" className="btn-primary">Get Started <FaArrowRight size={13} /></Link>
               <Link to="/what-we-do" className="btn-outline">All Services</Link>
+              <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20your%20services." target="_blank" rel="noopener noreferrer" className="btn-wa"><FaWhatsapp size={16} /> WhatsApp</a>
+              <a href="tel:+919866440477" className="btn-call"><FaPhone size={14} /> Call Now</a>
             </div>
           </div>
 
@@ -452,6 +455,8 @@ export default function ProductDetails() {
             <p>Contact us today and experience the convenience of our services</p>
             <div className="cta-actions">
               <Link to="/contact" className="btn-primary">Contact Us Now</Link>
+              <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20your%20services." target="_blank" rel="noopener noreferrer" className="btn-wa btn-wa-lg"><FaWhatsapp size={18} /> Chat on WhatsApp</a>
+              <a href="tel:+919866440477" className="btn-call btn-call-lg"><FaPhone size={15} /> Call Us Now</a>
               <Link to="/what-we-do" className="btn-outline">View All Services</Link>
             </div>
           </div>

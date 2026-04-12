@@ -197,23 +197,67 @@
   border-radius: var(--r-lg);
   overflow: hidden;
   border: 1px solid var(--glass-border-gold);
-  box-shadow: var(--shadow-lg), 0 0 60px rgba(212,175,55,0.08);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 0 1px rgba(212,175,55,0.15),
+    0 0 40px rgba(212,175,55,0.12),
+    0 0 80px rgba(212,175,55,0.06);
   background: rgba(255,255,255,0.04);
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+  cursor: pointer;
+}
+
+/* Animated edge lighting */
+.product-hero-image-wrap::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-lg);
+  padding: 2px;
+  background: linear-gradient(135deg,
+    rgba(212,175,55,0.8),
+    rgba(192,32,64,0.6),
+    rgba(64,32,112,0.8),
+    rgba(212,175,55,0.8));
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: edge-rotate 4s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes edge-rotate {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.product-hero-image-wrap:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(212,175,55,0.4),
+    0 0 60px rgba(212,175,55,0.25),
+    0 0 100px rgba(212,175,55,0.1);
 }
 
 .product-hero-image-wrap img {
   width: 85%;
   height: 85%;
   object-fit: contain;
-  transition: transform 0.6s ease;
+  transition: transform 0.5s ease;
   display: block;
+  position: relative;
+  z-index: 2;
 }
 
 .product-hero-image-wrap:hover img {
-  transform: scale(1.06);
+  transform: scale(1.1);
 }
 
 .product-hero-img-glow {
@@ -225,6 +269,51 @@
     rgba(6, 13, 26, 0.6) 100%
   );
   pointer-events: none;
+}
+
+/* ── WhatsApp & Call Buttons ── */
+.btn-wa {
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--r-sm);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #25D366;
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(37,211,102,0.35);
+  transition: all 0.25s ease;
+}
+.btn-wa:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(37,211,102,0.5);
+  background: #20c05c;
+}
+
+.btn-call {
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--r-sm);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, #402070, #c02040);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(64,32,112,0.35);
+  transition: all 0.25s ease;
+}
+.btn-call:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(192,32,64,0.5);
+}
+
+.btn-wa-lg, .btn-call-lg {
+  padding: 0.95rem 1.75rem;
+  font-size: 1rem;
 }
 
 /* ── Buttons ── */
@@ -284,10 +373,27 @@
    STATS BAR
 ══════════════════════════════ */
 .product-stats-bar {
-  background: rgba(255,255,255,0.03);
-  border-top: 1px solid var(--glass-border);
-  border-bottom: 1px solid var(--glass-border);
+  background: linear-gradient(135deg, rgba(212,175,55,0.06), rgba(255,255,255,0.02));
+  border-top: 1px solid rgba(212,175,55,0.2);
+  border-bottom: 1px solid rgba(212,175,55,0.2);
   backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.product-stats-bar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--ms-crimson, #c02040), var(--gold), transparent);
+  background-size: 200% 100%;
+  animation: stats-sweep 3s linear infinite;
+}
+
+@keyframes stats-sweep {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
 }
 
 .stats-inner {
@@ -357,6 +463,18 @@
 .section-header {
   text-align: center;
   margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.section-header::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 2px;
+  margin: 1rem auto 0;
+  box-shadow: 0 0 12px rgba(212,175,55,0.4);
 }
 
 .section-pill {
@@ -402,9 +520,16 @@
 .overview-text {
   background: var(--glass);
   border: 1px solid var(--glass-border);
+  border-left: 3px solid var(--gold);
   border-radius: var(--r-md);
   padding: 2.25rem;
   backdrop-filter: blur(20px);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.overview-text:hover {
+  border-left-color: var(--gold-light);
+  box-shadow: var(--shadow-md), -4px 0 20px rgba(212,175,55,0.15);
 }
 
 .overview-text h3 {
@@ -537,8 +662,24 @@
 .benefit-card:hover::before { opacity: 1; }
 
 .benefit-icon {
-  font-size: 1.5rem;
-  line-height: 1;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(212,175,55,0.05));
+  border: 1px solid rgba(212,175,55,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold-light);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.benefit-card:hover .benefit-icon {
+  background: linear-gradient(135deg, rgba(212,175,55,0.3), rgba(212,175,55,0.1));
+  box-shadow: 0 0 20px rgba(212,175,55,0.25);
+  transform: scale(1.1) rotate(-5deg);
 }
 
 .benefit-card p {
@@ -775,9 +916,10 @@
     gap: 3rem;
   }
 
-  .product-hero-content { align-items: center; }
+  .product-hero-content { align-items: center; order: 2; }
+  .product-hero-visual { order: 1; }
   .product-hero-desc { max-width: none; }
-  .product-hero-image-wrap { max-width: 380px; margin: 0 auto; }
+  .product-hero-image-wrap { max-width: 320px; margin: 0 auto; }
 
   .overview-grid { grid-template-columns: 1fr; }
 
