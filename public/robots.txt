@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Disallow: /login/
+Disallow: /login/customer
+Disallow: /login/employee
+Disallow: /login/superadmin
+
+Sitemap: https://moneyspotfintech.com/sitemap.xml
