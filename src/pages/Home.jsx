@@ -9,7 +9,7 @@ import {
   FaExchangeAlt, FaPlane, FaShoppingCart, FaCouch, FaCar,
   FaFingerprint, FaMapMarkerAlt, FaChartBar, FaBuilding
 } from 'react-icons/fa'
-import bannerImg from '../assets/icons png/MS Logo.png'
+import bannerImg from '../assets/icons png/Money Spot Logo.png'
 import './Home.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -51,32 +51,60 @@ const products = [
     accent: 'var(--ms-crimson)',
   },
   {
-    slug: 'aadhaar-withdrawal',
-    title: 'Aadhaar Cash Withdrawal',
-    tagline: 'No ATM card? No problem',
-    desc: 'Withdraw cash from your bank account using just your Aadhaar number and biometric fingerprint — no ATM card needed.',
+    slug: 'personal-loans',
+    title: 'Personal Loans',
+    tagline: 'Quick disbursal with minimal docs',
+    desc: 'Get personal loans with fast approval and minimal documentation. Competitive interest rates tailored to your profile.',
     features: [
-      { icon: FaFingerprint,  label: 'No ATM Card Needed' },
-      { icon: FaLock,         label: 'Biometric Authentication' },
-      { icon: FaBolt,         label: 'Instant Disbursement' },
-      { icon: FaMapMarkerAlt, label: 'Available Nearby' },
+      { icon: FaBolt,        label: 'Fast Approval' },
+      { icon: FaCheckCircle, label: 'Minimal Documentation' },
+      { icon: FaChartLine,   label: 'Competitive Rates' },
+      { icon: FaClock,       label: 'Flexible Tenure' },
     ],
-    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png',
-    accent: '#f59e0b',
+    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_20_dpj7hw.png',
+    accent: '#7c3aed',
   },
   {
-    slug: 'cash-deposit',
-    title: 'Cash Deposit',
-    tagline: 'Quick & secure cash deposits',
-    desc: 'Quick and secure cash deposit services to any bank account across India with instant confirmation and real-time tracking.',
+    slug: 'business-loans',
+    title: 'Business Loans',
+    tagline: 'Fuel your business growth',
+    desc: 'Tailored business loan solutions to help you scale, expand, and achieve your entrepreneurial goals with ease.',
     features: [
-      { icon: FaBolt,          label: 'Instant Deposit' },
-      { icon: FaUniversity,    label: 'All Banks Supported' },
-      { icon: FaLock,          label: 'Secure Process' },
-      { icon: FaMoneyBillWave, label: 'Low Charges' },
+      { icon: FaMoneyBillWave, label: 'Loan up to ₹70 Lakhs' },
+      { icon: FaBolt,          label: 'Fast Approval & Disbursal' },
+      { icon: FaCheckCircle,   label: 'High Approval Chances' },
+      { icon: FaUniversity,    label: '120+ Bank & NBFC Tie-ups' },
     ],
-    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png',
-    accent: '#2b77e6',
+    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_21_rfhylr.png',
+    accent: '#d97706',
+  },
+  {
+    slug: 'insurance',
+    title: 'Insurance Services',
+    tagline: 'Protect what matters most',
+    desc: 'Life, health, and vehicle insurance from top providers at the best rates. Comprehensive coverage for you and your family.',
+    features: [
+      { icon: FaShieldAlt,   label: 'Life Insurance' },
+      { icon: FaCheckCircle, label: 'Health Insurance' },
+      { icon: FaClock,       label: 'Vehicle Insurance' },
+      { icon: FaStar,        label: 'Best Rates' },
+    ],
+    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_23_ebzlts.png',
+    accent: '#10b981',
+  },
+  {
+    slug: 'cibil-score',
+    title: 'CIBIL Score Check & Repair',
+    tagline: 'Know & improve your credit score',
+    desc: 'Know your credit score and get expert guidance to improve it for better loan eligibility and financial health.',
+    features: [
+      { icon: FaBolt,        label: 'Instant Score Check' },
+      { icon: FaChartLine,   label: 'Expert Guidance' },
+      { icon: FaCheckCircle, label: 'Score Improvement' },
+      { icon: FaClock,       label: 'Free Consultation' },
+    ],
+    img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986813/Layer_26_nxw11o.png',
+    accent: '#f43f5e',
   },
 ]
 
@@ -97,12 +125,10 @@ const whyUs = [
 ]
 
 const moreServices = [
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_20_dpj7hw.png', label: 'Personal Loans',      desc: 'Quick disbursal with minimal docs',  slug: 'personal-loans' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_21_rfhylr.png', label: 'Business Loans',     desc: 'Fuel your business growth',          slug: 'business-loans' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png', label: 'Aadhaar Services',    desc: 'Aadhaar-based cash withdrawal',      slug: 'aadhaar-withdrawal' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png', label: 'Cash Deposit',   desc: 'Quick & secure cash deposits',       slug: 'cash-deposit' },
   { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_25_z5scod.png', label: 'Bank Account Opening', desc: 'Zero-hassle account setup',         slug: 'bank-account' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986813/Layer_26_nxw11o.png', label: 'CIBIL Score',          desc: 'Know & improve your score',         slug: 'cibil-score' },
   { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',   label: 'New Credit Cards',    desc: 'Best cards for your profile',       slug: 'new-credit-card' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_23_ebzlts.png', label: 'Insurance Services',  desc: 'Life, health & vehicle cover',      slug: 'insurance' },
 ]
 
 const testimonials = [

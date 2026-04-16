@@ -1,0 +1,155 @@
+.employee-dashboard {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.dashboard-content {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  color: white;
+  margin-bottom: 2rem;
+}
+
+.dashboard-header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.card h2 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.3rem;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 0.75rem;
+}
+
+.card p {
+  margin: 0.75rem 0;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.card strong {
+  color: #333;
+}
+
+.profile-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.profile-card h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.profile-card p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.profile-card strong {
+  color: white;
+}
+
+.coins-card {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  color: white;
+  text-align: center;
+}
+
+.coins-card h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.coins-amount {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  color: white;
+}
+
+.coins-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.performance-card {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: white;
+}
+
+.performance-card h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.performance-card p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.rating {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+  color: white;
+}
+
+.attendance-card {
+  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  color: white;
+}
+
+.attendance-card h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.attendance-card p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.attendance-percentage {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  color: white;
+}
+
+.login-card {
+  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  color: white;
+}
+
+.login-card h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.login-card p {
+  color: rgba(255, 255, 255, 0.9);
+}

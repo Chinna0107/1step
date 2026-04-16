@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { FaCheckCircle } from 'react-icons/fa'
+import { FaCheckCircle, FaUser, FaBuilding, FaKey } from 'react-icons/fa'
 import logoImg from '../assets/icons png/MS Logo.png'
 import fullLogoImg from '../assets/icons png/Full Logo.png'
 import nameImg from '../assets/icons png/Money Spot Logo.png'
@@ -19,18 +19,28 @@ const navLinks = [
   { to: '/',           label: 'Home',      icon: '🏠' },
   { to: '/what-we-do', label: 'What We Do', icon: '💼' },
   { to: '/about',      label: 'About Us',   icon: '👥' },
-  { to: '/contact',    label: 'Contact',    icon: '📞' },
-  { to: '/faq',        label: 'FAQ',        icon: '❓' },
-  { to: '/terms',      label: 'T&C',        icon: '📄' },
+  { to: '/contact',    label: 'Contact Us',    icon: '📞' },
+  // { to: '/faq',        label: 'FAQ',        icon: '❓' },
+  // { to: '/terms',      label: 'T&C',        icon: '📄' },
 ]
 
-export default function Header() {
-  const [menuOpen, setMenuOpen]   = useState(false)
+export default function Header({ menuOpen, setMenuOpen }) {
   const [loginOpen, setLoginOpen] = useState(false)
   const navigate  = useNavigate()
   const location  = useLocation()
+  const loginRef  = useRef(null)
 
   const close = () => setMenuOpen(false)
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (loginRef.current && !loginRef.current.contains(e.target)) {
+        setLoginOpen(false)
+      }
+    }
+    if (loginOpen) document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [loginOpen])
 
   return (
     <>
@@ -62,13 +72,13 @@ export default function Header() {
 
           <div className="header-actions">
             {/* ── Desktop login ── */}
-            <div className="login-dropdown">
+            <div className="login-dropdown" ref={loginRef}>
               <button className="btn-login" onClick={() => setLoginOpen(o => !o)}>Login ▾</button>
               {loginOpen && (
                 <div className="login-menu">
-                  <button onClick={() => { navigate('/login/customer');   setLoginOpen(false) }}>👤 Customer Login</button>
-                  <button onClick={() => { navigate('/login/employee');   setLoginOpen(false) }}>🏢 Employee / Admin</button>
-                  <button onClick={() => { navigate('/login/superadmin'); setLoginOpen(false) }}>🔑 Super Admin</button>
+                  <button onClick={() => { navigate('/login/customer');   setLoginOpen(false) }}><FaUser size={13} /> Customer Login</button>
+                  <button onClick={() => { navigate('/login/employee');   setLoginOpen(false) }}><FaBuilding size={13} /> Employee / Admin</button>
+                  <button onClick={() => { navigate('/login/superadmin'); setLoginOpen(false) }}><FaKey size={13} /> Super Admin</button>
                 </div>
               )}
             </div>
@@ -121,14 +131,6 @@ export default function Header() {
               onClick={() => { navigate('/login/customer'); close() }}
             >
               <span className="opt-icon">👤</span> Customer Login
-            </button>
-          </div>
-          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-            <button className="nav-login-opt--secondary" onClick={() => { navigate('/login/employee'); close() }}>
-              🏢 Employee
-            </button>
-            <button className="nav-login-opt--secondary" onClick={() => { navigate('/login/superadmin'); close() }}>
-              🔑 Super Admin
             </button>
           </div>
         </div>

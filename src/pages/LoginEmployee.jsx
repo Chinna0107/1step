@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
+import { useEmployeeLogin } from '../hooks/useEmployeeLogin'
+import { useRoleBasedAuth } from '../hooks/useRoleBasedAuth'
 import logoImg from '../assets/icons png/MS Logo.png'
 import fullLogoImg from '../assets/icons png/Full Logo.png'
 import nameImg from '../assets/icons png/Money Spot Logo.png'
@@ -20,6 +22,9 @@ export default function LoginEmployee() {
   const [step, setStep] = useState(1)
   const [form, setForm] = useState({ email: '', password: '' })
   const [mpin, setMpin] = useState('')
+  const { verifyCredentials, verifyMpin, loading, error, success } = useEmployeeLogin()
+  const { saveAuthData } = useRoleBasedAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
     gsap.fromTo('.login-card',
@@ -38,8 +43,20 @@ export default function LoginEmployee() {
       { opacity: 1, x: 0, duration: 0.5, stagger: 0.1, ease: 'power3.out' })
   }, [step])
 
-  const handleCredentials = e => { e.preventDefault(); setStep(2) }
-  const handleMpin = e => { e.preventDefault(); alert('Login successful!') }
+  const handleCredentials = async e => {
+    e.preventDefault()
+    const data = await verifyCredentials(form)
+    if (data) setStep(2)
+  }
+  const handleMpin = async e => {
+    e.preventDefault()
+    const data = await verifyMpin({ email: form.email, mpin })
+    if (data) {
+      const userRole = data.user.is_admin ? 'admin' : 'employee'
+      saveAuthData(data.token, data.user, userRole)
+      navigate(userRole === 'admin' ? '/admin/dashboard' : '/employee/dashboard')
+    }
+  }
 
   return (
     <div className="login-page">
@@ -70,6 +87,9 @@ export default function LoginEmployee() {
 
         <h2>Employee / Admin Login</h2>
 
+        {error && <div className="login-alert login-alert-error">{error}</div>}
+        {success && <div className="login-alert login-alert-success">{success}</div>}
+
         {step === 1 ? (
           <>
             <p className="login-sub">Enter your credentials to proceed</p>
@@ -86,7 +106,9 @@ export default function LoginEmployee() {
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })} />
               </div>
-              <button type="submit" className="btn-login-submit">Verify & Continue →</button>
+              <button type="submit" className="btn-login-submit" disabled={loading}>
+                {loading ? 'Verifying...' : 'Verify & Continue →'}
+              </button>
             </form>
           </>
         ) : (
@@ -96,18 +118,14 @@ export default function LoginEmployee() {
               <div className="form-group">
                 <label>6-Digit MPIN</label>
                 <input
-                  required
-                  type="password"
-                  inputMode="numeric"
-                  maxLength={6}
-                  placeholder="••••••"
-                  className="mpin-input"
-                  value={mpin}
+                  required type="password" inputMode="numeric"
+                  maxLength={6} placeholder="••••••"
+                  className="mpin-input" value={mpin}
                   onChange={e => setMpin(e.target.value.replace(/\D/g, '').slice(0, 6))}
                 />
               </div>
-              <button type="submit" className="btn-login-submit" disabled={mpin.length !== 6}>
-                🔓 Login
+              <button type="submit" className="btn-login-submit" disabled={loading || mpin.length !== 6}>
+                {loading ? 'Logging in...' : '🔓 Login'}
               </button>
               <button type="button" className="btn-back" onClick={() => setStep(1)}>← Back</button>
             </form>

@@ -69,3 +69,24 @@
     font-size: 13px;
   }
 }
+
+.fc-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.floating-contact {
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Hide when mobile nav is open */
+@media (max-width: 768px) {
+  .mobile-nav.open ~ * .floating-contact,
+  body:has(.mobile-nav.open) .floating-contact {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+  }
+}

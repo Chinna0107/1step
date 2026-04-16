@@ -10,13 +10,13 @@
 /* ══ HERO ══ */
 .wwd-hero {
   position: relative;
-  min-height: 88vh;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   background: linear-gradient(135deg, #060d1a 0%, #0f1e35 50%, #1a1040 100%);
-  padding-top: 118px;
+  padding-top: 80px;
 }
 
 .wwd-hero-bg {

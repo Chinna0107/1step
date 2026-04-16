@@ -21,28 +21,28 @@ const products = [
     slug: 'spot-cash',
     Icon: FaBolt,
     title: 'Spot Cash on Credit Card',
-    tagline: 'Instant Credit Card to Cash / Bank Account Transfer',
-    desc: 'Get funds in minutes — safe, secure & verified process. No utility, no education, no rentals. 100% pure non-utility transactions with bank hidden charges reversal support.',
+    tagline: 'Get Funds in Minutes – Safe, Secure & Verified Process',
+    desc: 'Get Funds in Minutes – Safe, Secure & Verified Process. No Utility / No Education / No Rentals. 100% Pure Non-Utility Transactions with Bank Hidden Charges Reversal Support.',
     features: [
-      { Icon: FaBolt,         label: 'Instant Bank Transfer' },
-      { Icon: FaShieldAlt,    label: 'No Hidden Charges' },
+      { Icon: FaCheckCircle,  label: 'No Hidden Charges' },
       { Icon: FaStar,         label: 'Cashback / Reward Points' },
       { Icon: FaLock,         label: '100% Safe & Secure' },
+      { Icon: FaShieldAlt,    label: 'Bank Charges Reversal Support' },
     ],
     categories: ['Travel', 'Grocery', 'Furniture', 'Insurance'],
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',
     gradient: 'linear-gradient(135deg,#060d1a,#1a365d 60%,#2b4a8a)',
     accent: '#2b77e6',
-    detailedDesc: 'MoneySpot provides Instant Credit Card to Cash / Bank Account Transfer — get funds in minutes through a safe, secure & verified process. We process 100% pure non-utility transactions under categories like Travel, Grocery, Furniture & Insurance. No hidden charges, no third-party transfers, same card holder account transfer only. We also offer Bank Hidden Charges Reversal Support. Fast • Transparent • Professional.',
+    detailedDesc: 'Get Funds in Minutes – Safe, Secure & Verified Process. No Utility / No Education / No Rentals. No Hidden Charges. Cashback / Reward Points. 100% Safe & Secure. 100% Pure Non-Utility Transactions. Bank Hidden Charges Reversal Support. Transactions processed under Travel, Grocery, Furniture & Insurance categories. Fast • Transparent • Professional.',
     benefits: [
       'No Hidden Charges — full transparency',
-      'Cashback / Reward Points on transactions',
+      'Cashback / Reward Points on every transaction',
       '100% Safe & Secure process',
       '100% Pure Non-Utility Transactions',
       'Bank Hidden Charges Reversal Support',
       'KYC Verified & Fraud Prevention System',
       'Same Card Holder Account Transfer Only',
-      'Instant Processing — funds in minutes',
+      'No Third-Party Transfers',
     ],
     howItWorks: [
       'Visit our branch or contact us',
@@ -54,7 +54,7 @@ const products = [
     requirements: [
       'Valid credit card with available limit',
       'Government-issued ID (Aadhaar / PAN)',
-      'Active bank account (same card holder)',
+      'Active bank account (same card holder only)',
       'Mobile number for OTP verification',
     ],
     trustPoints: [
@@ -197,7 +197,7 @@ const products = [
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_20_dpj7hw.png',
     gradient: 'linear-gradient(135deg,#060d1a,#3b1a7a 60%,#5b21b6)',
     accent: '#7c3aed',
-    detailedDesc: 'Get instant funds for your personal needs — medical emergencies, travel, education, or lifestyle. MoneySpot offers hassle-free personal loans up to ₹40 Lakhs with instant approval, quick disbursal, flexible tenure up to 5 years, low interest rates, and 100% digital process available. We work with 120+ Bank & NBFC partners to get you the best deal.',
+    detailedDesc: 'Fast. Simple. Trusted Financial Solutions. Get the funds you need with quick approvals, minimal documentation, and expert support from 120+ Banks & NBFC Partners. Whether it’s medical emergencies, travel, education, or lifestyle needs — get hassle-free personal loans with fast processing. Loan up to ₹40 Lakhs, instant approval, quick disbursal, flexible tenure up to 5 years, low interest rates, and 100% digital process available.',
     benefits: [
       'Loan up to ₹40 Lakhs',
       'Instant Approval Process',
@@ -205,6 +205,8 @@ const products = [
       'Flexible Tenure up to 5 Years',
       'Low Interest Rates',
       '100% Digital Process Available',
+      '120+ Bank & NBFC Partners',
+      'Expert guidance throughout',
     ],
     howItWorks: [
       'Contact nearest branch or call us',
@@ -225,9 +227,9 @@ const products = [
   {
     slug: 'business-loans',
     Icon: FaBuilding,
-    title: 'Business Loans',
+    title: 'Business Loans (Proprietorship)',
     tagline: 'Fuel Your Business Growth',
-    desc: 'Expand your business, manage cash flow, or invest in new opportunities. Loan up to ₹70 Lakhs with fast approval & 120+ Bank & NBFC tie-ups.',
+    desc: 'Expand your business, manage cash flow, or invest in new opportunities with easy business loans up to ₹70 Lakhs.',
     features: [
       { Icon: FaMoneyBillWave, label: 'Loan up to ₹70 Lakhs' },
       { Icon: FaBolt,          label: 'Fast Approval & Disbursal' },
@@ -237,24 +239,27 @@ const products = [
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_21_rfhylr.png',
     gradient: 'linear-gradient(135deg,#060d1a,#7a3200 60%,#92400e)',
     accent: '#d97706',
-    detailedDesc: 'Fuel your business growth with MoneySpot Business Loans (Proprietorship). Expand your business, manage cash flow, or invest in new opportunities. Loan up to ₹70 Lakhs with fast approval, high approval chances, competitive interest rates, and 120+ Bank & NBFC tie-ups. Our experts handle everything from document submission to bank selection.',
+    detailedDesc: 'Fuel Your Business Growth. Expand your business, manage cash flow, or invest in new opportunities with easy business loans.',
     benefits: [
       'Loan up to ₹70 Lakhs',
       'Fast Approval & Disbursal',
       'High Approval Chances',
       '120+ Bank & NBFC Tie-ups',
       'Competitive Interest Rates',
-      'Expert guidance throughout',
+      'Higher Approval Success Rate',
+      'Smart Loan Matching System',
+      'Professional Expert Support',
     ],
     howItWorks: [
       'Connect with our team',
       'Submit business documents',
-      'Business eligibility check',
-      'Best bank selection by our experts',
+      'Business eligibility check by experts',
+      'Best bank / NBFC selection',
       'Quick approval & disbursal',
     ],
     requirements: [
       'Aadhaar & PAN Card',
+      'Passport Size Photo & Mobile / Email',
       'Labour License / Udyam / GST (if available)',
       'Shop Photos (Inside & Outside)',
       '12 Months Bank Statement (PDF)',
@@ -262,13 +267,14 @@ const products = [
       'House Proof / Rent Agreement',
       '2 References (Name & Contact)',
     ],
+    branch: true,
   },
   {
     slug: 'insurance',
     Icon: FaShieldAlt,
     title: 'Insurance Services',
     tagline: 'Protect What Matters Most',
-    desc: 'Trusted insurance solutions through IRDA-certified providers. Health, Life, General & Term Insurance — tailored to your needs for financial protection & peace of mind.',
+    desc: 'At Money Spot, we help you secure your future with trusted insurance solutions through our partnerships with IRDA-certified insurance providers. We offer a wide range of policies tailored to your needs — ensuring financial protection, peace of mind, and long-term security.',
     features: [
       { Icon: FaShieldAlt,    label: 'Health Insurance' },
       { Icon: FaCheckCircle,  label: 'Life Insurance' },
@@ -278,18 +284,19 @@ const products = [
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_23_ebzlts.png',
     gradient: 'linear-gradient(135deg,#060d1a,#065f46 60%,#0d7a58)',
     accent: '#10b981',
-    detailedDesc: 'MoneySpot helps you secure your future with trusted insurance solutions through partnerships with IRDA-certified insurance providers. We offer Health Insurance (cashless hospitalization, family & individual plans), Life Insurance (financial protection for loved ones), General Insurance (vehicle, property, travel, business), and Term Insurance (maximum protection at minimal cost). Partnered with IRDA Approved Companies. Your Safety. Your Future. Our Responsibility.',
+    detailedDesc: 'At Money Spot, we help you secure your future with trusted insurance solutions through our partnerships with IRDA-certified insurance providers. We offer a wide range of policies tailored to your needs — ensuring financial protection, peace of mind, and long-term security.\n\n🏥 Health Insurance — Cashless Hospitalization, Family & Individual Plans, Coverage for Major Illnesses, Affordable Premium Options.\n\n❤️ Life Insurance — Financial Protection for Loved Ones, Long-Term Wealth Security, Flexible Coverage Options, Trusted Plans from Top Insurers.\n\n🌐 General Insurance — Vehicle Insurance (Bike & Car), Property & Asset Protection, Travel Insurance, Business Insurance Solutions.\n\n📈 Term Insurance — Maximum Protection at Minimal Cost, Ideal for Income Protection, Long-Term Financial Planning, Simple & Transparent Policies.\n\nYour Safety. Your Future. Our Responsibility.',
     benefits: [
       'Partnered with IRDA Approved Companies',
       'Expert Guidance & Policy Comparison',
       'Hassle-Free Documentation',
       'Fast Processing & Support',
       'Customized Plans as per Your Needs',
-      'Cashless Hospitalization (Health)',
-      'Family & Individual Plans available',
-      'Vehicle, Property & Travel Insurance',
+      'Cashless Hospitalization (Health Plans)',
+      'Vehicle, Property, Travel & Business Insurance',
+      'Maximum Protection at Minimal Cost (Term)',
     ],
     howItWorks: [
+      'Contact us or visit our branch',
       'Discuss your insurance needs with our experts',
       'Compare plans from top IRDA-certified providers',
       'Choose the right policy for you',
@@ -303,6 +310,7 @@ const products = [
       'Vehicle RC (for vehicle insurance)',
       'Nominee details',
     ],
+    branch: true,
   },
   {
     slug: 'cash-deposit',
@@ -543,9 +551,40 @@ export default function ProductDetails() {
           </div>
 
           <div className="product-hero-visual">
-            <div className="product-hero-image-wrap">
-              <img src={product.img} alt={product.title} />
-              <div className="product-hero-img-glow" />
+            <div className="product-hero-ring-wrap">
+              {/* Outer ring — half purple half crimson with dots */}
+              <svg className="product-hero-ring-svg" viewBox="0 0 380 380" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Half purple arc */}
+                <path d="M 190 10 A 180 180 0 0 1 370 190" stroke="#402070" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9"/>
+                <path d="M 370 190 A 180 180 0 0 1 190 370" stroke="#402070" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.5"/>
+                {/* Half crimson arc */}
+                <path d="M 190 370 A 180 180 0 0 1 10 190" stroke="#c02040" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9"/>
+                <path d="M 10 190 A 180 180 0 0 1 190 10" stroke="#c02040" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.5"/>
+                {/* Connecting dots */}
+                {[0,30,60,90,120,150,180,210,240,270,300,330].map((angle, i) => {
+                  const rad = (angle * Math.PI) / 180
+                  const x = 190 + 180 * Math.cos(rad)
+                  const y = 190 + 180 * Math.sin(rad)
+                  const isPurple = angle >= 0 && angle < 180
+                  return (
+                    <circle key={i} cx={x} cy={y} r={angle % 90 === 0 ? 5 : 3}
+                      fill={isPurple ? '#7c3aed' : '#e03060'}
+                      opacity={angle % 90 === 0 ? 1 : 0.7}
+                    />
+                  )
+                })}
+                {/* Glow dots at transition points */}
+                <circle cx="190" cy="10" r="6" fill="#d4af37" opacity="0.9"/>
+                <circle cx="190" cy="370" r="6" fill="#d4af37" opacity="0.9"/>
+              </svg>
+              {/* Inner reverse ring */}
+              <svg className="product-hero-ring-svg-reverse" viewBox="0 0 364 364" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="182" cy="182" r="174" stroke="rgba(212,175,55,0.15)" strokeWidth="1" strokeDasharray="6 10"/>
+              </svg>
+              <div className="product-hero-image-wrap">
+                <img src={product.img} alt={product.title} />
+                <div className="product-hero-img-glow" />
+              </div>
             </div>
           </div>
         </div>
@@ -671,6 +710,22 @@ export default function ProductDetails() {
 
         {/* CTA */}
         <section className="content-section pd-cta-section">
+          {product.branch && (
+            <div className="pd-branch-banner">
+              <div className="pd-branch-glow" />
+              <div className="pd-branch-content">
+                <span className="pd-branch-icon">🏢</span>
+                <div>
+                  <h3>Visit Our Branch Today</h3>
+                  <p>Kadapa &nbsp;·&nbsp; Anantapur &nbsp;·&nbsp; Bangalore</p>
+                </div>
+                <div className="pd-branch-actions">
+                  <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20want%20to%20visit%20your%20branch." target="_blank" rel="noopener noreferrer" className="pd-branch-btn pd-branch-wa">💬 WhatsApp</a>
+                  <a href="tel:+919866440477" className="pd-branch-btn pd-branch-call">📞 Call Now</a>
+                </div>
+              </div>
+            </div>
+          )}
           <div className="pd-cta-content">
             <h2>Ready to Get Started?</h2>
             <p>Contact us today and experience the convenience of our services</p>

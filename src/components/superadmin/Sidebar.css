@@ -1,0 +1,120 @@
+.sa-sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, var(--ms-purple-dark) 0%, var(--ms-purple) 60%, var(--ms-crimson) 100%);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+  z-index: 100;
+}
+
+.sa-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+}
+
+.sa-brand-logo {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(212,175,55,0.5));
+}
+
+.sa-brand-name {
+  height: 22px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  display: block;
+}
+
+.sa-brand-role {
+  display: block;
+  font-size: 11px;
+  color: var(--ms-gold);
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.sa-sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sa-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.sa-nav-link:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border-color: rgba(255,255,255,0.15);
+}
+
+.sa-nav-link.active {
+  background: rgba(255,255,255,0.18);
+  color: #fff;
+  border-color: rgba(212,175,55,0.4);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.sa-nav-link.active .sa-nav-icon {
+  filter: drop-shadow(0 0 4px rgba(212,175,55,0.8));
+}
+
+.sa-nav-icon {
+  font-size: 20px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sa-sidebar-footer {
+  padding: 16px 12px 24px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.sa-logout-btn {
+  width: 100%;
+  padding: 12px;
+  background: rgba(192,32,64,0.3);
+  color: #fff;
+  border: 1px solid rgba(192,32,64,0.5);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sa-logout-btn:hover {
+  background: var(--ms-crimson);
+  border-color: var(--ms-crimson);
+  transform: translateY(-1px);
+}

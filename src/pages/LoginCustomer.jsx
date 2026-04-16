@@ -30,9 +30,16 @@ export default function LoginCustomer() {
     })
   }, [])
 
-  const handleSubmit = e => {
+  const handleSendOtp = async e => {
     e.preventDefault()
-    alert('OTP sent to your mobile number!')
+    const ok = await sendOtp(form)
+    if (ok) setStep(2)
+  }
+
+  const handleVerifyOtp = async e => {
+    e.preventDefault()
+    const data = await verifyOtp({ ...form, otp })
+    if (data) console.log('Customer logged in:', data)
   }
 
   return (
@@ -65,11 +72,13 @@ export default function LoginCustomer() {
         <h2>Customer Login</h2>
         <p className="login-sub">Enter your PAN & mobile number to continue</p>
 
-        <form onSubmit={handleSubmit}>
+        <div className="login-alert login-alert-info">Customer portal coming soon. Contact us for assistance.</div>
+
+        <form onSubmit={e => e.preventDefault()}>
           <div className="form-group">
             <label>PAN Number</label>
             <input
-              required
+              disabled
               placeholder="PXXPKXXXXD"
               maxLength={10}
               value={form.pan}
@@ -79,7 +88,7 @@ export default function LoginCustomer() {
           <div className="form-group">
             <label>Mobile Number</label>
             <input
-              required
+              disabled
               type="tel"
               placeholder="XXXXXXXXX0"
               maxLength={10}
@@ -87,7 +96,7 @@ export default function LoginCustomer() {
               onChange={e => setForm({ ...form, mobile: e.target.value.replace(/\D/g, '') })}
             />
           </div>
-          <button type="submit" className="btn-login-submit">🚀 Send OTP</button>
+          <button type="submit" className="btn-login-submit" disabled>🚀 Coming Soon</button>
         </form>
 
         <div className="login-switch">
