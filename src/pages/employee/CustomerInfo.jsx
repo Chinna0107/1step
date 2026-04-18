@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { useMyCustomers } from '../../hooks/useCustomers'
 import '../../pages/dashboard.css'
+import './CustomerInfo.css'
 
 export default function CustomerInfo() {
   const { customers, loading, error } = useMyCustomers()
+  const [lightbox, setLightbox] = useState(null)
 
   const approved = customers.filter(c => c.status === 'approved').length
   const pending  = customers.filter(c => c.status === 'pending').length
@@ -41,7 +43,7 @@ export default function CustomerInfo() {
             ) : (
               <table className="dash-table">
                 <thead>
-                  <tr><th>Name</th><th>Email</th><th>Phone</th><th>PAN</th><th>Acc Number</th><th>Status</th><th>Date</th></tr>
+                  <tr><th>Name</th><th>Email</th><th>Phone</th><th>PAN</th><th>Acc Number</th><th>Branch</th><th>Documents</th><th>Status</th><th>Date</th></tr>
                 </thead>
                 <tbody>
                   {customers.map(c => (
@@ -51,6 +53,17 @@ export default function CustomerInfo() {
                       <td>{c.phone}</td>
                       <td>{c.pan}</td>
                       <td>{c.acc_number}</td>
+                      <td>{c.branch || '—'}</td>
+                      <td>
+                        <div className="ci-doc-thumbs">
+                          {c.aadhar_img_url
+                            ? <img src={c.aadhar_img_url} alt="Aadhar" className="ci-thumb" title="Aadhar Card" onClick={() => setLightbox({ url: c.aadhar_img_url, label: `${c.name} — Aadhar Card` })} />
+                            : <span className="ci-no-doc">No Aadhar</span>}
+                          {c.pan_img_url
+                            ? <img src={c.pan_img_url} alt="PAN" className="ci-thumb" title="PAN Card" onClick={() => setLightbox({ url: c.pan_img_url, label: `${c.name} — PAN Card` })} />
+                            : <span className="ci-no-doc">No PAN</span>}
+                        </div>
+                      </td>
                       <td><span style={statusStyle(c.status)}>{c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></td>
                       <td>{new Date(c.created_at).toLocaleDateString('en-IN')}</td>
                     </tr>
@@ -61,6 +74,18 @@ export default function CustomerInfo() {
           </div>
         </div>
       </div>
+
+      {lightbox && (
+        <div className="ci-lightbox" onClick={() => setLightbox(null)}>
+          <div className="ci-lightbox-box" onClick={e => e.stopPropagation()}>
+            <div className="ci-lightbox-header">
+              <span>{lightbox.label}</span>
+              <button onClick={() => setLightbox(null)}>✕</button>
+            </div>
+            <img src={lightbox.url} alt={lightbox.label} className="ci-lightbox-img" />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
-import { useAdmins } from '../../hooks/useSuperAdmin'
+import { useAdmins, useBranches } from '../../hooks/useSuperAdmin'
 import './superadmin.css'
 
-const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', password: '', confirm_password: '', mpin: '' }
+const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', branch: '', password: '', confirm_password: '', mpin: '' }
 
 export default function AdminsData() {
   const { admins, loading, error, msg, addAdmin, toggleStatus, deleteUser } = useAdmins()
+  const { branches } = useBranches()
   const [showForm, setShowForm] = useState(false)
   const [form, setForm]         = useState(empty)
   const [saving, setSaving]     = useState(false)
@@ -74,6 +75,13 @@ export default function AdminsData() {
                         onChange={e => set('aadhar', e.target.value.replace(/\D/g, '').slice(0, 12))} />
                     </div>
                     <div className="sa-form-group">
+                      <label>Branch / Location *</label>
+                      <select required value={form.branch} onChange={e => set('branch', e.target.value)}>
+                        <option value="">Select branch</option>
+                        {branches.map(b => <option key={b.id} value={b.city}>{b.city}</option>)}
+                      </select>
+                    </div>
+                    <div className="sa-form-group">
                       <label>Password *</label>
                       <div style={{ position: 'relative' }}>
                         <input required type={showPass ? 'text' : 'password'} placeholder="Create password"
@@ -100,7 +108,7 @@ export default function AdminsData() {
                         onChange={e => set('mpin', e.target.value.replace(/\D/g, '').slice(0, 6))} />
                     </div>
                   </div>
-                  <button type="submit" className="sa-btn sa-btn-primary" disabled={saving || form.password !== form.confirm_password || (form.pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.pan))}>
+                  <button type="submit" className="sa-btn sa-btn-primary" disabled={saving || form.password !== form.confirm_password || !form.branch || (form.pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.pan))}>
                     {saving ? 'Creating...' : '✅ Create Admin'}
                   </button>
                 </form>
@@ -116,7 +124,7 @@ export default function AdminsData() {
                   <thead>
                     <tr>
                       <th>Name</th><th>Email</th><th>Mobile</th><th>PAN</th>
-                      <th>Role</th><th>Coins</th><th>Status</th><th>Joined</th><th>Actions</th>
+                      <th>Branch</th><th>Role</th><th>Coins</th><th>Status</th><th>Joined</th><th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -126,6 +134,7 @@ export default function AdminsData() {
                         <td>{a.email}</td>
                         <td>{a.mobile || '—'}</td>
                         <td>{a.pan || '—'}</td>
+                        <td><span className="sa-status admin">{a.branch || '—'}</span></td>
                         <td><span className="sa-status admin">{a.is_superadmin ? 'SuperAdmin' : 'Admin'}</span></td>
                         <td>🪙 {a.coins ?? 0}</td>
                         <td><span className={`sa-status ${a.is_active ? 'active' : 'inactive'}`}>{a.is_active ? 'Active' : 'Inactive'}</span></td>
@@ -139,7 +148,7 @@ export default function AdminsData() {
                           )}
                         </td>
                       </tr>
-                    )) : <tr><td colSpan={9} className="sa-empty">No admins found</td></tr>}
+                    )) : <tr><td colSpan={10} className="sa-empty">No admins found</td></tr>}
                   </tbody>
                 </table>
               )}

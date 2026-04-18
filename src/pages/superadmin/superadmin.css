@@ -213,3 +213,70 @@
 /* Loading / empty */
 .sa-loading { text-align: center; padding: 40px; color: var(--ms-purple-light); font-weight: 600; }
 .sa-empty   { text-align: center; padding: 40px; color: #9ca3af; }
+
+/* Skeleton loader */
+@keyframes sa-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position: 600px 0; }
+}
+
+.sa-skeleton {
+  background: linear-gradient(90deg, #f0f2f8 25%, #e4e6f0 50%, #f0f2f8 75%);
+  background-size: 600px 100%;
+  animation: sa-shimmer 1.4s infinite linear;
+  border-radius: 6px;
+}
+
+.sa-skeleton-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px 24px;
+}
+
+.sa-skeleton-line       { height: 14px; width: 100%; }
+.sa-skeleton-line.short { width: 40%; }
+.sa-skeleton-line.med   { width: 65%; }
+
+.sa-skeleton-table {
+  width: 100%;
+  padding: 0 0 8px;
+}
+.sa-skeleton-table-row {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f2f8;
+}
+.sa-skeleton-table-row .sa-skeleton { height: 12px; flex: 1; }
+.sa-skeleton-table-row .sa-skeleton:first-child { flex: 1.5; }
+
+.sa-skeleton-stat {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(64,32,112,0.07);
+  border-left: 4px solid #e8eaf0;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+.sa-skeleton-stat-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; }
+.sa-skeleton-stat-body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.sa-skeleton-stat-body .sa-skeleton:first-child { height: 10px; width: 60%; }
+.sa-skeleton-stat-body .sa-skeleton:last-child  { height: 28px; width: 45%; }
+
+/* Mini stat strip */
+.sa-stat-mini {
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px 18px;
+  box-shadow: 0 2px 8px rgba(64,32,112,0.07);
+  border-left: 4px solid #402070;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 160px;
+}
+.sa-stat-mini-val   { font-size: 22px; font-weight: 900; color: #1a0a2e; line-height: 1; }
+.sa-stat-mini-label { font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; margin-top: 2px; }

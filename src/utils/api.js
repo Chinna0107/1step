@@ -1,7 +1,8 @@
 export const api = async (endpoint, options = {}) => {
   const { headers: extraHeaders, ...rest } = options
+  const base = import.meta.env.VITE_API_URL || ''
 
-  const res = await fetch(endpoint, {
+  const res = await fetch(`${base}${endpoint}`, {
     ...rest,
     headers: {
       'Content-Type': 'application/json',

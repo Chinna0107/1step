@@ -22,6 +22,36 @@ export function useSuperAdminDashboard() {
   return { data, loading, error }
 }
 
+export function useDashboardStats() {
+  const [stats, setStats]     = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState('')
+
+  const refetch = useCallback(() => {
+    setLoading(true)
+    api('/dashboard/superadmin/stats', { headers: authHeaders() })
+      .then(d => { setStats(d); setLoading(false) })
+      .catch(e => { setError(e.message); setLoading(false) })
+  }, [])
+
+  useEffect(() => { refetch() }, [refetch])
+
+  return { stats, loading, error, refetch }
+}
+
+export function useBranches() {
+  const [branches, setBranches] = useState([])
+  const [loading, setLoading]   = useState(true)
+
+  useEffect(() => {
+    api('/dashboard/branches', { headers: authHeaders() })
+      .then(d => { setBranches(d); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
+
+  return { branches, loading }
+}
+
 export function useAdmins() {
   const [admins, setAdmins]   = useState([])
   const [loading, setLoading] = useState(true)
@@ -121,4 +151,40 @@ export function useAttendance() {
   }, [view, date, month, year])
 
   return { attendance, loading, error, view, setView, date, setDate, month, setMonth, year, setYear }
+}
+
+export function useMasterTable(table) {
+  const [rows, setRows]       = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError]     = useState('')
+  const [msg, setMsg]         = useState('')
+
+  const refetch = useCallback(() => {
+    setLoading(true)
+    api(`/master/${table}`, { headers: authHeaders() })
+      .then(d => { setRows(d); setLoading(false) })
+      .catch(e => { setError(e.message); setLoading(false) })
+  }, [table])
+
+  useEffect(() => { refetch() }, [refetch])
+
+  const add = async (body) => {
+    setMsg(''); setError('')
+    try {
+      await api(`/master/${table}`, { method: 'POST', headers: authHeaders(), body: JSON.stringify(body) })
+      setMsg('Added successfully'); refetch(); return true
+    } catch (e) { setError(e.message); return false }
+  }
+
+  const toggle = async (id) => {
+    try { await api(`/master/${table}/${id}/toggle`, { method: 'PATCH', headers: authHeaders() }); refetch() }
+    catch (e) { setError(e.message) }
+  }
+
+  const remove = async (id) => {
+    try { await api(`/master/${table}/${id}`, { method: 'DELETE', headers: authHeaders() }); refetch() }
+    catch (e) { setError(e.message) }
+  }
+
+  return { rows, loading, error, msg, add, toggle, remove, refetch }
 }

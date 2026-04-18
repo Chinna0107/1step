@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
 import { useCustomerRequests } from '../../hooks/useCustomers'
 import '../../pages/dashboard.css'
+import './Requests.css'
 
 export default function Requests() {
   const { pending, all, loading, error, msg, approve, reject } = useCustomerRequests()
   const [tab, setTab] = useState('pending')
+  const [lightbox, setLightbox] = useState(null)
 
   const rows = tab === 'pending' ? pending : all
 
@@ -46,7 +48,7 @@ export default function Requests() {
               ) : (
                 <table className="dash-table">
                   <thead>
-                    <tr><th>Customer</th><th>Email</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Acc No.</th><th>Submitted By</th><th>Status</th><th>Actions</th></tr>
+                    <tr><th>Customer</th><th>Email</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Acc No.</th><th>Branch</th><th>Documents</th><th>Submitted By</th><th>Status</th><th>Actions</th></tr>
                   </thead>
                   <tbody>
                     {rows.map(c => (
@@ -57,6 +59,17 @@ export default function Requests() {
                         <td>{c.pan}</td>
                         <td>{c.aadhar}</td>
                         <td>{c.acc_number}</td>
+                        <td>{c.branch || '—'}</td>
+                        <td>
+                          <div className="req-doc-thumbs">
+                            {c.aadhar_img_url
+                              ? <button className="req-doc-btn" onClick={() => setLightbox({ url: c.aadhar_img_url, label: `${c.name} — Aadhar Card` })}>🪪 Aadhar</button>
+                              : <span className="req-no-doc">No Aadhar</span>}
+                            {c.pan_img_url
+                              ? <button className="req-doc-btn" onClick={() => setLightbox({ url: c.pan_img_url, label: `${c.name} — PAN Card` })}>🪪 PAN</button>
+                              : <span className="req-no-doc">No PAN</span>}
+                          </div>
+                        </td>
                         <td>{c.added_by_name}</td>
                         <td><span style={statusStyle(c.status)}>{c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></td>
                         <td>
@@ -78,6 +91,18 @@ export default function Requests() {
           </div>
         </div>
       </div>
+
+      {lightbox && (
+        <div className="req-lightbox" onClick={() => setLightbox(null)}>
+          <div className="req-lightbox-box" onClick={e => e.stopPropagation()}>
+            <div className="req-lightbox-header">
+              <span>{lightbox.label}</span>
+              <button onClick={() => setLightbox(null)}>✕</button>
+            </div>
+            <img src={lightbox.url} alt={lightbox.label} className="req-lightbox-img" />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

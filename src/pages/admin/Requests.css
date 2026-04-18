@@ -245,3 +245,108 @@
   color: #333;
   margin-bottom: 1rem;
 }
+
+/* ── Document buttons ── */
+.req-doc-thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.req-doc-btn {
+  background: linear-gradient(135deg, rgba(64,32,112,0.08), rgba(192,32,64,0.08));
+  border: 1.5px solid rgba(64,32,112,0.2);
+  color: #402070;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.req-doc-btn:hover {
+  background: linear-gradient(135deg, #402070, #c02040);
+  color: #fff;
+  border-color: transparent;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(64,32,112,0.25);
+}
+
+.req-no-doc {
+  font-size: 10px;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* ── Lightbox ── */
+.req-lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: req-lb-in 0.15s ease;
+}
+
+@keyframes req-lb-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.req-lightbox-box {
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  max-width: 640px;
+  width: 100%;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+  animation: req-lb-slide 0.18s ease;
+}
+
+@keyframes req-lb-slide {
+  from { transform: scale(0.93) translateY(16px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.req-lightbox-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 18px;
+  background: linear-gradient(135deg, #402070, #c02040);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.req-lightbox-header button {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.req-lightbox-header button:hover {
+  background: rgba(255,255,255,0.38);
+}
+
+.req-lightbox-img {
+  width: 100%;
+  max-height: 65vh;
+  object-fit: contain;
+  display: block;
+  background: #f1f5f9;
+}

@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
-import { useEmployees } from '../../hooks/useSuperAdmin'
+import { useEmployees, useBranches } from '../../hooks/useSuperAdmin'
 import './superadmin.css'
 
-const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', password: '', confirm_password: '', mpin: '', is_admin: false }
+const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', branch: '', password: '', confirm_password: '', mpin: '', is_admin: false }
 
 export default function EmployeesData() {
   const { employees, loading, error, msg, addEmployee, toggleStatus, deleteUser } = useEmployees()
+  const { branches } = useBranches()
   const [showForm, setShowForm] = useState(false)
   const [form, setForm]         = useState(empty)
   const [saving, setSaving]     = useState(false)
@@ -72,6 +73,13 @@ export default function EmployeesData() {
                         onChange={e => set('aadhar', e.target.value.replace(/\D/g, '').slice(0, 12))} />
                     </div>
                     <div className="sa-form-group">
+                      <label>Branch / Location *</label>
+                      <select required value={form.branch} onChange={e => set('branch', e.target.value)}>
+                        <option value="">Select branch</option>
+                        {branches.map(b => <option key={b.id} value={b.city}>{b.city}</option>)}
+                      </select>
+                    </div>
+                    <div className="sa-form-group">
                       <label>Password *</label>
                       <div style={{ position: 'relative' }}>
                         <input required type={showPass ? 'text' : 'password'} placeholder="Create password"
@@ -105,7 +113,7 @@ export default function EmployeesData() {
                     </div>
                   </div>
                   <button type="submit" className="sa-btn sa-btn-primary"
-                    disabled={saving || form.password !== form.confirm_password || (form.pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.pan))}>
+                    disabled={saving || form.password !== form.confirm_password || !form.branch || (form.pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.pan))}>
                     {saving ? 'Creating...' : '✅ Create Employee'}
                   </button>
                 </form>
@@ -121,7 +129,7 @@ export default function EmployeesData() {
                   <thead>
                     <tr>
                       <th>Name</th><th>Email</th><th>Mobile</th><th>PAN</th>
-                      <th>Role</th><th>Coins</th><th>Status</th><th>Joined</th><th>Actions</th>
+                      <th>Branch</th><th>Role</th><th>Coins</th><th>Status</th><th>Joined</th><th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -131,6 +139,11 @@ export default function EmployeesData() {
                         <td>{emp.email}</td>
                         <td>{emp.mobile || '—'}</td>
                         <td>{emp.pan || '—'}</td>
+                        <td>
+                          {emp.branch
+                            ? <span className="sa-status admin">{emp.branch}</span>
+                            : <span style={{ color: '#9ca3af' }}>—</span>}
+                        </td>
                         <td><span className="sa-status admin">{emp.is_admin ? 'Admin' : 'Employee'}</span></td>
                         <td>🪙 {emp.coins ?? 0}</td>
                         <td><span className={`sa-status ${emp.is_active ? 'active' : 'inactive'}`}>{emp.is_active ? 'Active' : 'Inactive'}</span></td>
@@ -142,7 +155,7 @@ export default function EmployeesData() {
                           <button className="sa-btn sa-btn-danger sa-btn-sm" onClick={() => deleteUser(emp.id)}>Delete</button>
                         </td>
                       </tr>
-                    )) : <tr><td colSpan={9} className="sa-empty">No employees found</td></tr>}
+                    )) : <tr><td colSpan={10} className="sa-empty">No employees found</td></tr>}
                   </tbody>
                 </table>
               )}

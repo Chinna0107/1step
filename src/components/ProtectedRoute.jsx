@@ -31,3 +31,11 @@ export function AdminRoute({ children }) {
 export function EmployeeRoute({ children }) {
   return <ProtectedRoute requiredRole="employee">{children}</ProtectedRoute>
 }
+
+export function CustomerRoute({ children }) {
+  try {
+    const auth = localStorage.getItem('customer_auth')
+    if (!auth || !JSON.parse(auth).token) return <Navigate to="/login/customer" replace />
+  } catch { return <Navigate to="/login/customer" replace /> }
+  return children
+}

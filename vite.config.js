@@ -8,6 +8,7 @@ export default defineConfig({
       '/auth': 'http://localhost:3000',
       '/dashboard': 'http://localhost:3000',
       '/customers': 'http://localhost:3000',
+      '/master': 'http://localhost:3000',
     }
   }
 })

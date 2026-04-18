@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
+import { useCustomerLogin } from '../hooks/useCustomerAuth'
 import logoImg from '../assets/icons png/MS Logo.png'
 import fullLogoImg from '../assets/icons png/Full Logo.png'
 import nameImg from '../assets/icons png/Money Spot Logo.png'
@@ -17,7 +18,9 @@ const particles = [
 ]
 
 export default function LoginCustomer() {
-  const [form, setForm] = useState({ pan: '', mobile: '' })
+  const [form, setForm] = useState({ pan: '', phone: '' })
+  const { login, loading, error, setError } = useCustomerLogin()
+  const navigate = useNavigate()
 
   useEffect(() => {
     gsap.fromTo('.login-card',
@@ -30,27 +33,17 @@ export default function LoginCustomer() {
     })
   }, [])
 
-  const handleSendOtp = async e => {
+  const handleLogin = async e => {
     e.preventDefault()
-    const ok = await sendOtp(form)
-    if (ok) setStep(2)
-  }
-
-  const handleVerifyOtp = async e => {
-    e.preventDefault()
-    const data = await verifyOtp({ ...form, otp })
-    if (data) console.log('Customer logged in:', data)
+    const data = await login({ pan: form.pan, phone: form.phone })
+    if (data?.token) navigate('/customer/dashboard')
   }
 
   return (
     <div className="login-page">
       <div className="login-particles">
         {particles.map((p, i) => (
-          <div key={i} className="login-particle" style={{
-            left: p.left, top: p.top,
-            width: p.w, height: p.h,
-            animationDelay: `${p.delay}s`,
-          }} />
+          <div key={i} className="login-particle" style={{ left: p.left, top: p.top, width: p.w, height: p.h, animationDelay: `${p.delay}s` }} />
         ))}
       </div>
 
@@ -63,52 +56,38 @@ export default function LoginCustomer() {
           </div>
         </div>
 
-      <div className="login-card">
-        <div className="login-logo">
-          <img src={logoImg} alt="MoneySpot" className="login-logo-img" />
-          <img src={nameImg} alt="MoneySpot" className="login-name-img" />
-        </div>
-
-        <h2>Customer Login</h2>
-        <p className="login-sub">Enter your PAN & mobile number to continue</p>
-
-        <div className="login-alert login-alert-info">Customer portal coming soon. Contact us for assistance.</div>
-
-        <form onSubmit={e => e.preventDefault()}>
-          <div className="form-group">
-            <label>PAN Number</label>
-            <input
-              disabled
-              placeholder="PXXPKXXXXD"
-              maxLength={10}
-              value={form.pan}
-              onChange={e => setForm({ ...form, pan: e.target.value.toUpperCase() })}
-            />
+        <div className="login-card">
+          <div className="login-logo">
+            <img src={logoImg} alt="MoneySpot" className="login-logo-img" />
+            <img src={nameImg} alt="MoneySpot" className="login-name-img" />
           </div>
-          <div className="form-group">
-            <label>Mobile Number</label>
-            <input
-              disabled
-              type="tel"
-              placeholder="XXXXXXXXX0"
-              maxLength={10}
-              value={form.mobile}
-              onChange={e => setForm({ ...form, mobile: e.target.value.replace(/\D/g, '') })}
-            />
-          </div>
-          <button type="submit" className="btn-login-submit" disabled>🚀 Coming Soon</button>
-        </form>
 
-        <div className="login-switch">
-          <Link to="/login/employee">Employee / Admin Login</Link>
-          <span>·</span>
-          <Link to="/login/superadmin">Super Admin</Link>
+          <h2>Customer Login</h2>
+          <p className="login-sub">Enter your PAN & registered mobile number</p>
+
+          {error && <div className="login-alert login-alert-error">{error}</div>}
+
+          <form onSubmit={handleLogin}>
+            <div className="form-group">
+              <label>PAN Number</label>
+              <input required placeholder="ABCDE1234F" maxLength={10}
+                value={form.pan} onChange={e => { setError(''); setForm({ ...form, pan: e.target.value.toUpperCase() }) }} />
+            </div>
+            <div className="form-group">
+              <label>Mobile Number</label>
+              <input required type="tel" placeholder="10-digit mobile" maxLength={10}
+                value={form.phone} onChange={e => { setError(''); setForm({ ...form, phone: e.target.value.replace(/\D/g, '').slice(0, 10) }) }} />
+            </div>
+            <button type="submit" className="btn-login-submit" disabled={loading || form.phone.length !== 10}>
+              {loading ? 'Logging in...' : '🔓 Login'}
+            </button>
+          </form>
+
+          <div className="login-contact-strip" style={{ marginTop: 16 }}>
+            <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
+            <a href="tel:+919866440477" className="lcs-btn lcs-call">📞 Call Us</a>
+          </div>
         </div>
-        <div className="login-contact-strip">
-          <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
-          <a href="tel:+919866440477" className="lcs-btn lcs-call">📞 Call Us</a>
-        </div>
-      </div>
       </div>
     </div>
   )

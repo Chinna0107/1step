@@ -19,10 +19,9 @@ const particles = [
 ]
 
 export default function LoginEmployee() {
-  const [step, setStep] = useState(1)
-  const [form, setForm] = useState({ email: '', password: '' })
-  const [mpin, setMpin] = useState('')
-  const { verifyCredentials, verifyMpin, loading, error, success } = useEmployeeLogin()
+  const [step, setStep]   = useState(1)
+  const [form, setForm]   = useState({ email: '', password: '', mpin: '' })
+  const { verifyCredentials, verifyMpin, loading, error, success, setError, setSuccess } = useEmployeeLogin()
   const { saveAuthData } = useRoleBasedAuth()
   const navigate = useNavigate()
 
@@ -37,21 +36,16 @@ export default function LoginEmployee() {
     })
   }, [])
 
-  useEffect(() => {
-    gsap.fromTo('.form-group',
-      { opacity: 0, x: step === 1 ? -20 : 20 },
-      { opacity: 1, x: 0, duration: 0.5, stagger: 0.1, ease: 'power3.out' })
-  }, [step])
-
-  const handleCredentials = async e => {
+  const handleStep1 = async e => {
     e.preventDefault()
-    const data = await verifyCredentials(form)
+    const data = await verifyCredentials({ email: form.email, password: form.password })
     if (data) setStep(2)
   }
-  const handleMpin = async e => {
+
+  const handleStep2 = async e => {
     e.preventDefault()
-    const data = await verifyMpin({ email: form.email, mpin })
-    if (data) {
+    const data = await verifyMpin({ email: form.email, mpin: form.mpin })
+    if (data?.token) {
       const userRole = data.user.is_admin ? 'admin' : 'employee'
       saveAuthData(data.token, data.user, userRole)
       navigate(userRole === 'admin' ? '/admin/dashboard' : '/employee/dashboard')
@@ -87,68 +81,53 @@ export default function LoginEmployee() {
 
         <h2>Employee / Admin Login</h2>
 
+        <div className="login-steps">
+          <span className={`step-dot ${step === 1 ? 'active' : 'done'}`}>1</span>
+          <span className="step-sep">›</span>
+          <span className={`step-dot ${step === 2 ? 'active' : ''}`}>2</span>
+        </div>
+
         {error && <div className="login-alert login-alert-error">{error}</div>}
-        {success && <div className="login-alert login-alert-success">{success}</div>}
+        {success && step === 1 && <div className="login-alert login-alert-success">{success}</div>}
 
         {step === 1 ? (
           <>
-            <p className="login-sub">Enter your credentials to proceed</p>
-            <form onSubmit={handleCredentials}>
+            <p className="login-sub">Enter your email and password</p>
+            <form onSubmit={handleStep1}>
               <div className="form-group">
                 <label>Email Address</label>
                 <input required type="email" placeholder="employee@moneyspotfintech.com"
-                  value={form.email}
-                  onChange={e => setForm({ ...form, email: e.target.value })} />
+                  value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
               </div>
               <div className="form-group">
                 <label>Password</label>
                 <input required type="password" placeholder="Enter your password"
-                  value={form.password}
-                  onChange={e => setForm({ ...form, password: e.target.value })} />
+                  value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
               </div>
               <button type="submit" className="btn-login-submit" disabled={loading}>
-                {loading ? 'Verifying...' : 'Verify & Continue →'}
+                {loading ? 'Verifying...' : 'Continue →'}
               </button>
             </form>
           </>
         ) : (
           <>
             <p className="login-sub">Enter your 6-digit MPIN to complete login</p>
-            <form onSubmit={handleMpin}>
+            <form onSubmit={handleStep2}>
               <div className="form-group">
                 <label>6-Digit MPIN</label>
-                <input
-                  required type="password" inputMode="numeric"
-                  maxLength={6} placeholder="••••••"
-                  className="mpin-input" value={mpin}
-                  onChange={e => setMpin(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                />
+                <input required type="password" inputMode="numeric" maxLength={6}
+                  placeholder="••••••" className="mpin-input" autoFocus
+                  value={form.mpin} onChange={e => setForm({ ...form, mpin: e.target.value.replace(/\D/g, '').slice(0, 6) })} />
               </div>
-              <button type="submit" className="btn-login-submit" disabled={loading || mpin.length !== 6}>
+              <button type="submit" className="btn-login-submit" disabled={loading || form.mpin.length !== 6}>
                 {loading ? 'Logging in...' : '🔓 Login'}
               </button>
-              <button type="button" className="btn-back" onClick={() => setStep(1)}>← Back</button>
+              <button type="button" className="btn-back" onClick={() => { setStep(1); setError(''); setSuccess('') }}>← Back</button>
             </form>
           </>
         )}
 
-        <div className="login-steps">
-          <div className={`step-dot ${step === 1 ? 'active' : 'done'}`}>{step > 1 ? '✓' : '1'}</div>
-          <span className={`step-label ${step === 1 ? 'active' : 'done'}`}>Credentials</span>
-          <span className="step-sep">→</span>
-          <div className={`step-dot ${step === 2 ? 'active' : ''}`}>2</div>
-          <span className={`step-label ${step === 2 ? 'active' : ''}`}>MPIN</span>
-        </div>
-
-        <div className="login-switch">
-          <Link to="/login/customer">Customer Login</Link>
-          <span>·</span>
-          <Link to="/login/superadmin">Super Admin</Link>
-        </div>
-        <div className="login-contact-strip">
-          <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
-          <a href="tel:+919866440477" className="lcs-btn lcs-call">📞 Call Us</a>
-        </div>
+        
       </div>
       </div>
     </div>

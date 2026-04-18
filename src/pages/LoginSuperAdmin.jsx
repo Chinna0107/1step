@@ -19,10 +19,8 @@ const particles = [
 ]
 
 export default function LoginSuperAdmin() {
-  const [mode, setMode]   = useState('login')
   const [step, setStep]   = useState(1)
-  const [form, setForm]   = useState({ email: '', password: '' })
-  const [mpin, setMpin]   = useState('')
+  const [form, setForm]   = useState({ email: '', password: '', mpin: '' })
   const [reg, setReg]     = useState({ name: '', email: '', password: '', mpin: '', secretKey: '' })
   const { verifyCredentials, verifyMpin, register, loading, error, success, setError, setSuccess } = useSuperAdminAuth()
   const { saveAuthData } = useRoleBasedAuth()
@@ -39,25 +37,23 @@ export default function LoginSuperAdmin() {
     })
   }, [])
 
-  useEffect(() => {
-    gsap.fromTo('.form-group',
-      { opacity: 0, x: step === 1 ? -20 : 20 },
-      { opacity: 1, x: 0, duration: 0.5, stagger: 0.1, ease: 'power3.out' })
-  }, [step])
+  const [mode, setMode] = useState('login')
 
-  const handleCredentials = async e => {
+  const handleStep1 = async e => {
     e.preventDefault()
-    const data = await verifyCredentials(form)
+    const data = await verifyCredentials({ email: form.email, password: form.password })
     if (data) setStep(2)
   }
-  const handleMpin = async e => {
+
+  const handleStep2 = async e => {
     e.preventDefault()
-    const data = await verifyMpin({ email: form.email, mpin })
-    if (data) {
+    const data = await verifyMpin({ email: form.email, mpin: form.mpin })
+    if (data?.token) {
       saveAuthData(data.token, data.user, 'superadmin')
       navigate('/superadmin/dashboard')
     }
   }
+
   const handleRegister = async e => {
     e.preventDefault()
     const data = await register(reg)
@@ -97,103 +93,55 @@ export default function LoginSuperAdmin() {
 
         <h2>{mode === 'register' ? 'Register Admin' : 'Super Admin Login'}</h2>
 
-        {error && <div className="login-alert login-alert-error">{error}</div>}
-        {success && <div className="login-alert login-alert-success">{success}</div>}
+        {mode === 'register' && error && <div className="login-alert login-alert-error">{error}</div>}
+        {mode === 'register' && success && <div className="login-alert login-alert-success">{success}</div>}
 
         {mode === 'register' ? (
           <>
             <p className="login-sub">Create a new Super Admin account</p>
             <form onSubmit={handleRegister}>
-              <div className="form-group">
-                <label>Full Name</label>
-                <input required placeholder="Admin Name" value={reg.name}
-                  onChange={e => setReg({ ...reg, name: e.target.value })} />
-              </div>
-              <div className="form-group">
-                <label>Email</label>
-                <input required type="email" placeholder="admin@moneyspotfintech.com" value={reg.email}
-                  onChange={e => setReg({ ...reg, email: e.target.value })} />
-              </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input required type="password" placeholder="Create password" value={reg.password}
-                  onChange={e => setReg({ ...reg, password: e.target.value })} />
-              </div>
-              <div className="form-group">
-                <label>6-Digit MPIN</label>
-                <input required type="password" inputMode="numeric" maxLength={6}
-                  placeholder="••••••" className="mpin-input" value={reg.mpin}
-                  onChange={e => setReg({ ...reg, mpin: e.target.value.replace(/\D/g, '').slice(0, 6) })} />
-              </div>
-              <div className="form-group">
-                <label>Secret Key</label>
-                <input required type="password" placeholder="Enter secret registration key" value={reg.secretKey}
-                  onChange={e => setReg({ ...reg, secretKey: e.target.value })} />
-              </div>
-              <button type="submit" className="btn-login-submit superadmin-btn" disabled={loading}>
-                {loading ? 'Registering...' : '✅ Register Admin'}
-              </button>
-              <button type="button" className="btn-back" onClick={() => { setMode('login'); setError(''); setSuccess('') }}>
-                ← Back to Login
-              </button>
-            </form>
-          </>
-        ) : step === 1 ? (
-          <>
-            <p className="login-sub">Restricted access — authorized personnel only</p>
-            <form onSubmit={handleCredentials}>
-              <div className="form-group">
-                <label>Admin Email</label>
-                <input required type="email" placeholder="admin@moneyspotfintech.com"
-                  value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} />
-              </div>
-              <div className="form-group">
-                <label>Password</label>
-                <input required type="password" placeholder="Enter your password"
-                  value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} />
-              </div>
-              <button type="submit" className="btn-login-submit superadmin-btn" disabled={loading}>
-                {loading ? 'Verifying...' : 'Verify & Continue →'}
-              </button>
+              <div className="form-group"><label>Full Name</label><input required placeholder="Admin Name" value={reg.name} onChange={e => setReg({ ...reg, name: e.target.value })} /></div>
+              <div className="form-group"><label>Email</label><input required type="email" placeholder="admin@moneyspotfintech.com" value={reg.email} onChange={e => setReg({ ...reg, email: e.target.value })} /></div>
+              <div className="form-group"><label>Password</label><input required type="password" placeholder="Create password" value={reg.password} onChange={e => setReg({ ...reg, password: e.target.value })} /></div>
+              <div className="form-group"><label>6-Digit MPIN</label><input required type="password" inputMode="numeric" maxLength={6} placeholder="••••••" className="mpin-input" value={reg.mpin} onChange={e => setReg({ ...reg, mpin: e.target.value.replace(/\D/g, '').slice(0, 6) })} /></div>
+              <div className="form-group"><label>Secret Key</label><input required type="password" placeholder="Enter secret registration key" value={reg.secretKey} onChange={e => setReg({ ...reg, secretKey: e.target.value })} /></div>
+              <button type="submit" className="btn-login-submit superadmin-btn" disabled={loading}>{loading ? 'Registering...' : '✅ Register Admin'}</button>
+              <button type="button" className="btn-back" onClick={() => { setMode('login'); setError(''); setSuccess('') }}>← Back to Login</button>
             </form>
           </>
         ) : (
           <>
-            <p className="login-sub">Enter your 6-digit MPIN to complete login</p>
-            <form onSubmit={handleMpin}>
-              <div className="form-group">
-                <label>6-Digit MPIN</label>
-                <input required type="password" inputMode="numeric" maxLength={6}
-                  placeholder="••••••" className="mpin-input" value={mpin}
-                  onChange={e => setMpin(e.target.value.replace(/\D/g, '').slice(0, 6))} />
-              </div>
-              <button type="submit" className="btn-login-submit superadmin-btn" disabled={loading || mpin.length !== 6}>
-                {loading ? 'Logging in...' : '🔓 Login'}
-              </button>
-              <button type="button" className="btn-back" onClick={() => setStep(1)}>← Back</button>
-            </form>
+            <div className="login-steps">
+              <span className={`step-dot ${step === 1 ? 'active' : 'done'}`}>1</span>
+              <span className="step-sep">›</span>
+              <span className={`step-dot ${step === 2 ? 'active' : ''}`}>2</span>
+            </div>
+
+            {error && <div className="login-alert login-alert-error">{error}</div>}
+            {success && step === 1 && <div className="login-alert login-alert-success">{success}</div>}
+
+            {step === 1 ? (
+              <>
+                <p className="login-sub">Restricted access — authorized personnel only</p>
+                <form onSubmit={handleStep1}>
+                  <div className="form-group"><label>Admin Email</label><input required type="email" placeholder="admin@moneyspotfintech.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
+                  <div className="form-group"><label>Password</label><input required type="password" placeholder="Enter your password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} /></div>
+                  <button type="submit" className="btn-login-submit superadmin-btn" disabled={loading}>{loading ? 'Verifying...' : 'Continue →'}</button>
+                </form>
+              </>
+            ) : (
+              <>
+                <p className="login-sub">Enter your 6-digit MPIN to complete login</p>
+                <form onSubmit={handleStep2}>
+                  <div className="form-group"><label>6-Digit MPIN</label><input required type="password" inputMode="numeric" maxLength={6} placeholder="••••••" className="mpin-input" autoFocus value={form.mpin} onChange={e => setForm({ ...form, mpin: e.target.value.replace(/\D/g, '').slice(0, 6) })} /></div>
+                  <button type="submit" className="btn-login-submit superadmin-btn" disabled={loading || form.mpin.length !== 6}>{loading ? 'Logging in...' : '🔓 Login'}</button>
+                  <button type="button" className="btn-back" onClick={() => { setStep(1); setError(''); setSuccess('') }}>← Back</button>
+                </form>
+              </>
+            )}
           </>
         )}
 
-        <div className="login-steps">
-          <div className={`step-dot ${step === 1 ? 'active' : 'done'}`}>{step > 1 ? '✓' : '1'}</div>
-          <span className={`step-label ${step === 1 ? 'active' : 'done'}`}>Credentials</span>
-          <span className="step-sep">→</span>
-          <div className={`step-dot ${step === 2 ? 'active' : ''}`}>2</div>
-          <span className={`step-label ${step === 2 ? 'active' : ''}`}>MPIN</span>
-        </div>
-
-        {mode === 'login' && (
-          <button className="btn-register-admin" onClick={() => { setMode('register'); setError(''); setSuccess('') }}>
-            ➕ Register New Admin
-          </button>
-        )}
-
-        <div className="login-switch">
-          <Link to="/login/customer">Customer Login</Link>
-          <span>·</span>
-          <Link to="/login/employee">Employee / Admin</Link>
-        </div>
         <div className="login-contact-strip">
           <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
           <a href="tel:+919866440477" className="lcs-btn lcs-call">📞 Call Us</a>

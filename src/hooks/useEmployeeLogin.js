@@ -9,35 +9,21 @@ export function useEmployeeLogin() {
   const verifyCredentials = async ({ email, password }) => {
     setLoading(true); setError(''); setSuccess('')
     try {
-      const data = await api('/auth/employee/login', {
-        method: 'POST',
-        body: JSON.stringify({ email, password }),
-      })
+      const data = await api('/auth/employee/login', { method: 'POST', body: JSON.stringify({ email, password }) })
       setSuccess('Credentials verified!')
       return data
-    } catch (err) {
-      setError(err.message)
-      return null
-    } finally {
-      setLoading(false)
-    }
+    } catch (err) { setError(err.message); return null }
+    finally { setLoading(false) }
   }
 
   const verifyMpin = async ({ email, mpin }) => {
     setLoading(true); setError(''); setSuccess('')
     try {
-      const data = await api('/auth/employee/verify-mpin', {
-        method: 'POST',
-        body: JSON.stringify({ email, mpin }),
-      })
+      const data = await api('/auth/employee/verify-mpin', { method: 'POST', body: JSON.stringify({ email, mpin }) })
       setSuccess('Login successful!')
       return data
-    } catch (err) {
-      setError(err.message)
-      return null
-    } finally {
-      setLoading(false)
-    }
+    } catch (err) { setError(err.message); return null }
+    finally { setLoading(false) }
   }
 
   return { verifyCredentials, verifyMpin, loading, error, success, setError, setSuccess }

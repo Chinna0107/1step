@@ -12,9 +12,9 @@ import '../../pages/dashboard.css'
 
 const links = [
   { to: '/employee/dashboard',     icon: <MdDashboard />,             label: 'Dashboard' },
+  { to: '/employee/services',      icon: <MdMiscellaneousServices />, label: 'New Transaction' },
   { to: '/employee/customer-info', icon: <MdPeople />,                label: 'Customers' },
   { to: '/employee/add-customer',  icon: <MdPersonAdd />,             label: 'Add Customer' },
-  { to: '/employee/services',      icon: <MdMiscellaneousServices />, label: 'Services' },
 ]
 
 export default function EmployeeNavbar() {

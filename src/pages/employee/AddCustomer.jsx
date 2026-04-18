@@ -3,7 +3,7 @@ import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { useAddCustomer, useMyCustomers } from '../../hooks/useCustomers'
 import '../../pages/dashboard.css'
 
-const empty = { name: '', email: '', phone: '', pan: '', aadhar: '', acc_number: '' }
+const empty = { name: '', email: '', phone: '', pan: '', aadhar: '', acc_number: '', branch: '', aadhar_img_url: '', pan_img_url: '' }
 
 export default function AddCustomer() {
   const { submitCustomer, loading, error, success } = useAddCustomer()
@@ -76,6 +76,27 @@ export default function AddCustomer() {
                     <input required placeholder="Bank account number" value={form.acc_number}
                       onChange={e => set('acc_number', e.target.value.replace(/\D/g, ''))} />
                   </div>
+                  <div className="dash-form-group">
+                    <label>Branch *</label>
+                    <select required value={form.branch} onChange={e => set('branch', e.target.value)}>
+                      <option value="">Select branch</option>
+                      <option value="Kadapa">Kadapa</option>
+                      <option value="Ananthapur">Ananthapur</option>
+                      <option value="Bangalore">Bangalore</option>
+                    </select>
+                  </div>
+                  <div className="dash-form-group">
+                    <label>Aadhar Card Image URL</label>
+                    <input type="url" placeholder="https://res.cloudinary.com/..." value={form.aadhar_img_url}
+                      onChange={e => set('aadhar_img_url', e.target.value)} />
+                    <span className="dash-field-hint">Upload to Cloudinary and paste the URL here</span>
+                  </div>
+                  <div className="dash-form-group">
+                    <label>PAN Card Image URL</label>
+                    <input type="url" placeholder="https://res.cloudinary.com/..." value={form.pan_img_url}
+                      onChange={e => set('pan_img_url', e.target.value)} />
+                    <span className="dash-field-hint">Upload to Cloudinary and paste the URL here</span>
+                  </div>
                 </div>
                 <button type="submit" className="dash-btn dash-btn-primary"
                   disabled={loading || (form.pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.pan))}>
@@ -96,7 +117,7 @@ export default function AddCustomer() {
             ) : (
               <table className="dash-table">
                 <thead>
-                  <tr><th>Name</th><th>Email</th><th>Phone</th><th>PAN</th><th>Status</th><th>Submitted</th></tr>
+                  <tr><th>Name</th><th>Email</th><th>Phone</th><th>PAN</th><th>Branch</th><th>Status</th><th>Submitted</th></tr>
                 </thead>
                 <tbody>
                   {customers.map(c => (
@@ -105,6 +126,7 @@ export default function AddCustomer() {
                       <td>{c.email}</td>
                       <td>{c.phone}</td>
                       <td>{c.pan}</td>
+                      <td>{c.branch || '—'}</td>
                       <td><span style={statusStyle(c.status)}>{c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></td>
                       <td>{new Date(c.created_at).toLocaleDateString('en-IN')}</td>
                     </tr>
