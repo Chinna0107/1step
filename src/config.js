@@ -1,10 +1,10 @@
 // ── src/config.js ─────────────────────────────────────────────
-// Single source of truth for environment-dependent config.
-// Vite replaces import.meta.env.* at build time.
-// Dev  → reads from .env
-// Prod → reads from .env.production
+// In dev: API_URL is empty so requests go through Vite proxy (relative URLs)
+// In prod: API_URL is the full backend URL from .env.production
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+const API_URL = import.meta.env.PROD
+  ? (import.meta.env.VITE_API_URL || '')
+  : ''
 
 const config = {
   API_URL,
