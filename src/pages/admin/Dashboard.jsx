@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
 import { getTokenByRole, getUserByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
+import { cacheGet, cacheSet } from '../../utils/cache'
 import { MdTrendingUp, MdAccountBalanceWallet, MdMonetizationOn, MdPeople, MdRefresh } from 'react-icons/md'
 import '../../pages/dashboard.css'
 
@@ -14,14 +15,19 @@ function Skel({ w = '100%', h = 16 }) {
 }
 
 export default function AdminDashboard() {
-  const [data, setData]       = useState(null)
-  const [loading, setLoading] = useState(true)
+  const CACHE_KEY = 'admin_stats'
+  const [data, setData]       = useState(() => cacheGet(CACHE_KEY))
+  const [loading, setLoading] = useState(!cacheGet(CACHE_KEY))
   const user = getUserByRole('admin')
 
-  const refetch = useCallback(() => {
+  const refetch = useCallback((force = false) => {
+    if (!force) {
+      const cached = cacheGet(CACHE_KEY)
+      if (cached) { setData(cached); setLoading(false); return }
+    }
     setLoading(true)
     api('/dashboard/admin/stats', { headers: auth() })
-      .then(d => { setData(d); setLoading(false) })
+      .then(d => { cacheSet(CACHE_KEY, d); setData(d); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
 
@@ -45,7 +51,7 @@ export default function AdminDashboard() {
             <p style={{ margin: 0, fontSize: 12, color: '#9ca3af' }}>Branch: {user?.branch || 'All Branches'}</p>
           </div>
           <div className="dash-topbar-right">
-            <button className="dash-btn dash-btn-primary" onClick={refetch} style={{ padding: '7px 14px' }}>
+            <button className="dash-btn dash-btn-primary" onClick={() => refetch(true)} style={{ padding: '7px 14px' }}>
               <MdRefresh /> Refresh
             </button>
             <span className="dash-badge">Admin Portal</span>
