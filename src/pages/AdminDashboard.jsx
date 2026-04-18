@@ -2,9 +2,8 @@ import { useNavigate } from 'react-router-dom'
 import { FaUserTie, FaCheckCircle, FaSignOutAlt, FaToggleOn, FaToggleOff, FaSync } from 'react-icons/fa'
 import { useDashboard } from '../hooks/useDashboard'
 import { useAuth } from '../hooks/useAuth'
+import { api } from '../utils/api'
 import './Dashboard.css'
-
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 export default function AdminDashboard() {
   const { data, loading, error, refetch } = useDashboard('admin')
@@ -15,7 +14,7 @@ export default function AdminDashboard() {
 
   const handleToggle = async (id) => {
     const token = localStorage.getItem('ms_token')
-    await fetch(`${BASE}/dashboard/users/${id}/toggle`, {
+    await api(`/dashboard/users/${id}/toggle`, {
       method: 'PATCH', headers: { Authorization: `Bearer ${token}` },
     })
     refetch()

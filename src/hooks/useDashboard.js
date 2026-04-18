@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+import { api } from '../utils/api'
 
 export function useDashboard(role) {
   const [data,    setData]    = useState(null)
@@ -13,11 +12,9 @@ export function useDashboard(role) {
     if (!token) { setError('Not authenticated'); setLoading(false); return }
     setLoading(true); setError('')
     try {
-      const res  = await fetch(`${BASE}/dashboard/${role}`, {
+      const json = await api(`/dashboard/${role}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      const json = await res.json()
-      if (!res.ok) throw new Error(json.error || 'Failed to load dashboard')
       setData(json)
     } catch (err) {
       setError(err.message)

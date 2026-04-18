@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react'
+import config from '../config'
 
 const TOKEN_KEY = 'ms_token'
 const USER_KEY  = 'ms_user'
@@ -19,7 +20,7 @@ export function useAuth() {
   const clearSession = useCallback(async () => {
     if (token) {
       try {
-        await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/auth/logout`, {
+        await fetch(`${config.API_URL}/auth/logout`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}` },
         })

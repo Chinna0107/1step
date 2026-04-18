@@ -4,9 +4,8 @@ import { FaUsers, FaUserTie, FaUserShield, FaSignOutAlt, FaPlus, FaToggleOn, FaT
 import { useDashboard } from '../hooks/useDashboard'
 import { useAddEmployee } from '../hooks/useAddEmployee'
 import { useAuth } from '../hooks/useAuth'
+import { api } from '../utils/api'
 import './Dashboard.css'
-
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 export default function SuperAdminDashboard() {
   const { data, loading, error, refetch } = useDashboard('superadmin')
@@ -20,7 +19,7 @@ export default function SuperAdminDashboard() {
 
   const handleToggle = async (id) => {
     const token = localStorage.getItem('ms_token')
-    await fetch(`${BASE}/dashboard/users/${id}/toggle`, {
+    await api(`/dashboard/users/${id}/toggle`, {
       method: 'PATCH', headers: { Authorization: `Bearer ${token}` },
     })
     refetch()
