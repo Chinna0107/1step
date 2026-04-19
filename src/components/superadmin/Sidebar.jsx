@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   MdDashboard, MdInsights, MdStorefront, MdEmojiEvents,
-  MdAccountBalance, MdPeople, MdSettings, MdMiscellaneousServices,
-  MdAssessment, MdSecurity, MdLogout, MdChevronRight,
+  MdAccountBalance, MdPeople, MdSettings, MdAssessment, MdSecurity, MdLogout, MdChevronRight,
   MdLock, MdFactCheck
 } from 'react-icons/md'
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { api } from '../../utils/api'
 import { getTokenByRole, getUserByRole } from '../../utils/tokenUtils'
 import logoImg from '../../assets/icons png/MS Logo.png'
+import nameImg from '../../assets/icons png/Money Spot Logo.png'
 import './Sidebar.css'
 
 const NAV = [
@@ -33,8 +33,7 @@ const NAV = [
   {
     group: 'Configuration',
     items: [
-      { to: '/superadmin/master',       icon: <MdSettings />,     label: 'Master Config' },
-      { to: '/superadmin/services',     icon: <MdMiscellaneousServices />, label: 'Service Types' },
+      { to: '/superadmin/config',       icon: <MdSettings />,     label: 'Configuration' },
     ],
   },
   {
@@ -68,13 +67,10 @@ export default function Sidebar() {
     <aside className={`sa-sidebar ${collapsed ? 'collapsed' : ''}`}>
       {/* Brand */}
       <div className="sa-sidebar-brand">
-        <img src={logoImg} alt="logo" className="sa-brand-logo" />
+        <img src={logoImg} alt="MoneySpot" className="sa-brand-logo" />
         {!collapsed && (
           <div className="sa-brand-text">
-            <span className="sa-brand-title">
-              <span style={{ color: '#fff' }}>Money</span>
-              <span style={{ color: '#d4af37' }}>Spot</span>
-            </span>
+            <img src={nameImg} alt="MoneySpot" className="sa-brand-name-img" />
             <span className="sa-brand-role">
               <MdLock size={10} style={{ marginRight: 4 }} />Super Admin
             </span>

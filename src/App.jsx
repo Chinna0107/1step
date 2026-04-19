@@ -27,7 +27,7 @@ import Insights from './pages/superadmin/Insights'
 import Branches from './pages/superadmin/Branches'
 import Tracking from './pages/superadmin/Tracking'
 import Finance from './pages/superadmin/Finance'
-import MasterConfig from './pages/superadmin/MasterConfig'
+import Configuration from './pages/superadmin/Configuration'
 import Reports from './pages/superadmin/Reports'
 import Security from './pages/superadmin/Security'
 
@@ -50,12 +50,17 @@ import EmployeeDashboard from './pages/employee/Dashboard'
 import CustomerInfo from './pages/employee/CustomerInfo'
 import AddCustomer from './pages/employee/AddCustomer'
 import Services from './pages/employee/Services'
+import EmployeeReports from './pages/employee/EmployeeReports'
+import Profile from './pages/employee/Profile'
+import EmployeeNavbar from './components/employee/EmployeeNavbar'
+import AdminSidebar from './components/admin/AdminSidebar'
 
 // Customer Pages
 import CustomerDashboard from './pages/customer/Dashboard'
 import CustomerServices from './pages/customer/Services'
 import CustomerTransactions from './pages/customer/Transactions'
 import CustomerKYC from './pages/customer/KYC'
+import CustomerCoins from './pages/customer/Coins'
 import { CustomerOffers, CustomerNotifications, CustomerSupport, CustomerSecurity } from './pages/customer/Misc'
 
 import './App.css'
@@ -117,7 +122,7 @@ export default function App() {
         <Route path="/superadmin/branches"   element={<SuperAdminRoute><Branches /></SuperAdminRoute>} />
         <Route path="/superadmin/tracking"   element={<SuperAdminRoute><Tracking /></SuperAdminRoute>} />
         <Route path="/superadmin/finance"    element={<SuperAdminRoute><Finance /></SuperAdminRoute>} />
-        <Route path="/superadmin/master"     element={<SuperAdminRoute><MasterConfig /></SuperAdminRoute>} />
+        <Route path="/superadmin/config"     element={<SuperAdminRoute><Configuration /></SuperAdminRoute>} />
         <Route path="/superadmin/reports"    element={<SuperAdminRoute><Reports /></SuperAdminRoute>} />
         <Route path="/superadmin/security"   element={<SuperAdminRoute><Security /></SuperAdminRoute>} />
 
@@ -141,12 +146,16 @@ export default function App() {
         <Route path="/employee/add-customer" element={<EmployeeRoute><AddCustomer /></EmployeeRoute>} />
         <Route path="/employee/services"     element={<EmployeeRoute><Services /></EmployeeRoute>} />
         <Route path="/employee/attendance"    element={<EmployeeRoute><EmployeeAttendance /></EmployeeRoute>} />
+        <Route path="/employee/reports"       element={<EmployeeRoute><EmployeeReports /></EmployeeRoute>} />
+        <Route path="/employee/profile"       element={<EmployeeRoute><Profile Sidebar={EmployeeNavbar} /></EmployeeRoute>} />
+        <Route path="/admin/profile"          element={<AdminRoute><Profile Sidebar={AdminSidebar} isAdmin={true} /></AdminRoute>} />
         
 
         {/* Customer routes */}
         <Route path="/customer/dashboard"     element={<CustomerRoute><CustomerDashboard /></CustomerRoute>} />
         <Route path="/customer/services"      element={<CustomerRoute><CustomerServices /></CustomerRoute>} />
         <Route path="/customer/transactions"  element={<CustomerRoute><CustomerTransactions /></CustomerRoute>} />
+        <Route path="/customer/coins"         element={<CustomerRoute><CustomerCoins /></CustomerRoute>} />
         <Route path="/customer/kyc"           element={<CustomerRoute><CustomerKYC /></CustomerRoute>} />
         <Route path="/customer/offers"        element={<CustomerRoute><CustomerOffers /></CustomerRoute>} />
         <Route path="/customer/notifications" element={<CustomerRoute><CustomerNotifications /></CustomerRoute>} />

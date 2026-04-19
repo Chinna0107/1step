@@ -2,12 +2,13 @@ import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   MdDashboard, MdPeople, MdPersonAdd,
-  MdMiscellaneousServices, MdPerson, MdLogout
+  MdMiscellaneousServices, MdPerson, MdLogout, MdBarChart
 } from 'react-icons/md'
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import nameImg from '../../assets/icons png/Money Spot Logo.png'
+import logoImg from '../../assets/icons png/MS Logo.png'
 import '../../pages/dashboard.css'
 
 const links = [
@@ -15,6 +16,8 @@ const links = [
   { to: '/employee/services',      icon: <MdMiscellaneousServices />, label: 'New Transaction' },
   { to: '/employee/customer-info', icon: <MdPeople />,                label: 'Customers' },
   { to: '/employee/add-customer',  icon: <MdPersonAdd />,             label: 'Add Customer' },
+  { to: '/employee/reports',       icon: <MdBarChart />,              label: 'Reports' },
+  { to: '/employee/profile',       icon: <MdPerson />,                label: 'Profile' },
 ]
 
 export default function EmployeeNavbar() {
@@ -35,7 +38,8 @@ export default function EmployeeNavbar() {
   return (
     <nav className="emp-navbar">
       <div className="emp-navbar-brand">
-        <img src={nameImg} alt="MoneySpot" />
+        <img src={logoImg} alt="MoneySpot" style={{ height: 32, width: 32, objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(192,32,64,0.5))' }} />
+        <img src={nameImg} alt="MoneySpot" style={{ height: 24, width: 'auto', objectFit: 'contain' }} />
         <span>Employee Portal</span>
       </div>
       <div className="emp-navbar-links">

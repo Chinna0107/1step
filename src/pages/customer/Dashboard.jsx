@@ -1,88 +1,153 @@
-import { useCustomerProfile, useCustomerTransactions, getCustomerUser } from '../../hooks/useCustomerAuth'
+import { useCustomerProfile, useCustomerTransactions, useCustomerCoins, getCustomerUser } from '../../hooks/useCustomerAuth'
 import CustomerSidebar from '../../components/customer/CustomerSidebar'
 import { SkeletonStat, SkeletonCard, SkeletonTable } from '../../components/customer/Skeleton'
 import '../../components/customer/CustomerSidebar.css'
+import './CustomerDashboard.css'
+
+const fmt = n => Number(n).toLocaleString('en-IN')
 
 export default function CustomerDashboard() {
   const user = getCustomerUser()
   const { profile, loading: pLoading } = useCustomerProfile()
   const { txns, loading: tLoading }    = useCustomerTransactions()
 
-  const total  = txns.length
-  const amount = txns.reduce((s, t) => s + parseFloat(t.amount || 0), 0)
+  const { coins: coinsData } = useCustomerCoins()
+  const total   = txns.length
+  const amount  = txns.reduce((s, t) => s + parseFloat(t.amount || 0), 0)
   const success = txns.filter(t => t.status === 'success' || !t.status).length
+  const now     = new Date()
+  const hour    = now.getHours()
+  const coinsBal = coinsData?.coins ?? 0
+  const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening'
 
   return (
     <div className="cust-page">
       <CustomerSidebar />
       <div className="cust-content">
-        <div className="cust-topbar">
-          <h1>Welcome back, {user?.name?.split(' ')[0]} 👋</h1>
-          <p>Here's your MoneySpot account summary</p>
+
+        {/* ── Hero ── */}
+        <div className="cd-hero">
+          <div className="cd-hero-orb cd-orb1" />
+          <div className="cd-hero-orb cd-orb2" />
+          <div className="cd-hero-inner">
+            <div>
+              <div className="cd-greeting">{greeting} 👋</div>
+              <h1 className="cd-hero-name">{user?.name || 'Customer'}</h1>
+              <div className="cd-hero-meta">
+                {now.toLocaleDateString('en-IN', { weekday: 'long', month: 'long', day: 'numeric' })}
+                {profile?.branch && <span className="cd-branch-pill">🏦 {profile.branch}</span>}
+              </div>
+            </div>
+            <div className="cd-kyc-badge">
+              <span className="cd-kyc-dot" />
+              KYC Verified
+            </div>
+          </div>
         </div>
 
-        {/* Stats */}
-        <div className="cust-stats">
-          {tLoading ? (
-            [1,2,3,4].map(i => <SkeletonStat key={i} />)
-          ) : (
+        {/* ── Stats ── */}
+        <div className="cd-stats">
+          {tLoading ? [1,2,3,4,5].map(i => <SkeletonStat key={i} />) : (
             <>
-              <div className="cust-stat" style={{ borderColor: '#402070' }}>
-                <div className="cust-stat-icon">💳</div>
-                <div className="cust-stat-label">Total Transactions</div>
-                <div className="cust-stat-value">{total}</div>
-              </div>
-              <div className="cust-stat" style={{ borderColor: '#c02040' }}>
-                <div className="cust-stat-icon">₹</div>
-                <div className="cust-stat-label">Total Amount</div>
-                <div className="cust-stat-value">₹{amount.toLocaleString('en-IN')}</div>
-              </div>
-              <div className="cust-stat" style={{ borderColor: '#059669' }}>
-                <div className="cust-stat-icon">✅</div>
-                <div className="cust-stat-label">Successful</div>
-                <div className="cust-stat-value">{success}</div>
-              </div>
-              <div className="cust-stat" style={{ borderColor: '#d97706' }}>
-                <div className="cust-stat-icon">🏦</div>
-                <div className="cust-stat-label">Branch</div>
-                <div className="cust-stat-value" style={{ fontSize: 16 }}>{profile?.branch || '—'}</div>
-              </div>
+              {[
+                { icon: '💳', label: 'Total Transactions', value: total, color: '#402070' },
+                { icon: '₹',  label: 'Total Amount',       value: `₹${fmt(amount)}`, color: '#c02040' },
+                { icon: '✅', label: 'Successful',          value: success, color: '#059669' },
+                { icon: '🪙', label: 'MS Coins',            value: fmt(coinsBal), color: '#b8860b' },
+                { icon: '🏦', label: 'Branch',              value: profile?.branch || '—', color: '#d97706', small: true },
+              ].map((s, i) => (
+                <div key={i} className="cd-stat" style={{ '--c': s.color, animationDelay: `${i * 80}ms` }}>
+                  <div className="cd-stat-glow" />
+                  <div className="cd-stat-icon">{s.icon}</div>
+                  <div className="cd-stat-label">{s.label}</div>
+                  <div className="cd-stat-value" style={s.small ? { fontSize: 18 } : {}}>{s.value}</div>
+                </div>
+              ))}
             </>
           )}
         </div>
 
-        {/* Account Details */}
-        {pLoading ? <SkeletonCard rows={5} /> : (
-          <div className="cust-card">
-            <div className="cust-card-header"><h2>Account Details</h2></div>
-            <div className="cust-card-body">
-              <div className="cust-info-row"><span className="cust-info-label">Full Name</span><span className="cust-info-value">{profile?.name || '—'}</span></div>
-              <div className="cust-info-row"><span className="cust-info-label">PAN Number</span><span className="cust-info-value">{profile?.pan || '—'}</span></div>
-              <div className="cust-info-row"><span className="cust-info-label">Mobile</span><span className="cust-info-value">{profile?.phone || '—'}</span></div>
-              <div className="cust-info-row"><span className="cust-info-label">Email</span><span className="cust-info-value">{profile?.email || '—'}</span></div>
-              <div className="cust-info-row"><span className="cust-info-label">Account No.</span><span className="cust-info-value">{profile?.acc_number || '—'}</span></div>
-              <div className="cust-info-row"><span className="cust-info-label">KYC Status</span><span className="cust-info-value"><span className="cust-badge cust-badge-success">✅ Approved</span></span></div>
+        {/* ── Account + Recent Txns ── */}
+        <div className="cd-grid">
+
+          {/* Account Details */}
+          {pLoading ? <SkeletonCard rows={6} /> : (
+            <div className="cd-card cd-card-anim">
+              <div className="cd-card-header">
+                <span className="cd-card-icon">👤</span>
+                <h2>Account Details</h2>
+                <span className="cd-verified">✅ Approved</span>
+              </div>
+              <div className="cd-card-body">
+                {[
+                  { label: 'Full Name',    value: profile?.name },
+                  { label: 'PAN Number',   value: profile?.pan },
+                  { label: 'Mobile',       value: profile?.phone },
+                  { label: 'Email',        value: profile?.email || '—' },
+                  { label: 'Account No.',  value: profile?.acc_number },
+                  { label: 'Member Since', value: profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-IN') : '—' },
+                ].map((row, i) => (
+                  <div key={i} className="cd-info-row" style={{ animationDelay: `${i * 50}ms` }}>
+                    <span className="cd-info-label">{row.label}</span>
+                    <span className="cd-info-value">{row.value || '—'}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quick Actions */}
+          <div className="cd-card cd-card-anim" style={{ animationDelay: '100ms' }}>
+            <div className="cd-card-header">
+              <span className="cd-card-icon">⚡</span>
+              <h2>Quick Actions</h2>
+            </div>
+            <div className="cd-card-body">
+              <div className="cd-quick-grid">
+                {[
+                  { icon: '💸', label: 'Money Transfer', color: '#402070' },
+                  { icon: '💳', label: 'Card Withdrawal', color: '#c02040' },
+                  { icon: '📄', label: 'Bill Payment', color: '#059669' },
+                  { icon: '🏧', label: 'AEPS', color: '#d97706' },
+                  { icon: '📈', label: 'CIBIL Check', color: '#0284c7' },
+                  { icon: '🛡️', label: 'Insurance', color: '#7c3aed' },
+                ].map((a, i) => (
+                  <a key={i} href="https://wa.me/919866440477" target="_blank" rel="noopener noreferrer"
+                    className="cd-quick-btn" style={{ '--qc': a.color, animationDelay: `${i * 60}ms` }}>
+                    <span className="cd-quick-icon">{a.icon}</span>
+                    <span className="cd-quick-label">{a.label}</span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
-        )}
+        </div>
 
-        {/* Recent Transactions */}
-        <div className="cust-card">
-          <div className="cust-card-header"><h2>Recent Transactions</h2></div>
+        {/* ── Recent Transactions ── */}
+        <div className="cd-card cd-card-anim" style={{ animationDelay: '200ms' }}>
+          <div className="cd-card-header">
+            <span className="cd-card-icon">📊</span>
+            <h2>Recent Transactions</h2>
+            <span className="cd-card-badge">{total} total</span>
+          </div>
           {tLoading ? <SkeletonTable rows={4} cols={4} /> : (
             <div className="cust-table-wrap">
               {txns.length === 0 ? (
-                <div className="cust-empty">No transactions yet</div>
+                <div className="cd-empty">
+                  <div style={{ fontSize: 40, marginBottom: 10 }}>📭</div>
+                  <div>No transactions yet</div>
+                  <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 4 }}>Contact your branch to get started</div>
+                </div>
               ) : (
                 <table className="cust-table">
                   <thead><tr><th>Service</th><th>Platform</th><th>Amount</th><th>Date</th></tr></thead>
                   <tbody>
-                    {txns.slice(0, 5).map(t => (
-                      <tr key={t.id}>
-                        <td>{t.service_type || '—'}</td>
-                        <td>{t.platform || '—'}</td>
-                        <td>₹{parseFloat(t.amount).toLocaleString('en-IN')}</td>
-                        <td>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                    {txns.slice(0, 5).map((t, i) => (
+                      <tr key={t.id} className="cd-tr" style={{ animationDelay: `${i * 50}ms` }}>
+                        <td><strong>{t.service_type || '—'}</strong></td>
+                        <td>{t.platform ? <span className="cd-platform-tag">{t.platform}</span> : '—'}</td>
+                        <td><span style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</span></td>
+                        <td style={{ fontSize: 12, color: '#64748b' }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -91,6 +156,22 @@ export default function CustomerDashboard() {
             </div>
           )}
         </div>
+
+        {/* ── Support Banner ── */}
+        <div className="cd-support-banner">
+          <div className="cd-support-orb" />
+          <div className="cd-support-inner">
+            <div>
+              <div className="cd-support-title">Need Help?</div>
+              <div className="cd-support-sub">Our team is available 24/7 to assist you</div>
+            </div>
+            <div className="cd-support-btns">
+              <a href="https://wa.me/919866440477" target="_blank" rel="noopener noreferrer" className="cd-wa-btn">💬 WhatsApp</a>
+              <a href="tel:+919866440477" className="cd-call-btn">📞 Call</a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   )

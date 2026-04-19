@@ -4,7 +4,7 @@ import { getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import '../../pages/dashboard.css'
 
-const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', password: '', confirm_password: '', mpin: '', is_admin: false }
+const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', password: '', confirm_password: '', mpin: '', is_admin: false, pan_img_url: '', aadhar_img_url: '', docx_url: '', resume_url: '', photo_url: '' }
 
 export default function CreateEmployee() {
   const [form, setForm]     = useState(empty)
@@ -102,6 +102,31 @@ export default function CreateEmployee() {
                       <input type="checkbox" checked={form.is_admin} onChange={e => set('is_admin', e.target.checked)} />
                       Grant Admin Access
                     </label>
+                  </div>
+                  <div className="dash-form-group">
+                    <label>PAN Card Image URL</label>
+                    <input type="url" placeholder="Paste PAN card image URL" value={form.pan_img_url}
+                      onChange={e => set('pan_img_url', e.target.value)} />
+                  </div>
+                  <div className="dash-form-group">
+                    <label>Aadhar Card Image URL</label>
+                    <input type="url" placeholder="Paste Aadhar card image URL" value={form.aadhar_img_url}
+                      onChange={e => set('aadhar_img_url', e.target.value)} />
+                  </div>
+                  <div className="dash-form-group">
+                    <label>Document / ID Proof URL</label>
+                    <input type="url" placeholder="Paste document image URL" value={form.docx_url}
+                      onChange={e => set('docx_url', e.target.value)} />
+                  </div>
+                  <div className="dash-form-group">
+                    <label>Resume URL</label>
+                    <input type="url" placeholder="Paste resume URL" value={form.resume_url}
+                      onChange={e => set('resume_url', e.target.value)} />
+                  </div>
+                  <div className="dash-form-group">
+                    <label>Employee Photo URL</label>
+                    <input type="url" placeholder="Paste photo URL" value={form.photo_url}
+                      onChange={e => set('photo_url', e.target.value)} />
                   </div>
                 </div>
                 <button type="submit" className="dash-btn dash-btn-primary"

@@ -2,12 +2,14 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { getCustomerUser, useCustomerLogin } from '../../hooks/useCustomerAuth'
 import logoImg from '../../assets/icons png/MS Logo.png'
+import nameImg from '../../assets/icons png/Money Spot Logo.png'
 import './CustomerSidebar.css'
 
 const nav = [
   { to: '/customer/dashboard',     icon: '🏠', label: 'Dashboard' },
   { to: '/customer/services',      icon: '💳', label: 'Services' },
   { to: '/customer/transactions',  icon: '📊', label: 'Transactions' },
+  { to: '/customer/coins',         icon: '🪙', label: 'MS Coins' },
   { to: '/customer/kyc',           icon: '🪪', label: 'KYC & Profile' },
   { to: '/customer/offers',        icon: '💰', label: 'Offers' },
   { to: '/customer/notifications', icon: '🔔', label: 'Alerts' },
@@ -36,7 +38,7 @@ export default function CustomerSidebar() {
         <div className="csb-brand">
           <img src={logoImg} alt="MoneySpot" className="csb-logo" />
           <div>
-            <div className="csb-brand-name">MoneySpot</div>
+            <img src={nameImg} alt="MoneySpot" style={{ height: 18, width: 'auto', objectFit: 'contain', filter: 'brightness(0)', display: 'block' }} />
             <div className="csb-brand-sub">Customer Portal</div>
           </div>
         </div>
@@ -65,7 +67,7 @@ export default function CustomerSidebar() {
       <header className="csb-mobile-header">
         <div className="csb-mobile-brand">
           <img src={logoImg} alt="MoneySpot" className="csb-mobile-logo" />
-          <span className="csb-mobile-title">MoneySpot</span>
+          <img src={nameImg} alt="MoneySpot" style={{ height: 20, width: 'auto', objectFit: 'contain', filter: 'brightness(0)' }} />
         </div>
         <div className="csb-mobile-user">
           <div className="csb-avatar" style={{ width: 32, height: 32, fontSize: 13 }}>

@@ -111,6 +111,17 @@
   box-shadow: 0 4px 12px rgba(64,32,112,0.25);
 }
 .dash-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(64,32,112,0.35); }
+.dash-btn-secondary {
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.dash-btn-secondary:hover {
+  background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
 .dash-btn-success { background: #d1fae5; color: #059669; }
 .dash-btn-success:hover { background: #059669; color: #fff; }
 .dash-btn-danger  { background: #fee2e2; color: #dc2626; }
@@ -173,6 +184,277 @@
 }
 .dash-field-hint { font-size: 11px; color: #dc2626; margin-top: 3px; }
 
+/* Image upload section */
+.dash-image-upload-group {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+.dash-image-upload-group input {
+  flex: 1;
+  margin: 0;
+}
+.dash-cloudinary-btn {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+}
+.dash-cloudinary-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+}
+.dash-cloudinary-btn:active {
+  transform: translateY(0);
+}
+.dash-cloudinary-btn .icon {
+  font-size: 14px;
+  animation: bounce 2s infinite;
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-3px); }
+  60% { transform: translateY(-2px); }
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Enhanced form group for image uploads */
+.dash-form-group.image-upload {
+  position: relative;
+  transition: all 0.2s ease;
+}
+.dash-form-group.image-upload:hover {
+  transform: translateY(-1px);
+}
+.dash-form-group.image-upload label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s ease;
+}
+.dash-form-group.image-upload label::before {
+  content: '🖼️';
+  font-size: 14px;
+  filter: drop-shadow(0 0 2px rgba(59, 130, 246, 0.3));
+}
+.dash-form-group.image-upload .upload-hint {
+  font-size: 10px;
+  color: #6b7280;
+  margin-top: 4px;
+  font-style: italic;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+.dash-form-group.image-upload:hover .upload-hint {
+  opacity: 1;
+  color: #3b82f6;
+}
+
+/* Input focus enhancement for image uploads */
+.dash-image-upload-group input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Success state for filled image URLs */
+.dash-image-upload-group input:valid:not(:placeholder-shown) {
+  border-color: #10b981;
+  background: linear-gradient(135deg, #fff, #f0fdf4);
+}
+.dash-image-upload-group input:valid:not(:placeholder-shown) + .dash-cloudinary-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+}
+.dash-image-upload-group input:valid:not(:placeholder-shown) + .dash-cloudinary-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+/* Customer search dropdown enhancements */
+.customer-search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1.5px solid rgba(64,32,112,0.15);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(64,32,112,0.15);
+  z-index: 1000;
+  max-height: 320px;
+  overflow-y: auto;
+  animation: slideDown 0.3s ease-out;
+}
+
+.customer-search-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f2f8;
+  transition: all 0.2s ease;
+}
+
+.customer-search-item:hover {
+  background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+  transform: translateX(4px);
+}
+
+.customer-search-item:last-child {
+  border-bottom: none;
+}
+
+.add-customer-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+  border: 2px solid #10b981;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.25);
+  z-index: 1000;
+  animation: slideDown 0.3s ease-out;
+}
+
+.add-customer-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  transition: all 0.2s ease;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.add-customer-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  background: linear-gradient(135deg, #059669, #047857);
+}
+
+.add-customer-btn:active {
+  transform: translateY(0);
+}
+
+/* Customer profile enhancements */
+.customer-profile-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.customer-profile-header {
+  background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.customer-profile-body {
+  padding: 16px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-field-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.profile-field-value {
+  font-size: 13px;
+  color: #374151;
+  font-weight: 500;
+}
+
+.transaction-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+
+.transaction-history-item:hover {
+  background: #f3f4f6;
+  transform: translateX(2px);
+}
+
+.transaction-summary {
+  margin-top: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  font-size: 12px;
+}
+
+.summary-item {
+  text-align: center;
+}
+
+.summary-value {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.summary-label {
+  color: #6b7280;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 /* Alerts */
 .dash-alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
 .dash-alert-success { background: #d1fae5; color: #059669; border: 1px solid #a7f3d0; }
@@ -181,6 +463,19 @@
 /* Loading / empty */
 .dash-loading { text-align: center; padding: 40px; color: var(--ms-purple-light); font-weight: 600; }
 .dash-empty   { text-align: center; padding: 40px; color: #9ca3af; font-size: 14px; }
+
+/* ReportView filter bar */
+.rv-filters {
+  background: #fff;
+  border-radius: 14px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  flex-wrap: wrap;
+  box-shadow: 0 2px 12px rgba(64,32,112,0.07);
+  margin-bottom: 20px;
+}
 
 /* Tabs */
 .dash-tabs { display: flex; gap: 6px; margin-bottom: 18px; }
@@ -343,4 +638,27 @@
   .dash-main { padding: 16px; }
   .emp-page-content { padding: 16px; }
   .adm-sidebar { width: 200px; }
+  
+  /* Mobile responsive for image upload */
+  .dash-image-upload-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dash-cloudinary-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .dash-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-cloudinary-btn {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+  .dash-cloudinary-btn .icon {
+    font-size: 16px;
+  }
 }

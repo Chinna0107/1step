@@ -303,3 +303,136 @@
 @media (max-width: 480px) {
   .dash-stats-row { grid-template-columns: 1fr; }
 }
+
+/* ═══════════════════════════════════════════
+   Enhanced Animations & UI — SuperAdmin
+   ═══════════════════════════════════════════ */
+
+/* Stat card entrance */
+.dash-stat {
+  animation: sa-card-in 0.5s ease both;
+}
+.dash-stat:nth-child(1) { animation-delay: 0ms; }
+.dash-stat:nth-child(2) { animation-delay: 80ms; }
+.dash-stat:nth-child(3) { animation-delay: 160ms; }
+.dash-stat:nth-child(4) { animation-delay: 240ms; }
+
+@keyframes sa-card-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Card entrance */
+.dash-card {
+  animation: sa-card-in 0.5s ease both;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.dash-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(64,32,112,0.12);
+}
+
+/* Topbar gradient line */
+.dash-topbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #402070, #c02040, #d4af37, #c02040, #402070);
+  background-size: 200% 100%;
+  animation: line-sweep 3s linear infinite;
+}
+.dash-topbar { position: relative; }
+
+@keyframes line-sweep {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* Stat icon pulse */
+.dash-stat-icon {
+  animation: icon-pulse 3s ease-in-out infinite;
+}
+@keyframes icon-pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.08); }
+}
+
+/* Platform bar animation */
+.dash-platform-bar {
+  animation: bar-grow 0.8s cubic-bezier(0.34,1.56,0.64,1) both;
+  transform-origin: left;
+}
+@keyframes bar-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Table row entrance */
+.dash-table tbody tr {
+  animation: row-slide-in 0.3s ease both;
+}
+.dash-table tbody tr:nth-child(1) { animation-delay: 0ms; }
+.dash-table tbody tr:nth-child(2) { animation-delay: 50ms; }
+.dash-table tbody tr:nth-child(3) { animation-delay: 100ms; }
+.dash-table tbody tr:nth-child(4) { animation-delay: 150ms; }
+.dash-table tbody tr:nth-child(5) { animation-delay: 200ms; }
+
+@keyframes row-slide-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Report card hover glow */
+.dash-report-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(64,32,112,0.05), rgba(192,32,64,0.03));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.dash-report-card { position: relative; }
+.dash-report-card:hover::before { opacity: 1; }
+
+/* Section label animation */
+.dash-section-label {
+  animation: fade-in-right 0.4s ease both;
+}
+@keyframes fade-in-right {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Highlight box value counter */
+.dash-highlight-val {
+  background: linear-gradient(135deg, #402070, #c02040);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Alert slide in */
+.dash-alert {
+  animation: alert-in 0.3s ease both;
+}
+@keyframes alert-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* User chip glow */
+.dash-user-chip:hover {
+  border-color: rgba(64,32,112,0.3);
+  box-shadow: 0 0 0 3px rgba(64,32,112,0.08);
+}
+
+/* Refresh button spin on hover */
+.dash-icon-btn:first-child:hover svg {
+  animation: spin 0.5s ease;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

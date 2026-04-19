@@ -5,6 +5,7 @@ import { api } from '../../utils/api'
 import { cacheGet, cacheSet } from '../../utils/cache'
 import { MdTrendingUp, MdAccountBalanceWallet, MdMonetizationOn, MdPeople, MdRefresh } from 'react-icons/md'
 import '../../pages/dashboard.css'
+import '../admin/AdminDashboard.css'
 
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const fmt    = n => Number(n).toLocaleString('en-IN')

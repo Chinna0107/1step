@@ -39,6 +39,7 @@ const NAV = [
       { to: '/admin/reports',      icon: <MdAssessment />,   label: 'Reports' },
       { to: '/admin/security',     icon: <MdSecurity />,     label: 'Security' },
       { to: '/admin/config',       icon: <MdSettings />,     label: 'Configuration' },
+      { to: '/admin/profile',      icon: <MdPerson />,       label: 'My Profile' },
     ]},
 ]
 
@@ -57,8 +58,8 @@ export default function AdminSidebar() {
   return (
     <aside className="adm-sidebar" style={{ width: 220, overflowY: 'auto' }}>
       <div className="adm-sidebar-brand">
-        <img src={logoImg} alt="logo" className="adm-brand-logo" />
-        <div>
+        <img src={logoImg} alt="MoneySpot" className="adm-brand-logo" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <img src={nameImg} alt="MoneySpot" className="adm-brand-name" />
           <span className="adm-brand-role">Admin Panel</span>
         </div>

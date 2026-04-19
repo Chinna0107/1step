@@ -12,7 +12,7 @@ import Insights from './pages/superadmin/Insights';
 import Branches from './pages/superadmin/Branches';
 import Tracking from './pages/superadmin/Tracking';
 import Finance from './pages/superadmin/Finance';
-import MasterConfig from './pages/superadmin/MasterConfig';
+import Configuration from './pages/superadmin/Configuration';
 import Reports from './pages/superadmin/Reports';
 import Security from './pages/superadmin/Security';
 
@@ -35,6 +35,12 @@ import EmployeeDashboard from './pages/employee/Dashboard';
 import CustomerInfo from './pages/employee/CustomerInfo';
 import AddCustomer from './pages/employee/AddCustomer';
 import Services from './pages/employee/Services';
+import EmployeeReports from './pages/employee/EmployeeReports';
+import Profile from './pages/employee/Profile';
+import EmployeeNavbar from './components/employee/EmployeeNavbar';
+import AdminSidebar from './components/admin/AdminSidebar';
+
+import Profile from './pages/employee/Profile';
 
 export default function AppRoutes() {
   return (
@@ -49,7 +55,7 @@ export default function AppRoutes() {
       <Route path="/superadmin/branches"   element={<SuperAdminRoute><Branches /></SuperAdminRoute>} />
       <Route path="/superadmin/tracking"   element={<SuperAdminRoute><Tracking /></SuperAdminRoute>} />
       <Route path="/superadmin/finance"    element={<SuperAdminRoute><Finance /></SuperAdminRoute>} />
-      <Route path="/superadmin/master"     element={<SuperAdminRoute><MasterConfig /></SuperAdminRoute>} />
+      <Route path="/superadmin/config"     element={<SuperAdminRoute><Configuration /></SuperAdminRoute>} />
       <Route path="/superadmin/reports"    element={<SuperAdminRoute><Reports /></SuperAdminRoute>} />
       <Route path="/superadmin/security"   element={<SuperAdminRoute><Security /></SuperAdminRoute>} />
 
@@ -72,6 +78,9 @@ export default function AppRoutes() {
       <Route path="/employee/customer-info" element={<EmployeeRoute><CustomerInfo /></EmployeeRoute>} />
       <Route path="/employee/add-customer" element={<EmployeeRoute><AddCustomer /></EmployeeRoute>} />
       <Route path="/employee/services"     element={<EmployeeRoute><Services /></EmployeeRoute>} />
+      <Route path="/employee/reports"      element={<EmployeeRoute><EmployeeReports /></EmployeeRoute>} />
+      <Route path="/employee/profile"       element={<EmployeeRoute><Profile Sidebar={EmployeeNavbar} /></EmployeeRoute>} />
+      <Route path="/admin/profile"          element={<AdminRoute><Profile Sidebar={AdminSidebar} isAdmin={true} /></AdminRoute>} />
 
       <Route path="*" element={<Navigate to="/login/superadmin" replace />} />
     </Routes>

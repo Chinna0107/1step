@@ -3,7 +3,7 @@ import Sidebar from '../../components/superadmin/Sidebar'
 import { useEmployees, useBranches } from '../../hooks/useSuperAdmin'
 import './superadmin.css'
 
-const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', branch: '', password: '', confirm_password: '', mpin: '', is_admin: false }
+const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', branch: '', password: '', confirm_password: '', mpin: '', is_admin: false, pan_img_url: '', aadhar_img_url: '', docx_url: '', resume_url: '', photo_url: '' }
 
 export default function EmployeesData() {
   const { employees, loading, error, msg, addEmployee, toggleStatus, deleteUser } = useEmployees()
@@ -110,6 +110,31 @@ export default function EmployeesData() {
                         <input type="checkbox" checked={form.is_admin} onChange={e => set('is_admin', e.target.checked)} />
                         Grant Admin Access
                       </label>
+                    </div>
+                    <div className="sa-form-group">
+                      <label>PAN Card Image URL</label>
+                      <input type="url" placeholder="Paste PAN card image URL" value={form.pan_img_url}
+                        onChange={e => set('pan_img_url', e.target.value)} />
+                    </div>
+                    <div className="sa-form-group">
+                      <label>Aadhar Card Image URL</label>
+                      <input type="url" placeholder="Paste Aadhar card image URL" value={form.aadhar_img_url}
+                        onChange={e => set('aadhar_img_url', e.target.value)} />
+                    </div>
+                    <div className="sa-form-group">
+                      <label>Document / ID Proof URL</label>
+                      <input type="url" placeholder="Paste document image URL" value={form.docx_url}
+                        onChange={e => set('docx_url', e.target.value)} />
+                    </div>
+                    <div className="sa-form-group">
+                      <label>Resume URL</label>
+                      <input type="url" placeholder="Paste resume URL" value={form.resume_url}
+                        onChange={e => set('resume_url', e.target.value)} />
+                    </div>
+                    <div className="sa-form-group">
+                      <label>Employee Photo URL</label>
+                      <input type="url" placeholder="Paste photo URL" value={form.photo_url}
+                        onChange={e => set('photo_url', e.target.value)} />
                     </div>
                   </div>
                   <button type="submit" className="sa-btn sa-btn-primary"

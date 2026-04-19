@@ -72,7 +72,35 @@ export function useCustomerProfile() {
   return { profile, loading, error }
 }
 
-// ── Transactions — cached, manual refetch busts cache ────────
+// ── Coins ────────────────────────────────────────────────────
+export function useCustomerCoins() {
+  const [coins, setCoins]           = useState(null)
+  const [loading, setLoading]       = useState(true)
+  const [redeeming, setRedeeming]   = useState(false)
+  const [msg, setMsg]               = useState('')
+  const [error, setError]           = useState('')
+
+  const refetch = useCallback(() => {
+    setLoading(true)
+    api('/customer/coins', { headers: authHeader() })
+      .then(d => { setCoins(d); setLoading(false) })
+      .catch(e => { setError(e.message); setLoading(false) })
+  }, [])
+
+  useEffect(() => { refetch() }, [refetch])
+
+  const redeem = async (amount) => {
+    setRedeeming(true); setMsg(''); setError('')
+    try {
+      const r = await api('/customer/coins/redeem', { method: 'POST', headers: authHeader(), body: JSON.stringify({ amount }) })
+      setMsg(r.message)
+      setCoins(prev => ({ ...prev, coins: r.remaining, coins_redeemed: (prev?.coins_redeemed || 0) + r.coinsUsed }))
+    } catch (e) { setError(e.message) }
+    setRedeeming(false)
+  }
+
+  return { coins, loading, redeeming, msg, error, redeem, refetch, setMsg, setError }
+}
 export function useCustomerTransactions() {
   const [txns, setTxns]       = useState(cache.txns || [])
   const [loading, setLoading] = useState(!isFresh(cache.txnsTs))

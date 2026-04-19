@@ -50,3 +50,87 @@
   color: #28a745;
   margin: 0;
 }
+
+/* ═══════════════════════════════════════════
+   Enhanced Admin Dashboard Animations
+   ═══════════════════════════════════════════ */
+
+/* Stat card entrance */
+.dash-stat {
+  animation: adm-card-in 0.5s ease both;
+}
+.dash-stat:nth-child(1) { animation-delay: 0ms; }
+.dash-stat:nth-child(2) { animation-delay: 80ms; }
+.dash-stat:nth-child(3) { animation-delay: 160ms; }
+.dash-stat:nth-child(4) { animation-delay: 240ms; }
+
+@keyframes adm-card-in {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Card hover lift */
+.dash-card {
+  animation: adm-card-in 0.5s ease both;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.dash-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 28px rgba(64,32,112,0.12);
+}
+
+/* Topbar animated bottom border */
+.dash-topbar {
+  position: relative;
+}
+.dash-topbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #402070, #c02040, #d4af37, #c02040, #402070);
+  background-size: 200% 100%;
+  animation: adm-line 3s linear infinite;
+}
+@keyframes adm-line {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+/* Table row entrance */
+.dash-table tbody tr {
+  animation: adm-row-in 0.3s ease both;
+}
+.dash-table tbody tr:nth-child(1) { animation-delay: 0ms; }
+.dash-table tbody tr:nth-child(2) { animation-delay: 50ms; }
+.dash-table tbody tr:nth-child(3) { animation-delay: 100ms; }
+.dash-table tbody tr:nth-child(4) { animation-delay: 150ms; }
+.dash-table tbody tr:nth-child(5) { animation-delay: 200ms; }
+
+@keyframes adm-row-in {
+  from { opacity: 0; transform: translateX(-8px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Progress bar animation */
+div[style*="borderRadius: 999"] > div {
+  transition: width 1s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+
+/* Alert animation */
+.dash-alert {
+  animation: adm-alert-in 0.3s ease both;
+}
+@keyframes adm-alert-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Refresh button spin */
+.dash-btn:active svg {
+  animation: adm-spin 0.4s ease;
+}
+@keyframes adm-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

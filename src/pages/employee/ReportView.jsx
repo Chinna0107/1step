@@ -1,0 +1,347 @@
+import React, { useState, useEffect, useCallback } from 'react'
+import { api } from '../../utils/api'
+
+const fmt    = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
+const fmtVal = n => { const v = parseFloat(n) || 0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
+const today  = new Date().toISOString().split('T')[0]
+const monthStart = today.slice(0, 7) + '-01'
+
+const SERVICE_ICONS = {
+  'Card Withdrawal':       '💳',
+  'Bill Pay + Withdrawal': '📄',
+  'Money Transfer (DMT)':  '💸',
+  'AEPS':                  '🏧',
+  'Only Bill Payment':     '🧾',
+}
+
+const COLORS = ['#402070','#c02040','#d4af37','#059669','#0ea5e9','#f59e0b','#8b5cf6','#ec4899']
+
+export default function ReportView({ authHeader, showFinancials = true, branches = [], employees = [] }) {
+  const [data, setData]         = useState(null)
+  const [loading, setLoading]   = useState(true)
+  const [from, setFrom]         = useState(monthStart)
+  const [to, setTo]             = useState(today)
+  const [branch, setBranch]     = useState('')
+  const [empId, setEmpId]       = useState('')
+  const [tab, setTab]           = useState('service')
+
+  const load = useCallback(() => {
+    setLoading(true)
+    const p = new URLSearchParams({ from, to })
+    if (branch) p.set('branch', branch)
+    if (empId)  p.set('employee_id', empId)
+    api(`/dashboard/reports?${p}`, { headers: authHeader() })
+      .then(d => { setData(d); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [from, to, branch, empId])
+
+  useEffect(() => { load() }, [load])
+
+  const txns            = data?.transactions    ?? []
+  const totals          = data?.totals          ?? {}
+  const platformSummary = data?.platformSummary ?? []
+  const serviceSummary  = data?.serviceSummary  ?? []
+
+  const activeRows = tab === 'service' ? serviceSummary : platformSummary
+  const maxAmt     = Math.max(1, ...activeRows.map(r => r.amount))
+
+  // ── Export CSV ──
+  const exportCSV = () => {
+    if (!txns.length) return
+    const h = 'ID,Date,Employee,Branch,Service,Platform,Amount,Charges,Settled' + (showFinancials ? ',Commission' : '')
+    const r = txns.map(t => [
+      t.id,
+      new Date(t.created_at).toLocaleDateString('en-IN'),
+      t.employee_name || '',
+      t.branch || '',
+      t.service_type || '',
+      t.platform || '',
+      t.amount,
+      t.charges_amount || 0,
+      t.settled_amount || 0,
+      ...(showFinancials ? [t.profit || 0] : []),
+    ].join(','))
+    const blob = new Blob([h + '\n' + r.join('\n')], { type: 'text/csv' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = `report_${from}_${to}.csv`
+    a.click()
+  }
+
+  // ── Export PDF ──
+  const exportPDF = () => {
+    const label = tab === 'service' ? 'Service' : 'Platform'
+    const rows  = activeRows.map((r, i) =>
+      `<tr>
+        <td>${SERVICE_ICONS[r.name] || ''} ${r.name}</td>
+        <td>${r.count}</td>
+        <td>₹${fmt(r.amount)}</td>
+        ${showFinancials ? `<td>₹${fmt(r.commission ?? r.profit ?? 0)}</td>` : ''}
+      </tr>`
+    ).join('')
+    const html = `<html><head><title>${label} Report</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 24px; color: #1a0a2e; }
+        h2   { color: #402070; }
+        p    { color: #64748b; font-size: 13px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
+        th { background: #402070; color: #fff; padding: 10px 14px; text-align: left; }
+        td { padding: 9px 14px; border-bottom: 1px solid #e2e8f0; }
+        tr:nth-child(even) td { background: #f8fafc; }
+        .summary { display: flex; gap: 20px; margin: 16px 0; }
+        .s-box { background: #f0f2f8; border-radius: 8px; padding: 10px 18px; }
+        .s-label { font-size: 11px; color: #64748b; text-transform: uppercase; }
+        .s-val   { font-size: 20px; font-weight: 800; color: #402070; }
+      </style></head><body>
+      <h2>MoneySpot — ${label}-wise Report</h2>
+      <p>Period: ${from} → ${to}${branch ? ` · Branch: ${branch}` : ''}</p>
+      <div class="summary">
+        <div class="s-box"><div class="s-label">Transactions</div><div class="s-val">${fmt(totals.count ?? 0)}</div></div>
+        <div class="s-box"><div class="s-label">Total Amount</div><div class="s-val">₹${fmt(totals.amount ?? 0)}</div></div>
+        ${showFinancials ? `<div class="s-box"><div class="s-label">Commission</div><div class="s-val">₹${fmt(totals.profit ?? 0)}</div></div>` : ''}
+      </div>
+      <table><thead><tr>
+        <th>${label}</th><th>Transactions</th><th>Amount</th>
+        ${showFinancials ? '<th>Commission</th>' : ''}
+      </tr></thead><tbody>${rows}</tbody></table>
+      </body></html>`
+    const w = window.open('', '_blank')
+    w.document.write(html)
+    w.document.close()
+    w.focus()
+    setTimeout(() => { w.print(); w.close() }, 400)
+  }
+
+  return (
+    <div>
+      {/* ── Filters ── */}
+      <div className="rv-filters">
+        <div className="dash-form-group" style={{ margin: 0 }}>
+          <label>From</label>
+          <input type="date" value={from} max={to} onChange={e => setFrom(e.target.value)} />
+        </div>
+        <div className="dash-form-group" style={{ margin: 0 }}>
+          <label>To</label>
+          <input type="date" value={to} min={from} max={today} onChange={e => setTo(e.target.value)} />
+        </div>
+        {branches.length > 0 && (
+          <div className="dash-form-group" style={{ margin: 0 }}>
+            <label>Branch</label>
+            <select value={branch} onChange={e => setBranch(e.target.value)}>
+              <option value="">All Branches</option>
+              {branches.map(b => <option key={b} value={b}>{b}</option>)}
+            </select>
+          </div>
+        )}
+        {employees.length > 0 && (
+          <div className="dash-form-group" style={{ margin: 0 }}>
+            <label>Employee</label>
+            <select value={empId} onChange={e => setEmpId(e.target.value)}>
+              <option value="">All Employees</option>
+              {employees.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+            </select>
+          </div>
+        )}
+        <button className="dash-btn dash-btn-primary" onClick={load}>🔍 Generate</button>
+        <button className="dash-btn" style={{ background: '#d1fae5', color: '#059669', border: 'none' }} onClick={exportCSV}>📊 CSV</button>
+        <button className="dash-btn" style={{ background: '#fee2e2', color: '#dc2626', border: 'none' }} onClick={exportPDF}>📄 PDF</button>
+      </div>
+
+      {loading ? <div className="dash-loading">Loading...</div> : (
+        <>
+          {/* ── Summary Stats ── */}
+          <div className="dash-stats" style={{ marginBottom: 20 }}>
+            <div className="dash-stat">
+              <div className="dash-stat-label">Total Transactions</div>
+              <div className="dash-stat-value">{fmt(totals.count ?? 0)}</div>
+            </div>
+            <div className="dash-stat">
+              <div className="dash-stat-label">Total Amount</div>
+              <div className="dash-stat-value" style={{ color: '#059669' }}>{fmtVal(totals.amount ?? 0)}</div>
+            </div>
+            <div className="dash-stat">
+              <div className="dash-stat-label">Customer Charges</div>
+              <div className="dash-stat-value" style={{ color: '#d97706' }}>{fmtVal(totals.charges_amount ?? 0)}</div>
+            </div>
+            {showFinancials && (
+              <div className="dash-stat">
+                <div className="dash-stat-label">Net Commission</div>
+                <div className="dash-stat-value" style={{ color: '#402070' }}>{fmtVal(totals.profit ?? 0)}</div>
+              </div>
+            )}
+          </div>
+
+          {/* ── Tabs ── */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setTab('service')}
+              className="dash-btn"
+              style={{ background: tab === 'service' ? '#402070' : '#f1f5f9', color: tab === 'service' ? '#fff' : '#64748b', border: 'none', fontWeight: 700 }}
+            >🔧 Service-wise</button>
+            <button
+              onClick={() => setTab('platform')}
+              className="dash-btn"
+              style={{ background: tab === 'platform' ? '#402070' : '#f1f5f9', color: tab === 'platform' ? '#fff' : '#64748b', border: 'none', fontWeight: 700 }}
+            >📱 Platform-wise</button>
+          </div>
+
+          {/* ── Bar Chart ── */}
+          {activeRows.length > 0 && (
+            <div className="dash-card" style={{ marginBottom: 20 }}>
+              <div className="dash-card-header">
+                <h2>{tab === 'service' ? '🔧 Service' : '📱 Platform'}-wise Distribution</h2>
+                <span style={{ fontSize: 12, color: '#9ca3af' }}>{from === to ? from : `${from} → ${to}`}</span>
+              </div>
+              <div style={{ padding: '16px 20px' }}>
+                {activeRows.map((r, i) => {
+                  const pct = Math.round((r.amount / maxAmt) * 100)
+                  return (
+                    <div key={r.name} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+                      <div style={{ width: 140, fontSize: 12, fontWeight: 700, color: '#1a0a2e', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flexShrink: 0 }}>
+                        {SERVICE_ICONS[r.name] || ''} {r.name}
+                      </div>
+                      <div style={{ flex: 1, height: 26, background: '#f1f5f9', borderRadius: 8, overflow: 'hidden' }}>
+                        <div style={{ width: `${pct}%`, height: '100%', background: COLORS[i % COLORS.length], borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: 8, minWidth: 32, transition: 'width 0.8s ease' }}>
+                          <span style={{ fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.9)' }}>{pct}%</span>
+                        </div>
+                      </div>
+                      <div style={{ width: 90, textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: '#1a0a2e' }}>{fmtVal(r.amount)}</div>
+                        <div style={{ fontSize: 11, color: '#94a3b8' }}>{r.count} txns</div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* ── Service Cards ── */}
+          {tab === 'service' && serviceSummary.length > 0 && (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 16, marginBottom: 20 }}>
+              {serviceSummary.map((s, i) => (
+                <div key={s.name} className="dash-card" style={{ marginBottom: 0, borderTop: `3px solid ${COLORS[i % COLORS.length]}` }}>
+                  <div className="dash-card-header" style={{ background: 'linear-gradient(135deg, #f8f9fa, #f0f2f8)' }}>
+                    <h2 style={{ fontSize: 14 }}>{SERVICE_ICONS[s.name] || '🔧'} {s.name}</h2>
+                  </div>
+                  <div className="dash-card-body" style={{ padding: '12px 16px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 16px' }}>
+                      <Row label="No. of Trans"     value={s.count} />
+                      <Row label="Total Amt"        value={`₹${fmt(s.amount)}`} color="#059669" />
+                      <Row label="Settled Amt"      value={`₹${fmt(s.settled)}`} />
+                      <Row label="Cust. Charges"    value={`₹${fmt(s.customer_charges)}`} color="#d97706" />
+                      {showFinancials && <>
+                        <Row label="Platform Charges" value={`₹${fmt(s.platform_charges)}`} color="#dc2626" />
+                        <Row label="Commission"       value={`₹${fmt(s.commission)}`}       color="#402070" bold />
+                      </>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ── Platform Table ── */}
+          {tab === 'platform' && (
+            <div className="dash-card" style={{ marginBottom: 20 }}>
+              <div className="dash-card-header">
+                <h2>📊 Platform Summary</h2>
+              </div>
+              <div className="dash-table-wrap">
+                <table className="dash-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Platform</th>
+                      <th>Transactions</th>
+                      <th>Total Amount</th>
+                      <th>Share</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {platformSummary.map((p, i) => (
+                      <tr key={p.name}>
+                        <td><span style={{ background: COLORS[i % COLORS.length], color: '#fff', borderRadius: '50%', width: 22, height: 22, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 800 }}>{i + 1}</span></td>
+                        <td><strong>{p.name}</strong></td>
+                        <td>{p.count}</td>
+                        <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(p.amount)}</td>
+                        <td>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{ width: 60, height: 6, background: '#f1f5f9', borderRadius: 999, overflow: 'hidden' }}>
+                              <div style={{ width: `${Math.round(p.amount / maxAmt * 100)}%`, height: '100%', background: COLORS[i % COLORS.length], borderRadius: 999 }} />
+                            </div>
+                            <span style={{ fontSize: 11, color: '#64748b' }}>{Math.round(p.amount / (totals.amount || 1) * 100)}%</span>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                    {platformSummary.length > 0 && (
+                      <tr style={{ background: '#f8f9fa', fontWeight: 800 }}>
+                        <td colSpan={2}>Total</td>
+                        <td>{platformSummary.reduce((s, p) => s + p.count, 0)}</td>
+                        <td style={{ color: '#059669' }}>₹{fmt(platformSummary.reduce((s, p) => s + p.amount, 0))}</td>
+                        <td>100%</td>
+                      </tr>
+                    )}
+                    {!platformSummary.length && <tr><td colSpan={5} className="dash-empty">No data</td></tr>}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* ── Transactions Table ── */}
+          <div className="dash-card">
+            <div className="dash-card-header">
+              <h2>📋 Transactions ({txns.length})</h2>
+            </div>
+            <div className="dash-table-wrap">
+              <table className="dash-table">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Date</th>
+                    {showFinancials && <th>Employee</th>}
+                    <th>Customer</th>
+                    <th>Service</th>
+                    <th>Platform</th>
+                    <th>Amount</th>
+                    <th>Charges</th>
+                    <th>Settled</th>
+                    {showFinancials && <th>Commission</th>}
+                  </tr>
+                </thead>
+                <tbody>
+                  {txns.map(t => (
+                    <tr key={t.id}>
+                      <td style={{ fontFamily: 'monospace', color: '#402070', fontWeight: 700, fontSize: 11 }}>#{t.id}</td>
+                      <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                      {showFinancials && <td style={{ fontSize: 12 }}>{t.employee_name || '—'}</td>}
+                      <td><strong>{t.cust_name || '—'}</strong></td>
+                      <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
+                      <td>{t.platform || t.bill_platform || '—'}</td>
+                      <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</td>
+                      <td style={{ color: '#d97706' }}>₹{fmt(t.charges_amount || 0)}</td>
+                      <td style={{ fontWeight: 600 }}>₹{fmt(t.settled_amount || 0)}</td>
+                      {showFinancials && <td style={{ color: '#402070', fontWeight: 700 }}>₹{fmt(t.profit || 0)}</td>}
+                    </tr>
+                  ))}
+                  {!txns.length && <tr><td colSpan={showFinancials ? 10 : 8} className="dash-empty">No transactions found</td></tr>}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+function Row({ label, value, color, bold }) {
+  return (
+    <div style={{ padding: '4px 0', borderBottom: '1px solid #f3f4f6' }}>
+      <div style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase', letterSpacing: 0.3 }}>{label}</div>
+      <div style={{ fontSize: 14, fontWeight: bold ? 800 : 600, color: color || '#374151', marginTop: 2 }}>{value}</div>
+    </div>
+  )
+}

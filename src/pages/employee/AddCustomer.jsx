@@ -1,6 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { useAddCustomer, useMyCustomers } from '../../hooks/useCustomers'
+import { getUserByRole } from '../../utils/tokenUtils'
 import '../../pages/dashboard.css'
 
 const empty = { name: '', email: '', phone: '', pan: '', aadhar: '', acc_number: '', branch: '', aadhar_img_url: '', pan_img_url: '' }
@@ -10,6 +11,24 @@ export default function AddCustomer() {
   const { customers, loading: listLoading, refetch } = useMyCustomers()
   const [form, setForm] = useState(empty)
   const [showForm, setShowForm] = useState(false)
+  const currentUser = getUserByRole('employee') || getUserByRole('admin')
+
+  // Check for pending customer name from transaction page
+  useEffect(() => {
+    const pendingName = localStorage.getItem('pendingCustomerName')
+    if (pendingName) {
+      setForm(f => ({ 
+        ...f, 
+        name: pendingName,
+        branch: currentUser?.branch || 'Kadapa Main' // Set default branch
+      }))
+      setShowForm(true)
+      localStorage.removeItem('pendingCustomerName')
+    } else {
+      // Set default branch for new customers
+      setForm(f => ({ ...f, branch: currentUser?.branch || 'Kadapa Main' }))
+    }
+  }, [currentUser])
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -80,22 +99,57 @@ export default function AddCustomer() {
                     <label>Branch *</label>
                     <select required value={form.branch} onChange={e => set('branch', e.target.value)}>
                       <option value="">Select branch</option>
-                      <option value="Kadapa">Kadapa</option>
+                      <option value="Kadapa Main">Kadapa Main</option>
                       <option value="Ananthapur">Ananthapur</option>
-                      <option value="Bangalore">Bangalore</option>
+                      <option value="Bangalore HSR">Bangalore HSR</option>
                     </select>
+                    {currentUser?.branch && (
+                      <div style={{ fontSize: 11, color: '#059669', marginTop: 4, fontStyle: 'italic' }}>
+                        ℹ️ Default: {currentUser.branch} (your branch)
+                      </div>
+                    )}
                   </div>
-                  <div className="dash-form-group">
+                  <div className="dash-form-group image-upload">
                     <label>Aadhar Card Image URL</label>
-                    <input type="url" placeholder="https://res.cloudinary.com/..." value={form.aadhar_img_url}
-                      onChange={e => set('aadhar_img_url', e.target.value)} />
-                    <span className="dash-field-hint">Upload to Cloudinary and paste the URL here</span>
+                    <div className="dash-image-upload-group">
+                      <input 
+                        type="url" 
+                        placeholder="Paste Aadhar image URL" 
+                        value={form.aadhar_img_url}
+                        onChange={e => set('aadhar_img_url', e.target.value)} 
+                      />
+                      <button 
+                        type="button" 
+                        className="dash-cloudinary-btn"
+                        onClick={() => window.open('https://cloudinary.com', '_blank')}
+                        title="Upload image to Cloudinary"
+                      >
+                        <span className="icon">📤</span>
+                        Upload
+                      </button>
+                    </div>
+                    <div className="upload-hint">Click upload button to open Cloudinary in new tab</div>
                   </div>
-                  <div className="dash-form-group">
+                  <div className="dash-form-group image-upload">
                     <label>PAN Card Image URL</label>
-                    <input type="url" placeholder="https://res.cloudinary.com/..." value={form.pan_img_url}
-                      onChange={e => set('pan_img_url', e.target.value)} />
-                    <span className="dash-field-hint">Upload to Cloudinary and paste the URL here</span>
+                    <div className="dash-image-upload-group">
+                      <input 
+                        type="url" 
+                        placeholder="Paste PAN image URL" 
+                        value={form.pan_img_url}
+                        onChange={e => set('pan_img_url', e.target.value)} 
+                      />
+                      <button 
+                        type="button" 
+                        className="dash-cloudinary-btn"
+                        onClick={() => window.open('https://cloudinary.com', '_blank')}
+                        title="Upload image to Cloudinary"
+                      >
+                        <span className="icon">📤</span>
+                        Upload
+                      </button>
+                    </div>
+                    <div className="upload-hint">Click upload button to open Cloudinary in new tab</div>
                   </div>
                 </div>
                 <button type="submit" className="dash-btn dash-btn-primary"

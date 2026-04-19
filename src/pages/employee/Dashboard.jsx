@@ -1,21 +1,59 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useState, useCallback, useRef } from 'react'
 import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
-import { MdLogin, MdLogout, MdRefresh } from 'react-icons/md'
-import '../../pages/dashboard.css'
+import { MdLogin, MdLogout, MdRefresh, MdTrendingUp, MdAccountBalanceWallet, MdMonetizationOn, MdStar } from 'react-icons/md'
+import './EmployeeDashboard.css'
 
-const auth = () => ({ Authorization: `Bearer ${getTokenByRole('employee') || getTokenByRole('admin')}` })
+const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('employee') || getTokenByRole('admin')}` })
 const fmt    = n => Number(n).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
+const TARGET = 25
 
-const TARGET_TXN = 25
+function AnimatedNumber({ value, prefix = '', suffix = '' }) {
+  const [display, setDisplay] = useState(0)
+  const ref = useRef(null)
+  useEffect(() => {
+    const target = parseFloat(value) || 0
+    const duration = 1000
+    const start = Date.now()
+    const tick = () => {
+      const elapsed = Date.now() - start
+      const progress = Math.min(elapsed / duration, 1)
+      const ease = 1 - Math.pow(1 - progress, 3)
+      setDisplay(Math.round(target * ease))
+      if (progress < 1) ref.current = requestAnimationFrame(tick)
+    }
+    ref.current = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(ref.current)
+  }, [value])
+  return <>{prefix}{display.toLocaleString('en-IN')}{suffix}</>
+}
+
+function StatCard({ icon, label, value, sub, color, delay = 0 }) {
+  return (
+    <div className="ed-stat" style={{ '--color': color, animationDelay: `${delay}ms` }}>
+      <div className="ed-stat-glow" />
+      <div className="ed-stat-icon">{icon}</div>
+      <div className="ed-stat-label">{label}</div>
+      <div className="ed-stat-value">{value}</div>
+      {sub && <div className="ed-stat-sub">{sub}</div>}
+    </div>
+  )
+}
 
 export default function EmployeeDashboard() {
-  const [data, setData]       = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [attMsg, setAttMsg]   = useState('')
+  const [data, setData]           = useState(null)
+  const [loading, setLoading]     = useState(true)
+  const [attMsg, setAttMsg]       = useState('')
+  const [attErr, setAttErr]       = useState('')
   const [attLoading, setAttLoading] = useState(false)
+  const [greeting, setGreeting]   = useState('')
+
+  useEffect(() => {
+    const h = new Date().getHours()
+    setGreeting(h < 12 ? 'Good Morning' : h < 17 ? 'Good Afternoon' : 'Good Evening')
+  }, [])
 
   const refetch = useCallback(() => {
     setLoading(true)
@@ -27,144 +65,185 @@ export default function EmployeeDashboard() {
   useEffect(() => { refetch() }, [refetch])
 
   const markAttendance = async type => {
-    setAttLoading(true); setAttMsg('')
+    setAttLoading(true); setAttMsg(''); setAttErr('')
     try {
       const r = await api('/dashboard/attendance/mark', { method: 'POST', headers: auth(), body: JSON.stringify({ type }) })
       setAttMsg(r.coinsEarned > 0 ? `${r.message} 🪙 +${r.coinsEarned} coins!` : r.message)
       refetch()
-    } catch (e) { setAttMsg(e.message) }
+    } catch (e) { setAttErr(e.message) }
     setAttLoading(false)
   }
 
-  const profile = data?.profile    ?? {}
-  const s       = data?.stats      ?? {}
+  const profile = data?.profile     ?? {}
+  const s       = data?.stats       ?? {}
   const txns    = data?.transactions ?? []
   const att     = data?.attendance  ?? null
+  const pct     = Math.min(100, Math.round((s.txnToday ?? 0) / TARGET * 100))
   const now     = new Date()
-  const pct     = Math.min(100, Math.round((s.txnToday ?? 0) / TARGET_TXN * 100))
 
   return (
-    <div className="emp-page">
+    <div className="ed-page">
       <EmployeeNavbar />
-      <div className="emp-page-content">
+      <div className="ed-content">
 
-        <div className="emp-page-header">
-          <div>
-            <h1>Welcome back, {profile.name || '...'} 👋</h1>
-            <p style={{ color: '#888', fontSize: 13, marginTop: 4 }}>
-              {now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-              {profile.branch && ` · ${profile.branch}`}
-            </p>
-          </div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none', padding: '7px 14px' }} onClick={refetch}><MdRefresh /></button>
-            <span className="dash-badge">Employee Portal</span>
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="dash-stats">
-          <div className="dash-stat">
-            <div className="dash-stat-label">Transactions Today</div>
-            <div className="dash-stat-value">{loading ? '—' : fmt(s.txnToday ?? 0)}</div>
-            <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>Month: {fmt(s.txnMonth ?? 0)}</div>
-          </div>
-          <div className="dash-stat">
-            <div className="dash-stat-label">Value Handled</div>
-            <div className="dash-stat-value">{loading ? '—' : fmtVal(s.valueToday ?? 0)}</div>
-            <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>Month: {fmtVal(s.valueMonth ?? 0)}</div>
-          </div>
-          <div className="dash-stat">
-            <div className="dash-stat-label">Profit Generated</div>
-            <div className="dash-stat-value">{loading ? '—' : fmtVal(s.profitToday ?? 0)}</div>
-            <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>Month: {fmtVal(s.profitMonth ?? 0)}</div>
-          </div>
-          <div className="dash-stat">
-            <div className="dash-stat-label">MoneySpot Coins</div>
-            <div className="dash-stat-value" style={{ color: '#b8860b' }}>🪙 {loading ? '—' : fmt(profile.coins ?? 0)}</div>
-          </div>
-        </div>
-
-        {/* Target vs Achievement */}
-        <div className="dash-card">
-          <div className="dash-card-header"><h2>🎯 Target vs Achievement — Today</h2></div>
-          <div className="dash-card-body">
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 13 }}>
-              <span style={{ fontWeight: 700, color: '#402070' }}>{s.txnToday ?? 0} / {TARGET_TXN} transactions</span>
-              <span style={{ fontWeight: 800, color: pct >= 100 ? '#059669' : pct >= 60 ? '#d97706' : '#dc2626' }}>{pct}%</span>
-            </div>
-            <div style={{ height: 12, background: '#f0f2f8', borderRadius: 999, overflow: 'hidden' }}>
-              <div style={{ width: `${pct}%`, height: '100%', background: pct >= 100 ? '#10b981' : pct >= 60 ? '#d97706' : '#ef4444', borderRadius: 999, transition: 'width 0.6s ease' }} />
-            </div>
-            <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 6 }}>
-              {pct >= 100 ? '🎉 Target achieved!' : `${TARGET_TXN - (s.txnToday ?? 0)} more transactions to reach daily target`}
-            </div>
-          </div>
-        </div>
-
-        {/* Attendance */}
-        <div className="dash-card">
-          <div className="dash-card-header"><h2>🕒 Today's Attendance</h2></div>
-          <div className="dash-card-body">
-            {attMsg && <div className="dash-alert dash-alert-success" style={{ marginBottom: 12 }}>{attMsg}</div>}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-              <div style={{ background: '#f0f2f8', borderRadius: 10, padding: '14px 18px' }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', marginBottom: 4 }}>Check In</div>
-                <div style={{ fontSize: 20, fontWeight: 900, color: '#402070' }}>{att?.check_in || '—'}</div>
-                {att?.late && <div style={{ fontSize: 11, background: '#fef3c7', color: '#d97706', padding: '2px 8px', borderRadius: 20, display: 'inline-block', marginTop: 4, fontWeight: 700 }}>⏰ Late</div>}
-              </div>
-              <div style={{ background: '#f0f2f8', borderRadius: 10, padding: '14px 18px' }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', marginBottom: 4 }}>Check Out</div>
-                <div style={{ fontSize: 20, fontWeight: 900, color: '#402070' }}>{att?.check_out || '—'}</div>
-                {att?.minutes > 0 && <div style={{ fontSize: 11, color: '#059669', fontWeight: 700, marginTop: 4 }}>{att.minutes} min worked</div>}
+        {/* ── Hero Header ── */}
+        <div className="ed-hero">
+          <div className="ed-hero-bg" />
+          <div className="ed-hero-orb ed-orb1" />
+          <div className="ed-hero-orb ed-orb2" />
+          <div className="ed-hero-inner">
+            <div>
+              <div className="ed-greeting">{greeting} 👋</div>
+              <h1 className="ed-hero-name">{loading ? '...' : profile.name || 'Employee'}</h1>
+              <div className="ed-hero-meta">
+                {now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                {profile.branch && <span className="ed-branch-pill">🏦 {profile.branch}</span>}
               </div>
             </div>
-            <div style={{ display: 'flex', gap: 12 }}>
-              <button className="dash-btn dash-btn-success" onClick={() => markAttendance('check_in')} disabled={attLoading || !!att?.check_in}>
-                <MdLogin /> {att?.check_in ? `Checked in at ${att.check_in}` : 'Check In'}
-              </button>
-              <button className="dash-btn dash-btn-danger" onClick={() => markAttendance('check_out')} disabled={attLoading || !att?.check_in || !!att?.check_out}>
-                <MdLogout /> {att?.check_out ? `Checked out at ${att.check_out}` : 'Check Out'}
-              </button>
+            <div className="ed-hero-actions">
+              <button className="ed-refresh-btn" onClick={refetch}><MdRefresh size={18} /></button>
+              <div className="ed-coins-pill">🪙 {loading ? '...' : fmt(profile.coins ?? 0)} coins</div>
             </div>
           </div>
         </div>
 
-        {/* Recent Transactions */}
-        <div className="dash-card">
-          <div className="dash-card-header"><h2>💳 My Recent Transactions</h2></div>
-          <div className="dash-table-wrap">
-            {loading ? <div className="dash-loading">Loading...</div> : (
-              <table className="dash-table">
-                <thead><tr><th>Date</th><th>Service</th><th>Platform</th><th>Bank</th><th>Amount</th><th>Profit</th></tr></thead>
+        {/* ── Stats ── */}
+        <div className="ed-stats">
+          {loading ? [1,2,3,4].map(i => <div key={i} className="ed-stat-skel" />) : (
+            <>
+              <StatCard icon={<MdTrendingUp />}           color="#402070" delay={0}
+                label="Transactions Today" value={<AnimatedNumber value={s.txnToday ?? 0} />}
+                sub={`Month: ${fmt(s.txnMonth ?? 0)}`} />
+              <StatCard icon={<MdAccountBalanceWallet />} color="#c02040" delay={100}
+                label="Value Handled" value={fmtVal(s.valueToday ?? 0)}
+                sub={`Month: ${fmtVal(s.valueMonth ?? 0)}`} />
+              <StatCard icon={<MdMonetizationOn />}       color="#d4af37" delay={200}
+                label="Profit Generated" value={fmtVal(s.profitToday ?? 0)}
+                sub={`Month: ${fmtVal(s.profitMonth ?? 0)}`} />
+              <StatCard icon={<MdStar />}                 color="#059669" delay={300}
+                label="MoneySpot Coins" value={<AnimatedNumber value={profile.coins ?? 0} prefix="🪙 " />}
+                sub="Earn more by working longer" />
+            </>
+          )}
+        </div>
+
+        <div className="ed-grid">
+
+          {/* ── Target ── */}
+          <div className="ed-card ed-card-target">
+            <div className="ed-card-header">
+              <span className="ed-card-icon">🎯</span>
+              <h2>Daily Target</h2>
+              <span className="ed-card-badge" style={{ background: pct >= 100 ? '#d1fae5' : pct >= 60 ? '#fef3c7' : '#fee2e2', color: pct >= 100 ? '#059669' : pct >= 60 ? '#d97706' : '#dc2626' }}>
+                {pct}%
+              </span>
+            </div>
+            <div className="ed-card-body">
+              <div className="ed-target-info">
+                <span className="ed-target-current">{s.txnToday ?? 0}</span>
+                <span className="ed-target-sep">/</span>
+                <span className="ed-target-max">{TARGET} txns</span>
+              </div>
+              <div className="ed-progress-track">
+                <div className="ed-progress-fill" style={{
+                  width: `${pct}%`,
+                  background: pct >= 100 ? 'linear-gradient(90deg,#10b981,#059669)' : pct >= 60 ? 'linear-gradient(90deg,#f59e0b,#d97706)' : 'linear-gradient(90deg,#ef4444,#dc2626)'
+                }} />
+                <div className="ed-progress-glow" style={{ left: `${pct}%`, background: pct >= 100 ? '#10b981' : pct >= 60 ? '#f59e0b' : '#ef4444' }} />
+              </div>
+              <div className="ed-target-msg">
+                {pct >= 100 ? '🎉 Target achieved! Outstanding work!' : `${TARGET - (s.txnToday ?? 0)} more to reach today's target`}
+              </div>
+            </div>
+          </div>
+
+          {/* ── Attendance ── */}
+          <div className="ed-card">
+            <div className="ed-card-header">
+              <span className="ed-card-icon">🕒</span>
+              <h2>Today's Attendance</h2>
+              {att?.status && <span className="ed-card-badge" style={{ background: '#d1fae5', color: '#059669' }}>{att.status}</span>}
+            </div>
+            <div className="ed-card-body">
+              {(attMsg || attErr) && (
+                <div className={`ed-alert ${attErr ? 'ed-alert-error' : 'ed-alert-success'}`}>
+                  {attErr || attMsg}
+                </div>
+              )}
+              <div className="ed-att-grid">
+                <div className="ed-att-box">
+                  <div className="ed-att-label">Check In</div>
+                  <div className="ed-att-time">{att?.check_in || '—'}</div>
+                  {att?.late && <div className="ed-att-late">⏰ Late</div>}
+                </div>
+                <div className="ed-att-divider" />
+                <div className="ed-att-box">
+                  <div className="ed-att-label">Check Out</div>
+                  <div className="ed-att-time">{att?.check_out || '—'}</div>
+                  {att?.minutes > 0 && <div className="ed-att-mins">⏱ {att.minutes} min</div>}
+                </div>
+              </div>
+              <div className="ed-att-btns">
+                <button className="ed-att-btn ed-att-in" onClick={() => markAttendance('check_in')}
+                  disabled={attLoading || !!att?.check_in}>
+                  <MdLogin /> {att?.check_in ? `In at ${att.check_in}` : 'Check In'}
+                </button>
+                <button className="ed-att-btn ed-att-out" onClick={() => markAttendance('check_out')}
+                  disabled={attLoading || !att?.check_in || !!att?.check_out}>
+                  <MdLogout /> {att?.check_out ? `Out at ${att.check_out}` : 'Check Out'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Recent Transactions ── */}
+        <div className="ed-card">
+          <div className="ed-card-header">
+            <span className="ed-card-icon">💳</span>
+            <h2>Recent Transactions</h2>
+            <span className="ed-card-badge">{txns.length} records</span>
+          </div>
+          <div className="ed-table-wrap">
+            {loading ? (
+              <div className="ed-table-skel">
+                {[1,2,3,4].map(i => <div key={i} className="ed-row-skel" style={{ animationDelay: `${i*80}ms` }} />)}
+              </div>
+            ) : txns.length === 0 ? (
+              <div className="ed-empty">
+                <div className="ed-empty-icon">💳</div>
+                <div>No transactions yet — go to Services to add one</div>
+              </div>
+            ) : (
+              <table className="ed-table">
+                <thead><tr><th>Date</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr></thead>
                 <tbody>
-                  {txns.map(t => (
-                    <tr key={t.id}>
-                      <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                  {txns.map((t, i) => (
+                    <tr key={t.id} style={{ animationDelay: `${i * 40}ms` }} className="ed-tr">
+                      <td>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                       <td><strong>{t.service_type}</strong></td>
-                      <td>{t.platform || '—'}</td>
-                      <td>{t.bank || '—'}</td>
-                      <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</td>
-                      <td style={{ color: '#d4af37', fontWeight: 800 }}>₹{fmt(t.profit)}</td>
+                      <td><span className="ed-platform-tag">{t.platform || '—'}</span></td>
+                      <td><span className="ed-amount">₹{fmt(t.amount)}</span></td>
+                      <td><span className="ed-charges">₹{fmt(t.charges_amount || 0)}</span></td>
+                      <td><span className="ed-profit">₹{fmt(t.settled_amount || t.profit || 0)}</span></td>
                     </tr>
                   ))}
-                  {!txns.length && <tr><td colSpan={6} className="dash-empty">No transactions yet — go to Services to add one</td></tr>}
                 </tbody>
               </table>
             )}
           </div>
         </div>
 
-        {/* Coins */}
-        <div className="dash-card">
-          <div className="dash-card-header"><h2>🪙 MoneySpot Coins</h2></div>
-          <div className="dash-card-body">
-            <div className="coins-card">
-              <div className="coins-label">Available Balance</div>
-              <div className="coins-amount">🪙 {loading ? '...' : fmt(profile.coins ?? 0)}</div>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, marginTop: 8 }}>
-                Earn 5 coins/min for every minute worked beyond 500 minutes/day
-              </p>
+        {/* ── Coins Card ── */}
+        <div className="ed-coins-card">
+          <div className="ed-coins-bg" />
+          <div className="ed-coins-orb" />
+          <div className="ed-coins-inner">
+            <div className="ed-coins-icon">🪙</div>
+            <div>
+              <div className="ed-coins-label">MoneySpot Coins Balance</div>
+              <div className="ed-coins-value">{loading ? '...' : fmt(profile.coins ?? 0)}</div>
+              <div className="ed-coins-hint">Earn 5 coins per minute worked beyond 500 min/day</div>
             </div>
           </div>
         </div>

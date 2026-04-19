@@ -113,6 +113,15 @@
 .sa-btn-warning { background: #fef3c7; color: #d97706; }
 .sa-btn-warning:hover { background: #d97706; color: #fff; }
 
+.sa-btn-secondary { background: #f8f9fa; color: #495057; border: 1px solid #dee2e6; }
+.sa-btn-secondary:hover { background: #e9ecef; }
+
+.sa-btn-outline { background: transparent; color: var(--ms-purple); border: 1px solid var(--ms-purple); }
+.sa-btn-outline:hover { background: var(--ms-purple); color: #fff; }
+
+.sa-btn-info { background: #e3f2fd; color: #1976d2; }
+.sa-btn-info:hover { background: #1976d2; color: #fff; }
+
 .sa-btn-sm { padding: 6px 12px; font-size: 12px; }
 
 /* Table */
