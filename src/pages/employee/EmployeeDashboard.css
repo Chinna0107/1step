@@ -478,3 +478,63 @@
   .ed-grid  { grid-template-columns: 1fr; }
   .ed-stat-value { font-size: 20px; }
 }
+
+/* ── Growth Badge ── */
+.ed-stat-value-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ed-growth {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 20px;
+}
+.ed-growth-up   { background: #d1fae5; color: #059669; }
+.ed-growth-down { background: #fee2e2; color: #dc2626; }
+
+/* ── Earnings Stat ── */
+.ed-earnings-stat { border-top: 3px solid #059669; }
+
+.ed-earnings-val { color: #059669 !important; }
+
+.ed-earnings-coins {
+  font-size: 11px;
+  font-weight: 700;
+  color: #d4af37;
+  margin-top: 4px;
+  background: rgba(212,175,55,0.1);
+  border-radius: 6px;
+  padding: 3px 8px;
+  display: inline-block;
+}
+
+/* ── Target extras ── */
+.ed-target-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 14px 0;
+}
+
+.ed-target-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ed-target-extra-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.ed-target-extra-item strong {
+  font-size: 14px;
+}

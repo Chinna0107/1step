@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
+import { useSuperAdminSecurity } from '../../hooks/useSuperAdmin'
 import { api } from '../../utils/api'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import { SkeletonStats, SkeletonTable } from '../../components/superadmin/Skeleton'

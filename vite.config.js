@@ -14,6 +14,8 @@ export default defineConfig(({ mode }) => {
         '/customers': { target: backendUrl, changeOrigin: true },
         '/customer':  { target: backendUrl, changeOrigin: true },
         '/master':    { target: backendUrl, changeOrigin: true },
+        '/leads':     { target: backendUrl, changeOrigin: true },
+        '/finance':   { target: backendUrl, changeOrigin: true },
       },
     },
   }

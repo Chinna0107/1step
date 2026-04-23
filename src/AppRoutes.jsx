@@ -29,6 +29,14 @@ import CreateEmployee from './pages/admin/CreateEmployee';
 import Requests from './pages/admin/Requests';
 import EmployeePerformance from './pages/admin/EmployeePerformance';
 import EmployeeAttendance from './pages/admin/EmployeeAttendance';
+import FinanceDashboard from './pages/admin/FinanceDashboard';
+import Wallets from './pages/admin/Wallets';
+import Ledger from './pages/admin/Ledger';
+import CashFlow from './pages/admin/CashFlow';
+import Expenses from './pages/admin/Expenses';
+import Settlements from './pages/admin/Settlements';
+import DailyClosing from './pages/admin/DailyClosing';
+import Profit from './pages/admin/Profit';
 
 // Employee Pages
 import EmployeeDashboard from './pages/employee/Dashboard';
@@ -39,8 +47,6 @@ import EmployeeReports from './pages/employee/EmployeeReports';
 import Profile from './pages/employee/Profile';
 import EmployeeNavbar from './components/employee/EmployeeNavbar';
 import AdminSidebar from './components/admin/AdminSidebar';
-
-import Profile from './pages/employee/Profile';
 
 export default function AppRoutes() {
   return (
@@ -63,7 +69,14 @@ export default function AppRoutes() {
       <Route path="/admin/dashboard"       element={<AdminRoute><AdminDashboard /></AdminRoute>} />
       <Route path="/admin/insights"        element={<AdminRoute><AdminInsights /></AdminRoute>} />
       <Route path="/admin/transactions"    element={<AdminRoute><AdminTransactions /></AdminRoute>} />
-      <Route path="/admin/finance"         element={<AdminRoute><AdminFinance /></AdminRoute>} />
+      <Route path="/admin/finance"         element={<AdminRoute><FinanceDashboard /></AdminRoute>} />
+      <Route path="/admin/finance/wallets"     element={<AdminRoute><Wallets /></AdminRoute>} />
+      <Route path="/admin/finance/ledger"      element={<AdminRoute><Ledger /></AdminRoute>} />
+      <Route path="/admin/finance/cashflow"    element={<AdminRoute><CashFlow /></AdminRoute>} />
+      <Route path="/admin/finance/expenses"    element={<AdminRoute><Expenses /></AdminRoute>} />
+      <Route path="/admin/finance/settlements" element={<AdminRoute><Settlements /></AdminRoute>} />
+      <Route path="/admin/finance/closing"     element={<AdminRoute><DailyClosing /></AdminRoute>} />
+      <Route path="/admin/finance/profit"      element={<AdminRoute><Profit /></AdminRoute>} />
       <Route path="/admin/customers"       element={<AdminRoute><AdminCustomers /></AdminRoute>} />
       <Route path="/admin/reports"         element={<AdminRoute><AdminReports /></AdminRoute>} />
       <Route path="/admin/security"        element={<AdminRoute><AdminSecurity /></AdminRoute>} />

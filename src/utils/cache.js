@@ -1,8 +1,8 @@
 // TTLs in ms
 const TTL = {
-  dashboard: 3 * 60 * 1000,  // 3 min — live-ish data
-  list:      5 * 60 * 1000,  // 5 min — admins, employees, branches
-  master:   10 * 60 * 1000,  // 10 min — rarely changes
+  dashboard: 5 * 60 * 1000,   // 5 min — dashboard stats
+  list:      15 * 60 * 1000,  // 15 min — admins, employees, branches, customers
+  master:    30 * 60 * 1000,  // 30 min — platforms, banks, cards (rarely changes)
 }
 
 export function cacheGet(key) {

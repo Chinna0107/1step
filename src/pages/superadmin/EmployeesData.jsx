@@ -3,7 +3,7 @@ import Sidebar from '../../components/superadmin/Sidebar'
 import { useEmployees, useBranches } from '../../hooks/useSuperAdmin'
 import './superadmin.css'
 
-const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', branch: '', password: '', confirm_password: '', mpin: '', is_admin: false, pan_img_url: '', aadhar_img_url: '', docx_url: '', resume_url: '', photo_url: '' }
+const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', branch: '', password: '', confirm_password: '', mpin: '', is_admin: false, role: '', pan_img_url: '', aadhar_img_url: '', docx_url: '', resume_url: '', photo_url: '' }
 
 export default function EmployeesData() {
   const { employees, loading, error, msg, addEmployee, toggleStatus, deleteUser } = useEmployees()
@@ -104,6 +104,11 @@ export default function EmployeesData() {
                       <input required type="password" inputMode="numeric" maxLength={6}
                         placeholder="••••••" value={form.mpin}
                         onChange={e => set('mpin', e.target.value.replace(/\D/g, '').slice(0, 6))} />
+                    </div>
+                    <div className="sa-form-group">
+                      <label>Role / Designation</label>
+                      <input placeholder="e.g. Cashier, Field Agent, Teller" value={form.role}
+                        onChange={e => set('role', e.target.value)} />
                     </div>
                     <div className="sa-form-group" style={{ justifyContent: 'flex-end' }}>
                       <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', textTransform: 'none', fontSize: 14, fontWeight: 600 }}>

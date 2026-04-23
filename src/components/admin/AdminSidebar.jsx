@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
-  MdDashboard, MdInsights, MdStorefront, MdAccountBalance,
+  MdDashboard, MdInsights, MdAccountBalance,
   MdPeople, MdPersonAdd, MdInbox, MdBarChart, MdFactCheck,
-  MdReceipt, MdAssessment, MdSecurity, MdSettings, MdLogout, MdPerson
+  MdReceipt, MdAssessment, MdSecurity, MdSettings, MdLogout, MdPerson,
+  MdExpandMore, MdExpandLess, MdWallet, MdBook, MdSwapHoriz,
+  MdMoneyOff, MdHandshake, MdCalendarToday, MdTrendingUp
 } from 'react-icons/md'
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
@@ -11,6 +13,17 @@ import { api } from '../../utils/api'
 import logoImg from '../../assets/icons png/MS Logo.png'
 import nameImg from '../../assets/icons png/Money Spot Logo.png'
 import '../../pages/dashboard.css'
+
+const FINANCE_ITEMS = [
+  { to: '/admin/finance',          icon: '💰', label: 'Overview' },
+  { to: '/admin/finance/wallets',  icon: '💼', label: 'Wallets' },
+  { to: '/admin/finance/ledger',   icon: '📒', label: 'Ledger' },
+  { to: '/admin/finance/cashflow', icon: '💹', label: 'Cash Flow' },
+  { to: '/admin/finance/expenses', icon: '📉', label: 'Expenses' },
+  { to: '/admin/finance/settlements', icon: '🤝', label: 'Settlements' },
+  { to: '/admin/finance/closing',  icon: '📅', label: 'Daily Closing' },
+  { to: '/admin/finance/profit',   icon: '💸', label: 'Profit' },
+]
 
 const NAV = [
   { group: 'Overview',
@@ -21,7 +34,6 @@ const NAV = [
   { group: 'Operations',
     items: [
       { to: '/admin/transactions', icon: <MdReceipt />,      label: 'Transactions' },
-      { to: '/admin/finance',      icon: <MdAccountBalance />,label: 'Financial Control' },
     ]},
   { group: 'Employees',
     items: [
@@ -48,6 +60,8 @@ export default function AdminSidebar() {
   const navigate     = useNavigate()
   const { logout }   = useRoleBasedAuth()
   const user         = getUserByRole('admin')
+  const financeOpen  = pathname.startsWith('/admin/finance')
+  const [finExpanded, setFinExpanded] = useState(financeOpen)
 
   const handleLogout = async () => {
     try { await api('/auth/logout', { method: 'POST', headers: { Authorization: `Bearer ${getTokenByRole('admin')}` } }) } catch (_) {}
@@ -66,18 +80,45 @@ export default function AdminSidebar() {
       </div>
 
       <nav className="adm-sidebar-nav" style={{ gap: 0 }}>
-        {NAV.map(group => (
+        {NAV.map((group, gi) => (
           <div key={group.group}>
             <div style={{ fontSize: 10, fontWeight: 800, color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', letterSpacing: 1.2, padding: '14px 14px 4px' }}>
               {group.group}
             </div>
             {group.items.map(item => (
               <Link key={item.to} to={item.to}
-                className={`adm-nav-link ${pathname.startsWith(item.to) ? 'active' : ''}`}>
+                className={`adm-nav-link ${pathname === item.to ? 'active' : ''}`}>
                 <span className="adm-nav-icon">{item.icon}</span>
                 <span>{item.label}</span>
               </Link>
             ))}
+            {/* Finance submenu after Operations group */}
+            {gi === 1 && (
+              <>
+                <button
+                  onClick={() => setFinExpanded(v => !v)}
+                  className={`adm-nav-link ${financeOpen ? 'active' : ''}`}
+                  style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left', justifyContent: 'space-between' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span className="adm-nav-icon"><MdAccountBalance /></span>
+                    <span>Financial Control</span>
+                  </span>
+                  {finExpanded ? <MdExpandLess /> : <MdExpandMore />}
+                </button>
+                {finExpanded && (
+                  <div style={{ paddingLeft: 12 }}>
+                    {FINANCE_ITEMS.map(item => (
+                      <Link key={item.to} to={item.to}
+                        className={`adm-nav-link ${pathname === item.to ? 'active' : ''}`}
+                        style={{ fontSize: 12, padding: '7px 14px' }}>
+                        <span style={{ fontSize: 14 }}>{item.icon}</span>
+                        <span>{item.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
           </div>
         ))}
       </nav>

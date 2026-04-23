@@ -30,6 +30,7 @@ import Finance from './pages/superadmin/Finance'
 import Configuration from './pages/superadmin/Configuration'
 import Reports from './pages/superadmin/Reports'
 import Security from './pages/superadmin/Security'
+import SuperAdminCustomers from './pages/superadmin/Customers'
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard'
@@ -43,7 +44,15 @@ import AdminFinance from './pages/admin/Finance'
 import AdminCustomers from './pages/admin/Customers'
 import AdminReports from './pages/admin/Reports'
 import AdminSecurity from './pages/admin/Security'
-import AdminConfig from './pages/admin/Config'  
+import AdminConfig from './pages/admin/Config'
+import FinanceDashboard from './pages/admin/FinanceDashboard'
+import Wallets from './pages/admin/Wallets'
+import Ledger from './pages/admin/Ledger'
+import CashFlow from './pages/admin/CashFlow'
+import Expenses from './pages/admin/Expenses'
+import Settlements from './pages/admin/Settlements'
+import DailyClosing from './pages/admin/DailyClosing'
+import Profit from './pages/admin/Profit'
 
 // Employee Pages
 import EmployeeDashboard from './pages/employee/Dashboard'
@@ -52,6 +61,7 @@ import AddCustomer from './pages/employee/AddCustomer'
 import Services from './pages/employee/Services'
 import EmployeeReports from './pages/employee/EmployeeReports'
 import Profile from './pages/employee/Profile'
+import Leads from './pages/employee/Leads'
 import EmployeeNavbar from './components/employee/EmployeeNavbar'
 import AdminSidebar from './components/admin/AdminSidebar'
 
@@ -124,13 +134,21 @@ export default function App() {
         <Route path="/superadmin/finance"    element={<SuperAdminRoute><Finance /></SuperAdminRoute>} />
         <Route path="/superadmin/config"     element={<SuperAdminRoute><Configuration /></SuperAdminRoute>} />
         <Route path="/superadmin/reports"    element={<SuperAdminRoute><Reports /></SuperAdminRoute>} />
+        <Route path="/superadmin/customers"  element={<SuperAdminRoute><SuperAdminCustomers /></SuperAdminRoute>} />
         <Route path="/superadmin/security"   element={<SuperAdminRoute><Security /></SuperAdminRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin/dashboard"       element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         <Route path="/admin/insights"        element={<AdminRoute><AdminInsights /></AdminRoute>} />
         <Route path="/admin/transactions"    element={<AdminRoute><AdminTransactions /></AdminRoute>} />
-        <Route path="/admin/finance"         element={<AdminRoute><AdminFinance /></AdminRoute>} />
+        <Route path="/admin/finance"         element={<AdminRoute><FinanceDashboard /></AdminRoute>} />
+        <Route path="/admin/finance/wallets"     element={<AdminRoute><Wallets /></AdminRoute>} />
+        <Route path="/admin/finance/ledger"      element={<AdminRoute><Ledger /></AdminRoute>} />
+        <Route path="/admin/finance/cashflow"    element={<AdminRoute><CashFlow /></AdminRoute>} />
+        <Route path="/admin/finance/expenses"    element={<AdminRoute><Expenses /></AdminRoute>} />
+        <Route path="/admin/finance/settlements" element={<AdminRoute><Settlements /></AdminRoute>} />
+        <Route path="/admin/finance/closing"     element={<AdminRoute><DailyClosing /></AdminRoute>} />
+        <Route path="/admin/finance/profit"      element={<AdminRoute><Profit /></AdminRoute>} />
         <Route path="/admin/customers"       element={<AdminRoute><AdminCustomers /></AdminRoute>} />
         <Route path="/admin/reports"         element={<AdminRoute><AdminReports /></AdminRoute>} />
         <Route path="/admin/security"        element={<AdminRoute><AdminSecurity /></AdminRoute>} />
@@ -145,6 +163,7 @@ export default function App() {
         <Route path="/employee/customer-info"element={<EmployeeRoute><CustomerInfo /></EmployeeRoute>} />
         <Route path="/employee/add-customer" element={<EmployeeRoute><AddCustomer /></EmployeeRoute>} />
         <Route path="/employee/services"     element={<EmployeeRoute><Services /></EmployeeRoute>} />
+        <Route path="/employee/leads"         element={<EmployeeRoute><Leads /></EmployeeRoute>} />
         <Route path="/employee/attendance"    element={<EmployeeRoute><EmployeeAttendance /></EmployeeRoute>} />
         <Route path="/employee/reports"       element={<EmployeeRoute><EmployeeReports /></EmployeeRoute>} />
         <Route path="/employee/profile"       element={<EmployeeRoute><Profile Sidebar={EmployeeNavbar} /></EmployeeRoute>} />

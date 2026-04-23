@@ -39,6 +39,7 @@ const NAV = [
   {
     group: 'Reports',
     items: [
+      { to: '/superadmin/customers',    icon: <MdPeople />,       label: 'Customers (All)' },
       { to: '/superadmin/reports',      icon: <MdAssessment />,   label: 'Reports & Downloads' },
       { to: '/superadmin/security',     icon: <MdSecurity />,     label: 'Security & Control' },
     ],

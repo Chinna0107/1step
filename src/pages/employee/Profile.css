@@ -452,3 +452,242 @@
   .profile-details-card { margin: 0 16px 24px; }
   .profile-details-header, .profile-detail-item { padding: 20px 24px; }
 }
+
+/* ═══════════════════════════════════════════
+   ID Card Styles
+   ═══════════════════════════════════════════ */
+
+.id-card-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 32px 40px 48px;
+}
+
+.id-card {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(64,32,112,0.22), 0 4px 16px rgba(0,0,0,0.1);
+  background: #fff;
+  position: relative;
+  animation: profile-card-in 0.8s 0.3s ease both;
+}
+
+/* Top gradient header */
+.id-card-header {
+  background: linear-gradient(135deg, #1a0a2e 0%, #402070 40%, #c02040 100%);
+  padding: 28px 28px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.id-card-header-orb {
+  position: absolute;
+  width: 180px; height: 180px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.07);
+  top: -60px; right: -40px;
+  filter: blur(20px);
+}
+
+.id-card-header-orb2 {
+  position: absolute;
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  background: rgba(212,175,55,0.12);
+  bottom: -50px; left: -20px;
+  filter: blur(16px);
+}
+
+.id-card-logo {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+
+.id-card-type {
+  position: relative;
+  z-index: 1;
+  color: rgba(255,255,255,0.55);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Card body */
+.id-card-body {
+  display: flex;
+  gap: 24px;
+  padding: 28px 28px 20px;
+  align-items: flex-start;
+}
+
+/* Photo */
+.id-card-photo {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.id-card-photo > img,
+.id-card-initials {
+  width: 96px;
+  height: 96px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 3px solid #f1f5f9;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+
+.id-card-initials {
+  background: linear-gradient(135deg, #402070, #c02040);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 900;
+  color: #fff;
+}
+
+.id-card-role-dot {
+  position: absolute;
+  bottom: -4px; right: -4px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+}
+
+.id-card-role-dot.profile-role-superadmin { background: #dc2626; }
+.id-card-role-dot.profile-role-admin      { background: #402070; }
+.id-card-role-dot.profile-role-employee   { background: #059669; }
+
+/* Info section */
+.id-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.id-card-name {
+  font-size: 20px;
+  font-weight: 900;
+  color: #1a0a2e;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.id-card-role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.id-card-role-badge.profile-role-superadmin { background: linear-gradient(135deg,#dc2626,#ef4444); color:#fff; }
+.id-card-role-badge.profile-role-admin      { background: linear-gradient(135deg,#402070,#6b21a8); color:#fff; }
+.id-card-role-badge.profile-role-employee   { background: linear-gradient(135deg,#059669,#10b981); color:#fff; }
+
+.id-card-branch {
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.id-card-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.id-card-field {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: #f8fafc;
+  border-radius: 8px;
+  gap: 8px;
+}
+
+.id-card-field-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.id-card-field-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a0a2e;
+  text-align: right;
+  word-break: break-all;
+}
+
+.id-card-empid {
+  font-family: 'Courier New', monospace;
+  color: #402070;
+  font-size: 14px;
+}
+
+/* Footer */
+.id-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+.id-card-coins {
+  font-size: 13px;
+  font-weight: 700;
+  color: #d97706;
+}
+
+.id-card-footer-id {
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+.id-card-status {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.id-card-status.active   { color: #059669; }
+.id-card-status.inactive { color: #dc2626; }
+
+/* Bottom color strip */
+.id-card-strip {
+  height: 6px;
+  background: linear-gradient(90deg, #402070, #6b21a8, #c02040, #d4af37);
+}
+
+/* Responsive */
+@media (max-width: 540px) {
+  .id-card-wrap { padding: 24px 16px 40px; }
+  .id-card-body { flex-direction: column; align-items: center; text-align: center; }
+  .id-card-info { width: 100%; }
+  .id-card-name { white-space: normal; }
+  .id-card-field { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .id-card-field-val { text-align: left; }
+}

@@ -1,55 +1,50 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
+import { useSuperAdminFinance, useBranches } from '../../hooks/useSuperAdmin'
 import { api } from '../../utils/api'
 import { getTokenByRole } from '../../utils/tokenUtils'
-import { useBranches } from '../../hooks/useSuperAdmin'
-import { SkeletonTable, SkeletonRows, SkeletonStats } from '../../components/superadmin/Skeleton'
+import { SkeletonTable, SkeletonStats } from '../../components/superadmin/Skeleton'
 import './superadmin.css'
 import './Dashboard.css'
 
-const auth = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
-const fmt    = n => Number(n).toLocaleString('en-IN')
-const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
+const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
+const fmt    = n => Number(parseFloat(n)||0).toLocaleString('en-IN')
+const fmtVal = n => { const v = parseFloat(n)||0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
 
-const CATEGORIES = ['Rent', 'Utilities', 'Salary', 'Maintenance', 'Marketing', 'Other']
-const emptyExp   = { branch: '', category: '', amount: '', date: new Date().toISOString().split('T')[0], note: '' }
+const today      = new Date().toISOString().split('T')[0]
+const monthStart = today.slice(0, 7) + '-01'
+
+const CATEGORIES = ['Rent','Utilities','Salary','Maintenance','Marketing','Other']
+const emptyExp   = { branch: '', category: '', amount: '', date: today, note: '' }
+
+const STAT_COLORS = ['#10b981','#d4af37','#dc2626','#059669','#402070']
 
 export default function Finance() {
-  const [tab, setTab]           = useState('ledger')
-  const [data, setData]         = useState(null)
-  const [loading, setLoading]   = useState(true)
+  const [tab, setTab]           = useState('overview')
+  const [from, setFrom]         = useState(monthStart)
+  const [to, setTo]             = useState(today)
+  const [branchFilter, setBranchFilter] = useState('')
   const [showForm, setShowForm] = useState(false)
   const [form, setForm]         = useState(emptyExp)
   const [saving, setSaving]     = useState(false)
   const [msg, setMsg]           = useState('')
   const [error, setError]       = useState('')
   const { branches }            = useBranches()
+  const { ledger, expenses, expSummary, serviceSummary, daily, totals, loading, refetch, addExpense: hookAddExpense } = useSuperAdminFinance(from, to, branchFilter)
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
-
-  const refetch = useCallback(() => {
-    setLoading(true)
-    api('/dashboard/finance', { headers: auth() })
-      .then(d => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
-
-  useEffect(() => { refetch() }, [refetch])
 
   const handleAddExp = async e => {
     e.preventDefault()
     setSaving(true); setMsg(''); setError('')
-    try {
-      await api('/dashboard/expenses', { method: 'POST', headers: auth(), body: JSON.stringify(form) })
-      setMsg('Expense added'); setForm(emptyExp); setShowForm(false); refetch()
-    } catch (err) { setError(err.message) }
+    const ok = await hookAddExpense(form)
+    if (ok) { setMsg('✅ Expense added'); setForm(emptyExp); setShowForm(false) }
+    else setError('Failed to add expense')
     setSaving(false)
   }
 
-  const ledger     = data?.ledger     ?? []
-  const expenses   = data?.expenses   ?? []
-  const expSummary = data?.expSummary ?? []
-  const totals     = data?.totals     ?? {}
+
+  const maxDaily = Math.max(1, ...daily.map(d => d.amount))
 
   return (
     <div className="sa-page">
@@ -57,37 +52,41 @@ export default function Finance() {
       <div className="sa-content">
         <div className="dash-topbar">
           <div>
-            <h1 className="dash-topbar-title">Financial Control</h1>
-            <p className="dash-topbar-sub">Track real money movement across all branches</p>
+            <h1 className="dash-topbar-title">💰 Financial Control</h1>
+            <p className="dash-topbar-sub">All branches · Real money movement</p>
           </div>
-          <div className="dash-topbar-right">
-            {['ledger','cash','expenses'].map(t => (
-              <button key={t} className="sa-btn sa-btn-sm"
-                style={{ background: tab === t ? 'linear-gradient(135deg,#402070,#c02040)' : '#f4f5fb',
-                         color: tab === t ? '#fff' : '#666', border: '1px solid #e8eaf0' }}
-                onClick={() => setTab(t)}>
-                {t === 'ledger' ? '🏦 Ledger' : t === 'cash' ? '💵 Cash' : '📉 Expenses'}
-              </button>
-            ))}
+          <div className="dash-topbar-right" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+            <input type="date" value={from} max={to} onChange={e => setFrom(e.target.value)}
+              style={{ padding: '6px 10px', borderRadius: 8, border: '1.5px solid #e2e8f0', fontSize: 13, fontFamily: 'inherit' }} />
+            <input type="date" value={to} min={from} max={today} onChange={e => setTo(e.target.value)}
+              style={{ padding: '6px 10px', borderRadius: 8, border: '1.5px solid #e2e8f0', fontSize: 13, fontFamily: 'inherit' }} />
+            <select value={branchFilter} onChange={e => setBranchFilter(e.target.value)}
+              style={{ padding: '6px 10px', borderRadius: 8, border: '1.5px solid #e2e8f0', fontSize: 13, fontFamily: 'inherit' }}>
+              <option value="">All Branches</option>
+              {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
+            </select>
+            <button className="sa-btn sa-btn-primary sa-btn-sm" onClick={refetch}>🔍 Apply</button>
           </div>
         </div>
 
         <div className="dash-main">
 
+          {/* ── Summary Stats ── */}
           <div className="dash-stats-row">
-            {loading ? <SkeletonStats count={4} /> : (
+            {loading ? <SkeletonStats count={5} /> : (
               <>
                 {[
-                  { label: 'Total Cash In',   value: fmtVal(totals.totalCashIn   ?? 0), color: '#10b981' },
-                  { label: 'Total Profit',    value: fmtVal(totals.totalProfit   ?? 0), color: '#d4af37' },
-                  { label: 'Total Expenses',  value: fmtVal(totals.totalExpenses ?? 0), color: '#c02040' },
-                  { label: 'Active Branches', value: ledger.length,                     color: '#402070' },
+                  { label: 'Total Cash In',   value: fmtVal(totals.totalCashIn   ?? 0), color: '#10b981', icon: '💵' },
+                  { label: 'Gross Profit',    value: fmtVal(totals.totalProfit   ?? 0), color: '#d4af37', icon: '📈' },
+                  { label: 'Total Expenses',  value: fmtVal(totals.totalExpenses ?? 0), color: '#dc2626', icon: '📉' },
+                  { label: 'Net Profit',      value: fmtVal(totals.netProfit     ?? 0), color: totals.netProfit >= 0 ? '#059669' : '#dc2626', icon: '🏆' },
+                  { label: 'Active Branches', value: ledger.length,                     color: '#402070', icon: '🏦' },
                 ].map(s => (
                   <div key={s.label} className="dash-stat" style={{ '--c': s.color }}>
-                    <div className="dash-stat-icon" style={{ fontSize: 22 }}>💰</div>
+                    <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
                     <div className="dash-stat-body">
                       <span className="dash-stat-label">{s.label}</span>
-                      <span className="dash-stat-value">{s.value}</span>
+                      <span className="dash-stat-value" style={{ color: s.color }}>{s.value}</span>
                     </div>
                   </div>
                 ))}
@@ -95,15 +94,34 @@ export default function Finance() {
             )}
           </div>
 
-          {tab === 'ledger' && (
-            <>
-              <div className="dash-section-label">🏦 Branch Transaction Ledger — Today</div>
+          {/* ── Tabs ── */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 20, flexWrap: 'wrap' }}>
+            {[
+              { key: 'overview',  label: '📊 Overview' },
+              { key: 'branches',  label: '🏦 Branch Ledger' },
+              { key: 'services',  label: '🔧 Service-wise' },
+              { key: 'daily',     label: '📅 Daily Trend' },
+              { key: 'expenses',  label: '📉 Expenses' },
+            ].map(t => (
+              <button key={t.key} onClick={() => setTab(t.key)}
+                style={{ padding: '9px 18px', borderRadius: 10, border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer',
+                  background: tab === t.key ? 'linear-gradient(135deg,#402070,#c02040)' : '#f0f2f8',
+                  color: tab === t.key ? '#fff' : '#64748b' }}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {/* ── OVERVIEW ── */}
+          {tab === 'overview' && (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+              {/* Branch Summary */}
               <div className="sa-card">
-                <div className="sa-card-header"><h2>Daily Ledger — All Branches</h2></div>
+                <div className="sa-card-header"><h2>🏦 Branch Performance</h2></div>
                 <div className="sa-table-wrap">
-                  {loading ? <SkeletonTable rows={3} cols={5} /> : (
+                  {loading ? <SkeletonTable rows={3} cols={4} /> : (
                     <table className="sa-table">
-                      <thead><tr><th>Branch</th><th>Transactions</th><th>Total Amount</th><th>Profit</th><th>Status</th></tr></thead>
+                      <thead><tr><th>Branch</th><th>Txns</th><th>Amount</th><th>Profit</th></tr></thead>
                       <tbody>
                         {ledger.map(l => (
                           <tr key={l.branch}>
@@ -111,62 +129,149 @@ export default function Finance() {
                             <td>{l.txn}</td>
                             <td style={{ color: '#059669', fontWeight: 700 }}>{fmtVal(l.cash_in)}</td>
                             <td style={{ color: '#d4af37', fontWeight: 800 }}>{fmtVal(l.profit)}</td>
-                            <td><span className="dash-badge badge-green">✅ Active</span></td>
                           </tr>
                         ))}
-                        {!ledger.length && <tr><td colSpan={5} className="sa-empty">No transactions today</td></tr>}
+                        {!ledger.length && <tr><td colSpan={4} className="sa-empty">No data for this period</td></tr>}
                       </tbody>
                     </table>
                   )}
                 </div>
               </div>
-            </>
-          )}
 
-          {tab === 'cash' && (
-            <>
-              <div className="dash-section-label">💵 Cash Register — Branch-wise</div>
-              {loading ? <SkeletonRows rows={4} /> : (
-                <div className="dash-grid-3">
-                  {ledger.map(l => (
-                    <div key={l.branch} className="dash-card">
-                      <div className="dash-card-head"><span>🏦</span><h3>{l.branch}</h3></div>
-                      <div className="dash-card-body">
-                        <div className="dash-kv-list">
-                          <div className="dash-kv"><span>Total Amount</span><span className="kv-green">{fmtVal(l.cash_in)}</span></div>
-                          <div className="dash-kv"><span>Profit</span><span className="kv-gold">{fmtVal(l.profit)}</span></div>
-                          <div className="dash-kv"><span>Transactions</span><span>{l.txn}</span></div>
+              {/* Expense Summary */}
+              <div className="sa-card">
+                <div className="sa-card-header"><h2>📉 Expense Breakdown</h2></div>
+                <div className="sa-card-body">
+                  {loading ? <SkeletonStats count={4} /> : expSummary.length === 0 ? (
+                    <div className="sa-empty">No expenses in this period</div>
+                  ) : expSummary.map((s, i) => {
+                    const pct = Math.round(s.total / (totals.totalExpenses || 1) * 100)
+                    return (
+                      <div key={s.category} style={{ marginBottom: 12 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 13 }}>
+                          <span style={{ fontWeight: 600, color: '#374151' }}>{s.category}</span>
+                          <span style={{ fontWeight: 800, color: '#dc2626' }}>{fmtVal(s.total)}</span>
+                        </div>
+                        <div style={{ height: 8, background: '#f1f5f9', borderRadius: 999, overflow: 'hidden' }}>
+                          <div style={{ width: `${pct}%`, height: '100%', background: STAT_COLORS[i % STAT_COLORS.length], borderRadius: 999 }} />
                         </div>
                       </div>
-                    </div>
-                  ))}
-                  {!ledger.length && <p style={{ color: '#9ca3af', fontSize: 13 }}>No data today</p>}
+                    )
+                  })}
                 </div>
-              )}
-            </>
+              </div>
+            </div>
           )}
 
-          {tab === 'expenses' && (
-            <>
-              <div className="dash-section-label">📉 Expense Management</div>
+          {/* ── BRANCH LEDGER ── */}
+          {tab === 'branches' && (
+            <div className="sa-card">
+              <div className="sa-card-header">
+                <h2>🏦 Branch-wise Ledger — {from} to {to}</h2>
+              </div>
+              <div className="sa-table-wrap">
+                {loading ? <SkeletonTable rows={4} cols={5} /> : (
+                  <table className="sa-table">
+                    <thead>
+                      <tr><th>Branch</th><th>Transactions</th><th>Total Amount</th><th>Customer Charges</th><th>Gross Profit</th><th>Share %</th></tr>
+                    </thead>
+                    <tbody>
+                      {ledger.map(l => (
+                        <tr key={l.branch}>
+                          <td><strong>{l.branch}</strong></td>
+                          <td style={{ fontWeight: 700 }}>{l.txn}</td>
+                          <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(l.cash_in)}</td>
+                          <td style={{ color: '#d97706', fontWeight: 700 }}>₹{fmt(l.charges)}</td>
+                          <td style={{ color: '#d4af37', fontWeight: 800 }}>₹{fmt(l.profit)}</td>
+                          <td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <div style={{ width: 60, height: 6, background: '#f1f5f9', borderRadius: 999, overflow: 'hidden' }}>
+                                <div style={{ width: `${Math.round(l.cash_in / (totals.totalCashIn || 1) * 100)}%`, height: '100%', background: '#402070', borderRadius: 999 }} />
+                              </div>
+                              <span style={{ fontSize: 12, color: '#64748b' }}>{Math.round(l.cash_in / (totals.totalCashIn || 1) * 100)}%</span>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                      {ledger.length > 0 && (
+                        <tr style={{ background: '#f8fafc', fontWeight: 800 }}>
+                          <td>Total</td>
+                          <td>{ledger.reduce((s, l) => s + l.txn, 0)}</td>
+                          <td style={{ color: '#059669' }}>₹{fmt(totals.totalCashIn)}</td>
+                          <td style={{ color: '#d97706' }}>₹{fmt(totals.totalCharges)}</td>
+                          <td style={{ color: '#d4af37' }}>₹{fmt(totals.totalProfit)}</td>
+                          <td>100%</td>
+                        </tr>
+                      )}
+                      {!ledger.length && <tr><td colSpan={6} className="sa-empty">No data for this period</td></tr>}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            </div>
+          )}
 
-              {!loading && expSummary.length > 0 && (
-                <div className="dash-grid-2" style={{ marginBottom: 16 }}>
-                  {expSummary.map(s => (
-                    <div key={s.category} className="dash-card">
-                      <div className="dash-card-head"><span>📌</span><h3>{s.category}</h3></div>
-                      <div className="dash-card-body">
-                        <span style={{ fontSize: '1.6rem', fontWeight: 900, color: '#c02040' }}>{fmtVal(s.total)}</span>
-                        <span style={{ display: 'block', fontSize: 12, color: '#9ca3af', marginTop: 4 }}>This month</span>
+          {/* ── SERVICE-WISE ── */}
+          {tab === 'services' && (
+            <div className="sa-card">
+              <div className="sa-card-header"><h2>🔧 Service-wise Revenue</h2></div>
+              <div className="sa-table-wrap">
+                {loading ? <SkeletonTable rows={5} cols={4} /> : (
+                  <table className="sa-table">
+                    <thead>
+                      <tr><th>Service</th><th>Transactions</th><th>Total Amount</th><th>Profit</th><th>Avg / Txn</th></tr>
+                    </thead>
+                    <tbody>
+                      {serviceSummary.map((s, i) => (
+                        <tr key={s.service_type}>
+                          <td><strong>{s.service_type}</strong></td>
+                          <td>{s.txn}</td>
+                          <td style={{ color: '#059669', fontWeight: 700 }}>{fmtVal(s.amount)}</td>
+                          <td style={{ color: '#d4af37', fontWeight: 800 }}>{fmtVal(s.profit)}</td>
+                          <td style={{ color: '#64748b', fontSize: 12 }}>{s.txn ? fmtVal(s.amount / s.txn) : '—'}</td>
+                        </tr>
+                      ))}
+                      {!serviceSummary.length && <tr><td colSpan={5} className="sa-empty">No data</td></tr>}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ── DAILY TREND ── */}
+          {tab === 'daily' && (
+            <div className="sa-card">
+              <div className="sa-card-header"><h2>📅 Daily Revenue Trend</h2></div>
+              <div style={{ padding: '16px 20px' }}>
+                {loading ? <SkeletonStats count={4} /> : daily.length === 0 ? (
+                  <div className="sa-empty">No data for this period</div>
+                ) : daily.map(d => {
+                  const pct = Math.round(d.amount / maxDaily * 100)
+                  return (
+                    <div key={d.day} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+                      <div style={{ width: 90, fontSize: 12, color: '#64748b', flexShrink: 0 }}>
+                        {new Date(d.day).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                      </div>
+                      <div style={{ flex: 1, height: 24, background: '#f1f5f9', borderRadius: 6, overflow: 'hidden' }}>
+                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg,#402070,#c02040)', borderRadius: 6, minWidth: 4, transition: 'width 0.6s ease' }} />
+                      </div>
+                      <div style={{ width: 100, textAlign: 'right', flexShrink: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: '#1a0a2e' }}>{fmtVal(d.amount)}</div>
+                        <div style={{ fontSize: 11, color: '#94a3b8' }}>{d.txn} txns</div>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
+          {/* ── EXPENSES ── */}
+          {tab === 'expenses' && (
+            <>
               {msg   && <div className="sa-alert sa-alert-success" style={{ marginBottom: 12 }}>✅ {msg}</div>}
               {error && <div className="sa-alert sa-alert-error"   style={{ marginBottom: 12 }}>❌ {error}</div>}
-
               <div className="sa-card">
                 <div className="sa-card-header">
                   <h2>All Expenses ({expenses.length})</h2>
@@ -182,7 +287,7 @@ export default function Finance() {
                           <label>Branch *</label>
                           <select required value={form.branch} onChange={e => set('branch', e.target.value)}>
                             <option value="">Select branch</option>
-                            {branches.map(b => <option key={b.id} value={b.city}>{b.city}</option>)}
+                            {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
                           </select>
                         </div>
                         <div className="sa-form-group">
@@ -223,7 +328,7 @@ export default function Finance() {
                             <td style={{ color: '#9ca3af', fontSize: 12 }}>{e.note || '—'}</td>
                           </tr>
                         ))}
-                        {!expenses.length && <tr><td colSpan={5} className="sa-empty">No expenses recorded</td></tr>}
+                        {!expenses.length && <tr><td colSpan={5} className="sa-empty">No expenses in this period</td></tr>}
                       </tbody>
                     </table>
                   )}

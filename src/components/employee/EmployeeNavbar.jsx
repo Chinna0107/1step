@@ -2,7 +2,7 @@ import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   MdDashboard, MdPeople, MdPersonAdd,
-  MdMiscellaneousServices, MdPerson, MdLogout, MdBarChart
+  MdMiscellaneousServices, MdPerson, MdLogout, MdBarChart, MdLeaderboard
 } from 'react-icons/md'
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
@@ -14,6 +14,7 @@ import '../../pages/dashboard.css'
 const links = [
   { to: '/employee/dashboard',     icon: <MdDashboard />,             label: 'Dashboard' },
   { to: '/employee/services',      icon: <MdMiscellaneousServices />, label: 'New Transaction' },
+  { to: '/employee/leads',         icon: <MdLeaderboard />,           label: '🎯 Leads' },
   { to: '/employee/customer-info', icon: <MdPeople />,                label: 'Customers' },
   { to: '/employee/add-customer',  icon: <MdPersonAdd />,             label: 'Add Customer' },
   { to: '/employee/reports',       icon: <MdBarChart />,              label: 'Reports' },

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react'
 import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
-import { MdLogin, MdLogout, MdRefresh, MdTrendingUp, MdAccountBalanceWallet, MdMonetizationOn, MdStar } from 'react-icons/md'
+import { MdLogin, MdLogout, MdRefresh, MdTrendingUp, MdTrendingDown, MdAccountBalanceWallet, MdMonetizationOn, MdStar, MdPeople, MdPersonAdd, MdPerson } from 'react-icons/md'
 import './EmployeeDashboard.css'
 
 const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('employee') || getTokenByRole('admin')}` })
@@ -30,13 +30,27 @@ function AnimatedNumber({ value, prefix = '', suffix = '' }) {
   return <>{prefix}{display.toLocaleString('en-IN')}{suffix}</>
 }
 
-function StatCard({ icon, label, value, sub, color, delay = 0 }) {
+function GrowthBadge({ pct }) {
+  if (pct === null || pct === undefined) return null
+  const up = pct >= 0
+  return (
+    <span className={`ed-growth ${up ? 'ed-growth-up' : 'ed-growth-down'}`}>
+      {up ? <MdTrendingUp size={12} /> : <MdTrendingDown size={12} />}
+      {Math.abs(pct)}%
+    </span>
+  )
+}
+
+function StatCard({ icon, label, value, sub, color, delay = 0, growth }) {
   return (
     <div className="ed-stat" style={{ '--color': color, animationDelay: `${delay}ms` }}>
       <div className="ed-stat-glow" />
       <div className="ed-stat-icon">{icon}</div>
       <div className="ed-stat-label">{label}</div>
-      <div className="ed-stat-value">{value}</div>
+      <div className="ed-stat-value-row">
+        <div className="ed-stat-value">{value}</div>
+        {growth !== undefined && <GrowthBadge pct={growth} />}
+      </div>
       {sub && <div className="ed-stat-sub">{sub}</div>}
     </div>
   )
@@ -107,22 +121,53 @@ export default function EmployeeDashboard() {
           </div>
         </div>
 
-        {/* ── Stats ── */}
+        {/* ── Stats Row 1 ── */}
         <div className="ed-stats">
           {loading ? [1,2,3,4].map(i => <div key={i} className="ed-stat-skel" />) : (
             <>
               <StatCard icon={<MdTrendingUp />}           color="#402070" delay={0}
                 label="Transactions Today" value={<AnimatedNumber value={s.txnToday ?? 0} />}
-                sub={`Month: ${fmt(s.txnMonth ?? 0)}`} />
+                sub={`Month: ${fmt(s.txnMonth ?? 0)}`}
+                growth={s.txnGrowth} />
               <StatCard icon={<MdAccountBalanceWallet />} color="#c02040" delay={100}
-                label="Value Handled" value={fmtVal(s.valueToday ?? 0)}
-                sub={`Month: ${fmtVal(s.valueMonth ?? 0)}`} />
+                label="Value Handled Today" value={fmtVal(s.valueToday ?? 0)}
+                sub={`Month: ${fmtVal(s.valueMonth ?? 0)}`}
+                growth={s.valueGrowth} />
               <StatCard icon={<MdMonetizationOn />}       color="#d4af37" delay={200}
-                label="Profit Generated" value={fmtVal(s.profitToday ?? 0)}
-                sub={`Month: ${fmtVal(s.profitMonth ?? 0)}`} />
+                label="Transactions This Month" value={<AnimatedNumber value={s.txnMonth ?? 0} />}
+                sub={`Today: ${fmt(s.txnToday ?? 0)}`} />
               <StatCard icon={<MdStar />}                 color="#059669" delay={300}
                 label="MoneySpot Coins" value={<AnimatedNumber value={profile.coins ?? 0} prefix="🪙 " />}
                 sub="Earn more by working longer" />
+            </>
+          )}
+        </div>
+
+        {/* ── Stats Row 2 ── */}
+        <div className="ed-stats" style={{ gridTemplateColumns: 'repeat(4,1fr)', marginBottom: 24 }}>
+          {loading ? [1,2,3,4].map(i => <div key={i} className="ed-stat-skel" />) : (
+            <>
+              <StatCard icon={<MdPeople />}    color="#0ea5e9" delay={0}
+                label="Customers Attended Today" value={<AnimatedNumber value={s.custAttendedToday ?? 0} />}
+                sub="Unique customers served" />
+              <StatCard icon={<MdPersonAdd />} color="#8b5cf6" delay={100}
+                label="New Customers Today" value={<AnimatedNumber value={s.custNewToday ?? 0} />}
+                sub="Added by you today" />
+              <StatCard icon={<MdPerson />}    color="#f59e0b" delay={200}
+                label="Total My Customers" value={<AnimatedNumber value={s.custTotal ?? 0} />}
+                sub="All time" />
+              <div className="ed-stat ed-earnings-stat" style={{ '--color': '#059669', animationDelay: '300ms' }}>
+                <div className="ed-stat-glow" />
+                <div className="ed-stat-icon">💸</div>
+                <div className="ed-stat-label">Today's Earnings</div>
+                <div className="ed-stat-value-row">
+                  <div className="ed-stat-value ed-earnings-val">{fmtVal(s.profitToday ?? 0)}</div>
+                </div>
+                <div className="ed-earnings-coins">
+                  🪙 {fmt(Math.round((s.profitToday ?? 0) / 10))} coins equivalent
+                </div>
+                <div className="ed-stat-sub">Month: {fmtVal(s.profitMonth ?? 0)}</div>
+              </div>
             </>
           )}
         </div>
@@ -153,6 +198,17 @@ export default function EmployeeDashboard() {
               </div>
               <div className="ed-target-msg">
                 {pct >= 100 ? '🎉 Target achieved! Outstanding work!' : `${TARGET - (s.txnToday ?? 0)} more to reach today's target`}
+              </div>
+              <div className="ed-target-divider" />
+              <div className="ed-target-extra">
+                <div className="ed-target-extra-item">
+                  <span>💰 Value This Month</span>
+                  <strong style={{ color: '#059669' }}>{fmtVal(s.valueMonth ?? 0)}</strong>
+                </div>
+                <div className="ed-target-extra-item">
+                  <span>📊 Txns This Month</span>
+                  <strong style={{ color: '#402070' }}>{fmt(s.txnMonth ?? 0)}</strong>
+                </div>
               </div>
             </div>
           </div>

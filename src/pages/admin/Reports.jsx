@@ -4,17 +4,12 @@ import { getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import ReportView from '../employee/ReportView'
 import '../../pages/dashboard.css'
+import { useAdminReports } from '../../hooks/useFinance'
 
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 
 export default function AdminReports() {
-  const [employees, setEmployees] = useState([])
-
-  useEffect(() => {
-    api('/dashboard/employees', { headers: auth() })
-      .then(d => setEmployees(d))
-      .catch(() => {})
-  }, [])
+  const { employees } = useAdminReports()
 
   return (
     <div className="dash-page">

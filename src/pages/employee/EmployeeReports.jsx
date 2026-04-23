@@ -11,13 +11,130 @@ const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/
 const today  = new Date().toISOString().split('T')[0]
 const monthStart = today.slice(0, 7) + '-01'
 
+const SERVICE_ICONS = {
+  'Card Withdrawal':       '💳',
+  'Bill Pay + Withdrawal': '📄',
+  'Money Transfer (DMT)':  '💸',
+  'AEPS':                  '🏧',
+  'Only Bill Payment':     '🧾',
+}
+
+const COLORS = ['#402070','#c02040','#d4af37','#059669','#0ea5e9','#f59e0b','#8b5cf6','#ec4899']
+
+// ── Txn Detail Modal ────────────────────────────────────────────────────
+function TxnDetailModal({ txn, onClose }) {
+  if (!txn) return null
+  const fields = [
+    { label: 'Transaction ID', value: `#${txn.id}` },
+    { label: 'Date & Time',    value: new Date(txn.created_at).toLocaleString('en-IN') },
+    { label: 'Customer',       value: txn.cust_name   || '—' },
+    { label: 'Customer PAN',   value: txn.cust_pan    || '—' },
+    { label: 'Customer Mobile',value: txn.cust_mobile || '—' },
+    { label: 'Service',        value: txn.service_type || '—' },
+    { label: 'Platform',       value: txn.platform || txn.bill_platform || '—' },
+    { label: 'Bank',           value: txn.bank || '—' },
+    { label: 'Card Type',      value: txn.card || '—' },
+    { label: 'Card Last 4',    value: txn.card_last4 || '—' },
+    { label: 'Amount',         value: `₹${fmt(txn.amount)}`,         color: '#059669' },
+    { label: 'Charges',        value: `₹${fmt(txn.charges_amount)}`, color: '#d97706' },
+    { label: 'Settled Amount', value: `₹${fmt(txn.settled_amount)}` },
+    { label: 'Payment Mode',   value: txn.payment_mode  || '—' },
+    { label: 'Received Mode',  value: txn.received_mode || '—' },
+    { label: 'Note',           value: txn.note || '—' },
+  ]
+  return (
+    <div onClick={e => e.target === e.currentTarget && onClose()}
+      style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+      <div style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:540, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
+        <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+          <div>
+            <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Transaction Details</div>
+            <div style={{ color:'#fff', fontWeight:900, fontSize:18, marginTop:2 }}>{SERVICE_ICONS[txn.service_type] || '📋'} {txn.service_type || 'Transaction'}</div>
+          </div>
+          <button onClick={onClose} style={{ background:'rgba(255,255,255,0.15)', border:'none', color:'#fff', width:32, height:32, borderRadius:'50%', cursor:'pointer', fontSize:16, display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
+        </div>
+        <div style={{ overflowY:'auto', padding:24 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+            {fields.map(f => (
+              <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px' }}>
+                <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
+                <div style={{ fontSize:14, fontWeight:700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', justifyContent:'flex-end', flexShrink:0 }}>
+          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ── Group Txns Modal (clicking count badge) ───────────────────────────
+function GroupTxnsModal({ label, name, txns, onClose, onViewTxn }) {
+  if (!txns) return null
+  return (
+    <div onClick={e => e.target === e.currentTarget && onClose()}
+      style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.55)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+      <div style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:680, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
+        <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+          <div>
+            <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>{label} Transactions</div>
+            <div style={{ color:'#fff', fontWeight:900, fontSize:18, marginTop:2 }}>{SERVICE_ICONS[name] || '📋'} {name} · {txns.length} records</div>
+          </div>
+          <button onClick={onClose} style={{ background:'rgba(255,255,255,0.15)', border:'none', color:'#fff', width:32, height:32, borderRadius:'50%', cursor:'pointer', fontSize:16, display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
+        </div>
+        <div style={{ overflowY:'auto' }}>
+          <table style={{ width:'100%', borderCollapse:'collapse', fontSize:13 }}>
+            <thead>
+              <tr style={{ background:'#f8fafc', position:'sticky', top:0 }}>
+                <th style={{ padding:'10px 16px', textAlign:'left', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:0.4, borderBottom:'1px solid #e2e8f0' }}>#</th>
+                <th style={{ padding:'10px 16px', textAlign:'left', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:0.4, borderBottom:'1px solid #e2e8f0' }}>Date</th>
+                <th style={{ padding:'10px 16px', textAlign:'left', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:0.4, borderBottom:'1px solid #e2e8f0' }}>Customer</th>
+                <th style={{ padding:'10px 16px', textAlign:'left', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:0.4, borderBottom:'1px solid #e2e8f0' }}>Amount</th>
+                <th style={{ padding:'10px 16px', textAlign:'left', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:0.4, borderBottom:'1px solid #e2e8f0' }}>Settled</th>
+                <th style={{ padding:'10px 16px', textAlign:'left', fontSize:11, fontWeight:700, color:'#64748b', textTransform:'uppercase', letterSpacing:0.4, borderBottom:'1px solid #e2e8f0' }}>View</th>
+              </tr>
+            </thead>
+            <tbody>
+              {txns.map((t, i) => (
+                <tr key={t.id} style={{ borderBottom:'1px solid #f1f5f9', transition:'background 0.15s' }}
+                  onMouseEnter={e => e.currentTarget.style.background='#faf5ff'}
+                  onMouseLeave={e => e.currentTarget.style.background=''}>
+                  <td style={{ padding:'11px 16px', color:'#94a3b8', fontSize:12 }}>{i+1}</td>
+                  <td style={{ padding:'11px 16px', fontSize:12, color:'#64748b' }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                  <td style={{ padding:'11px 16px', fontWeight:700, color:'#1a0a2e' }}>{t.cust_name || '—'}</td>
+                  <td style={{ padding:'11px 16px', color:'#059669', fontWeight:700 }}>₹{fmt(t.amount)}</td>
+                  <td style={{ padding:'11px 16px', color:'#402070', fontWeight:700 }}>₹{fmt(t.settled_amount || 0)}</td>
+                  <td style={{ padding:'11px 16px' }}>
+                    <button onClick={() => onViewTxn(t)}
+                      style={{ background:'#ede9fe', border:'none', color:'#402070', borderRadius:6, padding:'4px 12px', cursor:'pointer', fontSize:12, fontWeight:700 }}>
+                      View
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', justifyContent:'flex-end', flexShrink:0 }}>
+          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function EmployeeReports() {
-  const [data, setData]       = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [from, setFrom]       = useState(monthStart)
-  const [to, setTo]           = useState(today)
-  const [tab, setTab]         = useState('service')
-  const printRef              = useRef()
+  const [data, setData]               = useState(null)
+  const [loading, setLoading]         = useState(true)
+  const [from, setFrom]               = useState(monthStart)
+  const [to, setTo]                   = useState(today)
+  const [tab, setTab]                 = useState('service')
+  const [selectedTxn, setSelectedTxn] = useState(null)
+  const [groupTxns, setGroupTxns]     = useState(null)  // { label, name, txns }
+  const printRef                      = useRef()
 
   const load = useCallback(() => {
     setLoading(true)
@@ -34,7 +151,6 @@ export default function EmployeeReports() {
   const platformSummary = data?.platformSummary ?? []
   const serviceSummary  = data?.serviceSummary  ?? []
 
-  // Convert to rows for display
   const serviceRows  = serviceSummary.map(s => ({ name: s.name, count: s.count, amount: s.amount, profit: s.commission ?? 0 }))
   const platformRows = platformSummary.map(p => ({ name: p.name, count: p.count, amount: p.amount, profit: 0 }))
 
@@ -44,7 +160,6 @@ export default function EmployeeReports() {
   const activeRows = tab === 'service' ? serviceRows : platformRows
   const maxAmt     = tab === 'service' ? maxSvcAmt   : maxPltAmt
 
-  // ── Export Excel (CSV) ──
   const exportExcel = () => {
     if (!activeRows.length) return
     const label = tab === 'service' ? 'Service' : 'Platform'
@@ -57,7 +172,6 @@ export default function EmployeeReports() {
     a.click()
   }
 
-  // ── Export PDF (print) ──
   const exportPDF = () => {
     const label = tab === 'service' ? 'Service' : 'Platform'
     const rows  = activeRows.map(r =>
@@ -95,10 +209,12 @@ export default function EmployeeReports() {
     setTimeout(() => { w.print(); w.close() }, 400)
   }
 
-  const COLORS = ['#402070','#c02040','#d4af37','#059669','#0ea5e9','#f59e0b','#8b5cf6','#ec4899']
-
   return (
     <div className="er-page">
+      {selectedTxn && <TxnDetailModal txn={selectedTxn} onClose={() => setSelectedTxn(null)} />}
+      {groupTxns  && <GroupTxnsModal label={groupTxns.label} name={groupTxns.name} txns={groupTxns.txns}
+        onClose={() => setGroupTxns(null)}
+        onViewTxn={t => { setGroupTxns(null); setSelectedTxn(t) }} />}
       <EmployeeNavbar />
       <div className="er-content">
 
@@ -136,11 +252,11 @@ export default function EmployeeReports() {
         {/* ── Summary Cards ── */}
         <div className="er-summary">
           {[
-            { label: 'Total Transactions', value: fmt(totals.count ?? 0),          color: '#402070', icon: '📊' },
-            { label: 'Total Value',        value: fmtVal(totals.amount ?? 0),       color: '#059669', icon: '💰' },
-            { label: 'Total Profit',       value: fmtVal(totals.profit ?? 0),       color: '#d4af37', icon: '📈' },
-            { label: 'Services Used',      value: serviceRows.length,               color: '#c02040', icon: '🔧' },
-            { label: 'Platforms Used',     value: platformRows.length,              color: '#0ea5e9', icon: '📱' },
+            { label: 'Total Transactions', value: fmt(totals.count ?? 0),    color: '#402070', icon: '📊' },
+            { label: 'Total Value',        value: fmtVal(totals.amount ?? 0), color: '#059669', icon: '💰' },
+            { label: 'Total Profit',       value: fmtVal(totals.profit ?? 0), color: '#d4af37', icon: '📈' },
+            { label: 'Services Used',      value: serviceRows.length,         color: '#c02040', icon: '🔧' },
+            { label: 'Platforms Used',     value: platformRows.length,        color: '#0ea5e9', icon: '📱' },
           ].map(c => (
             <div key={c.label} className="er-sum-card" style={{ '--c': c.color }}>
               <div className="er-sum-icon">{c.icon}</div>
@@ -152,19 +268,60 @@ export default function EmployeeReports() {
 
         {/* ── Tabs ── */}
         <div className="er-tabs">
-          <button className={`er-tab ${tab === 'service' ? 'active' : ''}`}  onClick={() => setTab('service')}>🔧 Service-wise</button>
+          <button className={`er-tab ${tab === 'service'  ? 'active' : ''}`} onClick={() => setTab('service')}>🔧 Service-wise</button>
           <button className={`er-tab ${tab === 'platform' ? 'active' : ''}`} onClick={() => setTab('platform')}>📱 Platform-wise</button>
+          <button className={`er-tab ${tab === 'txns'     ? 'active' : ''}`} onClick={() => setTab('txns')}>📋 Transactions</button>
           <div className="er-tab-actions">
             <button className="er-btn er-btn-sm er-btn-excel" onClick={exportExcel}><MdDownload size={14} /> Excel</button>
             <button className="er-btn er-btn-sm er-btn-pdf"   onClick={exportPDF}><MdDownload size={14} /> PDF</button>
           </div>
         </div>
 
-        {/* ── Chart + Table ── */}
+        {/* ── Content ── */}
         {loading ? (
           <div className="er-skeleton-wrap">
             {[1,2,3,4].map(i => <div key={i} className="er-skel" style={{ animationDelay: `${i*80}ms` }} />)}
           </div>
+        ) : tab === 'txns' ? (
+          txns.length === 0 ? (
+            <div className="er-empty">
+              <div className="er-empty-icon">📭</div>
+              <div>No transactions found for this period</div>
+            </div>
+          ) : (
+            <div className="er-table-card">
+              <div className="er-table-header">
+                <h2>📋 All Transactions ({txns.length})</h2>
+                <span style={{ fontSize:12, color:'#94a3b8' }}>Click a row to view full details</span>
+              </div>
+              <div className="er-table-wrap">
+                <table className="er-table">
+                  <thead>
+                    <tr>
+                      <th>#</th><th>Date</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {txns.map((t, i) => (
+                      <tr key={t.id} className="er-tr" onClick={() => setSelectedTxn(t)}
+                        style={{ cursor:'pointer', animationDelay:`${i*30}ms` }}
+                        onMouseEnter={e => e.currentTarget.style.background='#f0f2f8'}
+                        onMouseLeave={e => e.currentTarget.style.background=''}>
+                        <td><span className="er-rank" style={{ background: COLORS[i % COLORS.length] }}>{i+1}</span></td>
+                        <td style={{ fontSize:12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                        <td><strong>{t.cust_name || '—'}</strong></td>
+                        <td style={{ fontSize:12 }}>{SERVICE_ICONS[t.service_type] || ''} {t.service_type || '—'}</td>
+                        <td>{t.platform || t.bill_platform || '—'}</td>
+                        <td><span className="er-amt">₹{fmt(t.amount)}</span></td>
+                        <td style={{ color:'#d97706', fontWeight:700 }}>₹{fmt(t.charges_amount || 0)}</td>
+                        <td style={{ fontWeight:600 }}>₹{fmt(t.settled_amount || 0)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )
         ) : activeRows.length === 0 ? (
           <div className="er-empty">
             <div className="er-empty-icon">📭</div>
@@ -199,7 +356,7 @@ export default function EmployeeReports() {
               </div>
             </div>
 
-            {/* Donut-style breakdown */}
+            {/* Breakdown cards */}
             <div className="er-breakdown-grid">
               {activeRows.map((r, i) => (
                 <div key={r.name} className="er-breakdown-card" style={{ '--bc': COLORS[i % COLORS.length] }}>
@@ -253,7 +410,23 @@ export default function EmployeeReports() {
                       <tr key={r.name} className="er-tr" style={{ animationDelay: `${i * 40}ms` }}>
                         <td><span className="er-rank" style={{ background: COLORS[i % COLORS.length] }}>{i + 1}</span></td>
                         <td><strong>{r.name}</strong></td>
-                        <td><span className="er-tag">{r.count}</span></td>
+                        <td>
+                          <span
+                            className="er-tag"
+                            title="Click to view transactions"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => {
+                              const filtered = txns.filter(t =>
+                                tab === 'service'
+                                  ? t.service_type === r.name
+                                  : (t.platform || t.bill_platform) === r.name
+                              )
+                              setGroupTxns({ label: tab === 'service' ? 'Service' : 'Platform', name: r.name, txns: filtered })
+                            }}
+                          >
+                            {r.count}
+                          </span>
+                        </td>
                         <td><span className="er-amt">₹{fmt(r.amount)}</span></td>
                         <td><span className="er-profit">₹{fmt(r.profit)}</span></td>
                         <td style={{ color: '#64748b' }}>₹{fmt(Math.round(r.amount / r.count))}</td>

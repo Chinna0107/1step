@@ -1,33 +1,19 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
-import { api } from '../../utils/api'
-import { getTokenByRole } from '../../utils/tokenUtils'
+import { useTracking } from '../../hooks/useSuperAdmin'
 import { SkeletonTable, SkeletonRows } from '../../components/superadmin/Skeleton'
 import { MdRefresh, MdFilterList, MdClear, MdTrendingUp, MdWarning, MdPeople, MdStorefront } from 'react-icons/md'
 import './superadmin.css'
 import './Dashboard.css'
 
-const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${v.toLocaleString('en-IN')}` }
 
 export default function Tracking() {
-  const [tab, setTab]         = useState('employees')
-  const [data, setData]       = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  // Filters
-  const [filterBranch,  setFilterBranch]  = useState('')
-  const [filterEmp,     setFilterEmp]     = useState('')
+  const [tab, setTab]               = useState('employees')
+  const [filterBranch, setFilterBranch]   = useState('')
+  const [filterEmp, setFilterEmp]         = useState('')
   const [filterService, setFilterService] = useState('')
-
-  const load = () => {
-    setLoading(true)
-    api('/dashboard/tracking', { headers: auth() })
-      .then(d => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }
-
-  useEffect(() => { load() }, [])
+  const { data, loading, refetch: load } = useTracking()
 
   const branches  = data?.branches    ?? []
   const employees = data?.employees   ?? []

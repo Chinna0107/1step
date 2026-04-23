@@ -3,6 +3,7 @@ import AdminSidebar from '../../components/admin/AdminSidebar'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import '../../pages/dashboard.css'
+import { useAdminStats } from '../../hooks/useFinance'
 
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${Number(v).toLocaleString('en-IN')}` }

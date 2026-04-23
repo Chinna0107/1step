@@ -87,8 +87,8 @@ function ChangePasswordModal({ onClose }) {
 }
 
 export default function Profile({ Sidebar, isAdmin = false }) {
-  const [user, setUser]         = useState(null)
-  const [loading, setLoading]   = useState(true)
+  const [user, setUser]               = useState(null)
+  const [loading, setLoading]         = useState(true)
   const [showPwModal, setShowPwModal] = useState(false)
 
   useEffect(() => {
@@ -97,29 +97,18 @@ export default function Profile({ Sidebar, isAdmin = false }) {
       .catch(() => setLoading(false))
   }, [])
 
-  const role     = user?.is_superadmin ? 'Super Admin' : user?.is_admin ? 'Admin' : 'Employee'
+  const roleLabel = user?.is_superadmin ? 'Super Admin' : user?.is_admin ? 'Admin' : 'Employee'
   const roleClass = user?.is_superadmin ? 'profile-role-superadmin' : user?.is_admin ? 'profile-role-admin' : 'profile-role-employee'
-  const initials = user?.name?.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || '?'
-
-  const infoRows = user ? [
-    { icon: '✉️',  label: 'Email',        value: user.email },
-    { icon: '📱',  label: 'Mobile',       value: user.mobile    || null },
-    { icon: '🪪',  label: 'PAN',          value: user.pan       || null },
-    { icon: '🔢',  label: 'Aadhar',       value: user.aadhar    || null },
-    { icon: '🏢',  label: 'Branch',       value: user.branch    || null },
-    { icon: '👔',  label: 'Role',         value: role, isRole: true },
-    { icon: '📅',  label: 'Member Since', value: user.created_at
-        ? new Date(user.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })
-        : null },
-  ] : []
+  const initials  = user?.name?.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || '?'
+  const empId     = user?.id ? `MS-${String(user.id).padStart(5, '0')}` : '—'
+  const joinDate  = user?.created_at ? new Date(user.created_at).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' }) : '—'
 
   const content = (
     <div className="profile-page">
-      {/* Floating Background Orbs */}
       <div className="profile-orb profile-orb1" />
       <div className="profile-orb profile-orb2" />
       <div className="profile-orb profile-orb3" />
-      
+
       <div className="profile-content">
         {loading ? (
           <div className="profile-loading">
@@ -128,65 +117,84 @@ export default function Profile({ Sidebar, isAdmin = false }) {
           </div>
         ) : (
           <>
-            {/* Hero Banner */}
-            <div className="profile-hero">
-              <div className="profile-hero-orbs">
-                <div className="profile-hero-orb profile-hero-orb1" />
-                <div className="profile-hero-orb profile-hero-orb2" />
+            {/* Page title */}
+            <div style={{ padding: '32px 40px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>My Profile</div>
+                <h1 style={{ margin: '4px 0 0', fontSize: 26, fontWeight: 900, color: '#1a0a2e' }}>Employee ID Card</h1>
               </div>
-              <div className="profile-hero-content">
-                <div className="profile-hero-label">My Profile</div>
-                <h1 className="profile-hero-title">{user?.name || 'User'}</h1>
-                <div className="profile-hero-subtitle">{role} • {user?.branch || 'No Branch Assigned'}</div>
-              </div>
+              <button className="profile-change-pw-btn" onClick={() => setShowPwModal(true)}>🔒 Change Password</button>
             </div>
 
-            {/* Avatar & Name Section */}
-            <div className="profile-avatar-section">
-              <div className="profile-avatar">
-                {user?.photo_url ? (
-                  <img src={user.photo_url} alt={user.name} />
-                ) : (
-                  <div className="profile-avatar-initials">{initials}</div>
-                )}
-              </div>
-              
-              <div className="profile-name-card">
-                <div className="profile-name-info">
-                  <h2>{user?.name || 'User'}</h2>
-                  <p>{user?.email}</p>
+            {/* ── ID CARD ── */}
+            <div className="id-card-wrap">
+              <div className="id-card">
+                {/* Card Header */}
+                <div className="id-card-header">
+                  <div className="id-card-header-orb" />
+                  <div className="id-card-header-orb2" />
+                  <div className="id-card-logo">💰 MoneySpot</div>
+                  <div className="id-card-type">Employee Identity Card</div>
                 </div>
-                <button className="profile-change-pw-btn" onClick={() => setShowPwModal(true)}>
-                  🔒 Change Password
-                </button>
-              </div>
-            </div>
 
-            {/* Details Card */}
-            <div className="profile-details-card">
-              <div className="profile-details-header">
-                <span className="profile-details-header-icon">📋</span>
-                <h3>Account Details</h3>
-              </div>
-              
-              <div className="profile-details-grid">
-                {infoRows.map(({ icon, label, value, isRole }, i) => (
-                  <div key={label} className="profile-detail-item" style={{ animationDelay: `${i * 80}ms` }}>
-                    <div className="profile-detail-label">
-                      <span>{icon}</span>
-                      {label}
+                {/* Card Body */}
+                <div className="id-card-body">
+                  {/* Photo */}
+                  <div className="id-card-photo">
+                    {user?.photo_url
+                      ? <img src={user.photo_url} alt={user.name} />
+                      : <div className="id-card-initials">{initials}</div>}
+                    <div className={`id-card-role-dot ${roleClass}`} />
+                  </div>
+
+                  {/* Info */}
+                  <div className="id-card-info">
+                    <div className="id-card-name">{user?.name || '—'}</div>
+                    <div className={`id-card-role-badge ${roleClass}`}>
+                      {roleLabel === 'Super Admin' ? '👑' : roleLabel === 'Admin' ? '⭐' : '👤'} {user?.role || roleLabel}
                     </div>
-                    <div className={`profile-detail-value ${!value ? 'empty' : ''}`}>
-                      {isRole ? (
-                        <span className={`profile-role-badge ${roleClass}`}>
-                          {role === 'Super Admin' ? '👑' : role === 'Admin' ? '⭐' : '👤'} {role}
-                        </span>
-                      ) : (
-                        value || '—'
-                      )}
+                    <div className="id-card-branch">🏢 {user?.branch || 'No Branch Assigned'}</div>
+
+                    <div className="id-card-fields">
+                      <div className="id-card-field">
+                        <span className="id-card-field-label">Employee ID</span>
+                        <span className="id-card-field-val id-card-empid">{empId}</span>
+                      </div>
+                      <div className="id-card-field">
+                        <span className="id-card-field-label">Email</span>
+                        <span className="id-card-field-val">{user?.email || '—'}</span>
+                      </div>
+                      <div className="id-card-field">
+                        <span className="id-card-field-label">Mobile</span>
+                        <span className="id-card-field-val">{user?.mobile || '—'}</span>
+                      </div>
+                      <div className="id-card-field">
+                        <span className="id-card-field-label">PAN</span>
+                        <span className="id-card-field-val">{user?.pan || '—'}</span>
+                      </div>
+                      <div className="id-card-field">
+                        <span className="id-card-field-label">Aadhar</span>
+                        <span className="id-card-field-val">{user?.aadhar ? `XXXX XXXX ${user.aadhar.slice(-4)}` : '—'}</span>
+                      </div>
+                      <div className="id-card-field">
+                        <span className="id-card-field-label">Joined</span>
+                        <span className="id-card-field-val">{joinDate}</span>
+                      </div>
                     </div>
                   </div>
-                ))}
+                </div>
+
+                {/* Card Footer */}
+                <div className="id-card-footer">
+                  <div className="id-card-coins">🪙 {user?.coins ?? 0} Coins</div>
+                  <div className="id-card-footer-id">{empId}</div>
+                  <div className={`id-card-status ${user?.is_active !== false ? 'active' : 'inactive'}`}>
+                    {user?.is_active !== false ? '● Active' : '● Inactive'}
+                  </div>
+                </div>
+
+                {/* Decorative strip */}
+                <div className="id-card-strip" />
               </div>
             </div>
           </>

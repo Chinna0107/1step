@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
+import { useMasterTable, useChargesConfig } from '../../hooks/useSuperAdmin'
 import { api } from '../../utils/api'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import './superadmin.css'
@@ -324,22 +325,15 @@ function ServiceCharges({ service, branches, platforms, cards }) {
 
 // ── Main page ─────────────────────────────────────────────────
 export default function Configuration() {
-  const [masterData, setMasterData] = useState({ branches: [], platforms: [], cards: [] })
-  const [activeTab, setActiveTab]   = useState('masters')
+  const [activeTab, setActiveTab]         = useState('masters')
   const [activeService, setActiveService] = useState(SERVICES[0].value)
+  const { master, branches: configBranches } = useChargesConfig()
 
-  useEffect(() => {
-    Promise.all([
-      api('/master/all', { headers: auth() }),
-      api('/master/branches', { headers: auth() }),
-    ]).then(([all, branches]) => {
-      setMasterData({
-        branches: branches.filter(b => b.is_active),
-        platforms: all.platforms || [],
-        cards:     all.cards     || [],
-      })
-    }).catch(() => {})
-  }, [])
+  const masterData = {
+    branches:  (configBranches || []).filter(b => b.is_active),
+    platforms: master?.platforms || [],
+    cards:     master?.cards     || [],
+  }
 
   const currentService = SERVICES.find(s => s.value === activeService)
 

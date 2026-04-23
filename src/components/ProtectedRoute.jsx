@@ -29,7 +29,9 @@ export function AdminRoute({ children }) {
 }
 
 export function EmployeeRoute({ children }) {
-  return <ProtectedRoute requiredRole="employee">{children}</ProtectedRoute>
+  const token = getToken('employee') || getToken('admin')
+  if (!token) return <Navigate to="/login/employee" replace />
+  return children
 }
 
 export function CustomerRoute({ children }) {

@@ -4,10 +4,13 @@ import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { api } from '../../utils/api'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import { useCharges } from '../../hooks/useCharges'
+import { cacheGet, cacheSet, TTL } from '../../utils/cache'
 import '../../pages/dashboard.css'
+import './Services.css'
 
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('employee') || getTokenByRole('admin')}` })
-const fmt = n => { const num = parseFloat(n); return isNaN(num) ? '0' : num.toLocaleString('en-IN') }
+const fmt    = n => { const num = parseFloat(n); return isNaN(num) ? '0' : num.toLocaleString('en-IN') }
+const fmtVal = n => { const v = parseFloat(n) || 0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
 
 const PAYMENT_MODES = ['Cash', 'UPI', 'NEFT', 'IMPS', 'RTGS', 'Cheque']
 
@@ -39,22 +42,63 @@ export default function Services() {
   const [search, setSearch]       = useState('')
   const [customerProfile, setCustomerProfile]   = useState(null)
   const [loadingProfile, setLoadingProfile]     = useState(false)
+  const [menuTxnId, setMenuTxnId] = useState(null)
+  const [menuPos, setMenuPos]     = useState({ top: 0, left: 0 })
+  const [editTxn, setEditTxn]     = useState(null)
+  const [viewTxn, setViewTxn]     = useState(null)
 
   const { lookup } = useCharges()
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
   useEffect(() => {
-    api('/master/all', { headers: auth() }).then(d => setMaster(d)).catch(() => {})
-    api('/customers/approved', { headers: auth() }).then(d => setCustomers(d)).catch(() => {})
+    // Serve from cache instantly, then revalidate in background
+    const cachedMaster    = cacheGet('svc:master')
+    const cachedCustomers = cacheGet('svc:customers')
+    const cachedHistory   = cacheGet('svc:history')
+
+    if (cachedMaster)    setMaster(cachedMaster)
+    if (cachedCustomers) setCustomers(cachedCustomers)
+    if (cachedHistory)   setHistory(cachedHistory)
+
+    // Fetch stale/missing in parallel
+    const fetches = []
+
+    if (!cachedMaster)
+      fetches.push(
+        api('/master/all', { headers: auth() })
+          .then(d => { setMaster(d); cacheSet('svc:master', d, TTL.master) })
+          .catch(() => {})
+      )
+
+    if (!cachedCustomers)
+      fetches.push(
+        api('/customers/approved', { headers: auth() })
+          .then(d => { setCustomers(d); cacheSet('svc:customers', d, TTL.list) })
+          .catch(() => {})
+      )
+
+    if (!cachedHistory)
+      fetches.push(
+        api('/master/transactions/mine', { headers: auth() })
+          .then(d => { setHistory(d); cacheSet('svc:history', d, TTL.dashboard) })
+          .catch(() => {})
+      )
+
+    // Background revalidate stale cache
+    if (cachedMaster)
+      api('/master/all', { headers: auth() })
+        .then(d => { setMaster(d); cacheSet('svc:master', d, TTL.master) }).catch(() => {})
+
+    if (cachedCustomers)
+      api('/customers/approved', { headers: auth() })
+        .then(d => { setCustomers(d); cacheSet('svc:customers', d, TTL.list) }).catch(() => {})
+
+    if (cachedHistory)
+      api('/master/transactions/mine', { headers: auth() })
+        .then(d => { setHistory(d); cacheSet('svc:history', d, TTL.dashboard) }).catch(() => {})
   }, [])
 
-  useEffect(() => {
-    if (form.customer_id || form.cust_name)
-      api('/master/transactions/mine', { headers: auth() }).then(d => setHistory(d)).catch(() => {})
-  }, [form.customer_id, form.cust_name])
-
-  // Instant charge lookup from pre-fetched map
   useEffect(() => {
     if (!form.service_type) return
     if (!form.platform) { setForm(f => ({ ...f, charges_pct: '' })); return }
@@ -125,7 +169,10 @@ export default function Services() {
       })
       setMsg(`✅ Transaction recorded! Profit: ₹${r.transaction.profit}`)
       setForm(emptyForm); setSearch('')
-      api('/master/transactions/mine', { headers: auth() }).then(d => setHistory(d)).catch(() => {})
+      // Bust history cache and refresh
+      cacheSet('svc:history', null, 0)
+      api('/master/transactions/mine', { headers: auth() })
+        .then(d => { setHistory(d); cacheSet('svc:history', d, TTL.dashboard) }).catch(() => {})
     } catch (err) { setError(err.message) }
     setSaving(false)
   }
@@ -182,7 +229,7 @@ export default function Services() {
           <form onSubmit={handleSubmit}>
 
             {/* ── Customer ── */}
-            <div className="dash-card" style={{ marginBottom: 16 }}>
+            <div className="dash-card" style={{ marginBottom: 16, overflow: 'visible' }}>
               <div className="dash-card-header">
                 <h2>👤 Customer Details</h2>
                 <div style={{ display: 'flex', gap: 6 }}>
@@ -195,7 +242,7 @@ export default function Services() {
                   ))}
                 </div>
               </div>
-              <div className="dash-card-body">
+              <div className="dash-card-body" style={{ overflow: 'visible' }}>
                 {custMode === 'search' ? (
                   <>
                     <div style={{ position: 'relative', marginBottom: 12, zIndex: 200 }}>
@@ -215,42 +262,96 @@ export default function Services() {
                       )}
 
                       {search.length >= 2 && filteredCusts.length === 0 && !form.customer_id && (
-                        <div className="add-customer-dropdown" style={{ zIndex: 1000 }}>
-                          <div style={{ padding: '20px 16px', textAlign: 'center' }}>
-                            <div style={{ fontSize: 14, color: '#374151', marginBottom: 12, fontWeight: 600 }}>
-                              No customers found for "{search}"
-                            </div>
-                            <button type="button" onClick={() => { localStorage.setItem('pendingCustomerName', search); navigate('/employee/add-customer') }} className="add-customer-btn">
-                              ➕ Add "{search}" as New Customer
-                            </button>
-                          </div>
+                        <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', borderRadius: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.12)', border: '1.5px solid #e2e8f0', zIndex: 1000, padding: 16, marginTop: 4 }}>
+                          <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>No customer found for <strong style={{ color: '#1a0a2e' }}>'{search}'</strong></div>
+                          <button type="button"
+                            onClick={() => { localStorage.setItem('pendingCustomerName', search); navigate('/employee/add-customer') }}
+                            style={{ width: '100%', padding: '12px 16px', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                            ➕ Add "{search}" as New Customer
+                          </button>
                         </div>
                       )}
                     </div>
 
                     {form.customer_id ? (
                       <>
-                        <div style={{ background: '#f0fdf4', border: '1.5px solid #a7f3d0', borderRadius: 10, padding: '12px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                          <div>
-                            <div style={{ fontWeight: 800, color: '#059669', fontSize: 15 }}>✅ {form.cust_name}</div>
-                            <div style={{ fontSize: 12, color: '#6b7280', marginTop: 2 }}>PAN: {form.cust_pan} · Mobile: {form.cust_mobile || '—'}</div>
-                          </div>
-                          <button type="button" onClick={clearCustomer} style={{ background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>✕ Clear</button>
-                        </div>
-
                         {loadingProfile && <div style={{ textAlign: 'center', padding: 16, color: '#6b7280' }}>⏳ Loading profile...</div>}
 
-                        {!loadingProfile && customerProfile && customerProfile.transactions?.length > 0 && (
-                          <div style={{ background: '#f9fafb', borderRadius: 8, padding: 12, fontSize: 12 }}>
-                            <div style={{ fontWeight: 600, color: '#374151', marginBottom: 8 }}>📊 Last {Math.min(customerProfile.transactions.length, 3)} transactions</div>
-                            {customerProfile.transactions.slice(0, 3).map(t => (
-                              <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #e5e7eb' }}>
-                                <span>{t.service_type} · {t.platform || '—'}</span>
-                                <strong style={{ color: '#059669' }}>₹{fmt(t.amount)}</strong>
+                        {!loadingProfile && customerProfile && (() => {
+                          const txns      = customerProfile.transactions || []
+                          const totalAmt  = txns.reduce((s, t) => s + parseFloat(t.amount || 0), 0)
+                          const isVip     = txns.length >= 5 || totalAmt >= 50000
+                          const isPremium = txns.length >= 10 || totalAmt >= 100000
+                          const badge     = isPremium ? { label: '👑 Premium', bg: '#fef3c7', color: '#d97706' }
+                                          : isVip     ? { label: '⭐ VIP',     bg: '#ede9fe', color: '#7c3aed' }
+                                          : null
+                          return (
+                            <div style={{ border: '1.5px solid #e2e8f0', borderRadius: 14, overflow: 'hidden' }}>
+                              {/* Header */}
+                              <div style={{ background: 'linear-gradient(135deg,#1a0a2e,#402070)', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                    <span style={{ fontWeight: 900, color: '#fff', fontSize: 16 }}>{customerProfile.name}</span>
+                                    {badge && <span style={{ background: badge.bg, color: badge.color, fontSize: 11, fontWeight: 800, padding: '2px 8px', borderRadius: 20 }}>{badge.label}</span>}
+                                  </div>
+                                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', marginTop: 3 }}>ID: #{customerProfile.id} · {customerProfile.branch || '—'}</div>
+                                </div>
+                                <button type="button" onClick={clearCustomer} style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>✕ Clear</button>
                               </div>
-                            ))}
-                          </div>
-                        )}
+
+                              {/* Details Grid */}
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: '#f1f5f9' }}>
+                                {[
+                                  { label: 'PAN',     value: customerProfile.pan     || '—' },
+                                  { label: 'Mobile',  value: customerProfile.phone   || '—' },
+                                  { label: 'Aadhar',  value: customerProfile.aadhar  ? customerProfile.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—' },
+                                  { label: 'Email',   value: customerProfile.email   || '—' },
+                                  { label: 'Account', value: customerProfile.acc_number || '—' },
+                                  { label: 'Added By',value: customerProfile.added_by_name || '—' },
+                                  { label: 'Status',  value: customerProfile.status  || '—', color: customerProfile.status === 'approved' ? '#059669' : '#d97706' },
+                                  { label: 'Since',   value: customerProfile.created_at ? new Date(customerProfile.created_at).toLocaleDateString('en-IN') : '—' },
+                                ].map(f => (
+                                  <div key={f.label} style={{ background: '#fff', padding: '8px 14px' }}>
+                                    <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.4 }}>{f.label}</div>
+                                    <div style={{ fontSize: 13, fontWeight: 700, color: f.color || '#1a0a2e', marginTop: 2 }}>{f.value}</div>
+                                  </div>
+                                ))}
+                              </div>
+
+                              {/* Stats */}
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
+                                <div style={{ padding: '10px 14px', textAlign: 'center', borderRight: '1px solid #e2e8f0' }}>
+                                  <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>Transactions</div>
+                                  <div style={{ fontSize: 20, fontWeight: 900, color: '#402070' }}>{txns.length}</div>
+                                </div>
+                                <div style={{ padding: '10px 14px', textAlign: 'center', borderRight: '1px solid #e2e8f0' }}>
+                                  <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>Total Amount</div>
+                                  <div style={{ fontSize: 16, fontWeight: 900, color: '#059669' }}>{fmtVal(totalAmt)}</div>
+                                </div>
+                                <div style={{ padding: '10px 14px', textAlign: 'center' }}>
+                                  <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>Avg / Txn</div>
+                                  <div style={{ fontSize: 16, fontWeight: 900, color: '#c02040' }}>{txns.length ? fmtVal(totalAmt / txns.length) : '—'}</div>
+                                </div>
+                              </div>
+
+                              {/* Recent Transactions */}
+                              {txns.length > 0 && (
+                                <div style={{ borderTop: '1px solid #e2e8f0' }}>
+                                  <div style={{ padding: '8px 14px', fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.4, background: '#f8fafc' }}>Recent Transactions</div>
+                                  {txns.slice(0, 3).map((t, i) => (
+                                    <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 14px', borderTop: i > 0 ? '1px solid #f1f5f9' : 'none', background: '#fff' }}>
+                                      <div>
+                                        <div style={{ fontSize: 12, fontWeight: 700, color: '#374151' }}>{t.service_type}</div>
+                                        <div style={{ fontSize: 11, color: '#9ca3af' }}>{t.platform || '—'} · {new Date(t.created_at).toLocaleDateString('en-IN')}</div>
+                                      </div>
+                                      <strong style={{ color: '#059669', fontSize: 13 }}>₹{fmt(t.amount)}</strong>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )
+                        })()}
                       </>
                     ) : (
                       <div style={{ fontSize: 13, color: '#9ca3af' }}>Type at least 2 characters to search approved customers</div>
@@ -430,31 +531,216 @@ export default function Services() {
           </div>
         </div>
 
-        {/* ── Recent Transactions ── */}
-        {form.cust_name && history.length > 0 && (
+        {/* ── Recent Transactions — always visible ── */}
+        {history.length > 0 && (
           <div className="dash-card" style={{ marginTop: 24 }}>
-            <div className="dash-card-header"><h2>My Recent Transactions</h2></div>
-            <div className="dash-table-wrap">
+            <div className="dash-card-header">
+              <h2>📋 Recent Transactions</h2>
+              <span style={{ fontSize: 12, color: '#9ca3af' }}>{history.length} records · click ⋯ for actions</span>
+            </div>
+            <div style={{ overflowX: 'auto' }}>
               <table className="dash-table">
                 <thead>
-                  <tr><th>Date</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr>
+                  <tr><th>Date</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th><th style={{ width: 60 }}>Actions</th></tr>
                 </thead>
                 <tbody>
                   {history.map(t => (
-                    <tr key={t.id}>
+                    <tr key={t.id} style={{ backgroundColor: t.is_edited ? '#fef2f2' : '' }}>
                       <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
-                      <td>{t.cust_name || '—'}</td>
-                      <td><strong>{t.service_type}</strong></td>
+                      <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}{t.is_edited ? ' ✏️' : ''}</strong></td>
+                      <td style={{ fontSize: 12 }}>{t.service_type}</td>
                       <td>{t.platform || t.bill_platform || '—'}</td>
-                      <td style={{ fontWeight: 700 }}>₹{fmt(t.amount)}</td>
+                      <td style={{ fontWeight: 700, color: '#059669' }}>₹{fmt(t.amount)}</td>
                       <td style={{ color: '#dc2626' }}>₹{fmt(t.charges_amount || 0)}</td>
                       <td style={{ color: '#059669', fontWeight: 800 }}>₹{fmt(t.settled_amount || t.profit || 0)}</td>
+                      <td className="txn-action-cell">
+                        <button className="txn-menu-btn" onClick={e => {
+                          e.stopPropagation()
+                          if (menuTxnId === t.id) { setMenuTxnId(null); return }
+                          const rect = e.currentTarget.getBoundingClientRect()
+                          setMenuPos({ top: rect.bottom + 6, left: rect.right - 180 })
+                          setMenuTxnId(t.id)
+                        }}>⋯</button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           </div>
+        )}
+
+        {/* ── View Modal ── */}
+        {viewTxn && (
+          <div onClick={() => setViewTxn(null)}
+            style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+            <div onClick={e => e.stopPropagation()}
+              style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:520, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
+              <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                <div>
+                  <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Transaction Details</div>
+                  <div style={{ color:'#fff', fontWeight:900, fontSize:18, marginTop:2 }}>#{viewTxn.id} · {viewTxn.service_type}</div>
+                </div>
+                <button onClick={() => setViewTxn(null)} style={{ background:'rgba(255,255,255,0.15)', border:'none', color:'#fff', width:32, height:32, borderRadius:'50%', cursor:'pointer', fontSize:16 }}>✕</button>
+              </div>
+              <div style={{ overflowY:'auto', padding:24 }}>
+                <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+                  {[
+                    { label:'Customer',      value: viewTxn.cust_name || '—' },
+                    { label:'PAN',           value: viewTxn.cust_pan  || '—' },
+                    { label:'Mobile',        value: viewTxn.cust_mobile || '—' },
+                    { label:'Date',          value: new Date(viewTxn.created_at).toLocaleString('en-IN') },
+                    { label:'Service',       value: viewTxn.service_type || '—' },
+                    { label:'Platform',      value: viewTxn.platform || viewTxn.bill_platform || '—' },
+                    { label:'Amount',        value: `₹${fmt(viewTxn.amount)}`,              color:'#059669' },
+                    { label:'Charges',       value: `₹${fmt(viewTxn.charges_amount || 0)}`, color:'#d97706' },
+                    { label:'Settled',       value: `₹${fmt(viewTxn.settled_amount || 0)}`, color:'#402070' },
+                    { label:'Payment Mode',  value: viewTxn.payment_mode  || '—' },
+                    { label:'Card',          value: viewTxn.card ? `${viewTxn.card} ****${viewTxn.card_last4 || ''}` : '—' },
+                    { label:'Note',          value: viewTxn.note || '—' },
+                  ].map(f => (
+                    <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px' }}>
+                      <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
+                      <div style={{ fontSize:14, fontWeight:700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', gap:10, justifyContent:'flex-end' }}>
+                <a href={`https://wa.me/${viewTxn.cust_mobile?.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${viewTxn.cust_name}, your ${viewTxn.service_type} of ₹${fmt(viewTxn.amount)} processed. Settled: ₹${fmt(viewTxn.settled_amount || 0)}. - MoneySpot`)}`}
+                  target="_blank" rel="noopener noreferrer"
+                  style={{ padding:'10px 20px', borderRadius:10, background:'#25D366', color:'#fff', fontWeight:700, fontSize:13, textDecoration:'none', display:'flex', alignItems:'center', gap:6 }}>
+                  💬 WhatsApp
+                </a>
+                <button onClick={() => setViewTxn(null)} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Edit Modal ── */}
+        {editTxn && (() => {
+          const isBW = editTxn.service_type === BILL_WITHDRAWAL
+          const isCW = editTxn.service_type === CARD_WITHDRAWAL
+          const isDM = editTxn.service_type === DMT
+          const isAE = editTxn.service_type === AEPS
+          const isOB = editTxn.service_type === ONLY_BILL
+          const [ef, setEf] = [editTxn, (patch) => setEditTxn(t => ({ ...t, ...patch }))]
+          const eInp = (k, label, type = 'text') => (
+            <div className="dash-form-group">
+              <label>{label}</label>
+              <input type={type} value={ef[k] || ''} onChange={e => setEf({ [k]: e.target.value })} />
+            </div>
+          )
+          const eSel = (k, label, opts) => (
+            <div className="dash-form-group">
+              <label>{label}</label>
+              <select value={ef[k] || ''} onChange={e => setEf({ [k]: e.target.value })}>
+                <option value="">Select</option>
+                {opts.map(o => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </div>
+          )
+          return (
+            <div onClick={() => setEditTxn(null)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+              <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:600, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
+                <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+                  <div>
+                    <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Edit Transaction</div>
+                    <div style={{ color:'#fff', fontWeight:900, fontSize:16 }}>#{editTxn.id} · {editTxn.service_type}</div>
+                  </div>
+                  <button onClick={() => setEditTxn(null)} style={{ background:'rgba(255,255,255,0.15)', border:'none', color:'#fff', width:32, height:32, borderRadius:'50%', cursor:'pointer', fontSize:16 }}>✕</button>
+                </div>
+                <div style={{ overflowY:'auto', padding:24 }}>
+                  <div className="dash-form-grid">
+                    {eInp('cust_name', 'Customer Name *')}
+                    {eInp('cust_pan',  'PAN Number *')}
+                    {eInp('cust_mobile', 'Mobile')}
+                    {eInp('cust_aadhar', 'Aadhar')}
+                  </div>
+                  <div className="dash-form-grid" style={{ marginTop:12 }}>
+                    {eSel('platform', 'Platform', platforms)}
+                    {(isCW || isBW) && eSel('card', 'Card Type', cards)}
+                    {(isCW || isBW) && eSel('card_bank', 'Card Bank', banks)}
+                    {(isCW || isBW) && (
+                      <div className="dash-form-group">
+                        <label>Card Last 4</label>
+                        <input maxLength={4} value={ef.card_last4 || ''} onChange={e => setEf({ card_last4: e.target.value.replace(/\D/g,'').slice(0,4) })} />
+                      </div>
+                    )}
+                    {(isDM || isAE || isOB) && eSel('bank', 'Bank', banks)}
+                    {(isDM || isOB) && eInp('acc_no', 'Account No.')}
+                    {isBW && eSel('bill_platform', 'Bill Platform', platforms)}
+                    {isBW && eInp('bill_amount', 'Bill Amount (₹)', 'number')}
+                    {eSel('payment_mode', 'Payment Mode', PAYMENT_MODES)}
+                    {isBW && eSel('received_mode', 'Receive Mode', PAYMENT_MODES)}
+                    {eInp('amount', 'Amount (₹) *', 'number')}
+                    {eInp('charges_pct', 'Charges %', 'number')}
+                    {eInp('charges_amount', 'Charges Amount (₹)', 'number')}
+                    {eInp('settled_amount', 'Settled Amount (₹)', 'number')}
+                    {isBW && eInp('bill_remaining', 'Bill Remaining (₹)', 'number')}
+                    {isBW && eInp('total_collected', 'Total Collected (₹)', 'number')}
+                    <div className="dash-form-group" style={{ gridColumn:'1/-1' }}>
+                      <label>Note / Remarks</label>
+                      <textarea rows={2} value={ef.note || ''} onChange={e => setEf({ note: e.target.value })} style={{ width:'100%', padding:'10px 14px', borderRadius:8, border:'1.5px solid rgba(64,32,112,0.2)', fontSize:14, fontFamily:'inherit', resize:'vertical', boxSizing:'border-box' }} />
+                    </div>
+                  </div>
+                </div>
+                <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', gap:10, justifyContent:'flex-end', flexShrink:0 }}>
+                  <button onClick={() => setEditTxn(null)} style={{ padding:'10px 20px', borderRadius:10, border:'1.5px solid #e2e8f0', background:'#f8fafc', color:'#64748b', fontWeight:600, cursor:'pointer', fontSize:13 }}>Cancel</button>
+                  <button onClick={async () => {
+                    try {
+                      const payload = {
+                        note:           editTxn.note,
+                        cust_name:      editTxn.cust_name,
+                        cust_pan:       editTxn.cust_pan,
+                        cust_aadhar:    editTxn.cust_aadhar,
+                        cust_mobile:    editTxn.cust_mobile,
+                        platform:       editTxn.platform,
+                        bank:           editTxn.bank,
+                        card:           editTxn.card,
+                        card_bank:      editTxn.card_bank,
+                        card_last4:     editTxn.card_last4,
+                        payment_mode:   editTxn.payment_mode,
+                        received_mode:  editTxn.received_mode,
+                        amount:         editTxn.amount,
+                        charges_pct:    editTxn.charges_pct,
+                        charges_amount: editTxn.charges_amount,
+                        settled_amount: editTxn.settled_amount,
+                        bill_platform:  editTxn.bill_platform,
+                        bill_amount:    editTxn.bill_amount,
+                        bill_remaining: editTxn.bill_remaining,
+                        total_collected:editTxn.total_collected,
+                        acc_no:         editTxn.acc_no,
+                      }
+                      const updated = await api(`/master/transactions/${editTxn.id}`, { method:'PATCH', headers: auth(), body: JSON.stringify(payload) })
+                      setHistory(h => h.map(t => t.id === editTxn.id ? { ...t, ...updated } : t))
+                      setEditTxn(null)
+                    } catch (err) { alert(err.message) }
+                  }} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>💾 Save Changes</button>
+                </div>
+              </div>
+            </div>
+          )
+        })()}
+
+        {/* close menu on outside click */}
+        {menuTxnId && (
+          <>
+            <div onClick={() => setMenuTxnId(null)} style={{ position:'fixed', inset:0, zIndex:998 }} />
+            <div className="txn-menu-dropdown" style={{ top: menuPos.top, left: menuPos.left }}>
+              {(() => { const t = history.find(x => x.id === menuTxnId); if (!t) return null; return (
+                <>
+                  <button className="txn-menu-item" onClick={() => { setViewTxn(t); setMenuTxnId(null) }}>👁️ View Details</button>
+                  <button className="txn-menu-item" onClick={() => { setEditTxn(t); setMenuTxnId(null) }}>✏️ Edit</button>
+                  <a className="txn-menu-item txn-menu-wa"
+                    href={`https://wa.me/${t.cust_mobile?.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${t.cust_name}, your ${t.service_type} transaction of ₹${fmt(t.amount)} on ${new Date(t.created_at).toLocaleDateString('en-IN')} has been processed. Settled: ₹${fmt(t.settled_amount || 0)}. - MoneySpot`)}`}
+                    target="_blank" rel="noopener noreferrer"
+                    onClick={() => setMenuTxnId(null)}>💬 Send WhatsApp</a>
+                </>
+              )})()} 
+            </div>
+          </>
         )}
       </div>
     </div>

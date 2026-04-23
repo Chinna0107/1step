@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
 import { getTokenByRole } from '../../utils/tokenUtils'
+import { useSuperAdminReports } from '../../hooks/useSuperAdmin'
 import { api } from '../../utils/api'
 import ReportView from '../employee/ReportView'
 import './superadmin.css'
@@ -9,17 +10,8 @@ import './Dashboard.css'
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
 
 export default function Reports() {
-  const [branches, setBranches]   = useState([])
-  const [employees, setEmployees] = useState([])
-
-  useEffect(() => {
-    api('/dashboard/branches', { headers: auth() })
-      .then(d => setBranches(d.map(b => b.name)))
-      .catch(() => {})
-    api('/dashboard/employees', { headers: auth() })
-      .then(d => setEmployees(d))
-      .catch(() => {})
-  }, [])
+  const { branches: branchObjs, employees } = useSuperAdminReports()
+  const branches = branchObjs.map(b => b.name)
 
   return (
     <div className="sa-page">

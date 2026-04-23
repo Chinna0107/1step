@@ -4,7 +4,7 @@ import { getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import '../../pages/dashboard.css'
 
-const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', password: '', confirm_password: '', mpin: '', is_admin: false, pan_img_url: '', aadhar_img_url: '', docx_url: '', resume_url: '', photo_url: '' }
+const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', password: '', confirm_password: '', mpin: '', is_admin: false, role: '', pan_img_url: '', aadhar_img_url: '', docx_url: '', resume_url: '', photo_url: '' }
 
 export default function CreateEmployee() {
   const [form, setForm]     = useState(empty)
@@ -96,6 +96,11 @@ export default function CreateEmployee() {
                     <input required type="password" inputMode="numeric" maxLength={6}
                       placeholder="••••••" value={form.mpin}
                       onChange={e => set('mpin', e.target.value.replace(/\D/g, '').slice(0, 6))} />
+                  </div>
+                  <div className="dash-form-group">
+                    <label>Role / Designation</label>
+                    <input placeholder="e.g. Cashier, Field Agent, Teller" value={form.role}
+                      onChange={e => set('role', e.target.value)} />
                   </div>
                   <div className="dash-form-group" style={{ justifyContent: 'flex-end' }}>
                     <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', textTransform: 'none', fontSize: 14, fontWeight: 600 }}>

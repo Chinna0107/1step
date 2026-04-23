@@ -1,26 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
-import { api } from '../../utils/api'
-import { getTokenByRole } from '../../utils/tokenUtils'
+import { useInsights } from '../../hooks/useSuperAdmin'
 import { SkeletonTable, SkeletonRows } from '../../components/superadmin/Skeleton'
 import './superadmin.css'
 import './Dashboard.css'
 
-const auth = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
-const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${v.toLocaleString('en-IN')}` }
-const COLORS = ['#402070','#c02040','#d4af37','#10b981','#0284c7','#7c3aed']
+const fmtVal = n => { const v = parseFloat(n)||0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${v.toLocaleString('en-IN')}` }
+const COLORS  = ['#402070','#c02040','#d4af37','#10b981','#0284c7','#7c3aed']
 
 export default function Insights() {
   const [period, setPeriod] = useState('today')
-  const [data, setData]     = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    setLoading(true)
-    api(`/dashboard/insights?period=${period}`, { headers: auth() })
-      .then(d => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [period])
+  const { data, loading, revalidating, refetch } = useInsights(period)
 
   const branches  = data?.branches  ?? []
   const platforms = data?.platforms ?? []
@@ -32,8 +22,11 @@ export default function Insights() {
       <div className="sa-content">
         <div className="dash-topbar">
           <div>
-            <h1 className="dash-topbar-title">Performance Insights</h1>
-            <p className="dash-topbar-sub">Real-time business performance</p>
+            <h1 className="dash-topbar-title">📊 Performance Insights</h1>
+            <p className="dash-topbar-sub">
+              Real-time business performance
+              {revalidating && <span style={{ marginLeft: 8, fontSize: 11, color: '#9ca3af', fontWeight: 600 }}>↻ updating...</span>}
+            </p>
           </div>
           <div className="dash-topbar-right">
             {['today','week','month'].map(p => (
@@ -44,13 +37,17 @@ export default function Insights() {
                 {p.charAt(0).toUpperCase() + p.slice(1)}
               </button>
             ))}
+            <button className="sa-btn sa-btn-sm" onClick={() => refetch(true)}
+              style={{ background: '#f4f5fb', color: '#666', border: '1px solid #e8eaf0' }}>
+              ↻
+            </button>
           </div>
         </div>
 
         <div className="dash-main">
 
           {/* Branch Leaderboard */}
-          <div className="dash-section-label">📈 Branch Performance — {period.charAt(0).toUpperCase()+period.slice(1)} Leaderboard</div>
+          <div className="dash-section-label">🏆 Branch Performance — {period.charAt(0).toUpperCase()+period.slice(1)}</div>
           <div className="sa-card">
             <div className="sa-card-header"><h2>Branch Leaderboard</h2></div>
             <div className="sa-table-wrap">
@@ -59,7 +56,7 @@ export default function Insights() {
                   <thead><tr><th>Rank</th><th>Branch</th><th>Transactions</th><th>Revenue</th></tr></thead>
                   <tbody>
                     {branches.map((b, i) => (
-                      <tr key={b.name}>
+                      <tr key={b.name} style={{ opacity: revalidating ? 0.6 : 1, transition: 'opacity 0.3s' }}>
                         <td><span className="dash-badge badge-gold">{b.medal} #{i+1}</span></td>
                         <td><strong>{b.name}</strong></td>
                         <td>{b.txn}</td>
@@ -73,18 +70,18 @@ export default function Insights() {
           </div>
 
           {/* Platform Performance */}
-          <div className="dash-section-label">🏢 Platform Performance</div>
+          <div className="dash-section-label">📱 Platform Performance</div>
           <div className="dash-grid-2">
             <div className="dash-card">
               <div className="dash-card-head"><span className="dash-card-icon">📊</span><h3>Transaction Share by Platform</h3></div>
               <div className="dash-card-body">
                 {loading ? <SkeletonRows rows={4} /> : platforms.length ? (
-                  <div className="dash-platform-list">
+                  <div className="dash-platform-list" style={{ opacity: revalidating ? 0.6 : 1, transition: 'opacity 0.3s' }}>
                     {platforms.map((p, i) => (
                       <div key={p.name} className="dash-platform-row">
                         <span className="dash-platform-name">{p.name}</span>
                         <div className="dash-platform-bar-wrap">
-                          <div className="dash-platform-bar" style={{ width: `${p.pct}%`, background: COLORS[i % COLORS.length] }} />
+                          <div className="dash-platform-bar" style={{ width: `${p.pct}%`, background: COLORS[i % COLORS.length], transition: 'width 0.6s ease' }} />
                         </div>
                         <span className="dash-platform-val">{p.pct}%</span>
                         <span className="dash-platform-val2">{fmtVal(p.value)}</span>
@@ -99,7 +96,7 @@ export default function Insights() {
               <div className="dash-card-head"><span className="dash-card-icon">📋</span><h3>Platform Summary</h3></div>
               <div className="dash-card-body">
                 {loading ? <SkeletonTable rows={4} cols={4} /> : (
-                  <table className="dash-table">
+                  <table className="dash-table" style={{ opacity: revalidating ? 0.6 : 1, transition: 'opacity 0.3s' }}>
                     <thead><tr><th>Platform</th><th>Txn</th><th>Value</th><th>Share</th></tr></thead>
                     <tbody>
                       {platforms.map(p => (
@@ -119,12 +116,12 @@ export default function Insights() {
           </div>
 
           {/* Employee Performance */}
-          <div className="dash-section-label">👨💼 Employee Performance</div>
+          <div className="dash-section-label">👨‍💼 Employee Performance</div>
           <div className="sa-card">
             <div className="sa-card-header"><h2>Employee Leaderboard — Txn Count + Value</h2></div>
             <div className="sa-table-wrap">
               {loading ? <SkeletonTable rows={5} cols={6} /> : (
-                <table className="sa-table">
+                <table className="sa-table" style={{ opacity: revalidating ? 0.6 : 1, transition: 'opacity 0.3s' }}>
                   <thead><tr><th>Rank</th><th>Employee</th><th>Branch</th><th>Txn</th><th>Value</th><th>Performance</th></tr></thead>
                   <tbody>
                     {employees.map((e, i) => (
@@ -137,7 +134,7 @@ export default function Insights() {
                         <td style={{ minWidth: 120 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div style={{ flex: 1, height: 6, background: '#f0f2f8', borderRadius: 999, overflow: 'hidden' }}>
-                              <div style={{ width: `${e.pct}%`, height: '100%', background: 'linear-gradient(90deg,#402070,#c02040)', borderRadius: 999 }} />
+                              <div style={{ width: `${e.pct}%`, height: '100%', background: 'linear-gradient(90deg,#402070,#c02040)', borderRadius: 999, transition: 'width 0.6s ease' }} />
                             </div>
                             <span style={{ fontSize: 12, fontWeight: 700, color: '#402070' }}>{e.pct}%</span>
                           </div>

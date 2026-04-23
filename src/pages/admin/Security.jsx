@@ -3,6 +3,7 @@ import AdminSidebar from '../../components/admin/AdminSidebar'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import '../../pages/dashboard.css'
+import { useAdminSecurity } from '../../hooks/useFinance'
 
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 

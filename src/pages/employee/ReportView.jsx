@@ -16,6 +16,69 @@ const SERVICE_ICONS = {
 
 const COLORS = ['#402070','#c02040','#d4af37','#059669','#0ea5e9','#f59e0b','#8b5cf6','#ec4899']
 
+function TxnDetailModal({ txn, onClose, showFinancials }) {
+  if (!txn) return null
+  const fields = [
+    { label: 'Transaction ID', value: `#${txn.id}` },
+    { label: 'Date & Time',    value: new Date(txn.created_at).toLocaleString('en-IN') },
+    { label: 'Customer',       value: txn.cust_name || '—' },
+    { label: 'Customer PAN',   value: txn.cust_pan  || '—' },
+    { label: 'Customer Mobile',value: txn.cust_mobile || '—' },
+    { label: 'Service',        value: txn.service_type || '—' },
+    { label: 'Platform',       value: txn.platform || txn.bill_platform || '—' },
+    { label: 'Bank',           value: txn.bank || '—' },
+    { label: 'Card Type',      value: txn.card || '—' },
+    { label: 'Card Last 4',    value: txn.card_last4 || '—' },
+    { label: 'Amount',         value: `₹${fmt(txn.amount)}`,          color: '#059669' },
+    { label: 'Charges',        value: `₹${fmt(txn.charges_amount)}`,  color: '#d97706' },
+    { label: 'Settled Amount', value: `₹${fmt(txn.settled_amount)}` },
+    { label: 'Payment Mode',   value: txn.payment_mode  || '—' },
+    { label: 'Received Mode',  value: txn.received_mode || '—' },
+    ...(showFinancials ? [
+      { label: 'Commission %',   value: `${txn.commission_pct || 0}%` },
+      { label: 'Net Profit',     value: `₹${fmt(txn.profit)}`, color: '#402070' },
+    ] : []),
+    { label: 'Employee',       value: txn.employee_name || '—' },
+    { label: 'Branch',         value: txn.branch || '—' },
+    ...(txn.is_edited ? [
+      { label: 'Edited',         value: 'Yes', color: '#dc2626' },
+      { label: 'Edited At',      value: txn.edited_at ? new Date(txn.edited_at).toLocaleString('en-IN') : '—', color: '#dc2626' },
+    ] : []),
+    { label: 'Note',           value: txn.note || '—' },
+  ]
+
+  return (
+    <div onClick={e => e.target === e.currentTarget && onClose()}
+      style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
+      <div style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:560, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
+        {/* Header */}
+        <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+          <div>
+            <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Transaction Details</div>
+            <div style={{ color:'#fff', fontWeight:900, fontSize:18, marginTop:2 }}>{SERVICE_ICONS[txn.service_type] || '📋'} {txn.service_type || 'Transaction'}</div>
+          </div>
+          <button onClick={onClose} style={{ background:'rgba(255,255,255,0.15)', border:'none', color:'#fff', width:32, height:32, borderRadius:'50%', cursor:'pointer', fontSize:16, display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
+        </div>
+        {/* Body */}
+        <div style={{ overflowY:'auto', padding:24 }}>
+          <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
+            {fields.map(f => (
+              <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px' }}>
+                <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
+                <div style={{ fontSize:14, fontWeight:700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {/* Footer */}
+        <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', justifyContent:'flex-end', flexShrink:0 }}>
+          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function ReportView({ authHeader, showFinancials = true, branches = [], employees = [] }) {
   const [data, setData]         = useState(null)
   const [loading, setLoading]   = useState(true)
@@ -24,6 +87,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
   const [branch, setBranch]     = useState('')
   const [empId, setEmpId]       = useState('')
   const [tab, setTab]           = useState('service')
+  const [selectedTxn, setSelectedTxn] = useState(null)
 
   const load = useCallback(() => {
     setLoading(true)
@@ -33,7 +97,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
     api(`/dashboard/reports?${p}`, { headers: authHeader() })
       .then(d => { setData(d); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [from, to, branch, empId])
+  }, [from, to, branch, empId, authHeader])
 
   useEffect(() => { load() }, [load])
 
@@ -114,6 +178,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
 
   return (
     <div>
+      {selectedTxn && <TxnDetailModal txn={selectedTxn} onClose={() => setSelectedTxn(null)} showFinancials={showFinancials} />}
       {/* ── Filters ── */}
       <div className="rv-filters">
         <div className="dash-form-group" style={{ margin: 0 }}>
@@ -313,11 +378,14 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                 </thead>
                 <tbody>
                   {txns.map(t => (
-                    <tr key={t.id}>
-                      <td style={{ fontFamily: 'monospace', color: '#402070', fontWeight: 700, fontSize: 11 }}>#{t.id}</td>
+                    <tr key={t.id} onClick={() => setSelectedTxn(t)}
+                      style={{ cursor: 'pointer', backgroundColor: t.is_edited ? '#fef2f2' : '' }}
+                      onMouseEnter={e => e.currentTarget.style.background = t.is_edited ? '#fee2e2' : '#f0f2f8'}
+                      onMouseLeave={e => e.currentTarget.style.background = t.is_edited ? '#fef2f2' : ''}>
+                      <td style={{ fontFamily: 'monospace', color: t.is_edited ? '#dc2626' : '#402070', fontWeight: 700, fontSize: 11 }}>#{t.id}{t.is_edited ? ' ✏️' : ''}</td>
                       <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                       {showFinancials && <td style={{ fontSize: 12 }}>{t.employee_name || '—'}</td>}
-                      <td><strong>{t.cust_name || '—'}</strong></td>
+                      <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}</strong></td>
                       <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
                       <td>{t.platform || t.bill_platform || '—'}</td>
                       <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</td>
