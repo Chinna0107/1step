@@ -2,7 +2,11 @@ import { useState, useEffect, useCallback } from 'react'
 import { api } from '../utils/api'
 import { getTokenByRole } from '../utils/tokenUtils'
 
-const auth = () => ({ Authorization: `Bearer ${getTokenByRole('employee') || getTokenByRole('admin')}` })
+const getToken = () =>
+  getTokenByRole('superadmin') || getTokenByRole('admin') || getTokenByRole('employee') ||
+  localStorage.getItem('ms_token')
+
+const auth = () => ({ Authorization: `Bearer ${getToken()}` })
 
 // ── useLeads ──────────────────────────────────────────────────
 export function useLeads(filterStatus = '', filterType = '') {

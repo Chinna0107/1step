@@ -1,0 +1,157 @@
+/* ── Profit Page ── */
+
+.profit-formula-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #1a0a2e, #402070, #c02040);
+  border-radius: 16px;
+  padding: 20px 28px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.profit-formula-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 10px 16px;
+}
+
+.profit-formula-result {
+  background: rgba(212,175,55,0.2);
+  border: 1px solid rgba(212,175,55,0.4);
+}
+
+.profit-formula-icon { font-size: 22px; }
+
+.profit-formula-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.profit-formula-desc {
+  font-size: 11px;
+  color: rgba(255,255,255,0.55);
+  margin-top: 2px;
+}
+
+.profit-formula-op {
+  font-size: 24px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.5);
+  flex-shrink: 0;
+}
+
+/* Grid */
+.profit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.profit-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.profit-section-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #402070;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 8px 14px;
+  background: #ede9fe;
+  border-radius: 8px;
+  display: inline-block;
+}
+
+.profit-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.profit-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 18px 20px;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.profit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.profit-card-icon { font-size: 28px; flex-shrink: 0; }
+
+.profit-card-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.profit-card-value {
+  font-size: 1.7rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.profit-card-sub {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* Breakdown bar */
+.profit-breakdown {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.profit-breakdown-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.profit-breakdown-bar {
+  height: 12px;
+  background: #f1f5f9;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.profit-breakdown-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .profit-grid { grid-template-columns: 1fr; }
+  .profit-formula-banner { gap: 8px; padding: 14px 16px; }
+  .profit-formula-item { padding: 8px 12px; }
+  .profit-formula-op { font-size: 18px; }
+}

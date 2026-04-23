@@ -62,6 +62,8 @@ import Services from './pages/employee/Services'
 import EmployeeReports from './pages/employee/EmployeeReports'
 import Profile from './pages/employee/Profile'
 import Leads from './pages/employee/Leads'
+import AdminLeads from './pages/admin/Leads'
+import SuperAdminLeads from './pages/superadmin/Leads'
 import EmployeeNavbar from './components/employee/EmployeeNavbar'
 import AdminSidebar from './components/admin/AdminSidebar'
 
@@ -127,6 +129,7 @@ export default function App() {
         <Route path="/superadmin/admins"     element={<SuperAdminRoute><AdminsData /></SuperAdminRoute>} />
         <Route path="/superadmin/employees"  element={<SuperAdminRoute><EmployeesData /></SuperAdminRoute>} />
         <Route path="/superadmin/attendance" element={<SuperAdminRoute><AttendanceData /></SuperAdminRoute>} />
+        <Route path="/superadmin/leads"       element={<SuperAdminRoute><SuperAdminLeads /></SuperAdminRoute>} />
         <Route path="/superadmin/services"   element={<SuperAdminRoute><ServicesData /></SuperAdminRoute>} />
         <Route path="/superadmin/insights"   element={<SuperAdminRoute><Insights /></SuperAdminRoute>} />
         <Route path="/superadmin/branches"   element={<SuperAdminRoute><Branches /></SuperAdminRoute>} />
@@ -157,6 +160,7 @@ export default function App() {
         <Route path="/admin/requests"        element={<AdminRoute><Requests /></AdminRoute>} />
         <Route path="/admin/performance"     element={<AdminRoute><EmployeePerformance /></AdminRoute>} />
         <Route path="/admin/attendance"      element={<AdminRoute><EmployeeAttendance /></AdminRoute>} />
+        <Route path="/admin/leads"            element={<AdminRoute><AdminLeads /></AdminRoute>} />
 
         {/* Employee routes */}
         <Route path="/employee/dashboard"    element={<EmployeeRoute><EmployeeDashboard /></EmployeeRoute>} />

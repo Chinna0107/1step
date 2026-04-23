@@ -107,6 +107,7 @@ export default function Services() {
   }, [form.service_type, form.platform, form.card, lookup])
 
   // Auto-calc derived fields
+  // Fix #5: Total Collected = Withdrawal Amount + Charges on withdrawal only (NOT bill amount)
   useEffect(() => {
     const amt     = parseFloat(form.amount)     || 0
     const billAmt = parseFloat(form.bill_amount) || 0
@@ -114,8 +115,9 @@ export default function Services() {
     if (!amt && !billAmt) return
     const chargesAmt = parseFloat((amt * pct / 100).toFixed(2))
     const settledAmt = parseFloat((amt - chargesAmt).toFixed(2))
-    const billRemain = parseFloat((billAmt - amt).toFixed(2))
-    const totalColl  = parseFloat((billAmt + amt + chargesAmt).toFixed(2))
+    const billRemain = parseFloat((billAmt > 0 && amt > 0 ? Math.max(0, billAmt - amt) : 0).toFixed(2))
+    // Total Collected = Bill Remaining Balance + Charges only
+    const totalColl  = parseFloat((billRemain + chargesAmt).toFixed(2))
     setForm(f => ({
       ...f,
       charges_amount:  chargesAmt,
@@ -275,80 +277,129 @@ export default function Services() {
 
                     {form.customer_id ? (
                       <>
-                        {loadingProfile && <div style={{ textAlign: 'center', padding: 16, color: '#6b7280' }}>⏳ Loading profile...</div>}
+                        {loadingProfile && (
+                          <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+                            {[80,60,100,60].map((w,i) => (
+                              <div key={i} style={{ height:16, borderRadius:8, background:'linear-gradient(90deg,#f0f2f8 25%,#e4e6f0 50%,#f0f2f8 75%)', backgroundSize:'400px 100%', animation:'shimmer 1.4s infinite linear', width:`${w}%` }} />
+                            ))}
+                          </div>
+                        )}
 
                         {!loadingProfile && customerProfile && (() => {
                           const txns      = customerProfile.transactions || []
                           const totalAmt  = txns.reduce((s, t) => s + parseFloat(t.amount || 0), 0)
-                          const isVip     = txns.length >= 5 || totalAmt >= 50000
+                          const totalProfit = txns.reduce((s, t) => s + parseFloat(t.profit || 0), 0)
                           const isPremium = txns.length >= 10 || totalAmt >= 100000
-                          const badge     = isPremium ? { label: '👑 Premium', bg: '#fef3c7', color: '#d97706' }
-                                          : isVip     ? { label: '⭐ VIP',     bg: '#ede9fe', color: '#7c3aed' }
+                          const isVip     = txns.length >= 5  || totalAmt >= 50000
+                          const badge     = isPremium ? { label: '👑 Premium', bg: 'linear-gradient(135deg,#d97706,#f59e0b)', color: '#fff' }
+                                          : isVip     ? { label: '⭐ VIP',     bg: 'linear-gradient(135deg,#7c3aed,#8b5cf6)', color: '#fff' }
                                           : null
+                          const serviceBreakdown = txns.reduce((acc, t) => {
+                            const k = t.service_type || 'Other'
+                            acc[k] = (acc[k] || 0) + 1
+                            return acc
+                          }, {})
                           return (
-                            <div style={{ border: '1.5px solid #e2e8f0', borderRadius: 14, overflow: 'hidden' }}>
+                            <div style={{ border:'1.5px solid #e2e8f0', borderRadius:16, overflow:'hidden', animation:'cd-card-in 0.4s ease both' }}>
+
                               {/* Header */}
-                              <div style={{ background: 'linear-gradient(135deg,#1a0a2e,#402070)', padding: '14px 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <div>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                    <span style={{ fontWeight: 900, color: '#fff', fontSize: 16 }}>{customerProfile.name}</span>
-                                    {badge && <span style={{ background: badge.bg, color: badge.color, fontSize: 11, fontWeight: 800, padding: '2px 8px', borderRadius: 20 }}>{badge.label}</span>}
+                              <div style={{ background:'linear-gradient(135deg,#1a0a2e 0%,#2d1155 50%,#c02040 100%)', padding:'16px 18px', position:'relative', overflow:'hidden' }}>
+                                <div style={{ position:'absolute', top:-30, right:-30, width:120, height:120, borderRadius:'50%', background:'rgba(212,175,55,0.15)', filter:'blur(20px)' }} />
+                                <div style={{ position:'absolute', bottom:-20, left:'20%', width:80, height:80, borderRadius:'50%', background:'rgba(64,32,112,0.3)', filter:'blur(15px)' }} />
+                                <div style={{ position:'relative', zIndex:1, display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
+                                  <div>
+                                    <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
+                                      <span style={{ fontWeight:900, color:'#fff', fontSize:17 }}>{customerProfile.name}</span>
+                                      {badge && <span style={{ background:badge.bg, color:badge.color, fontSize:10, fontWeight:800, padding:'2px 8px', borderRadius:20 }}>{badge.label}</span>}
+                                    </div>
+                                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.55)' }}>ID: #{customerProfile.id} · {customerProfile.branch || '—'}</div>
+                                    <div style={{ fontSize:11, color:'rgba(255,255,255,0.55)', marginTop:2 }}>
+                                      <span style={{ background:'rgba(16,185,129,0.2)', border:'1px solid rgba(16,185,129,0.3)', color:'#10b981', padding:'1px 8px', borderRadius:20, fontSize:10, fontWeight:700 }}>✅ {customerProfile.status}</span>
+                                    </div>
                                   </div>
-                                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', marginTop: 3 }}>ID: #{customerProfile.id} · {customerProfile.branch || '—'}</div>
+                                  <button type="button" onClick={clearCustomer} style={{ background:'rgba(255,255,255,0.15)', color:'#fff', border:'none', borderRadius:8, padding:'5px 12px', cursor:'pointer', fontSize:12, fontWeight:700 }}>✕ Clear</button>
                                 </div>
-                                <button type="button" onClick={clearCustomer} style={{ background: 'rgba(255,255,255,0.15)', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>✕ Clear</button>
                               </div>
 
-                              {/* Details Grid */}
-                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 1, background: '#f1f5f9' }}>
+                              {/* Stats Row */}
+                              <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', background:'#f8fafc', borderBottom:'1px solid #e2e8f0' }}>
                                 {[
-                                  { label: 'PAN',     value: customerProfile.pan     || '—' },
-                                  { label: 'Mobile',  value: customerProfile.phone   || '—' },
-                                  { label: 'Aadhar',  value: customerProfile.aadhar  ? customerProfile.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—' },
-                                  { label: 'Email',   value: customerProfile.email   || '—' },
-                                  { label: 'Account', value: customerProfile.acc_number || '—' },
-                                  { label: 'Added By',value: customerProfile.added_by_name || '—' },
-                                  { label: 'Status',  value: customerProfile.status  || '—', color: customerProfile.status === 'approved' ? '#059669' : '#d97706' },
-                                  { label: 'Since',   value: customerProfile.created_at ? new Date(customerProfile.created_at).toLocaleDateString('en-IN') : '—' },
-                                ].map(f => (
-                                  <div key={f.label} style={{ background: '#fff', padding: '8px 14px' }}>
-                                    <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.4 }}>{f.label}</div>
-                                    <div style={{ fontSize: 13, fontWeight: 700, color: f.color || '#1a0a2e', marginTop: 2 }}>{f.value}</div>
+                                  { label:'Transactions', value: txns.length,          color:'#402070' },
+                                  { label:'Total Amount', value: totalAmt >= 100000 ? `₹${(totalAmt/100000).toFixed(1)}L` : totalAmt >= 1000 ? `₹${(totalAmt/1000).toFixed(1)}K` : `₹${totalAmt}`, color:'#059669' },
+                                  { label:'Total Profit', value: totalProfit >= 1000 ? `₹${(totalProfit/1000).toFixed(1)}K` : `₹${totalProfit.toFixed(0)}`, color:'#d4af37' },
+                                  { label:'Avg / Txn',    value: txns.length ? (totalAmt/txns.length >= 1000 ? `₹${((totalAmt/txns.length)/1000).toFixed(1)}K` : `₹${Math.round(totalAmt/txns.length)}`) : '—', color:'#c02040' },
+                                ].map((s, i) => (
+                                  <div key={i} style={{ padding:'10px 12px', textAlign:'center', borderRight: i < 3 ? '1px solid #e2e8f0' : 'none' }}>
+                                    <div style={{ fontSize:9, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.4 }}>{s.label}</div>
+                                    <div style={{ fontSize:15, fontWeight:900, color:s.color, marginTop:3 }}>{s.value}</div>
                                   </div>
                                 ))}
                               </div>
 
-                              {/* Stats */}
-                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', background: '#f8fafc', borderTop: '1px solid #e2e8f0' }}>
-                                <div style={{ padding: '10px 14px', textAlign: 'center', borderRight: '1px solid #e2e8f0' }}>
-                                  <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>Transactions</div>
-                                  <div style={{ fontSize: 20, fontWeight: 900, color: '#402070' }}>{txns.length}</div>
-                                </div>
-                                <div style={{ padding: '10px 14px', textAlign: 'center', borderRight: '1px solid #e2e8f0' }}>
-                                  <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>Total Amount</div>
-                                  <div style={{ fontSize: 16, fontWeight: 900, color: '#059669' }}>{fmtVal(totalAmt)}</div>
-                                </div>
-                                <div style={{ padding: '10px 14px', textAlign: 'center' }}>
-                                  <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase' }}>Avg / Txn</div>
-                                  <div style={{ fontSize: 16, fontWeight: 900, color: '#c02040' }}>{txns.length ? fmtVal(totalAmt / txns.length) : '—'}</div>
-                                </div>
+                              {/* Details Grid */}
+                              <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:1, background:'#f1f5f9' }}>
+                                {[
+                                  { icon:'🪪', label:'PAN',        value: customerProfile.pan || '—' },
+                                  { icon:'📱', label:'Mobile',     value: customerProfile.phone || '—' },
+                                  { icon:'🔢', label:'Aadhar',     value: customerProfile.aadhar ? customerProfile.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—' },
+                                  { icon:'✉️',  label:'Email',      value: customerProfile.email || '—' },
+                                  { icon:'🏦', label:'Account No', value: customerProfile.acc_number || '—' },
+                                  { icon:'🏢', label:'Branch',     value: customerProfile.branch || '—' },
+                                  { icon:'👤', label:'Added By',   value: customerProfile.added_by_name || '—' },
+                                  { icon:'📅', label:'Member Since',value: customerProfile.created_at ? new Date(customerProfile.created_at).toLocaleDateString('en-IN') : '—' },
+                                  ...(customerProfile.reviewed_by_name ? [{ icon:'✅', label:'Approved By', value: customerProfile.reviewed_by_name }] : []),
+                                  ...(customerProfile.reviewed_at ? [{ icon:'📅', label:'Approved On', value: new Date(customerProfile.reviewed_at).toLocaleDateString('en-IN') }] : []),
+                                  ...(customerProfile.pan_img_url ? [{ icon:'🖼️', label:'PAN Image', value: <a href={customerProfile.pan_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.pan_img_url} alt="PAN" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(64,32,112,0.2)', cursor:'pointer' }} /></a> }] : []),
+                                  ...(customerProfile.aadhar_img_url ? [{ icon:'🖼️', label:'Aadhar Image', value: <a href={customerProfile.aadhar_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.aadhar_img_url} alt="Aadhar" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(64,32,112,0.2)', cursor:'pointer' }} /></a> }] : []),
+                                  ...(customerProfile.card_front_img_url ? [{ icon:'🏧', label:'Card Front', value: <a href={customerProfile.card_front_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.card_front_img_url} alt="Card" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(64,32,112,0.2)', cursor:'pointer' }} /></a> }] : []),
+                                ].map((f, i) => (
+                                  <div key={i} style={{ background:'#fff', padding:'8px 14px' }}>
+                                    <div style={{ fontSize:9, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.4 }}>{f.icon} {f.label}</div>
+                                    <div style={{ fontSize:12, fontWeight:700, color:'#1a0a2e', marginTop:2, wordBreak:'break-all' }}>{f.value}</div>
+                                  </div>
+                                ))}
                               </div>
+
+                              {/* Service Breakdown */}
+                              {Object.keys(serviceBreakdown).length > 0 && (
+                                <div style={{ borderTop:'1px solid #e2e8f0', background:'#fafbff', padding:'10px 14px' }}>
+                                  <div style={{ fontSize:9, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.4, marginBottom:8 }}>Service Breakdown</div>
+                                  <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
+                                    {Object.entries(serviceBreakdown).map(([svc, cnt]) => (
+                                      <span key={svc} style={{ background:'#ede9fe', color:'#402070', padding:'3px 10px', borderRadius:20, fontSize:11, fontWeight:700 }}>
+                                        {svc} ×{cnt}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
 
                               {/* Recent Transactions */}
                               {txns.length > 0 && (
-                                <div style={{ borderTop: '1px solid #e2e8f0' }}>
-                                  <div style={{ padding: '8px 14px', fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: 0.4, background: '#f8fafc' }}>Recent Transactions</div>
-                                  {txns.slice(0, 3).map((t, i) => (
-                                    <div key={t.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 14px', borderTop: i > 0 ? '1px solid #f1f5f9' : 'none', background: '#fff' }}>
-                                      <div>
-                                        <div style={{ fontSize: 12, fontWeight: 700, color: '#374151' }}>{t.service_type}</div>
-                                        <div style={{ fontSize: 11, color: '#9ca3af' }}>{t.platform || '—'} · {new Date(t.created_at).toLocaleDateString('en-IN')}</div>
+                                <div style={{ borderTop:'1px solid #e2e8f0' }}>
+                                  <div style={{ padding:'8px 14px', fontSize:9, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.4, background:'#f8fafc', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                                    <span>All Transactions</span>
+                                    <span style={{ color:'#402070' }}>{txns.length} total</span>
+                                  </div>
+                                  <div style={{ maxHeight:320, overflowY:'auto' }}>
+                                    {txns.map((t, i) => (
+                                      <div key={t.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'9px 14px', borderTop: i > 0 ? '1px solid #f1f5f9' : 'none', background:'#fff' }}>
+                                        <div>
+                                          <div style={{ fontSize:12, fontWeight:700, color:'#374151' }}>{t.service_type}</div>
+                                          <div style={{ fontSize:10, color:'#9ca3af', marginTop:1 }}>
+                                            {t.platform || t.bill_platform || '—'} · {new Date(t.created_at).toLocaleDateString('en-IN')} {new Date(t.created_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}
+                                          </div>
+                                        </div>
+                                        <div style={{ textAlign:'right' }}>
+                                          <div style={{ color:'#059669', fontWeight:800, fontSize:13 }}>₹{Number(t.amount).toLocaleString('en-IN')}</div>
+                                          {t.charges_amount > 0 && <div style={{ color:'#d97706', fontSize:10 }}>Charges: ₹{Number(t.charges_amount).toLocaleString('en-IN')}</div>}
+                                        </div>
                                       </div>
-                                      <strong style={{ color: '#059669', fontSize: 13 }}>₹{fmt(t.amount)}</strong>
-                                    </div>
-                                  ))}
+                                    ))}
+                                  </div>
                                 </div>
                               )}
+
                             </div>
                           )
                         })()}
@@ -541,18 +592,44 @@ export default function Services() {
             <div style={{ overflowX: 'auto' }}>
               <table className="dash-table">
                 <thead>
-                  <tr><th>Date</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th><th style={{ width: 60 }}>Actions</th></tr>
+                  <tr>
+                    <th>Date & Time</th>
+                    <th>Customer</th>
+                    <th>PAN</th>
+                    <th>Mobile</th>
+                    <th>Service</th>
+                    <th>Platform</th>
+                    <th>Bank</th>
+                    <th>Card</th>
+                    <th>Amount</th>
+                    <th>Charges %</th>
+                    <th>Charges ₹</th>
+                    <th>Settled</th>
+                    <th>Mode</th>
+                    <th>Note</th>
+                    <th style={{ width: 60 }}>Actions</th>
+                  </tr>
                 </thead>
                 <tbody>
                   {history.map(t => (
-                    <tr key={t.id} style={{ backgroundColor: t.is_edited ? '#fef2f2' : '' }}>
-                      <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
-                      <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}{t.is_edited ? ' ✏️' : ''}</strong></td>
-                      <td style={{ fontSize: 12 }}>{t.service_type}</td>
-                      <td>{t.platform || t.bill_platform || '—'}</td>
-                      <td style={{ fontWeight: 700, color: '#059669' }}>₹{fmt(t.amount)}</td>
-                      <td style={{ color: '#dc2626' }}>₹{fmt(t.charges_amount || 0)}</td>
-                      <td style={{ color: '#059669', fontWeight: 800 }}>₹{fmt(t.settled_amount || t.profit || 0)}</td>
+                    <tr key={t.id}>
+                      <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
+                        <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
+                        <div style={{ color: '#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+                      </td>
+                      <td><strong>{t.cust_name || '—'}</strong></td>
+                      <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_pan || '—'}</td>
+                      <td style={{ fontSize: 11 }}>{t.cust_mobile || '—'}</td>
+                      <td style={{ fontSize: 12 }}><strong>{t.service_type}</strong></td>
+                      <td style={{ fontSize: 12 }}>{t.platform || t.bill_platform || '—'}</td>
+                      <td style={{ fontSize: 12 }}>{t.bank || '—'}</td>
+                      <td style={{ fontSize: 11 }}>{t.card ? `${t.card}${t.card_last4 ? ` ****${t.card_last4}` : ''}` : '—'}</td>
+                      <td style={{ fontWeight: 700, color: '#059669', whiteSpace: 'nowrap' }}>₹{fmt(t.amount)}</td>
+                      <td style={{ color: '#d97706', fontSize: 12 }}>{t.charges_pct || 0}%</td>
+                      <td style={{ color: '#dc2626', fontSize: 12 }}>₹{fmt(t.charges_amount || 0)}</td>
+                      <td style={{ color: '#059669', fontWeight: 800, whiteSpace: 'nowrap' }}>₹{fmt(t.settled_amount || t.profit || 0)}</td>
+                      <td style={{ fontSize: 11 }}>{t.payment_mode || t.received_mode || '—'}</td>
+                      <td style={{ fontSize: 11, color: '#9ca3af', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.note || '—'}</td>
                       <td className="txn-action-cell">
                         <button className="txn-menu-btn" onClick={e => {
                           e.stopPropagation()
@@ -586,20 +663,33 @@ export default function Services() {
               <div style={{ overflowY:'auto', padding:24 }}>
                 <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
                   {[
-                    { label:'Customer',      value: viewTxn.cust_name || '—' },
-                    { label:'PAN',           value: viewTxn.cust_pan  || '—' },
-                    { label:'Mobile',        value: viewTxn.cust_mobile || '—' },
-                    { label:'Date',          value: new Date(viewTxn.created_at).toLocaleString('en-IN') },
-                    { label:'Service',       value: viewTxn.service_type || '—' },
-                    { label:'Platform',      value: viewTxn.platform || viewTxn.bill_platform || '—' },
-                    { label:'Amount',        value: `₹${fmt(viewTxn.amount)}`,              color:'#059669' },
-                    { label:'Charges',       value: `₹${fmt(viewTxn.charges_amount || 0)}`, color:'#d97706' },
-                    { label:'Settled',       value: `₹${fmt(viewTxn.settled_amount || 0)}`, color:'#402070' },
-                    { label:'Payment Mode',  value: viewTxn.payment_mode  || '—' },
-                    { label:'Card',          value: viewTxn.card ? `${viewTxn.card} ****${viewTxn.card_last4 || ''}` : '—' },
-                    { label:'Note',          value: viewTxn.note || '—' },
+                    { label:'Transaction ID', value: `#${viewTxn.id}` },
+                    { label:'Date & Time',    value: new Date(viewTxn.created_at).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' }) },
+                    { label:'Customer',       value: viewTxn.cust_name || '—' },
+                    { label:'PAN',            value: viewTxn.cust_pan  || '—' },
+                    { label:'Mobile',         value: viewTxn.cust_mobile || '—' },
+                    { label:'Aadhar',         value: viewTxn.cust_aadhar || '—' },
+                    { label:'Service',        value: viewTxn.service_type || '—' },
+                    { label:'Platform',       value: viewTxn.platform || viewTxn.bill_platform || '—' },
+                    { label:'Bank',           value: viewTxn.bank || '—' },
+                    { label:'Card',           value: viewTxn.card ? `${viewTxn.card}${viewTxn.card_last4 ? ` ****${viewTxn.card_last4}` : ''}` : '—' },
+                    { label:'Card Bank',      value: viewTxn.card_bank || '—' },
+                    { label:'Account No.',    value: viewTxn.acc_no || '—' },
+                    { label:'Amount',         value: `₹${fmt(viewTxn.amount)}`,              color:'#059669' },
+                    { label:'Charges %',      value: `${viewTxn.charges_pct || 0}%`,           color:'#d97706' },
+                    { label:'Charges ₹',      value: `₹${fmt(viewTxn.charges_amount || 0)}`,  color:'#d97706' },
+                    { label:'Settled Amount', value: `₹${fmt(viewTxn.settled_amount || 0)}`,  color:'#402070' },
+                    ...(viewTxn.service_type === BILL_WITHDRAWAL ? [
+                      { label:'Bill Platform',  value: viewTxn.bill_platform || '—' },
+                      { label:'Bill Amount',    value: `₹${fmt(viewTxn.bill_amount || 0)}` },
+                      { label:'Bill Remaining', value: `₹${fmt(viewTxn.bill_remaining || 0)}` },
+                      { label:'Total Collected',value: `₹${fmt(viewTxn.total_collected || 0)}`, color:'#059669' },
+                      { label:'Receive Mode',   value: viewTxn.received_mode || '—' },
+                    ] : []),
+                    { label:'Payment Mode',   value: viewTxn.payment_mode  || '—' },
+                    { label:'Note',           value: viewTxn.note || '—', full: true },
                   ].map(f => (
-                    <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px' }}>
+                    <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px', ...(f.full ? { gridColumn:'1/-1' } : {}) }}>
                       <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
                       <div style={{ fontSize:14, fontWeight:700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
                     </div>
@@ -652,13 +742,10 @@ export default function Services() {
                   <button onClick={() => setEditTxn(null)} style={{ background:'rgba(255,255,255,0.15)', border:'none', color:'#fff', width:32, height:32, borderRadius:'50%', cursor:'pointer', fontSize:16 }}>✕</button>
                 </div>
                 <div style={{ overflowY:'auto', padding:24 }}>
-                  <div className="dash-form-grid">
-                    {eInp('cust_name', 'Customer Name *')}
-                    {eInp('cust_pan',  'PAN Number *')}
-                    {eInp('cust_mobile', 'Mobile')}
-                    {eInp('cust_aadhar', 'Aadhar')}
+                  <div style={{ background:'#fef3c7', border:'1px solid #fcd34d', borderRadius:10, padding:'10px 14px', marginBottom:16, fontSize:13, color:'#92400e', fontWeight:600 }}>
+                    ⚠️ Editing transaction form data only. Customer identity (Name, PAN, Aadhar) cannot be changed.
                   </div>
-                  <div className="dash-form-grid" style={{ marginTop:12 }}>
+                  <div className="dash-form-grid">
                     {eSel('platform', 'Platform', platforms)}
                     {(isCW || isBW) && eSel('card', 'Card Type', cards)}
                     {(isCW || isBW) && eSel('card_bank', 'Card Bank', banks)}
@@ -692,10 +779,6 @@ export default function Services() {
                     try {
                       const payload = {
                         note:           editTxn.note,
-                        cust_name:      editTxn.cust_name,
-                        cust_pan:       editTxn.cust_pan,
-                        cust_aadhar:    editTxn.cust_aadhar,
-                        cust_mobile:    editTxn.cust_mobile,
                         platform:       editTxn.platform,
                         bank:           editTxn.bank,
                         card:           editTxn.card,

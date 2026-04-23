@@ -60,9 +60,8 @@ export default function Leads() {
   const [msg, setMsg]           = useState('')
   const [error, setError]       = useState('')
   const [viewLead, setViewLead] = useState(null)
-  const [editStatus, setEditStatus] = useState(null)
 
-  const { leads, stats, loading, load, createLead, updateStatus: hookUpdateStatus } = useLeads(filterStatus, filterType)
+  const { leads, stats, loading, load, createLead } = useLeads(filterStatus, filterType)
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -75,14 +74,6 @@ export default function Leads() {
       setForm(emptyForm); setShowForm(false)
     } catch (err) { setError(err.message) }
     setSaving(false)
-  }
-
-  const updateStatus = async (id, status) => {
-    try {
-      await hookUpdateStatus(id, status)
-      setEditStatus(null)
-      if (viewLead?.id === id) setViewLead(v => ({ ...v, status }))
-    } catch (err) { alert(err.message) }
   }
 
   const filtered = leads.filter(l =>
@@ -162,22 +153,9 @@ export default function Leads() {
                         <td style={{ fontSize: 12 }}>{LEAD_TYPES.find(t => t.value === l.lead_type)?.label || l.lead_type}</td>
                         <td style={{ color: '#059669', fontWeight: 700 }}>{l.required_amount > 0 ? `₹${fmt(l.required_amount)}` : '—'}</td>
                         <td>
-                          <span style={{ background: sc.bg, color: sc.color, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}
-                            onClick={() => setEditStatus(editStatus === l.id ? null : l.id)}>
+                          <span style={{ background: sc.bg, color: sc.color, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>
                             {sc.label}
                           </span>
-                          {editStatus === l.id && (
-                            <div className="lead-status-dropdown">
-                              {Object.entries(STATUS_CONFIG).map(([k, v]) => (
-                                <div key={k} onClick={() => updateStatus(l.id, k)}
-                                  style={{ padding: '8px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 600, color: v.color, background: k === l.status ? v.bg : '#fff' }}
-                                  onMouseEnter={e => e.currentTarget.style.background = v.bg}
-                                  onMouseLeave={e => e.currentTarget.style.background = k === l.status ? v.bg : '#fff'}>
-                                  {v.label}
-                                </div>
-                              ))}
-                            </div>
-                          )}
                         </td>
                         <td style={{ fontSize: 12, color: l.followup_date ? '#d97706' : '#9ca3af' }}>
                           {l.followup_date ? `📅 ${new Date(l.followup_date).toLocaleDateString('en-IN')}` : '—'}
@@ -320,19 +298,6 @@ export default function Leads() {
                 <button onClick={() => setViewLead(null)} style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', fontSize: 16 }}>✕</button>
               </div>
               <div style={{ overflowY: 'auto', padding: 24 }}>
-                {/* Status Change */}
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', marginBottom: 8 }}>Update Status</div>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    {Object.entries(STATUS_CONFIG).map(([k, v]) => (
-                      <button key={k} onClick={() => updateStatus(viewLead.id, k)}
-                        style={{ padding: '6px 14px', borderRadius: 20, border: `2px solid ${viewLead.status === k ? v.color : '#e2e8f0'}`, background: viewLead.status === k ? v.bg : '#fff', color: v.color, fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
-                        {v.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                   {[
                     { label: 'Mobile',      value: viewLead.mobile,        link: `tel:${viewLead.mobile}` },
@@ -397,7 +362,6 @@ export default function Leads() {
           </div>
         )}
 
-        {editStatus && <div onClick={() => setEditStatus(null)} style={{ position: 'fixed', inset: 0, zIndex: 99 }} />}
       </div>
     </div>
   )

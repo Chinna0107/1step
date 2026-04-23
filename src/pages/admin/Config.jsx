@@ -1,20 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
-import { getTokenByRole } from '../../utils/tokenUtils'
-import { api } from '../../utils/api'
+import { useAdminConfig } from '../../hooks/useFinance'
 import '../../pages/dashboard.css'
 
-const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
-
 export default function AdminConfig() {
-  const [master, setMaster]   = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    api('/master/all', { headers: auth() })
-      .then(d => { setMaster(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+  const { master, loading } = useAdminConfig()
 
   const Section = ({ title, icon, items, valueKey, valueLabel }) => (
     <div className="dash-card">

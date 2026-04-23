@@ -27,7 +27,8 @@ const NAV = [
       { to: '/superadmin/tracking',     icon: <MdEmojiEvents />,  label: 'Performance Tracking' },
       { to: '/superadmin/finance',      icon: <MdAccountBalance />,label: 'Financial Control' },
       { to: '/superadmin/employees',    icon: <MdPeople />,       label: 'Employee Management' },
-      { to: '/superadmin/attendance',    icon: <MdFactCheck />,    label: 'Attendance' },
+      { to: '/superadmin/attendance',   icon: <MdFactCheck />,    label: 'Attendance' },
+      { to: '/superadmin/leads',        icon: <MdAssessment />,   label: 'Lead Management' },
     ],
   },
   {

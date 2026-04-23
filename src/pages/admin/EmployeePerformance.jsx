@@ -1,18 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
-import { getTokenByRole } from '../../utils/tokenUtils'
-import { api } from '../../utils/api'
+import { useAdminReports } from '../../hooks/useFinance'
 import '../../pages/dashboard.css'
 
 export default function EmployeePerformance() {
-  const [employees, setEmployees] = useState([])
-  const [loading, setLoading]     = useState(true)
-
-  useEffect(() => {
-    api('/dashboard/employees', { headers: { Authorization: `Bearer ${getTokenByRole('admin')}` } })
-      .then(d => { setEmployees(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+  const { employees, loading } = useAdminReports()
 
   const getRating = (coins) => {
     if (coins >= 5000) return { stars: '⭐⭐⭐⭐⭐', label: 'Excellent', color: '#059669' }

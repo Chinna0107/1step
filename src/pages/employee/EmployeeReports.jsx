@@ -26,20 +26,30 @@ function TxnDetailModal({ txn, onClose }) {
   if (!txn) return null
   const fields = [
     { label: 'Transaction ID', value: `#${txn.id}` },
-    { label: 'Date & Time',    value: new Date(txn.created_at).toLocaleString('en-IN') },
+    { label: 'Date & Time',    value: new Date(txn.created_at).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' }) },
     { label: 'Customer',       value: txn.cust_name   || '—' },
     { label: 'Customer PAN',   value: txn.cust_pan    || '—' },
     { label: 'Customer Mobile',value: txn.cust_mobile || '—' },
+    { label: 'Aadhar',         value: txn.cust_aadhar || '—' },
     { label: 'Service',        value: txn.service_type || '—' },
     { label: 'Platform',       value: txn.platform || txn.bill_platform || '—' },
     { label: 'Bank',           value: txn.bank || '—' },
     { label: 'Card Type',      value: txn.card || '—' },
+    { label: 'Card Bank',      value: txn.card_bank || '—' },
     { label: 'Card Last 4',    value: txn.card_last4 || '—' },
+    { label: 'Account No.',    value: txn.acc_no || '—' },
     { label: 'Amount',         value: `₹${fmt(txn.amount)}`,         color: '#059669' },
-    { label: 'Charges',        value: `₹${fmt(txn.charges_amount)}`, color: '#d97706' },
-    { label: 'Settled Amount', value: `₹${fmt(txn.settled_amount)}` },
+    { label: 'Charges %',      value: `${txn.charges_pct || 0}%`,      color: '#d97706' },
+    { label: 'Charges ₹',      value: `₹${fmt(txn.charges_amount || 0)}`, color: '#d97706' },
+    { label: 'Settled Amount', value: `₹${fmt(txn.settled_amount || 0)}` },
+    ...(txn.service_type === 'Bill Pay + Withdrawal' ? [
+      { label: 'Bill Platform',  value: txn.bill_platform || '—' },
+      { label: 'Bill Amount',    value: `₹${fmt(txn.bill_amount || 0)}` },
+      { label: 'Bill Remaining', value: `₹${fmt(txn.bill_remaining || 0)}` },
+      { label: 'Total Collected',value: `₹${fmt(txn.total_collected || 0)}`, color: '#059669' },
+      { label: 'Receive Mode',   value: txn.received_mode || '—' },
+    ] : []),
     { label: 'Payment Mode',   value: txn.payment_mode  || '—' },
-    { label: 'Received Mode',  value: txn.received_mode || '—' },
     { label: 'Note',           value: txn.note || '—' },
   ]
   return (
@@ -103,8 +113,14 @@ function GroupTxnsModal({ label, name, txns, onClose, onViewTxn }) {
                   onMouseEnter={e => e.currentTarget.style.background='#faf5ff'}
                   onMouseLeave={e => e.currentTarget.style.background=''}>
                   <td style={{ padding:'11px 16px', color:'#94a3b8', fontSize:12 }}>{i+1}</td>
-                  <td style={{ padding:'11px 16px', fontSize:12, color:'#64748b' }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
-                  <td style={{ padding:'11px 16px', fontWeight:700, color:'#1a0a2e' }}>{t.cust_name || '—'}</td>
+                  <td style={{ padding:'11px 16px', fontSize:11, whiteSpace:'nowrap' }}>
+                    <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
+                    <div style={{ color:'#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}</div>
+                  </td>
+                  <td style={{ padding:'11px 16px', fontWeight:700, color:'#1a0a2e' }}>
+                    {t.cust_name || '—'}
+                    <div style={{ fontSize:11, color:'#9ca3af', fontWeight:400 }}>{t.cust_pan || ''}</div>
+                  </td>
                   <td style={{ padding:'11px 16px', color:'#059669', fontWeight:700 }}>₹{fmt(t.amount)}</td>
                   <td style={{ padding:'11px 16px', color:'#402070', fontWeight:700 }}>₹{fmt(t.settled_amount || 0)}</td>
                   <td style={{ padding:'11px 16px' }}>
@@ -133,7 +149,9 @@ export default function EmployeeReports() {
   const [to, setTo]                   = useState(today)
   const [tab, setTab]                 = useState('service')
   const [selectedTxn, setSelectedTxn] = useState(null)
-  const [groupTxns, setGroupTxns]     = useState(null)  // { label, name, txns }
+  const [groupTxns, setGroupTxns]     = useState(null)
+  const [search, setSearch]           = useState('')
+  const [svcFilter, setSvcFilter]     = useState('')
   const printRef                      = useRef()
 
   const load = useCallback(() => {
@@ -151,6 +169,16 @@ export default function EmployeeReports() {
   const platformSummary = data?.platformSummary ?? []
   const serviceSummary  = data?.serviceSummary  ?? []
 
+  // filtered txns for the Transactions tab
+  const filteredTxns = txns.filter(t => {
+    const matchSvc    = !svcFilter || t.service_type === svcFilter
+    const q           = search.toLowerCase()
+    const matchSearch = !search || t.cust_name?.toLowerCase().includes(q) || t.cust_pan?.toLowerCase().includes(q) || t.cust_mobile?.includes(search) || t.platform?.toLowerCase().includes(q)
+    return matchSvc && matchSearch
+  })
+
+  const serviceOptions = [...new Set(txns.map(t => t.service_type).filter(Boolean))]
+
   const serviceRows  = serviceSummary.map(s => ({ name: s.name, count: s.count, amount: s.amount, profit: s.commission ?? 0 }))
   const platformRows = platformSummary.map(p => ({ name: p.name, count: p.count, amount: p.amount, profit: 0 }))
 
@@ -161,6 +189,22 @@ export default function EmployeeReports() {
   const maxAmt     = tab === 'service' ? maxSvcAmt   : maxPltAmt
 
   const exportExcel = () => {
+    if (tab === 'txns') {
+      if (!filteredTxns.length) return
+      const header = 'Date,Time,Customer,PAN,Mobile,Service,Platform,Bank,Card,Amount,Charges%,Charges,Settled,Mode,Note'
+      const rows   = filteredTxns.map(t => [
+        new Date(t.created_at).toLocaleDateString('en-IN'),
+        new Date(t.created_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' }),
+        t.cust_name || '', t.cust_pan || '', t.cust_mobile || '',
+        t.service_type || '', t.platform || t.bill_platform || '',
+        t.bank || '', t.card || '',
+        t.amount, t.charges_pct || 0, t.charges_amount || 0, t.settled_amount || 0,
+        t.payment_mode || '', t.note || ''
+      ].join(','))
+      const blob = new Blob([header + '\n' + rows.join('\n')], { type: 'text/csv' })
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `transactions_${from}_${to}.csv`; a.click()
+      return
+    }
     if (!activeRows.length) return
     const label = tab === 'service' ? 'Service' : 'Platform'
     const header = `${label},Transactions,Total Amount,Total Profit`
@@ -173,6 +217,14 @@ export default function EmployeeReports() {
   }
 
   const exportPDF = () => {
+    if (tab === 'txns') {
+      const rows = filteredTxns.map(t =>
+        `<tr><td>${new Date(t.created_at).toLocaleDateString('en-IN')} ${new Date(t.created_at).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</td><td>${t.cust_name||''}</td><td>${t.cust_pan||''}</td><td>${t.service_type||''}</td><td>${t.platform||t.bill_platform||''}</td><td>₹${fmt(t.amount)}</td><td>₹${fmt(t.charges_amount||0)}</td><td>₹${fmt(t.settled_amount||0)}</td></tr>`
+      ).join('')
+      const html = `<html><head><title>Transactions</title><style>body{font-family:Arial;padding:24px;color:#1a0a2e}h2{color:#402070}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#402070;color:#fff;padding:8px 12px;text-align:left}td{padding:7px 12px;border-bottom:1px solid #e2e8f0}tr:nth-child(even)td{background:#f8fafc}</style></head><body><h2>MoneySpot — All Transactions</h2><p>Period: ${from} to ${to} · ${filteredTxns.length} records</p><table><thead><tr><th>Date & Time</th><th>Customer</th><th>PAN</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr></thead><tbody>${rows}</tbody></table></body></html>`
+      const w = window.open('', '_blank'); w.document.write(html); w.document.close(); w.focus(); setTimeout(() => { w.print(); w.close() }, 400)
+      return
+    }
     const label = tab === 'service' ? 'Service' : 'Platform'
     const rows  = activeRows.map(r =>
       `<tr><td>${r.name}</td><td>${r.count}</td><td>₹${fmt(r.amount)}</td><td>₹${fmt(r.profit)}</td></tr>`
@@ -285,40 +337,72 @@ export default function EmployeeReports() {
         ) : tab === 'txns' ? (
           txns.length === 0 ? (
             <div className="er-empty">
-              <div className="er-empty-icon">📭</div>
+              <div className="er-empty-icon">💭</div>
               <div>No transactions found for this period</div>
             </div>
           ) : (
             <div className="er-table-card">
               <div className="er-table-header">
-                <h2>📋 All Transactions ({txns.length})</h2>
-                <span style={{ fontSize:12, color:'#94a3b8' }}>Click a row to view full details</span>
+                <h2>📋 All Transactions ({filteredTxns.length}{filteredTxns.length !== txns.length ? ` of ${txns.length}` : ''})</h2>
+                <div style={{ display:'flex', gap:8 }}>
+                  <button className="er-btn er-btn-sm er-btn-excel" onClick={exportExcel}><MdTableChart size={13} /> Excel</button>
+                  <button className="er-btn er-btn-sm er-btn-pdf"   onClick={exportPDF}><MdPictureAsPdf size={13} /> PDF</button>
+                </div>
+              </div>
+              <div style={{ padding:'12px 20px', borderBottom:'1px solid #f1f5f9', display:'flex', gap:10, flexWrap:'wrap', alignItems:'center', background:'#fafbff' }}>
+                <div style={{ position:'relative', flex:1, minWidth:180 }}>
+                  <span style={{ position:'absolute', left:10, top:'50%', transform:'translateY(-50%)', color:'#94a3b8', fontSize:14 }}>🔍</span>
+                  <input placeholder="Search customer, PAN, mobile, platform..."
+                    value={search} onChange={e => setSearch(e.target.value)}
+                    style={{ width:'100%', padding:'8px 12px 8px 32px', borderRadius:8, border:'1.5px solid #e2e8f0', fontSize:13, fontFamily:'inherit', boxSizing:'border-box', outline:'none' }}
+                    onFocus={e => e.target.style.borderColor='#402070'}
+                    onBlur={e => e.target.style.borderColor='#e2e8f0'} />
+                </div>
+                <select value={svcFilter} onChange={e => setSvcFilter(e.target.value)}
+                  style={{ padding:'8px 12px', borderRadius:8, border:'1.5px solid #e2e8f0', fontSize:13, fontFamily:'inherit', color:'#374151', background:'#fff', cursor:'pointer', outline:'none' }}>
+                  <option value="">All Services</option>
+                  {serviceOptions.map(s => <option key={s} value={s}>{SERVICE_ICONS[s] || ''} {s}</option>)}
+                </select>
+                {(search || svcFilter) && (
+                  <button onClick={() => { setSearch(''); setSvcFilter('') }}
+                    style={{ padding:'8px 14px', borderRadius:8, border:'1.5px solid #fee2e2', background:'#fee2e2', color:'#dc2626', fontSize:12, fontWeight:700, cursor:'pointer' }}>
+                    ✕ Clear
+                  </button>
+                )}
               </div>
               <div className="er-table-wrap">
-                <table className="er-table">
-                  <thead>
-                    <tr>
-                      <th>#</th><th>Date</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {txns.map((t, i) => (
-                      <tr key={t.id} className="er-tr" onClick={() => setSelectedTxn(t)}
-                        style={{ cursor:'pointer', animationDelay:`${i*30}ms` }}
-                        onMouseEnter={e => e.currentTarget.style.background='#f0f2f8'}
-                        onMouseLeave={e => e.currentTarget.style.background=''}>
-                        <td><span className="er-rank" style={{ background: COLORS[i % COLORS.length] }}>{i+1}</span></td>
-                        <td style={{ fontSize:12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
-                        <td><strong>{t.cust_name || '—'}</strong></td>
-                        <td style={{ fontSize:12 }}>{SERVICE_ICONS[t.service_type] || ''} {t.service_type || '—'}</td>
-                        <td>{t.platform || t.bill_platform || '—'}</td>
-                        <td><span className="er-amt">₹{fmt(t.amount)}</span></td>
-                        <td style={{ color:'#d97706', fontWeight:700 }}>₹{fmt(t.charges_amount || 0)}</td>
-                        <td style={{ fontWeight:600 }}>₹{fmt(t.settled_amount || 0)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                {filteredTxns.length === 0 ? (
+                  <div className="er-empty" style={{ padding:'32px 20px' }}>
+                    <div className="er-empty-icon">🔍</div>
+                    <div>No transactions match your filters</div>
+                  </div>
+                ) : (
+                  <table className="er-table">
+                    <thead>
+                      <tr><th>#</th><th>Date &amp; Time</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr>
+                    </thead>
+                    <tbody>
+                      {filteredTxns.map((t, i) => (
+                        <tr key={t.id} className="er-tr" onClick={() => setSelectedTxn(t)}
+                          style={{ cursor:'pointer', animationDelay:`${i*30}ms` }}
+                          onMouseEnter={e => e.currentTarget.style.background='#f0f2f8'}
+                          onMouseLeave={e => e.currentTarget.style.background=''}>
+                          <td><span className="er-rank" style={{ background: COLORS[i % COLORS.length] }}>{i+1}</span></td>
+                          <td style={{ fontSize:11, whiteSpace:'nowrap' }}>
+                            <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
+                            <div style={{ color:'#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit' })}</div>
+                          </td>
+                          <td><strong>{t.cust_name || '—'}</strong><div style={{ fontSize:11, color:'#9ca3af' }}>{t.cust_pan || ''}</div></td>
+                          <td style={{ fontSize:12 }}>{SERVICE_ICONS[t.service_type] || ''} {t.service_type || '—'}</td>
+                          <td>{t.platform || t.bill_platform || '—'}</td>
+                          <td><span className="er-amt">₹{fmt(t.amount)}</span></td>
+                          <td style={{ color:'#d97706', fontWeight:700 }}>₹{fmt(t.charges_amount || 0)}</td>
+                          <td style={{ fontWeight:600 }}>₹{fmt(t.settled_amount || 0)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           )

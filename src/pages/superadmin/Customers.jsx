@@ -4,6 +4,7 @@ import { api } from '../../utils/api'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import { useBranches } from '../../hooks/useSuperAdmin'
 import { useSuperAdminCustomers } from '../../hooks/useLeads'
+import '../../pages/employee/CustomerInfo.css'
 import './superadmin.css'
 import './Dashboard.css'
 import '../../pages/dashboard.css'
@@ -25,6 +26,7 @@ export default function SuperAdminCustomers() {
   const [viewCustomer, setViewCustomer] = useState(null)
   const [viewTxns, setViewTxns]   = useState([])
   const [txnLoading, setTxnLoading] = useState(false)
+  const [lightbox, setLightbox]   = useState(null)
   const { branches }              = useBranches()
   const { customers, stats, branchStats, loading, load } = useSuperAdminCustomers(branch, status, search)
 
@@ -131,7 +133,7 @@ export default function SuperAdminCustomers() {
               ) : (
                 <table className="sa-table">
                   <thead>
-                    <tr><th>Name</th><th>Phone</th><th>PAN</th><th>Branch</th><th>Added By</th><th>Txns</th><th>Total Amount</th><th>Status</th><th>Date</th></tr>
+                    <tr><th>Name</th><th>Phone</th><th>PAN</th><th>Branch</th><th>Documents</th><th>Added By</th><th>Txns</th><th>Total Amount</th><th>Status</th><th>Date</th></tr>
                   </thead>
                   <tbody>
                     {customers.map(c => {
@@ -150,6 +152,19 @@ export default function SuperAdminCustomers() {
                           </td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.pan}</td>
                           <td><span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{c.branch || '—'}</span></td>
+                          <td>
+                            <div className="ci-doc-thumbs">
+                              {c.aadhar_img_url
+                                ? <img src={c.aadhar_img_url} alt="Aadhar" className="ci-thumb" title="Aadhar" onClick={e => { e.stopPropagation(); setLightbox({ url: c.aadhar_img_url, label: `${c.name} — Aadhar` }) }} />
+                                : <span className="ci-no-doc">No Aadhar</span>}
+                              {c.pan_img_url
+                                ? <img src={c.pan_img_url} alt="PAN" className="ci-thumb" title="PAN" onClick={e => { e.stopPropagation(); setLightbox({ url: c.pan_img_url, label: `${c.name} — PAN` }) }} />
+                                : <span className="ci-no-doc">No PAN</span>}
+                              {c.card_front_img_url
+                                ? <img src={c.card_front_img_url} alt="Card" className="ci-thumb" title="Card Front" onClick={e => { e.stopPropagation(); setLightbox({ url: c.card_front_img_url, label: `${c.name} — Card Front` }) }} />
+                                : <span className="ci-no-doc">No Card</span>}
+                            </div>
+                          </td>
                           <td style={{ fontSize: 12 }}>{c.added_by_name || '—'}</td>
                           <td style={{ fontWeight: 700, color: '#402070', textAlign: 'center' }}>{c.txn_count || 0}</td>
                           <td style={{ color: '#059669', fontWeight: 700 }}>{c.total_amount > 0 ? fmtVal(c.total_amount) : '—'}</td>
@@ -216,19 +231,21 @@ export default function SuperAdminCustomers() {
               {(viewCustomer.aadhar_img_url || viewCustomer.pan_img_url || viewCustomer.card_front_img_url) && (
                 <>
                   <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 }}>Documents</div>
-                  <div style={{ display: 'flex', gap: 10, marginBottom: 20, flexWrap: 'wrap' }}>
-                    {viewCustomer.aadhar_img_url && (
-                      <a href={viewCustomer.aadhar_img_url} target="_blank" rel="noopener noreferrer"
-                        style={{ padding: '8px 16px', background: '#ede9fe', color: '#402070', borderRadius: 8, fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>🪪 Aadhar</a>
-                    )}
-                    {viewCustomer.pan_img_url && (
-                      <a href={viewCustomer.pan_img_url} target="_blank" rel="noopener noreferrer"
-                        style={{ padding: '8px 16px', background: '#ede9fe', color: '#402070', borderRadius: 8, fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>💳 PAN</a>
-                    )}
-                    {viewCustomer.card_front_img_url && (
-                      <a href={viewCustomer.card_front_img_url} target="_blank" rel="noopener noreferrer"
-                        style={{ padding: '8px 16px', background: '#ede9fe', color: '#402070', borderRadius: 8, fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>🏧 Card Front</a>
-                    )}
+                  <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
+                    {[{ url: viewCustomer.aadhar_img_url, label: 'Aadhar Card', icon: '🪪' },
+                      { url: viewCustomer.pan_img_url,   label: 'PAN Card',    icon: '💳' },
+                      { url: viewCustomer.card_front_img_url, label: 'Card Front', icon: '🏧' },
+                    ].filter(d => d.url).map(d => (
+                      <div key={d.label} style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' }}>
+                        <img src={d.url} alt={d.label}
+                          onClick={() => setLightbox({ url: d.url, label: `${viewCustomer.name} — ${d.label}` })}
+                          style={{ width: 120, height: 80, objectFit: 'cover', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
+                          onMouseEnter={e => { e.target.style.transform='scale(1.05)'; e.target.style.boxShadow='0 4px 16px rgba(64,32,112,0.3)' }}
+                          onMouseLeave={e => { e.target.style.transform='scale(1)'; e.target.style.boxShadow='none' }}
+                        />
+                        <span style={{ fontSize: 11, fontWeight: 700, color: '#64748b' }}>{d.icon} {d.label}</span>
+                      </div>
+                    ))}
                   </div>
                 </>
               )}
@@ -285,6 +302,18 @@ export default function SuperAdminCustomers() {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {lightbox && (
+        <div className="ci-lightbox" onClick={() => setLightbox(null)}>
+          <div className="ci-lightbox-box" onClick={e => e.stopPropagation()}>
+            <div className="ci-lightbox-header">
+              <span>{lightbox.label}</span>
+              <button onClick={() => setLightbox(null)}>✕</button>
+            </div>
+            <img src={lightbox.url} alt={lightbox.label} className="ci-lightbox-img" />
           </div>
         </div>
       )}

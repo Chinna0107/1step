@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
-import { getTokenByRole } from '../../utils/tokenUtils'
-import { api } from '../../utils/api'
+import { useAdminTransactions } from '../../hooks/useFinance'
 import { MdPrint, MdFilterList, MdRefresh, MdClose } from 'react-icons/md'
 import '../../pages/dashboard.css'
 
-const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const fmt    = n => Number(n).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
 const today  = new Date().toISOString().split('T')[0]
@@ -119,24 +117,13 @@ function PrintReceipt({ txn, onClose }) {
 }
 
 export default function AdminTransactions() {
-  const [data, setData]       = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [from, setFrom]       = useState(today)
-  const [to, setTo]           = useState(today)
+  const [from, setFrom]         = useState(today)
+  const [to, setTo]             = useState(today)
   const [printTxn, setPrintTxn] = useState(null)
 
-  const load = () => {
-    setLoading(true)
-    const p = new URLSearchParams({ from, to })
-    api(`/dashboard/reports?${p}`, { headers: auth() })
-      .then(d => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }
+  const { transactions: txns, totals, loading, refetch } = useAdminTransactions(from, to)
 
-  useEffect(() => { load() }, [])
-
-  const txns   = data?.transactions ?? []
-  const totals = data?.totals       ?? {}
+  const load = () => refetch()
 
   return (
     <div className="dash-page">

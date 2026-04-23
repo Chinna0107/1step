@@ -144,8 +144,8 @@ export default function EmployeeDashboard() {
         </div>
 
         {/* ── Stats Row 2 ── */}
-        <div className="ed-stats" style={{ gridTemplateColumns: 'repeat(4,1fr)', marginBottom: 24 }}>
-          {loading ? [1,2,3,4].map(i => <div key={i} className="ed-stat-skel" />) : (
+        <div className="ed-stats" style={{ gridTemplateColumns: 'repeat(3,1fr)', marginBottom: 24 }}>
+          {loading ? [1,2,3].map(i => <div key={i} className="ed-stat-skel" />) : (
             <>
               <StatCard icon={<MdPeople />}    color="#0ea5e9" delay={0}
                 label="Customers Attended Today" value={<AnimatedNumber value={s.custAttendedToday ?? 0} />}
@@ -156,18 +156,6 @@ export default function EmployeeDashboard() {
               <StatCard icon={<MdPerson />}    color="#f59e0b" delay={200}
                 label="Total My Customers" value={<AnimatedNumber value={s.custTotal ?? 0} />}
                 sub="All time" />
-              <div className="ed-stat ed-earnings-stat" style={{ '--color': '#059669', animationDelay: '300ms' }}>
-                <div className="ed-stat-glow" />
-                <div className="ed-stat-icon">💸</div>
-                <div className="ed-stat-label">Today's Earnings</div>
-                <div className="ed-stat-value-row">
-                  <div className="ed-stat-value ed-earnings-val">{fmtVal(s.profitToday ?? 0)}</div>
-                </div>
-                <div className="ed-earnings-coins">
-                  🪙 {fmt(Math.round((s.profitToday ?? 0) / 10))} coins equivalent
-                </div>
-                <div className="ed-stat-sub">Month: {fmtVal(s.profitMonth ?? 0)}</div>
-              </div>
             </>
           )}
         </div>
@@ -218,7 +206,12 @@ export default function EmployeeDashboard() {
             <div className="ed-card-header">
               <span className="ed-card-icon">🕒</span>
               <h2>Today's Attendance</h2>
-              {att?.status && <span className="ed-card-badge" style={{ background: '#d1fae5', color: '#059669' }}>{att.status}</span>}
+              {att?.status && (
+                <span className="ed-card-badge" style={{
+                  background: att.status === 'Present' ? '#d1fae5' : '#fee2e2',
+                  color:      att.status === 'Present' ? '#059669' : '#dc2626'
+                }}>{att.status}</span>
+              )}
             </div>
             <div className="ed-card-body">
               {(attMsg || attErr) && (
@@ -229,16 +222,39 @@ export default function EmployeeDashboard() {
               <div className="ed-att-grid">
                 <div className="ed-att-box">
                   <div className="ed-att-label">Check In</div>
-                  <div className="ed-att-time">{att?.check_in || '—'}</div>
-                  {att?.late && <div className="ed-att-late">⏰ Late</div>}
+                  <div className="ed-att-time" style={{ color: att?.check_in ? '#059669' : '#94a3b8' }}>
+                    {att?.check_in || '—'}
+                  </div>
+                  {att?.late && <div className="ed-att-late">⏰ Late arrival</div>}
+                  {att?.check_in && !att?.late && <div style={{ fontSize:11, color:'#059669', marginTop:4, fontWeight:600 }}>✅ On time</div>}
                 </div>
                 <div className="ed-att-divider" />
                 <div className="ed-att-box">
                   <div className="ed-att-label">Check Out</div>
-                  <div className="ed-att-time">{att?.check_out || '—'}</div>
-                  {att?.minutes > 0 && <div className="ed-att-mins">⏱ {att.minutes} min</div>}
+                  <div className="ed-att-time" style={{ color: att?.check_out ? '#c02040' : '#94a3b8' }}>
+                    {att?.check_out || (att?.check_in ? 'Pending' : '—')}
+                  </div>
+                  {att?.minutes > 0 && (
+                    <div className="ed-att-mins">
+                      ⏱ {Math.floor(att.minutes / 60)}h {att.minutes % 60}m worked
+                    </div>
+                  )}
                 </div>
               </div>
+              {att?.check_in && att?.check_out && att?.minutes > 0 && (
+                <div style={{ background:'#f0fdf4', border:'1px solid #a7f3d0', borderRadius:10, padding:'10px 14px', marginBottom:12, fontSize:13 }}>
+                  <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                    <span style={{ color:'#059669', fontWeight:700 }}>⏱ Total Duration</span>
+                    <strong style={{ color:'#059669', fontSize:15 }}>{Math.floor(att.minutes / 60)}h {att.minutes % 60}m</strong>
+                  </div>
+                  {att.coins_earned > 0 && (
+                    <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:6 }}>
+                      <span style={{ color:'#d97706', fontWeight:700 }}>🪙 Coins Earned</span>
+                      <strong style={{ color:'#d97706' }}>+{fmt(att.coins_earned)}</strong>
+                    </div>
+                  )}
+                </div>
+              )}
               <div className="ed-att-btns">
                 <button className="ed-att-btn ed-att-in" onClick={() => markAttendance('check_in')}
                   disabled={attLoading || !!att?.check_in}>
@@ -272,13 +288,17 @@ export default function EmployeeDashboard() {
               </div>
             ) : (
               <table className="ed-table">
-                <thead><tr><th>Date</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr></thead>
+                <thead><tr><th>Date & Time</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr></thead>
                 <tbody>
                   {txns.map((t, i) => (
                     <tr key={t.id} style={{ animationDelay: `${i * 40}ms` }} className="ed-tr">
-                      <td>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                      <td>
+                        <div style={{ fontSize:12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
+                        <div style={{ fontSize:11, color:'#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', second:'2-digit' })}</div>
+                      </td>
+                      <td><strong style={{ fontSize:12 }}>{t.cust_name || '—'}</strong><div style={{ fontSize:11, color:'#9ca3af' }}>{t.cust_pan || ''}</div></td>
                       <td><strong>{t.service_type}</strong></td>
-                      <td><span className="ed-platform-tag">{t.platform || '—'}</span></td>
+                      <td><span className="ed-platform-tag">{t.platform || t.bill_platform || '—'}</span></td>
                       <td><span className="ed-amount">₹{fmt(t.amount)}</span></td>
                       <td><span className="ed-charges">₹{fmt(t.charges_amount || 0)}</span></td>
                       <td><span className="ed-profit">₹{fmt(t.settled_amount || t.profit || 0)}</span></td>

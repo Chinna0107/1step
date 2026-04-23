@@ -34,6 +34,7 @@ const NAV = [
   { group: 'Operations',
     items: [
       { to: '/admin/transactions', icon: <MdReceipt />,      label: 'Transactions' },
+      { to: '/admin/leads',        icon: <MdAssessment />,   label: 'Lead Management' },
     ]},
   { group: 'Employees',
     items: [

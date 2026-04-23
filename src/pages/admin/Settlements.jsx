@@ -1,18 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
-import { getTokenByRole } from '../../utils/tokenUtils'
-import { api } from '../../utils/api'
-import '../../pages/dashboard.css'
 import { useSettlements } from '../../hooks/useFinance'
+import '../../pages/dashboard.css'
 
-const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
-const fmt  = n => `₹${Number(n || 0).toLocaleString('en-IN')}`
+const fmt   = n => Number(parseFloat(n)||0).toLocaleString('en-IN')
 const empty = { platform: '', amount: '', note: '' }
 
 export default function Settlements() {
-  const [all, setAll]           = useState([])
+  const { settlements: all, loading, msg: hookMsg, error: hookErr, create, receive, refetch } = useSettlements()
   const [tab, setTab]           = useState('pending')
-  const [loading, setLoading]   = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [form, setForm]         = useState(empty)
   const [saving, setSaving]     = useState(false)
@@ -21,41 +17,38 @@ export default function Settlements() {
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
-  const refetch = useCallback(() => {
-    setLoading(true)
-    api('/finance/settlements', { headers: auth() })
-      .then(d => { setAll(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
-
-  useEffect(() => { refetch() }, [refetch])
-
   const handleAdd = async e => {
     e.preventDefault(); setSaving(true); setMsg(''); setErr('')
     try {
-      await api('/finance/settlements', { method: 'POST', headers: auth(), body: JSON.stringify(form) })
-      setMsg('Settlement added'); setForm(empty); setShowForm(false); refetch()
-    } catch (e) { setErr(e.message) }
+      await create(form)
+      setMsg('✅ Settlement added'); setForm(empty); setShowForm(false)
+    } catch (ex) { setErr(ex.message) }
     setSaving(false)
   }
 
   const markReceived = async id => {
-    try {
-      await api(`/finance/settlements/${id}/receive`, { method: 'PATCH', headers: auth() })
-      refetch()
-    } catch (e) { alert(e.message) }
+    try { await receive(id) } catch (ex) { alert(ex.message) }
   }
 
-  const rows    = all.filter(s => s.status?.toLowerCase() === tab)
-  const pending = all.filter(s => s.status?.toLowerCase() === 'pending')
-  const done    = all.filter(s => s.status?.toLowerCase() === 'received')
+  const pending  = all.filter(s => s.status?.toLowerCase() === 'pending')
+  const done     = all.filter(s => s.status?.toLowerCase() === 'received')
+  const rows     = tab === 'pending' ? pending : done
+
+  const pendingAmt  = pending.reduce((s, r) => s + parseFloat(r.amount||0), 0)
+  const receivedAmt = done.reduce((s, r) => s + parseFloat(r.amount||0), 0)
+
+  const displayMsg = msg || hookMsg
+  const displayErr = err || hookErr
 
   return (
     <div className="dash-page">
       <AdminSidebar />
       <div className="dash-content">
         <div className="dash-topbar">
-          <h1>🤝 Settlements</h1>
+          <div>
+            <h1>🤝 Settlements</h1>
+            <p style={{ margin: 0, fontSize: 13, color: '#9ca3af' }}>Track platform settlement payments — pending and received</p>
+          </div>
           <div className="dash-topbar-right">
             <button className="dash-btn dash-btn-primary" onClick={() => { setShowForm(v => !v); setMsg(''); setErr('') }}>
               {showForm ? '✕ Cancel' : '+ Add Settlement'}
@@ -64,8 +57,8 @@ export default function Settlements() {
         </div>
         <div className="dash-main">
 
-          {msg && <div className="dash-alert dash-alert-success">✅ {msg}</div>}
-          {err && <div className="dash-alert dash-alert-error">❌ {err}</div>}
+          {displayMsg && <div className="dash-alert dash-alert-success" style={{ marginBottom: 12 }}>{displayMsg}</div>}
+          {displayErr && <div className="dash-alert dash-alert-error"   style={{ marginBottom: 12 }}>❌ {displayErr}</div>}
 
           {/* Add Form */}
           {showForm && (
@@ -96,31 +89,28 @@ export default function Settlements() {
           )}
 
           {/* Summary */}
-          <div style={{ display: 'flex', gap: 12, marginBottom: 16 }}>
-            <div className="dash-stat" style={{ flex: '0 0 auto', minWidth: 160, borderLeftColor: '#d97706' }}>
-              <div className="dash-stat-label">Pending</div>
-              <div className="dash-stat-value" style={{ color: '#d97706', fontSize: '1.4rem' }}>
-                {fmt(pending.reduce((s, r) => s + parseFloat(r.amount || 0), 0))}
-              </div>
-              <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>{pending.length} entries</div>
+          <div className="dash-stats" style={{ gridTemplateColumns: 'repeat(3,1fr)', marginBottom: 20 }}>
+            <div className="dash-stat" style={{ borderTop: '3px solid #d97706' }}>
+              <div className="dash-stat-label">⏳ Pending</div>
+              <div className="dash-stat-value" style={{ color: '#d97706' }}>₹{fmt(pendingAmt)}</div>
+              <div className="dash-stat-sub">{pending.length} settlements</div>
             </div>
-            <div className="dash-stat" style={{ flex: '0 0 auto', minWidth: 160, borderLeftColor: '#059669' }}>
-              <div className="dash-stat-label">Received</div>
-              <div className="dash-stat-value" style={{ color: '#059669', fontSize: '1.4rem' }}>
-                {fmt(done.reduce((s, r) => s + parseFloat(r.amount || 0), 0))}
-              </div>
-              <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>{done.length} entries</div>
+            <div className="dash-stat" style={{ borderTop: '3px solid #059669' }}>
+              <div className="dash-stat-label">✅ Received</div>
+              <div className="dash-stat-value" style={{ color: '#059669' }}>₹{fmt(receivedAmt)}</div>
+              <div className="dash-stat-sub">{done.length} settlements</div>
+            </div>
+            <div className="dash-stat" style={{ borderTop: '3px solid #402070' }}>
+              <div className="dash-stat-label">📊 Total</div>
+              <div className="dash-stat-value" style={{ color: '#402070' }}>₹{fmt(pendingAmt + receivedAmt)}</div>
+              <div className="dash-stat-sub">{all.length} total</div>
             </div>
           </div>
 
           {/* Tabs */}
           <div className="dash-tabs">
-            <button className={`dash-tab ${tab === 'pending'  ? 'active' : ''}`} onClick={() => setTab('pending')}>
-              ⏳ Pending ({pending.length})
-            </button>
-            <button className={`dash-tab ${tab === 'received' ? 'active' : ''}`} onClick={() => setTab('received')}>
-              ✅ Completed ({done.length})
-            </button>
+            <button className={`dash-tab ${tab === 'pending'  ? 'active' : ''}`} onClick={() => setTab('pending')}>⏳ Pending ({pending.length})</button>
+            <button className={`dash-tab ${tab === 'received' ? 'active' : ''}`} onClick={() => setTab('received')}>✅ Received ({done.length})</button>
           </div>
 
           <div className="dash-card">
@@ -129,11 +119,7 @@ export default function Settlements() {
                 <table className="dash-table">
                   <thead>
                     <tr>
-                      <th>Platform</th>
-                      <th>Amount</th>
-                      <th>Status</th>
-                      <th>Note</th>
-                      <th>Date</th>
+                      <th>Platform</th><th>Amount</th><th>Status</th><th>Note</th><th>Date</th>
                       {tab === 'pending' && <th>Action</th>}
                     </tr>
                   </thead>
@@ -141,9 +127,9 @@ export default function Settlements() {
                     {rows.map(r => (
                       <tr key={r.id}>
                         <td><strong>{r.platform}</strong></td>
-                        <td style={{ fontWeight: 700, color: '#402070' }}>{fmt(r.amount)}</td>
+                        <td style={{ fontWeight: 700, color: '#402070' }}>₹{fmt(r.amount)}</td>
                         <td>
-                          <span className={`dash-status ${r.status?.toLowerCase() === 'pending' ? 'pending' : 'active'}`}>
+                          <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, background: r.status === 'pending' ? '#fef3c7' : '#d1fae5', color: r.status === 'pending' ? '#d97706' : '#059669' }}>
                             {r.status}
                           </span>
                         </td>
@@ -151,9 +137,7 @@ export default function Settlements() {
                         <td style={{ fontSize: 12, color: '#6b7280' }}>{new Date(r.created_at).toLocaleDateString('en-IN')}</td>
                         {tab === 'pending' && (
                           <td>
-                            <button className="dash-btn dash-btn-success dash-btn-sm" onClick={() => markReceived(r.id)}>
-                              ✅ Mark Received
-                            </button>
+                            <button className="dash-btn dash-btn-success dash-btn-sm" onClick={() => markReceived(r.id)}>✅ Mark Received</button>
                           </td>
                         )}
                       </tr>
@@ -164,7 +148,6 @@ export default function Settlements() {
               )}
             </div>
           </div>
-
         </div>
       </div>
     </div>

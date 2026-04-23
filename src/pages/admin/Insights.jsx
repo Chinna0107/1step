@@ -1,22 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
-import { getTokenByRole } from '../../utils/tokenUtils'
-import { api } from '../../utils/api'
-import '../../pages/dashboard.css'
 import { useAdminStats } from '../../hooks/useFinance'
+import '../../pages/dashboard.css'
 
-const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${Number(v).toLocaleString('en-IN')}` }
 
 export default function AdminInsights() {
-  const [data, setData]       = useState(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    api('/dashboard/admin/stats', { headers: auth() })
-      .then(d => { setData(d); setLoading(false) })
-      .catch(() => setLoading(false))
-  }, [])
+  const { data, loading } = useAdminStats()
 
   const emp = data?.employees ?? []
   const top = emp[0] ?? null

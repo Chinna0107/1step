@@ -2,10 +2,12 @@ import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
 import { useCustomerRequests } from '../../hooks/useCustomers'
 import '../../pages/dashboard.css'
+import '../employee/CustomerInfo.css'
 
 export default function AdminCustomers() {
   const { all, loading, error, msg, approve, reject } = useCustomerRequests()
   const [search, setSearch] = useState('')
+  const [lightbox, setLightbox] = useState(null)
 
   const filtered = search
     ? all.filter(c => c.name?.toLowerCase().includes(search.toLowerCase()) || c.phone?.includes(search) || c.pan?.toLowerCase().includes(search.toLowerCase()))
@@ -49,7 +51,7 @@ export default function AdminCustomers() {
             <div className="dash-table-wrap">
               {loading ? <div className="dash-loading">Loading...</div> : (
                 <table className="dash-table">
-                  <thead><tr><th>Name</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Acc No.</th><th>KYC</th><th>Added By</th><th>Status</th><th>Actions</th></tr></thead>
+                  <thead><tr><th>Name</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Acc No.</th><th>Documents</th><th>KYC</th><th>Added By</th><th>Status</th><th>Actions</th></tr></thead>
                   <tbody>
                     {filtered.map(c => (
                       <tr key={c.id}>
@@ -58,6 +60,19 @@ export default function AdminCustomers() {
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.pan}</td>
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.aadhar}</td>
                         <td style={{ fontSize: 12 }}>{c.acc_number}</td>
+                        <td>
+                          <div className="ci-doc-thumbs">
+                            {c.aadhar_img_url
+                              ? <img src={c.aadhar_img_url} alt="Aadhar" className="ci-thumb" title="Aadhar Card" onClick={e => { e.stopPropagation(); setLightbox({ url: c.aadhar_img_url, label: `${c.name} — Aadhar` }) }} />
+                              : <span className="ci-no-doc">No Aadhar</span>}
+                            {c.pan_img_url
+                              ? <img src={c.pan_img_url} alt="PAN" className="ci-thumb" title="PAN Card" onClick={e => { e.stopPropagation(); setLightbox({ url: c.pan_img_url, label: `${c.name} — PAN` }) }} />
+                              : <span className="ci-no-doc">No PAN</span>}
+                            {c.card_front_img_url
+                              ? <img src={c.card_front_img_url} alt="Card" className="ci-thumb" title="Card Front" onClick={e => { e.stopPropagation(); setLightbox({ url: c.card_front_img_url, label: `${c.name} — Card Front` }) }} />
+                              : <span className="ci-no-doc">No Card</span>}
+                          </div>
+                        </td>
                         <td>
                           <span style={{ background: c.status === 'approved' ? '#d1fae5' : '#fef3c7', color: c.status === 'approved' ? '#059669' : '#d97706', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>
                             {c.status === 'approved' ? '✅ Verified' : '⏳ Pending'}
@@ -77,7 +92,7 @@ export default function AdminCustomers() {
                         </td>
                       </tr>
                     ))}
-                    {!filtered.length && <tr><td colSpan={9} className="dash-empty">No customers found</td></tr>}
+                    {!filtered.length && <tr><td colSpan={10} className="dash-empty">No customers found</td></tr>}
                   </tbody>
                 </table>
               )}
@@ -86,6 +101,18 @@ export default function AdminCustomers() {
 
         </div>
       </div>
+
+      {lightbox && (
+        <div className="ci-lightbox" onClick={() => setLightbox(null)}>
+          <div className="ci-lightbox-box" onClick={e => e.stopPropagation()}>
+            <div className="ci-lightbox-header">
+              <span>{lightbox.label}</span>
+              <button onClick={() => setLightbox(null)}>✕</button>
+            </div>
+            <img src={lightbox.url} alt={lightbox.label} className="ci-lightbox-img" />
+          </div>
+        </div>
+      )}
     </div>
   )
 }

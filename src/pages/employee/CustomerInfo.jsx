@@ -101,6 +101,9 @@ export default function CustomerInfo() {
                           {c.pan_img_url
                             ? <img src={c.pan_img_url} alt="PAN" className="ci-thumb" title="PAN Card" onClick={() => setLightbox({ url: c.pan_img_url, label: `${c.name} — PAN Card` })} />
                             : <span className="ci-no-doc">No PAN</span>}
+                          {c.card_front_img_url
+                            ? <img src={c.card_front_img_url} alt="Card" className="ci-thumb" title="Card Front" onClick={() => setLightbox({ url: c.card_front_img_url, label: `${c.name} — Card Front` })} />
+                            : <span className="ci-no-doc">No Card</span>}
                         </div>
                       </td>
                       <td><span style={statusStyle(c.status)}>{c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></td>

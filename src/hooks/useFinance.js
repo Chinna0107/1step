@@ -191,12 +191,12 @@ export function useDailyClosing() {
 
 // ── useProfit ─────────────────────────────────────────────────
 export function useProfit() {
-  const { data, loading } = useSWR(
+  const { data, loading, refetch } = useSWR(
     'fin:profit',
     () => api('/finance/profit', { headers: authAdmin() }),
     TTL.dashboard
   )
-  return { data, loading }
+  return { data, loading, refetch }
 }
 
 // ── useAdminStats ─────────────────────────────────────────────
@@ -228,12 +228,92 @@ export function useAdminSecurity() {
 
 // ── useAdminReports ───────────────────────────────────────────
 export function useAdminReports() {
-  const { data } = useSWR(
+  const { data, loading, refetch } = useSWR(
     'admin:employees',
     () => api('/dashboard/employees', { headers: authAdmin() }),
     TTL.list
   )
-  return { employees: data ?? [] }
+  return { employees: data ?? [], loading, refetch }
+}
+
+// ── useAdminTransactions ──────────────────────────────────────
+export function useAdminTransactions(from, to) {
+  const { data, loading, refetch } = useSWR(
+    `admin:txns:${from}:${to}`,
+    () => {
+      const p = new URLSearchParams({ from, to })
+      return api(`/dashboard/reports?${p}`, { headers: authAdmin() })
+    },
+    TTL.dashboard
+  )
+  return {
+    transactions: data?.transactions ?? [],
+    totals:       data?.totals       ?? {},
+    loading, refetch,
+  }
+}
+
+// ── useAdminConfig ────────────────────────────────────────────
+export function useAdminConfig() {
+  const { data, loading, refetch } = useSWR(
+    'admin:master',
+    () => api('/master/all', { headers: authAdmin() }),
+    TTL.master
+  )
+  return { master: data, loading, refetch }
+}
+
+// ── useFinanceControl ────────────────────────────────────────
+export function useFinanceControl() {
+  const [msg,   setMsg]   = useState('')
+  const [error, setError] = useState('')
+  const [busy,  setBusy]  = useState(false)
+
+  const bust = () => {
+    cacheClear('fin:summary')
+    cacheClear('fin:wallets')
+  }
+
+  const topUpBalance = async (type, amount, remarks) => {
+    setBusy(true); setMsg(''); setError('')
+    try {
+      const r = await api('/finance/balance/add', {
+        method: 'POST', headers: authAdmin(),
+        body: JSON.stringify({ type, amount: parseFloat(amount), remarks }),
+      })
+      setMsg(r.message); bust()
+      return r
+    } catch (e) { setError(e.message) }
+    finally { setBusy(false) }
+  }
+
+  const topUpWallet = async (id, amount, remarks) => {
+    setBusy(true); setMsg(''); setError('')
+    try {
+      const r = await api(`/finance/wallets/${id}/add`, {
+        method: 'POST', headers: authAdmin(),
+        body: JSON.stringify({ amount: parseFloat(amount), remarks }),
+      })
+      setMsg(r.message); bust()
+      return r
+    } catch (e) { setError(e.message) }
+    finally { setBusy(false) }
+  }
+
+  const syncTxn = async (txn_id) => {
+    setBusy(true); setMsg(''); setError('')
+    try {
+      const r = await api('/finance/sync-txn', {
+        method: 'POST', headers: authAdmin(),
+        body: JSON.stringify({ txn_id }),
+      })
+      setMsg(r.message); bust()
+      return r
+    } catch (e) { setError(e.message) }
+    finally { setBusy(false) }
+  }
+
+  return { topUpBalance, topUpWallet, syncTxn, msg, error, busy, clearMsg: () => { setMsg(''); setError('') } }
 }
 
 // ── useAdminAttendance ────────────────────────────────────────
