@@ -169,7 +169,7 @@ export default function Services() {
         method: 'POST', headers: auth(),
         body: JSON.stringify({ ...form, amount: mainAmount }),
       })
-      setMsg(`✅ Transaction recorded! Profit: ₹${r.transaction.profit}`)
+      setMsg(`✅ Transaction recorded! `)
       setForm(emptyForm); setSearch('')
       // Bust history cache and refresh
       cacheSet('svc:history', null, 0)
@@ -326,7 +326,7 @@ export default function Services() {
                                 {[
                                   { label:'Transactions', value: txns.length,          color:'#402070' },
                                   { label:'Total Amount', value: totalAmt >= 100000 ? `₹${(totalAmt/100000).toFixed(1)}L` : totalAmt >= 1000 ? `₹${(totalAmt/1000).toFixed(1)}K` : `₹${totalAmt}`, color:'#059669' },
-                                  { label:'Total Profit', value: totalProfit >= 1000 ? `₹${(totalProfit/1000).toFixed(1)}K` : `₹${totalProfit.toFixed(0)}`, color:'#d4af37' },
+                                  { label:'Total Charges', value: totalProfit >= 1000 ? `₹${(totalProfit/1000).toFixed(1)}K` : `₹${totalProfit.toFixed(0)}`, color:'#d4af37' },
                                   { label:'Avg / Txn',    value: txns.length ? (totalAmt/txns.length >= 1000 ? `₹${((totalAmt/txns.length)/1000).toFixed(1)}K` : `₹${Math.round(totalAmt/txns.length)}`) : '—', color:'#c02040' },
                                 ].map((s, i) => (
                                   <div key={i} style={{ padding:'10px 12px', textAlign:'center', borderRight: i < 3 ? '1px solid #e2e8f0' : 'none' }}>
@@ -369,32 +369,6 @@ export default function Services() {
                                       <span key={svc} style={{ background:'#ede9fe', color:'#402070', padding:'3px 10px', borderRadius:20, fontSize:11, fontWeight:700 }}>
                                         {svc} ×{cnt}
                                       </span>
-                                    ))}
-                                  </div>
-                                </div>
-                              )}
-
-                              {/* Recent Transactions */}
-                              {txns.length > 0 && (
-                                <div style={{ borderTop:'1px solid #e2e8f0' }}>
-                                  <div style={{ padding:'8px 14px', fontSize:9, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.4, background:'#f8fafc', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
-                                    <span>All Transactions</span>
-                                    <span style={{ color:'#402070' }}>{txns.length} total</span>
-                                  </div>
-                                  <div style={{ maxHeight:320, overflowY:'auto' }}>
-                                    {txns.map((t, i) => (
-                                      <div key={t.id} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'9px 14px', borderTop: i > 0 ? '1px solid #f1f5f9' : 'none', background:'#fff' }}>
-                                        <div>
-                                          <div style={{ fontSize:12, fontWeight:700, color:'#374151' }}>{t.service_type}</div>
-                                          <div style={{ fontSize:10, color:'#9ca3af', marginTop:1 }}>
-                                            {t.platform || t.bill_platform || '—'} · {new Date(t.created_at).toLocaleDateString('en-IN')} {new Date(t.created_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}
-                                          </div>
-                                        </div>
-                                        <div style={{ textAlign:'right' }}>
-                                          <div style={{ color:'#059669', fontWeight:800, fontSize:13 }}>₹{Number(t.amount).toLocaleString('en-IN')}</div>
-                                          {t.charges_amount > 0 && <div style={{ color:'#d97706', fontSize:10 }}>Charges: ₹{Number(t.charges_amount).toLocaleString('en-IN')}</div>}
-                                        </div>
-                                      </div>
                                     ))}
                                   </div>
                                 </div>

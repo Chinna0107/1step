@@ -87,7 +87,13 @@ export default function LoginEmployee() {
           <span className={`step-dot ${step === 2 ? 'active' : ''}`}>2</span>
         </div>
 
-        {error && <div className="login-alert login-alert-error">{error}</div>}
+        {error && (
+          <div className={`login-alert ${
+            error.includes('Attendance completed') ? 'login-alert-attendance' : 'login-alert-error'
+          }`}>
+            {error.includes('Attendance completed') ? '🔒 ' : '❌ '}{error}
+          </div>
+        )}
         {success && step === 1 && <div className="login-alert login-alert-success">{success}</div>}
 
         {step === 1 ? (

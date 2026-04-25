@@ -43,7 +43,7 @@ export function useCustomerLogin() {
 
   const logout = async () => {
     try { await api('/customer/logout', { method: 'POST', headers: authHeader() }) } catch {}
-    localStorage.removeItem(KEY)
+    localStorage.clear()
     cache.profile = null; cache.txns = null
     cache.profileTs = 0;  cache.txnsTs = 0
   }

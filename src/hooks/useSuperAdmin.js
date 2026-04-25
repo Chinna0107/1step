@@ -369,6 +369,53 @@ export function useSuperAdminFinance(from, to, branch = '') {
   }
 }
 
+// ── useSuperAdminFinanceControl ───────────────────────────────
+export function useSuperAdminFinanceControl() {
+  const [msg,   setMsg]   = useState('')
+  const [error, setError] = useState('')
+  const [busy,  setBusy]  = useState(false)
+
+  const topUpBalance = async (type, amount, remarks, branch) => {
+    setBusy(true); setMsg(''); setError('')
+    try {
+      const r = await api(`/finance/balance/add?branch=${encodeURIComponent(branch)}`, {
+        method: 'POST', headers: authHeaders(),
+        body: JSON.stringify({ type, amount: parseFloat(amount), remarks }),
+      })
+      setMsg(r.message)
+      return r
+    } catch (e) { setError(e.message) }
+    finally { setBusy(false) }
+  }
+
+  const topUpWallet = async (id, amount, remarks) => {
+    setBusy(true); setMsg(''); setError('')
+    try {
+      const r = await api(`/finance/wallets/${id}/add`, {
+        method: 'POST', headers: authHeaders(),
+        body: JSON.stringify({ amount: parseFloat(amount), remarks }),
+      })
+      setMsg(r.message)
+      return r
+    } catch (e) { setError(e.message) }
+    finally { setBusy(false) }
+  }
+
+  const getBranchWallets = async (branch) => {
+    try {
+      return await api(`/finance/wallets?branch=${encodeURIComponent(branch)}`, { headers: authHeaders() })
+    } catch { return [] }
+  }
+
+  const getBranchSummary = async (branch) => {
+    try {
+      return await api(`/finance/summary?branch=${encodeURIComponent(branch)}`, { headers: authHeaders() })
+    } catch { return null }
+  }
+
+  return { topUpBalance, topUpWallet, getBranchWallets, getBranchSummary, msg, error, busy, clearMsg: () => { setMsg(''); setError('') } }
+}
+
 // ── useSuperAdminReports ──────────────────────────────────────
 export function useSuperAdminReports() {
   const CACHE_KEY_B = 'sa:report_branches'
@@ -443,4 +490,47 @@ export function useChargesConfig() {
   }
 
   return { master, branches, charges, loading, error, loadMaster, loadCharges, saveCharges }
+}
+
+// ── useSuperAdminWallets ──────────────────────────────────────
+export function useSuperAdminWallets() {
+  const { data, loading, refetch } = useSWR(
+    'sa:wallets:all',
+    () => api('/finance/wallets/all', { headers: authHeaders() }),
+    TTL.dashboard
+  )
+
+  const wallets = data ?? []
+
+  // Group by branch
+  const byBranch = wallets.reduce((acc, w) => {
+    const b = w.branch || 'Unknown'
+    if (!acc[b]) acc[b] = []
+    acc[b].push(w)
+    return acc
+  }, {})
+
+  const addMoney = async (id, amount, remarks) => {
+    try {
+      await api(`/finance/wallets/${id}/add`, {
+        method: 'POST', headers: authHeaders(),
+        body: JSON.stringify({ amount: parseFloat(amount), remarks }),
+      })
+      cacheClear('sa:wallets:all'); refetch(true)
+      return true
+    } catch (e) { return false }
+  }
+
+  const deductMoney = async (id, amount, remarks) => {
+    try {
+      await api(`/finance/wallets/${id}/deduct`, {
+        method: 'POST', headers: authHeaders(),
+        body: JSON.stringify({ amount: parseFloat(amount), remarks }),
+      })
+      cacheClear('sa:wallets:all'); refetch(true)
+      return true
+    } catch (e) { return false }
+  }
+
+  return { wallets, byBranch, loading, refetch, addMoney, deductMoney }
 }

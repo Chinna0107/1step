@@ -9,6 +9,9 @@ const authHeader = () => {
   return { Authorization: `Bearer ${token}` }
 }
 
+const fmt = n => Number(parseInt(n) || 0).toLocaleString('en-IN')
+const COINS_PER_RUPEE = 100
+
 function ChangePasswordModal({ onClose }) {
   const [form, setForm]     = useState({ current_password: '', new_password: '', confirm_password: '' })
   const [saving, setSaving] = useState(false)
@@ -90,12 +93,44 @@ export default function Profile({ Sidebar, isAdmin = false }) {
   const [user, setUser]               = useState(null)
   const [loading, setLoading]         = useState(true)
   const [showPwModal, setShowPwModal] = useState(false)
+  const [coins, setCoins]             = useState(0)
+  const [coinHistory, setCoinHistory] = useState([])
+  const [redeemAmt, setRedeemAmt]     = useState('')
+  const [redeemMsg, setRedeemMsg]     = useState('')
+  const [redeemErr, setRedeemErr]     = useState('')
+  const [redeeming, setRedeeming]     = useState(false)
+  const [showCoins, setShowCoins]     = useState(false)
 
-  useEffect(() => {
+  const fetchProfile = () => {
     api('/auth/me', { headers: authHeader() })
-      .then(d => { setUser(d); setLoading(false) })
+      .then(d => { setUser(d); setCoins(d.coins ?? 0); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [])
+  }
+
+  const fetchCoins = () => {
+    api('/master/coins/history', { headers: authHeader() })
+      .then(d => { setCoins(d.balance); setCoinHistory(d.history) })
+      .catch(() => {})
+  }
+
+  useEffect(() => { fetchProfile() }, [])
+  useEffect(() => { if (showCoins) fetchCoins() }, [showCoins])
+
+  const handleRedeem = async e => {
+    e.preventDefault()
+    setRedeeming(true); setRedeemMsg(''); setRedeemErr('')
+    try {
+      const r = await api('/master/coins/redeem', {
+        method: 'POST', headers: authHeader(),
+        body: JSON.stringify({ coins: parseInt(redeemAmt) }),
+      })
+      setRedeemMsg(r.message)
+      setRedeemAmt('')
+      fetchCoins()
+      fetchProfile()
+    } catch (err) { setRedeemErr(err.message) }
+    setRedeeming(false)
+  }
 
   const roleLabel = user?.is_superadmin ? 'Super Admin' : user?.is_admin ? 'Admin' : 'Employee'
   const roleClass = user?.is_superadmin ? 'profile-role-superadmin' : user?.is_admin ? 'profile-role-admin' : 'profile-role-employee'
@@ -196,6 +231,91 @@ export default function Profile({ Sidebar, isAdmin = false }) {
                 {/* Decorative strip */}
                 <div className="id-card-strip" />
               </div>
+            </div>
+            {/* ── COINS SECTION ── */}
+            <div style={{ padding: '0 40px 40px' }}>
+              <button
+                onClick={() => setShowCoins(v => !v)}
+                style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', borderRadius: 12, padding: '12px 24px', fontWeight: 800, fontSize: 15, cursor: 'pointer', marginBottom: showCoins ? 16 : 0, width: '100%', justifyContent: 'space-between' }}>
+                <span>🪙 Coins — {fmt(coins)} balance</span>
+                <span style={{ fontSize: 12, opacity: 0.8 }}>{showCoins ? '▲ Hide' : '▼ Show & Redeem'}</span>
+              </button>
+
+              {showCoins && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+
+                  {/* Redeem Panel */}
+                  <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 16px rgba(64,32,112,0.08)', border: '1px solid #f0f2f8' }}>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: '#402070', marginBottom: 4 }}>🎁 Redeem Coins</div>
+                    <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 16 }}>{COINS_PER_RUPEE} coins = ₹1 &nbsp;·&nbsp; Min: {COINS_PER_RUPEE} coins</div>
+
+                    {/* Balance display */}
+                    <div style={{ background: 'linear-gradient(135deg,#fef9e7,#fef3c7)', borderRadius: 10, padding: '12px 16px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: 12, color: '#d97706', fontWeight: 700 }}>Available Balance</span>
+                      <span style={{ fontSize: 22, fontWeight: 900, color: '#d97706' }}>🪙 {fmt(coins)}</span>
+                    </div>
+
+                    {redeemMsg && <div style={{ background: '#d1fae5', color: '#059669', padding: '8px 12px', borderRadius: 8, marginBottom: 12, fontSize: 13, fontWeight: 600 }}>✅ {redeemMsg}</div>}
+                    {redeemErr && <div style={{ background: '#fee2e2', color: '#dc2626', padding: '8px 12px', borderRadius: 8, marginBottom: 12, fontSize: 13, fontWeight: 600 }}>❌ {redeemErr}</div>}
+
+                    <form onSubmit={handleRedeem}>
+                      <div style={{ marginBottom: 12 }}>
+                        <label style={{ fontSize: 11, fontWeight: 700, color: '#6b7280', textTransform: 'uppercase', letterSpacing: 0.5, display: 'block', marginBottom: 6 }}>Coins to Redeem</label>
+                        <input
+                          type="number" required min={COINS_PER_RUPEE} step={COINS_PER_RUPEE}
+                          placeholder={`Min ${COINS_PER_RUPEE} coins`}
+                          value={redeemAmt} onChange={e => setRedeemAmt(e.target.value)}
+                          style={{ width: '100%', padding: '10px 14px', borderRadius: 8, border: '1.5px solid #e5e7eb', fontSize: 14, boxSizing: 'border-box', fontFamily: 'inherit' }}
+                        />
+                        {redeemAmt && parseInt(redeemAmt) >= COINS_PER_RUPEE && (
+                          <div style={{ fontSize: 12, color: '#059669', fontWeight: 700, marginTop: 6 }}>
+                            = ₹{parseInt(redeemAmt) / COINS_PER_RUPEE} cash value
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Quick select buttons */}
+                      <div style={{ display: 'flex', gap: 6, marginBottom: 14, flexWrap: 'wrap' }}>
+                        {[100, 500, 1000, 2000].filter(v => v <= coins).map(v => (
+                          <button key={v} type="button"
+                            onClick={() => setRedeemAmt(String(v))}
+                            style={{ padding: '4px 10px', borderRadius: 20, border: '1.5px solid #e5e7eb', background: redeemAmt === String(v) ? '#402070' : '#f8fafc', color: redeemAmt === String(v) ? '#fff' : '#374151', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+                            {fmt(v)}
+                          </button>
+                        ))}
+                      </div>
+
+                      <button type="submit" disabled={redeeming || !redeemAmt || parseInt(redeemAmt) < COINS_PER_RUPEE || parseInt(redeemAmt) > coins}
+                        style={{ width: '100%', padding: '11px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontWeight: 800, fontSize: 14, cursor: 'pointer', opacity: (redeeming || !redeemAmt || parseInt(redeemAmt) < COINS_PER_RUPEE || parseInt(redeemAmt) > coins) ? 0.5 : 1 }}>
+                        {redeeming ? 'Processing...' : `🎁 Redeem ${redeemAmt ? fmt(redeemAmt) : ''} Coins`}
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* History Panel */}
+                  <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 16px rgba(64,32,112,0.08)', border: '1px solid #f0f2f8', maxHeight: 380, overflowY: 'auto' }}>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: '#402070', marginBottom: 16 }}>📜 Coins History</div>
+                    {coinHistory.length === 0
+                      ? <div style={{ color: '#9ca3af', fontSize: 13, textAlign: 'center', padding: 20 }}>No coin activity yet</div>
+                      : coinHistory.map(h => (
+                        <div key={h.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', padding: '10px 0', borderBottom: '1px solid #f1f5f9' }}>
+                          <div>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: '#374151' }}>{h.remarks || (h.type === 'earn' ? 'Earned' : 'Redeemed')}</div>
+                            <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>{new Date(h.created_at).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</div>
+                          </div>
+                          <span style={{
+                            fontWeight: 800, fontSize: 14, whiteSpace: 'nowrap',
+                            color: h.type === 'earn' ? '#059669' : '#dc2626'
+                          }}>
+                            {h.type === 'earn' ? '+' : '−'}{fmt(h.coins)} 🪙
+                          </span>
+                        </div>
+                      ))
+                    }
+                  </div>
+
+                </div>
+              )}
             </div>
           </>
         )}

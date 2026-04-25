@@ -265,6 +265,11 @@ export default function EmployeeDashboard() {
                   <MdLogout /> {att?.check_out ? `Out at ${att.check_out}` : 'Check Out'}
                 </button>
               </div>
+              {att?.check_in && att?.check_out && (
+                <div style={{ marginTop: 10, background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 8, padding: '8px 12px', fontSize: 12, color: '#dc2626', fontWeight: 600, textAlign: 'center' }}>
+                  🔒 Attendance completed for today. Check-in is not allowed again.
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -288,7 +293,7 @@ export default function EmployeeDashboard() {
               </div>
             ) : (
               <table className="ed-table">
-                <thead><tr><th>Date & Time</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr></thead>
+                <thead><tr><th>Date & Time</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th><th>🪙 Coins</th></tr></thead>
                 <tbody>
                   {txns.map((t, i) => (
                     <tr key={t.id} style={{ animationDelay: `${i * 40}ms` }} className="ed-tr">
@@ -302,6 +307,11 @@ export default function EmployeeDashboard() {
                       <td><span className="ed-amount">₹{fmt(t.amount)}</span></td>
                       <td><span className="ed-charges">₹{fmt(t.charges_amount || 0)}</span></td>
                       <td><span className="ed-profit">₹{fmt(t.settled_amount || t.profit || 0)}</span></td>
+                      <td>
+                        <span style={{ background: '#fef3c7', color: '#d97706', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 800 }}>
+                          +{t.service_type === 'Bill Pay + Withdrawal' ? 40 : 20}
+                        </span>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -316,11 +326,16 @@ export default function EmployeeDashboard() {
           <div className="ed-coins-orb" />
           <div className="ed-coins-inner">
             <div className="ed-coins-icon">🪙</div>
-            <div>
+            <div style={{ flex: 1 }}>
               <div className="ed-coins-label">MoneySpot Coins Balance</div>
               <div className="ed-coins-value">{loading ? '...' : fmt(profile.coins ?? 0)}</div>
-              <div className="ed-coins-hint">Earn 5 coins per minute worked beyond 500 min/day</div>
+              <div className="ed-coins-hint">📈 Txn coins: 40 for Bill Pay+Withdrawal · 20 for others</div>
+              <div className="ed-coins-hint" style={{ marginTop: 4 }}>⏱ Attendance coins: 5 per min beyond 500 min/day</div>
             </div>
+            <a href="/employee/profile"
+              style={{ padding: '10px 20px', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', borderRadius: 10, color: '#fff', fontWeight: 700, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap', backdropFilter: 'blur(4px)' }}>
+              🎁 Redeem Coins
+            </a>
           </div>
         </div>
 

@@ -31,17 +31,12 @@ export function useRoleBasedAuth() {
   }
 
   const logout = (role) => {
-    localStorage.removeItem(`${role}_auth`)
-    if (getCurrentRole() === role) {
-      localStorage.removeItem('current_role')
-    }
+    localStorage.clear()
     setAuthData(null)
   }
 
   const logoutAll = () => {
-    localStorage.removeItem('admin_auth')
-    localStorage.removeItem('employee_auth')
-    localStorage.removeItem('current_role')
+    localStorage.clear()
     setAuthData(null)
   }
 
