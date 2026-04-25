@@ -46,9 +46,17 @@ export default function LoginEmployee() {
     e.preventDefault()
     const data = await verifyMpin({ email: form.email, mpin: form.mpin })
     if (data?.token) {
-      const userRole = data.user.is_admin ? 'admin' : 'employee'
-      saveAuthData(data.token, data.user, userRole)
-      navigate(userRole === 'admin' ? '/admin/dashboard' : '/employee/dashboard')
+      const u = data.user
+      if (u.is_superadmin) {
+        saveAuthData(data.token, u, 'superadmin')
+        navigate('/superadmin/dashboard')
+      } else if (u.is_admin) {
+        saveAuthData(data.token, u, 'admin')
+        navigate('/admin/dashboard')
+      } else {
+        saveAuthData(data.token, u, 'employee')
+        navigate('/employee/dashboard')
+      }
     }
   }
 

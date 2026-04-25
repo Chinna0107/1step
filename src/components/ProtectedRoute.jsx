@@ -25,11 +25,14 @@ export function SuperAdminRoute({ children }) {
 }
 
 export function AdminRoute({ children }) {
-  return <ProtectedRoute requiredRole="admin">{children}</ProtectedRoute>
+  // superadmin token also grants admin access
+  const token = getToken('admin') || getToken('superadmin')
+  if (!token) return <Navigate to="/login/employee" replace />
+  return children
 }
 
 export function EmployeeRoute({ children }) {
-  const token = getToken('employee') || getToken('admin')
+  const token = getToken('employee') || getToken('admin') || getToken('superadmin')
   if (!token) return <Navigate to="/login/employee" replace />
   return children
 }

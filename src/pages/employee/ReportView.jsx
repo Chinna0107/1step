@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { api } from '../../utils/api'
+import PrintReceipt from '../../components/PrintReceipt'
+import { MdPrint } from 'react-icons/md'
 
 const fmt    = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n) || 0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
@@ -88,6 +90,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
   const [empId, setEmpId]       = useState('')
   const [tab, setTab]           = useState('service')
   const [selectedTxn, setSelectedTxn] = useState(null)
+  const [printTxn, setPrintTxn]       = useState(null)
 
   const load = useCallback(() => {
     setLoading(true)
@@ -179,6 +182,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
   return (
     <div>
       {selectedTxn && <TxnDetailModal txn={selectedTxn} onClose={() => setSelectedTxn(null)} showFinancials={showFinancials} />}
+      {printTxn   && <PrintReceipt txn={printTxn} onClose={() => setPrintTxn(null)} showFinancials={showFinancials} />}
       {/* ── Filters ── */}
       <div className="rv-filters">
         <div className="dash-form-group" style={{ margin: 0 }}>
@@ -374,6 +378,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                     <th>Charges</th>
                     <th>Settled</th>
                     {showFinancials && <th>Commission</th>}
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -392,9 +397,15 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       <td style={{ color: '#d97706' }}>₹{fmt(t.charges_amount || 0)}</td>
                       <td style={{ fontWeight: 600 }}>₹{fmt(t.settled_amount || 0)}</td>
                       {showFinancials && <td style={{ color: '#402070', fontWeight: 700 }}>₹{fmt(t.profit || 0)}</td>}
+                      <td onClick={e => e.stopPropagation()}>
+                        <button onClick={() => setPrintTxn(t)}
+                          style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
+                          <MdPrint size={13} /> Print
+                        </button>
+                      </td>
                     </tr>
                   ))}
-                  {!txns.length && <tr><td colSpan={showFinancials ? 10 : 8} className="dash-empty">No transactions found</td></tr>}
+                  {!txns.length && <tr><td colSpan={showFinancials ? 11 : 9} className="dash-empty">No transactions found</td></tr>}
                 </tbody>
               </table>
             </div>
