@@ -115,12 +115,12 @@ export default function FinanceDashboard() {
   }
 
   const STATS = [
-    { label:'Cash in Hand',  value: fmtVal(summary?.cashInHand    ?? 0), color:'#059669', icon:'💵' },
-    { label:'Bank Balance',  value: fmtVal(summary?.bankBalance   ?? 0), color:'#2563eb', icon:'🏦' },
-    { label:'Wallet Total',  value: fmtVal(summary?.walletBalance ?? 0), color:'#402070', icon:'💼' },
-    { label:'Today Inflow',  value: fmtVal(summary?.todayInflow   ?? 0), color:'#10b981', icon:'📈' },
-    { label:'Today Profit',  value: fmtVal(summary?.todayProfit   ?? 0), color:'#d4af37', icon:'💸' },
-    { label:'Net Profit',    value: fmtVal(totals.netProfit       ?? 0), color: totals.netProfit >= 0 ? '#059669' : '#dc2626', icon:'🏆' },
+    { label: 'Cash in Hand',  value: fmtVal(summary?.cashInHand    ?? 0), color: '#059669', bg: '#d1fae5', icon: '💵' },
+    { label: 'Bank Balance',  value: fmtVal(summary?.bankBalance   ?? 0), color: '#2563eb', bg: '#dbeafe', icon: '🏦' },
+    { label: 'Wallet Total',  value: fmtVal(summary?.walletBalance ?? 0), color: '#7c3aed', bg: '#ede9fe', icon: '💼' },
+    { label: 'Today Inflow',  value: fmtVal(summary?.todayInflow   ?? 0), color: '#059669', bg: '#d1fae5', icon: '📈' },
+    { label: 'Today Profit',  value: fmtVal(summary?.todayProfit   ?? 0), color: '#d97706', bg: '#fef3c7', icon: '💸' },
+    { label: 'Net Profit',    value: fmtVal(totals.netProfit       ?? 0), color: (totals.netProfit ?? 0) >= 0 ? '#059669' : '#dc2626', bg: (totals.netProfit ?? 0) >= 0 ? '#d1fae5' : '#fee2e2', icon: '🏆' },
   ]
 
   return (
@@ -155,13 +155,36 @@ export default function FinanceDashboard() {
             </div>
           ))}
 
-          {/* Stats */}
-          <div className="dash-stats" style={{ gridTemplateColumns:'repeat(auto-fit,minmax(150px,1fr))', marginBottom:20 }}>
+          {/* Stats — 3 per row */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 20 }}>
             {STATS.map(s => (
-              <div key={s.label} className="dash-stat" style={{ borderTop:`3px solid ${s.color}` }}>
-                <div style={{ fontSize:20, marginBottom:4 }}>{s.icon}</div>
-                <div className="dash-stat-label">{s.label}</div>
-                <div className="dash-stat-value" style={{ color:s.color }}>{sl || loading ? '—' : s.value}</div>
+              <div key={s.label} style={{
+                background: '#fff',
+                borderRadius: 16,
+                padding: '20px 22px',
+                boxShadow: '0 2px 12px rgba(64,32,112,0.08)',
+                borderLeft: `4px solid ${s.color}`,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 16,
+                minWidth: 0,
+                transition: 'transform 0.2s, box-shadow 0.2s',
+              }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 6px 20px rgba(64,32,112,0.13)` }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(64,32,112,0.08)' }}>
+                {/* Icon bubble */}
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
+                  {s.icon}
+                </div>
+                {/* Text */}
+                <div style={{ minWidth: 0, flex: 1 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {s.label}
+                  </div>
+                  <div style={{ fontSize: 'clamp(1.1rem, 1.8vw, 1.5rem)', fontWeight: 900, color: sl || loading ? '#d1d5db' : s.color, lineHeight: 1.1, wordBreak: 'break-word' }}>
+                    {sl || loading ? '—' : s.value}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

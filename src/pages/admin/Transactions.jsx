@@ -5,18 +5,96 @@ import { MdPrint, MdFilterList, MdRefresh } from 'react-icons/md'
 import PrintReceipt from '../../components/PrintReceipt'
 import '../../pages/dashboard.css'
 
-const fmt    = n => Number(n).toLocaleString('en-IN')
+const fmt    = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
 const today  = new Date().toISOString().split('T')[0]
+
+const BILL_WITHDRAWAL = 'Bill Pay + Withdrawal'
+
+function TxnDetailModal({ txn, onClose }) {
+  const fields = [
+    { label: 'Transaction ID',  value: `#${txn.id}` },
+    { label: 'Date & Time',     value: new Date(txn.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) },
+    { label: 'Employee',        value: txn.employee_name || '—' },
+    { label: 'Branch',          value: txn.branch || '—' },
+    { label: 'Customer',        value: txn.cust_name || '—' },
+    { label: 'Customer PAN',    value: txn.cust_pan || '—' },
+    { label: 'Customer Mobile', value: txn.cust_mobile || '—' },
+    { label: 'Customer Aadhar', value: txn.cust_aadhar || '—' },
+    { label: 'Service',         value: txn.service_type || '—' },
+    { label: 'Platform',        value: txn.platform || txn.bill_platform || '—' },
+    { label: 'Bank',            value: txn.bank || '—' },
+    { label: 'Card Type',       value: txn.card || '—' },
+    { label: 'Card Bank',       value: txn.card_bank || '—' },
+    { label: 'Card Last 4',     value: txn.card_last4 ? `****${txn.card_last4}` : '—' },
+    { label: 'Account No.',     value: txn.acc_no || '—' },
+    { label: 'Payment Mode',    value: txn.payment_mode || '—' },
+    { label: 'Receive Mode',    value: txn.received_mode || '—' },
+    { label: 'Amount',          value: `₹${fmt(txn.amount)}`,              color: '#059669' },
+    { label: 'Charges %',       value: `${txn.charges_pct || 0}%`,          color: '#d97706' },
+    { label: 'Charges ₹',       value: `₹${fmt(txn.charges_amount || 0)}`,  color: '#d97706' },
+    { label: 'Settled Amount',  value: `₹${fmt(txn.settled_amount || 0)}`,  color: '#402070' },
+    { label: 'Net Profit',      value: `₹${fmt(txn.profit || 0)}`,          color: '#7c3aed' },
+    ...(txn.service_type === BILL_WITHDRAWAL ? [
+      { label: 'Bill Platform',   value: txn.bill_platform || '—' },
+      { label: 'Bill Amount',     value: `₹${fmt(txn.bill_amount || 0)}` },
+      { label: 'Bill Remaining',  value: `₹${fmt(txn.bill_remaining || 0)}` },
+      { label: 'Total Collected', value: `₹${fmt(txn.total_collected || 0)}`, color: '#059669' },
+    ] : []),
+    { label: 'Note', value: txn.note || '—', full: true },
+  ]
+
+  return (
+    <div onClick={e => e.target === e.currentTarget && onClose()}
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
+      <div style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 580, maxHeight: '92vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 64px rgba(0,0,0,0.25)' }}>
+        {/* Header */}
+        <div style={{ background: 'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+          <div>
+            <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>Transaction Details</div>
+            <div style={{ color: '#fff', fontWeight: 900, fontSize: 18, marginTop: 2 }}>#{txn.id} · {txn.service_type || 'Transaction'}</div>
+            <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 12, marginTop: 2 }}>
+              {new Date(txn.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', width: 32, height: 32, borderRadius: '50%', cursor: 'pointer', fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
+        </div>
+
+        {/* Body */}
+        <div style={{ overflowY: 'auto', padding: 20 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            {fields.map(f => (
+              <div key={f.label} style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', ...(f.full ? { gridColumn: '1/-1' } : {}) }}>
+                <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{f.label}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: f.color || '#1a0a2e', wordBreak: 'break-all' }}>{f.value}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ padding: '14px 20px', borderTop: '1px solid #f1f5f9', display: 'flex', gap: 10, justifyContent: 'flex-end', flexShrink: 0 }}>
+          {txn.cust_mobile && (
+            <a href={`https://wa.me/${txn.cust_mobile.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${txn.cust_name}, your ${txn.service_type} of ₹${fmt(txn.amount)} processed. Settled: ₹${fmt(txn.settled_amount || 0)}. - MoneySpot`)}`}
+              target="_blank" rel="noopener noreferrer"
+              style={{ padding: '10px 18px', borderRadius: 10, background: '#25D366', color: '#fff', fontWeight: 700, fontSize: 13, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
+              💬 WhatsApp
+            </a>
+          )}
+          <button onClick={onClose} style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>Close</button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function AdminTransactions() {
   const [from, setFrom]         = useState(today)
   const [to, setTo]             = useState(today)
   const [printTxn, setPrintTxn] = useState(null)
+  const [viewTxn, setViewTxn]   = useState(null)
 
   const { transactions: txns, totals, loading, refetch } = useAdminTransactions(from, to)
-
-  const load = () => refetch()
 
   return (
     <div className="dash-page">
@@ -25,17 +103,18 @@ export default function AdminTransactions() {
         <div className="dash-topbar">
           <h1>Transaction Management</h1>
           <div className="dash-topbar-right">
-            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none', padding: '7px 14px' }} onClick={load}><MdRefresh /></button>
+            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none', padding: '7px 14px' }} onClick={refetch}><MdRefresh /></button>
             <span className="dash-badge">{loading ? '...' : txns.length} Records</span>
           </div>
         </div>
+
         <div className="dash-main">
 
           {/* Summary */}
           <div className="dash-stats">
             <div className="dash-stat"><div className="dash-stat-label">Total Transactions</div><div className="dash-stat-value">{loading ? '—' : fmt(totals.count ?? 0)}</div></div>
-            <div className="dash-stat"><div className="dash-stat-label">Total Value</div><div className="dash-stat-value">{loading ? '—' : fmtVal(totals.amount ?? 0)}</div></div>
-            <div className="dash-stat"><div className="dash-stat-label">Total Profit</div><div className="dash-stat-value">{loading ? '—' : fmtVal(totals.profit ?? 0)}</div></div>
+            <div className="dash-stat"><div className="dash-stat-label">Total Value</div><div className="dash-stat-value" style={{ color: '#059669' }}>{loading ? '—' : fmtVal(totals.amount ?? 0)}</div></div>
+            <div className="dash-stat"><div className="dash-stat-label">Total Profit</div><div className="dash-stat-value" style={{ color: '#d4af37' }}>{loading ? '—' : fmtVal(totals.profit ?? 0)}</div></div>
           </div>
 
           {/* Filters */}
@@ -50,9 +129,9 @@ export default function AdminTransactions() {
                   <label>To Date</label>
                   <input type="date" value={to} onChange={e => setTo(e.target.value)} />
                 </div>
-                <button className="dash-btn dash-btn-primary" onClick={load}><MdFilterList /> Filter</button>
+                <button className="dash-btn dash-btn-primary" onClick={refetch}><MdFilterList /> Filter</button>
                 <button className="dash-btn" style={{ background: '#f0f2f8', color: '#666', border: 'none' }}
-                  onClick={() => { setFrom(today); setTo(today); setTimeout(load, 0) }}>Today</button>
+                  onClick={() => { setFrom(today); setTo(today); setTimeout(refetch, 0) }}>Today</button>
               </div>
             </div>
           </div>
@@ -60,7 +139,7 @@ export default function AdminTransactions() {
           {/* Table */}
           <div className="dash-card">
             <div className="dash-card-header">
-              <h2>Transactions</h2>
+              <h2>Transactions ({txns.length})</h2>
               <div style={{ fontSize: 13, color: '#9ca3af' }}>
                 Total: <strong style={{ color: '#059669' }}>{fmtVal(totals.amount ?? 0)}</strong> · Profit: <strong style={{ color: '#d4af37' }}>{fmtVal(totals.profit ?? 0)}</strong>
               </div>
@@ -69,29 +148,71 @@ export default function AdminTransactions() {
               {loading ? <div className="dash-loading">Loading...</div> : (
                 <table className="dash-table">
                   <thead>
-                    <tr><th>#</th><th>Date</th><th>Employee</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th><th>Print</th></tr>
+                    <tr>
+                      <th>#</th>
+                      <th>Date & Time</th>
+                      <th>Employee</th>
+                      <th>Customer</th>
+                      <th>PAN</th>
+                      <th>Mobile</th>
+                      <th>Service</th>
+                      <th>Platform</th>
+                      <th>Bank</th>
+                      <th>Card</th>
+                      <th>Amount</th>
+                      <th>Charges %</th>
+                      <th>Charges ₹</th>
+                      <th>Settled</th>
+                      <th>Profit</th>
+                      <th>Mode</th>
+                      <th>Note</th>
+                      <th></th>
+                    </tr>
                   </thead>
                   <tbody>
                     {txns.map(t => (
-                      <tr key={t.id}>
-                        <td style={{ fontFamily: 'monospace', color: '#402070', fontWeight: 700, fontSize: 12 }}>#{t.id}</td>
-                        <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
-                        <td><strong>{t.employee_name || '—'}</strong></td>
-                        <td style={{ fontSize: 12 }}>{t.cust_name || '—'}</td>
-                        <td>{t.service_type || '—'}</td>
-                        <td>{t.platform ? <span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{t.platform}</span> : '—'}</td>
-                        <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</td>
-                        <td style={{ color: '#dc2626', fontWeight: 600 }}>₹{fmt(t.charges_amount || 0)}</td>
-                        <td style={{ color: '#402070', fontWeight: 800 }}>₹{fmt(t.settled_amount || t.profit || 0)}</td>
+                      <tr key={t.id}
+                        onClick={() => setViewTxn(t)}
+                        style={{ cursor: 'pointer', background: t.is_edited ? '#fef2f2' : '' }}
+                        onMouseEnter={e => e.currentTarget.style.background = t.is_edited ? '#fee2e2' : '#f0f2f8'}
+                        onMouseLeave={e => e.currentTarget.style.background = t.is_edited ? '#fef2f2' : ''}>
+                        <td style={{ fontFamily: 'monospace', color: t.is_edited ? '#dc2626' : '#402070', fontWeight: 700, fontSize: 11 }}>
+                          #{t.id}{t.is_edited ? ' ✏️' : ''}
+                        </td>
+                        <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
+                          <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
+                          <div style={{ color: '#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+                        </td>
+                        <td style={{ fontSize: 12 }}><strong>{t.employee_name || '—'}</strong></td>
+                        <td><strong>{t.cust_name || '—'}</strong></td>
+                        <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_pan || '—'}</td>
+                        <td style={{ fontSize: 11 }}>{t.cust_mobile || '—'}</td>
+                        <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
                         <td>
+                          {(t.platform || t.bill_platform)
+                            ? <span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{t.platform || t.bill_platform}</span>
+                            : '—'}
+                        </td>
+                        <td style={{ fontSize: 11 }}>{t.bank || '—'}</td>
+                        <td style={{ fontSize: 11 }}>
+                          {t.card ? `${t.card}${t.card_last4 ? ` ****${t.card_last4}` : ''}` : '—'}
+                        </td>
+                        <td style={{ color: '#059669', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.amount)}</td>
+                        <td style={{ color: '#d97706', fontSize: 12 }}>{t.charges_pct || 0}%</td>
+                        <td style={{ color: '#dc2626', fontSize: 12 }}>₹{fmt(t.charges_amount || 0)}</td>
+                        <td style={{ color: '#402070', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.settled_amount || 0)}</td>
+                        <td style={{ color: '#7c3aed', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.profit || 0)}</td>
+                        <td style={{ fontSize: 11 }}>{t.payment_mode || t.received_mode || '—'}</td>
+                        <td style={{ fontSize: 11, color: '#9ca3af', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.note || '—'}</td>
+                        <td onClick={e => e.stopPropagation()}>
                           <button onClick={() => setPrintTxn(t)}
-                            style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'inherit' }}>
-                            <MdPrint size={14} /> Print
+                            style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+                            <MdPrint size={13} /> Print
                           </button>
                         </td>
                       </tr>
                     ))}
-                    {!txns.length && <tr><td colSpan={10} className="dash-empty">No transactions found</td></tr>}
+                    {!txns.length && <tr><td colSpan={18} className="dash-empty">No transactions found</td></tr>}
                   </tbody>
                 </table>
               )}
@@ -101,7 +222,8 @@ export default function AdminTransactions() {
         </div>
       </div>
 
-      {printTxn && <PrintReceipt txn={printTxn} onClose={() => setPrintTxn(null)} />}
+      {viewTxn  && <TxnDetailModal txn={viewTxn}  onClose={() => setViewTxn(null)} />}
+      {printTxn && <PrintReceipt  txn={printTxn} onClose={() => setPrintTxn(null)} showFinancials={true} />}
     </div>
   )
 }

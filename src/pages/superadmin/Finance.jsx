@@ -71,26 +71,44 @@ export default function Finance() {
 
         <div className="dash-main">
 
-          {/* ── Summary Stats ── */}
-          <div className="dash-stats-row">
-            {loading ? <SkeletonStats count={5} /> : (
-              <>
-                {[
-                  { label: 'Total Cash In',   value: fmtVal(totals.totalCashIn   ?? 0), color: '#10b981', icon: '💵' },
-                  { label: 'Gross Profit',    value: fmtVal(totals.totalProfit   ?? 0), color: '#d4af37', icon: '📈' },
-                  { label: 'Total Expenses',  value: fmtVal(totals.totalExpenses ?? 0), color: '#dc2626', icon: '📉' },
-                  { label: 'Net Profit',      value: fmtVal(totals.netProfit     ?? 0), color: totals.netProfit >= 0 ? '#059669' : '#dc2626', icon: '🏆' },
-                  { label: 'Active Branches', value: ledger.length,                     color: '#402070', icon: '🏦' },
-                ].map(s => (
-                  <div key={s.label} className="dash-stat" style={{ '--c': s.color }}>
-                    <div style={{ fontSize: 22, marginBottom: 6 }}>{s.icon}</div>
-                    <div className="dash-stat-body">
-                      <span className="dash-stat-label">{s.label}</span>
-                      <span className="dash-stat-value" style={{ color: s.color }}>{s.value}</span>
+          {/* ── Summary Stats — 3 per row ── */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
+            {loading ? <SkeletonStats count={6} /> : (
+              [
+                { label: 'Total Cash In',   value: fmtVal(totals.totalCashIn   ?? 0), color: '#059669', bg: '#d1fae5', icon: '💵' },
+                { label: 'Gross Profit',    value: fmtVal(totals.totalProfit   ?? 0), color: '#d97706', bg: '#fef3c7', icon: '📈' },
+                { label: 'Total Expenses',  value: fmtVal(totals.totalExpenses ?? 0), color: '#dc2626', bg: '#fee2e2', icon: '📉' },
+                { label: 'Net Profit',      value: fmtVal(totals.netProfit     ?? 0), color: (totals.netProfit ?? 0) >= 0 ? '#059669' : '#dc2626', bg: (totals.netProfit ?? 0) >= 0 ? '#d1fae5' : '#fee2e2', icon: '🏆' },
+                { label: 'Active Branches', value: ledger.length,                     color: '#7c3aed', bg: '#ede9fe', icon: '🏦' },
+                { label: 'Total Txns',      value: ledger.reduce((s, l) => s + l.txn, 0), color: '#0ea5e9', bg: '#e0f2fe', icon: '📊' },
+              ].map(s => (
+                <div key={s.label} style={{
+                  background: '#fff',
+                  borderRadius: 16,
+                  padding: '20px 22px',
+                  boxShadow: '0 2px 12px rgba(64,32,112,0.08)',
+                  borderLeft: `4px solid ${s.color}`,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 16,
+                  minWidth: 0,
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                }}
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(64,32,112,0.13)' }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(64,32,112,0.08)' }}>
+                  <div style={{ width: 48, height: 48, borderRadius: 14, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
+                    {s.icon}
+                  </div>
+                  <div style={{ minWidth: 0, flex: 1 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                      {s.label}
+                    </div>
+                    <div style={{ fontSize: 'clamp(1.1rem, 1.6vw, 1.5rem)', fontWeight: 900, color: s.color, lineHeight: 1.1, wordBreak: 'break-word' }}>
+                      {s.value}
                     </div>
                   </div>
-                ))}
-              </>
+                </div>
+              ))
             )}
           </div>
 

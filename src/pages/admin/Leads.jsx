@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
 import { useLeads } from '../../hooks/useLeads'
 import '../../pages/dashboard.css'
@@ -25,6 +25,8 @@ export default function AdminLeads() {
   const [search,       setSearch]       = useState('')
   const [viewLead,     setViewLead]     = useState(null)
   const [editStatusId, setEditStatusId] = useState(null)
+  const [dropdownPos,  setDropdownPos]  = useState({ top: 0, left: 0 })
+  const dropdownRef = useRef(null)
 
   const { leads, stats, loading, load, updateStatus: hookUpdate } = useLeads(filterStatus, filterType)
 
@@ -42,6 +44,26 @@ export default function AdminLeads() {
       if (viewLead?.id === id) setViewLead(v => ({ ...v, status }))
     } catch (err) { alert(err.message) }
   }
+
+  const openDropdown = (e, id) => {
+    if (editStatusId === id) { setEditStatusId(null); return }
+    const rect = e.currentTarget.getBoundingClientRect()
+    setDropdownPos({
+      top:  rect.bottom + window.scrollY + 4,
+      left: rect.left   + window.scrollX,
+    })
+    setEditStatusId(id)
+  }
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    if (!editStatusId) return
+    const handler = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setEditStatusId(null)
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [editStatusId])
 
   const exportExcel = () => {
     const header = 'ID,Name,Mobile,Email,Type,Amount,Status,Branch,Employee,Follow-up,Date'
@@ -162,26 +184,11 @@ export default function AdminLeads() {
                           <td><a href={`tel:${l.mobile}`} style={{ color: '#059669', fontWeight: 700, textDecoration: 'none' }}>📞 {l.mobile}</a></td>
                           <td style={{ fontSize: 12 }}>{LEAD_TYPES.find(t => t.value === l.lead_type)?.label || l.lead_type}</td>
                           <td style={{ color: '#059669', fontWeight: 700 }}>{l.required_amount > 0 ? `₹${fmt(l.required_amount)}` : '—'}</td>
-                          <td style={{ position: 'relative' }}>
-                            <span style={{ background: sc.bg, color: sc.color, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, cursor: 'pointer', userSelect: 'none' }}
-                              onClick={() => setEditStatusId(editStatusId === l.id ? null : l.id)}>
+                          <td>
+                            <span style={{ background: sc.bg, color: sc.color, padding: '4px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, cursor: 'pointer', userSelect: 'none', whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                              onClick={e => openDropdown(e, l.id)}>
                               {sc.label} ▾
                             </span>
-                            {editStatusId === l.id && (
-                              <>
-                                <div onClick={() => setEditStatusId(null)} style={{ position: 'fixed', inset: 0, zIndex: 98 }} />
-                                <div style={{ position: 'absolute', top: '110%', left: 0, background: '#fff', borderRadius: 10, boxShadow: '0 8px 32px rgba(0,0,0,0.15)', zIndex: 99, minWidth: 160, overflow: 'hidden', border: '1px solid #f0f2f8' }}>
-                                  {Object.entries(STATUS_CONFIG).map(([k, v]) => (
-                                    <div key={k} onClick={() => updateStatus(l.id, k)}
-                                      style={{ padding: '9px 14px', cursor: 'pointer', fontSize: 12, fontWeight: 700, color: v.color, background: k === l.status ? v.bg : '#fff', borderBottom: '1px solid #f8fafc' }}
-                                      onMouseEnter={e => e.currentTarget.style.background = v.bg}
-                                      onMouseLeave={e => e.currentTarget.style.background = k === l.status ? v.bg : '#fff'}>
-                                      {v.label}
-                                    </div>
-                                  ))}
-                                </div>
-                              </>
-                            )}
                           </td>
                           <td style={{ fontSize: 12 }}>{l.employee_name || '—'}</td>
                           <td style={{ fontSize: 12, color: l.followup_date ? '#d97706' : '#9ca3af' }}>
@@ -282,6 +289,28 @@ export default function AdminLeads() {
           </div>
         </div>
       )}
+      {/* Status dropdown — rendered at fixed position to avoid table clipping */}
+      {editStatusId && (() => {
+        const lead = filtered.find(l => l.id === editStatusId)
+        if (!lead) return null
+        return (
+          <div ref={dropdownRef}
+            style={{ position: 'absolute', top: dropdownPos.top, left: dropdownPos.left, background: '#fff', borderRadius: 12, boxShadow: '0 8px 40px rgba(0,0,0,0.18)', zIndex: 9999, minWidth: 170, overflow: 'hidden', border: '1.5px solid #f0f2f8' }}>
+            <div style={{ padding: '8px 14px 6px', fontSize: 10, fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1, borderBottom: '1px solid #f0f2f8' }}>
+              Update Status
+            </div>
+            {Object.entries(STATUS_CONFIG).map(([k, v]) => (
+              <div key={k} onClick={() => updateStatus(lead.id, k)}
+                style={{ padding: '10px 14px', cursor: 'pointer', fontSize: 13, fontWeight: 700, color: v.color, background: k === lead.status ? v.bg : '#fff', borderBottom: '1px solid #f8fafc', display: 'flex', alignItems: 'center', gap: 8, transition: 'background 0.15s' }}
+                onMouseEnter={e => e.currentTarget.style.background = v.bg}
+                onMouseLeave={e => e.currentTarget.style.background = k === lead.status ? v.bg : '#fff'}>
+                {k === lead.status && <span style={{ fontSize: 10 }}>✓</span>}
+                {v.label}
+              </div>
+            ))}
+          </div>
+        )
+      })()}
     </div>
   )
 }
