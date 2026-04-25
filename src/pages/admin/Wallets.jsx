@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
 import { api } from '../../utils/api'
 import { getTokenByRole } from '../../utils/tokenUtils'
-import { useWallets } from '../../hooks/useFinance'
+import { useWallets, useAdminConfig } from '../../hooks/useFinance'
 import '../../pages/dashboard.css'
 
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
@@ -23,6 +23,8 @@ const Modal = ({ title, onClose, children }) => (
 
 export default function Wallets() {
   const { wallets, loading, refetch } = useWallets()
+  const { master } = useAdminConfig()
+  const platforms = master?.platforms?.map(p => p.name) || []
   const [modal, setModal]   = useState(null)
   const [amount, setAmount] = useState('')
   const [remarks, setRemarks] = useState('')
@@ -203,8 +205,15 @@ export default function Wallets() {
 
           {modal.type === 'create' ? (
             <div className="dash-form-group" style={{ marginBottom: 16 }}>
-              <label>Wallet Name</label>
-              <input placeholder="e.g. Bankit, Finkeda, N1PAY" value={newName} onChange={e => setNewName(e.target.value)} />
+              <label>Select Platform *</label>
+              <select required value={newName} onChange={e => setNewName(e.target.value)}>
+                <option value="">Choose platform</option>
+                {platforms
+                  .filter(p => !wallets.some(w => w.name.toLowerCase() === p.toLowerCase()))
+                  .map(p => <option key={p} value={p}>{p}</option>)
+                }
+              </select>
+              <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 4 }}>Only platforms configured by superadmin are shown</div>
             </div>
           ) : (
             <>

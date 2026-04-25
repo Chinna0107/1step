@@ -12,8 +12,6 @@ const auth = () => ({ Authorization: `Bearer ${getTokenByRole('employee') || get
 const fmt    = n => { const num = parseFloat(n); return isNaN(num) ? '0' : num.toLocaleString('en-IN') }
 const fmtVal = n => { const v = parseFloat(n) || 0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
 
-const PAYMENT_MODES = ['Cash', 'UPI', 'NEFT', 'IMPS', 'RTGS', 'Cheque']
-
 const BILL_WITHDRAWAL = 'Bill Pay + Withdrawal'
 const CARD_WITHDRAWAL = 'Card Withdrawal'
 const DMT             = 'Money Transfer (DMT)'
@@ -195,6 +193,8 @@ export default function Services() {
   const platforms = master?.platforms?.map(p => p.name) || []
   const banks     = master?.banks?.map(b => b.name)     || []
   const cards     = master?.cards?.map(c => c.name)     || []
+  const receiveModes = master?.receive_modes?.map(r => r.name) || []
+  const paymentModes = master?.payment_modes?.map(p => p.name) || []
 
   const fg = (label, children, full = false) => (
     <div className="dash-form-group" style={full ? { gridColumn: '1 / -1' } : {}}>
@@ -430,7 +430,7 @@ export default function Services() {
                         {fg('Charges Amount (₹)', roInp('charges_amount', '#555'))}
                         {fg('Bill Payment Remaining Balance (₹)', roInp('bill_remaining', '#555'))}
                         {fg('Total Amount Collected (₹)', roInp('total_collected', '#059669'))}
-                        {fg('Receive Mode', sel('received_mode', PAYMENT_MODES))}
+                        {fg('Receive Mode', sel('received_mode', receiveModes))}
                         {fg('Remarks', inp('note', 'Remarks'), true)}
                       </div>
                     </div>
@@ -448,7 +448,7 @@ export default function Services() {
                         {fg('Card Type', sel('card', cards))}
                         {fg('Card Bank', sel('card_bank', banks))}
                         {fg('Card Last 4 Digits', <input placeholder="Card Last 4 Digits" maxLength={4} value={form.card_last4} onChange={e => set('card_last4', e.target.value.replace(/\D/g,'').slice(0,4))} />)}
-                        {fg('Payment Mode', sel('payment_mode', PAYMENT_MODES))}
+                        {fg('Payment Mode', sel('payment_mode', paymentModes))}
                         {fg('Total Amount (₹) *', <input required type="number" placeholder="₹" value={form.amount} onChange={e => set('amount', e.target.value)} />)}
                         {fg('Remarks', inp('note', 'Remarks'), true)}
                         {fg('Charges %', roInp('charges_pct'))}
@@ -469,7 +469,7 @@ export default function Services() {
                         {fg('Platform', sel('platform', platforms))}
                         {fg('Bank', sel('bank', banks))}
                         {fg('Account No.', inp('acc_no', 'Account No.'))}
-                        {fg('Payment Mode', sel('payment_mode', PAYMENT_MODES))}
+                        {fg('Payment Mode', sel('payment_mode', paymentModes))}
                         {fg('Total Amount (₹) *', <input required type="number" placeholder="₹" value={form.amount} onChange={e => set('amount', e.target.value)} />)}
                         {fg('Remarks', inp('note', 'Remarks'), true)}
                         {fg('Charges %', roInp('charges_pct'))}
@@ -490,7 +490,7 @@ export default function Services() {
                         {fg('Platform', sel('platform', platforms))}
                         {fg('Bank', sel('bank', banks))}
                         {fg('Aadhar No.', <input placeholder="Aadhar No." maxLength={12} value={form.cust_aadhar} onChange={e => set('cust_aadhar', e.target.value.replace(/\D/g,'').slice(0,12))} />)}
-                        {fg('Payment Mode', sel('payment_mode', PAYMENT_MODES))}
+                        {fg('Payment Mode', sel('payment_mode', paymentModes))}
                         {fg('Total Amount (₹) *', <input required type="number" placeholder="₹" value={form.amount} onChange={e => set('amount', e.target.value)} />)}
                         {fg('Remarks', inp('note', 'Remarks'), true)}
                         {fg('Charges %', roInp('charges_pct'))}
@@ -733,8 +733,8 @@ export default function Services() {
                     {(isDM || isOB) && eInp('acc_no', 'Account No.')}
                     {isBW && eSel('bill_platform', 'Bill Platform', platforms)}
                     {isBW && eInp('bill_amount', 'Bill Amount (₹)', 'number')}
-                    {eSel('payment_mode', 'Payment Mode', PAYMENT_MODES)}
-                    {isBW && eSel('received_mode', 'Receive Mode', PAYMENT_MODES)}
+                    {eSel('payment_mode', 'Payment Mode', paymentModes)}
+                    {isBW && eSel('received_mode', 'Receive Mode', receiveModes)}
                     {eInp('amount', 'Amount (₹) *', 'number')}
                     {eInp('charges_pct', 'Charges %', 'number')}
                     {eInp('charges_amount', 'Charges Amount (₹)', 'number')}
