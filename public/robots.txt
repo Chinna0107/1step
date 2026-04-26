@@ -1,9 +1,31 @@
 User-agent: *
 Allow: /
+Allow: /what-we-do
+Allow: /about
+Allow: /contact
+Allow: /faq
+Allow: /privacy
+Allow: /terms
+Allow: /product/
 
+# Block private/auth routes
+Disallow: /login
 Disallow: /login/
 Disallow: /login/customer
 Disallow: /login/employee
 Disallow: /login/superadmin
+Disallow: /admin/
+Disallow: /superadmin/
+Disallow: /employee/
+
+# Block query strings
+Disallow: /*?*
 
 Sitemap: https://moneyspotfintech.com/sitemap.xml
+
+# Crawl-delay for bots
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
