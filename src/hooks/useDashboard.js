@@ -1,15 +1,15 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../utils/api'
 import { cacheGet, cacheSet } from '../utils/cache'
+import { getTokenByRole } from '../utils/tokenUtils'
 
 export function useDashboard(role) {
   const [data,    setData]    = useState(() => cacheGet(`dashboard_${role}`))
   const [loading, setLoading] = useState(!cacheGet(`dashboard_${role}`))
   const [error,   setError]   = useState('')
 
-  const token = localStorage.getItem('ms_token')
-
   const fetch_ = useCallback(async (force = false) => {
+    const token = getTokenByRole(role) || getTokenByRole('admin') || getTokenByRole('superadmin')
     if (!token) { setError('Not authenticated'); setLoading(false); return }
     if (!force) {
       const cached = cacheGet(`dashboard_${role}`)
@@ -27,7 +27,7 @@ export function useDashboard(role) {
     } finally {
       setLoading(false)
     }
-  }, [role, token])
+  }, [role])
 
   useEffect(() => { fetch_() }, [fetch_])
 

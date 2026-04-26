@@ -154,6 +154,17 @@ export default function Services() {
       (c.name?.toLowerCase().includes(q) || c.phone?.includes(search) || c.pan?.toLowerCase().includes(q)))
   }, [customers, search])
 
+  // Search customers from API when search term changes
+  useEffect(() => {
+    if (search.length < 2 || form.customer_id) return
+    const t = setTimeout(() => {
+      api(`/customers/approved?search=${encodeURIComponent(search)}`, { headers: auth() })
+        .then(d => setCustomers(d))
+        .catch(() => {})
+    }, 300)
+    return () => clearTimeout(t)
+  }, [search, form.customer_id])
+
   const handleSubmit = async e => {
     e.preventDefault()
     if (!form.cust_name.trim()) { setError('Customer name is required'); return }

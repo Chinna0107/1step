@@ -71,7 +71,7 @@ export function useCustomerRequests() {
       api('/customers/pending', { headers: adminHeaders() }),
       api('/customers/all',     { headers: adminHeaders() }),
     ])
-      .then(([p, a]) => { cacheSet(CACHE_KEY, { pending: p, all: a }, TTL.list); setPending(p); setAll(a); setLoading(false) })
+      .then(([p, a]) => { cacheSet(CACHE_KEY, { pending: p, all: a }, 30 * 1000); setPending(p); setAll(a); setLoading(false) })
       .catch(e => { setError(e.message); setLoading(false) })
   }, [])
 

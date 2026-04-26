@@ -9,16 +9,16 @@ const fmt = n => Number(n).toLocaleString('en-IN')
 export default function CustomerCoins() {
   const { coins, loading, redeeming, msg, error, redeem, setMsg, setError } = useCustomerCoins()
   const { txns } = useCustomerTransactions()
-  const [redeemAmt, setRedeemAmt] = useState(100)
+  const [redeemAmt, setRedeemAmt] = useState(10)
 
-  const balance      = coins?.coins          ?? 0
+  const balance       = coins?.coins          ?? 0
   const totalRedeemed = coins?.coins_redeemed ?? 0
-  const discount     = Math.floor(redeemAmt / 100)
-  const maxRedeem    = Math.floor(balance / 100) * 100
+  const discount      = Math.floor(redeemAmt / 10)
+  const maxRedeem     = Math.floor(balance / 10) * 10
 
   const handleRedeem = () => {
     setMsg(''); setError('')
-    if (redeemAmt < 100)   return setError('Minimum 100 coins to redeem')
+    if (redeemAmt < 10)    return setError('Minimum 10 coins to redeem')
     if (redeemAmt > balance) return setError('Not enough coins')
     redeem(redeemAmt)
   }
@@ -39,7 +39,7 @@ export default function CustomerCoins() {
             <div>
               <div className="coins-hero-label">MoneySpot Rewards</div>
               <h1 className="coins-hero-title">🪙 Your Coins</h1>
-              <div className="coins-hero-sub">Earn 1 coin for every ₹1 spent · Redeem 100 coins = ₹1 discount</div>
+              <div className="coins-hero-sub">Earn coins on every transaction · Redeem 10 coins = ₹1 discount</div>
             </div>
             <div className="coins-balance-pill">
               <div className="coins-balance-icon">🪙</div>
@@ -54,10 +54,10 @@ export default function CustomerCoins() {
         {/* ── Summary Cards ── */}
         <div className="coins-summary">
           {[
-            { icon: '🪙', label: 'Available Coins',  value: fmt(balance),        color: '#d4af37', sub: `≈ ₹${fmt(Math.floor(balance / 100))} redeemable` },
-            { icon: '📈', label: 'Total Earned',      value: fmt(totalEarned),    color: '#059669', sub: '1 coin per ₹1 spent' },
-            { icon: '🎁', label: 'Total Redeemed',    value: fmt(totalRedeemed),  color: '#c02040', sub: `₹${fmt(Math.floor(totalRedeemed / 100))} saved` },
-            { icon: '💡', label: 'Redeem Rate',       value: '100 = ₹1',          color: '#402070', sub: 'Min 100 coins to redeem' },
+            { icon: '🪙', label: 'Available Coins',  value: fmt(balance),        color: '#d4af37', sub: `≈ ₹${fmt(Math.floor(balance / 10))} redeemable` },
+            { icon: '📈', label: 'Total Earned',      value: fmt(totalEarned),    color: '#059669', sub: 'Coins earned on transactions' },
+            { icon: '🎁', label: 'Total Redeemed',    value: fmt(totalRedeemed),  color: '#c02040', sub: `₹${fmt(Math.floor(totalRedeemed / 10))} saved` },
+            { icon: '💡', label: 'Redeem Rate',       value: '10 = ₹1',           color: '#402070', sub: '1 coin = ₹0.10 (10 paise)' },
           ].map((c, i) => (
             <div key={i} className="coins-sum-card" style={{ '--cc': c.color, animationDelay: `${i * 80}ms` }}>
               <div className="coins-sum-glow" />
@@ -67,6 +67,105 @@ export default function CustomerCoins() {
               <div className="coins-sum-sub">{c.sub}</div>
             </div>
           ))}
+        </div>
+
+        {/* ── Gifts & Rewards ── */}
+        <div className="coins-gifts-section">
+          <div className="coins-gifts-header">
+            <div>
+              <div className="coins-gifts-eyebrow">🎁 Rewards Catalogue</div>
+              <h2 className="coins-gifts-title">Gifts You Can Win</h2>
+              <p className="coins-gifts-sub">Earn coins on every transaction and unlock amazing gifts. The more you transact, the bigger the reward!</p>
+            </div>
+            <div className="coins-gifts-balance-chip">
+              <span className="coins-gifts-chip-icon">🪙</span>
+              <div>
+                <div className="coins-gifts-chip-val">{fmt(balance)}</div>
+                <div className="coins-gifts-chip-lbl">Your Coins</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="coins-gifts-grid">
+            {[
+              {
+                name: 'Premium Water Bottle',
+                desc: 'Stainless steel insulated bottle — keeps drinks cold for 24hrs',
+                coins: 500,
+                color: '#0ea5e9',
+                img: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=300&q=80&auto=format&fit=crop',
+              },
+              {
+                name: 'Stylish Backpack',
+                desc: 'Spacious laptop backpack with multiple compartments',
+                coins: 1500,
+                color: '#8b5cf6',
+                img: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300&q=80&auto=format&fit=crop',
+              },
+              {
+                name: 'Wireless Earphones',
+                desc: 'Bluetooth earbuds with noise cancellation & 20hr battery',
+                coins: 3000,
+                color: '#ec4899',
+                img: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300&q=80&auto=format&fit=crop',
+              },
+              {
+                name: 'Office Desk Kit',
+                desc: 'Premium stationery & organiser set for your workspace',
+                coins: 4000,
+                color: '#d97706',
+                img: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=300&q=80&auto=format&fit=crop',
+              },
+              {
+                name: 'Smart Study Table',
+                desc: 'Foldable wooden table with storage — perfect for home use',
+                coins: 5000,
+                color: '#10b981',
+                img: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=300&q=80&auto=format&fit=crop',
+              },
+              {
+                name: 'MoneySpot Gift Box',
+                desc: 'Exclusive curated gift hamper from MoneySpot Fintech',
+                coins: 8000,
+                color: '#c02040',
+                img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=300&q=80&auto=format&fit=crop',
+              },
+            ].map((g, i) => {
+              const unlocked = balance >= g.coins
+              const progress = Math.min(100, Math.floor((balance / g.coins) * 100))
+              const remaining = Math.max(0, g.coins - balance)
+              return (
+                <div key={i} className={`coins-gift-card ${unlocked ? 'gift-unlocked' : ''}`} style={{ '--gc': g.color, animationDelay: `${i * 70}ms` }}>
+                  <div className="gift-img-wrap">
+                    <img src={g.img} alt={g.name} className="gift-img" />
+                    <div className="gift-img-overlay" />
+                    {unlocked
+                      ? <div className="gift-status gift-status-unlocked">🎉 Unlocked!</div>
+                      : <div className="gift-status gift-status-locked">🔒 {remaining.toLocaleString('en-IN')} more coins</div>
+                    }
+                    <div className="gift-coins-badge">🪙 {g.coins.toLocaleString('en-IN')}</div>
+                  </div>
+                  <div className="gift-body">
+                    <div className="gift-name">{g.name}</div>
+                    <div className="gift-desc">{g.desc}</div>
+                    <div className="gift-progress-wrap">
+                      <div className="gift-progress-top">
+                        <span className="gift-progress-label">Progress</span>
+                        <span className="gift-progress-pct" style={{ color: g.color }}>{progress}%</span>
+                      </div>
+                      <div className="gift-bar-track">
+                        <div className="gift-bar-fill" style={{ width: `${progress}%`, background: g.color }} />
+                      </div>
+                    </div>
+                    {unlocked
+                      ? <button className="gift-claim-btn" style={{ '--gc': g.color }}>🎁 Claim Gift</button>
+                      : <div className="gift-need">{remaining.toLocaleString('en-IN')} coins to go</div>
+                    }
+                  </div>
+                </div>
+              )
+            })}
+          </div>
         </div>
 
         <div className="coins-grid">
@@ -92,17 +191,17 @@ export default function CustomerCoins() {
                 </label>
                 <input
                   type="range"
-                  min={100}
-                  max={Math.max(100, maxRedeem)}
-                  step={100}
-                  value={Math.min(redeemAmt, Math.max(100, maxRedeem))}
+                  min={10}
+                  max={Math.max(10, maxRedeem)}
+                  step={10}
+                  value={Math.min(redeemAmt, Math.max(10, maxRedeem))}
                   onChange={e => setRedeemAmt(Number(e.target.value))}
                   className="coins-slider"
-                  disabled={balance < 100}
+                  disabled={balance < 10}
                 />
                 <div className="coins-slider-range">
-                  <span>100</span>
-                  <span>{fmt(Math.max(100, maxRedeem))}</span>
+                  <span>10</span>
+                  <span>{fmt(Math.max(10, maxRedeem))}</span>
                 </div>
               </div>
 
@@ -124,14 +223,14 @@ export default function CustomerCoins() {
               <button
                 className="coins-redeem-btn"
                 onClick={handleRedeem}
-                disabled={redeeming || balance < 100}
+                disabled={redeeming || balance < 10}
               >
                 {redeeming ? 'Redeeming...' : `🎁 Redeem ${fmt(redeemAmt)} Coins for ₹${fmt(discount)}`}
               </button>
 
-              {balance < 100 && (
+              {balance < 10 && (
                 <div className="coins-need-more">
-                  You need {100 - balance} more coins to redeem. Keep transacting!
+                  You need {10 - balance} more coins to redeem. Keep transacting!
                 </div>
               )}
             </div>
@@ -147,7 +246,7 @@ export default function CustomerCoins() {
               {[
                 { icon: '💳', step: '1', title: 'Make a Transaction', desc: 'Every ₹1 you spend earns you 1 MoneySpot Coin automatically.' },
                 { icon: '🪙', step: '2', title: 'Coins Accumulate', desc: 'Coins are credited instantly after each transaction. No minimum required to earn.' },
-                { icon: '🎁', step: '3', title: 'Redeem for Discounts', desc: 'Use 100 coins to get ₹1 off on your next transaction. Minimum 100 coins to redeem.' },
+                { icon: '🎁', step: '3', title: 'Redeem for Discounts', desc: 'Use 10 coins to get ₹1 off on your next transaction. Minimum 10 coins to redeem.' },
                 { icon: '♾️', step: '4', title: 'No Expiry', desc: 'Your MoneySpot Coins never expire. Accumulate as many as you want!' },
               ].map((s, i) => (
                 <div key={i} className="coins-step" style={{ animationDelay: `${i * 80}ms` }}>

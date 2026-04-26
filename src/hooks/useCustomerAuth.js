@@ -32,7 +32,7 @@ export function useCustomerLogin() {
     setLoading(true); setError('')
     try {
       const data = await api('/customer/login', { method: 'POST', body: JSON.stringify({ pan, phone }) })
-      localStorage.setItem(KEY, JSON.stringify(data))
+      localStorage.setItem(KEY, JSON.stringify({ ...data, timestamp: new Date().toISOString() }))
       // clear cache on new login
       cache.profile = null; cache.txns = null
       cache.profileTs = 0;  cache.txnsTs = 0

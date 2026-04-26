@@ -14,7 +14,7 @@ export function verifyToken(role) {
   const { token, timestamp } = JSON.parse(auth)
   if (!token) return false
   const tokenAge = Date.now() - new Date(timestamp).getTime()
-  const maxAge = 8 * 60 * 60 * 1000 // 8 hours matching backend
+  const maxAge = 9 * 60 * 60 * 1000 // 9 hours — matches backend JWT expiry
   return tokenAge < maxAge
 }
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
-import { useSuperAdminFinance, useBranches } from '../../hooks/useSuperAdmin'
+import { useSuperAdminFinance, useBranches, useSuperAdminWallets } from '../../hooks/useSuperAdmin'
 import { api } from '../../utils/api'
 import { getTokenByRole } from '../../utils/tokenUtils'
 import { SkeletonTable, SkeletonStats } from '../../components/superadmin/Skeleton'
@@ -31,6 +31,19 @@ export default function Finance() {
   const [error, setError]       = useState('')
   const { branches }            = useBranches()
   const { ledger, expenses, expSummary, serviceSummary, daily, totals, loading, refetch, addExpense: hookAddExpense } = useSuperAdminFinance(from, to, branchFilter)
+  const { byBranch, loading: wLoading, refetch: wRefetch, addMoney, deductMoney } = useSuperAdminWallets()
+  const [wMsg, setWMsg]         = useState('')
+  const [wAction, setWAction]   = useState(null)
+  const [wAmount, setWAmount]   = useState('')
+  const [wRemarks, setWRemarks] = useState('')
+
+  const handleWalletAction = async () => {
+    if (!wAmount || parseFloat(wAmount) <= 0) return
+    const ok = wAction.mode === 'add'
+      ? await addMoney(wAction.id, wAmount, wRemarks)
+      : await deductMoney(wAction.id, wAmount, wRemarks)
+    if (ok) { setWMsg(wAction.mode === 'add' ? '✅ Money added' : '✅ Money deducted'); setWAction(null); setWAmount(''); setWRemarks('') }
+  }
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -120,6 +133,7 @@ export default function Finance() {
               { key: 'services',  label: '🔧 Service-wise' },
               { key: 'daily',     label: '📅 Daily Trend' },
               { key: 'expenses',  label: '📉 Expenses' },
+              { key: 'wallets',   label: '💼 Wallets' },
             ].map(t => (
               <button key={t.key} onClick={() => setTab(t.key)}
                 style={{ padding: '9px 18px', borderRadius: 10, border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer',
@@ -352,6 +366,72 @@ export default function Finance() {
                   )}
                 </div>
               </div>
+            </>
+          )}
+
+          {/* ── WALLETS ── */}
+          {tab === 'wallets' && (
+            <>
+              {wMsg && <div className="sa-alert sa-alert-success" style={{ marginBottom: 12 }} onClick={() => setWMsg('')}>{wMsg}</div>}
+              {wAction && (
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ background: '#fff', borderRadius: 16, padding: 28, width: 340, boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}>
+                    <h3 style={{ margin: '0 0 16px', fontSize: 16, color: '#1a0a2e' }}>
+                      {wAction.mode === 'add' ? '➕ Add Money' : '➖ Deduct Money'} — {wAction.name}
+                    </h3>
+                    <input type="number" min="1" placeholder="Amount (₹)" value={wAmount} onChange={e => setWAmount(e.target.value)}
+                      style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1.5px solid #e2e8f0', fontSize: 14, marginBottom: 10, boxSizing: 'border-box' }} />
+                    <input placeholder="Remarks (optional)" value={wRemarks} onChange={e => setWRemarks(e.target.value)}
+                      style={{ width: '100%', padding: '8px 12px', borderRadius: 8, border: '1.5px solid #e2e8f0', fontSize: 14, marginBottom: 16, boxSizing: 'border-box' }} />
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button className="sa-btn sa-btn-primary" style={{ flex: 1 }} onClick={handleWalletAction}>Confirm</button>
+                      <button className="sa-btn" style={{ flex: 1, background: '#f1f5f9', color: '#64748b', border: 'none' }} onClick={() => { setWAction(null); setWAmount(''); setWRemarks('') }}>Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {wLoading ? <SkeletonTable rows={4} cols={8} /> : Object.entries(byBranch).map(([branch, wallets]) => (
+                <div key={branch} className="sa-card" style={{ marginBottom: 20 }}>
+                  <div className="sa-card-header">
+                    <h2>🏦 {branch}</h2>
+                    <span style={{ fontSize: 13, color: '#64748b', fontWeight: 600 }}>
+                      Total: ₹{fmt(wallets.reduce((s, w) => s + parseFloat(w.balance || 0), 0))}
+                    </span>
+                  </div>
+                  <div className="sa-table-wrap">
+                    <table className="sa-table">
+                      <thead>
+                        <tr>
+                          <th>Wallet</th><th>Type</th><th>Balance</th>
+                          <th>Today In</th><th>Today Out</th>
+                          <th>Month In</th><th>Month Out</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {wallets.map(w => (
+                          <tr key={w.id}>
+                            <td><strong>{w.name}</strong>{w.platform ? <span style={{ fontSize: 11, color: '#94a3b8', marginLeft: 6 }}>({w.platform})</span> : null}</td>
+                            <td><span className="dash-badge badge-purple" style={{ fontSize: 11 }}>{w.wallet_type || 'platform'}</span></td>
+                            <td style={{ fontWeight: 800, color: parseFloat(w.balance) < 1000 ? '#dc2626' : '#059669' }}>₹{fmt(w.balance)}</td>
+                            <td style={{ color: '#059669', fontWeight: 600 }}>₹{fmt(w.today_inflow)}</td>
+                            <td style={{ color: '#dc2626', fontWeight: 600 }}>₹{fmt(w.today_outflow)}</td>
+                            <td style={{ color: '#059669' }}>₹{fmt(w.month_inflow)}</td>
+                            <td style={{ color: '#dc2626' }}>₹{fmt(w.month_outflow)}</td>
+                            <td>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                <button className="sa-btn sa-btn-primary sa-btn-sm" onClick={() => { setWAction({ id: w.id, name: w.name, mode: 'add' }); setWAmount(''); setWRemarks('') }}>+ Add</button>
+                                <button className="sa-btn sa-btn-sm" style={{ background: '#fee2e2', color: '#dc2626', border: 'none' }} onClick={() => { setWAction({ id: w.id, name: w.name, mode: 'deduct' }); setWAmount(''); setWRemarks('') }}>− Deduct</button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              ))}
+              {!wLoading && Object.keys(byBranch).length === 0 && <div className="sa-empty">No wallets found</div>}
             </>
           )}
 

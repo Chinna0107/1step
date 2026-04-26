@@ -6,8 +6,11 @@ import { cacheGet, cacheSet, cacheClear, TTL } from '../utils/cache'
 const authAdmin = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const authSA    = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
 
-const today      = new Date().toISOString().split('T')[0]
-const monthStart = today.slice(0, 7) + '-01'
+const getToday      = () => new Date().toISOString().split('T')[0]
+const getMonthStart = () => getToday().slice(0, 7) + '-01'
+
+const today      = getToday()
+const monthStart = getMonthStart()
 
 // helper: stale-while-revalidate fetch
 // - returns cached data instantly
