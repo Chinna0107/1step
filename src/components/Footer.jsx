@@ -34,8 +34,8 @@ export default function Footer() {
           <div className="footer-social">
             <a href={`https://wa.me/${PHONE}`} title="WhatsApp" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
             <a href="https://www.instagram.com/moneyspot_official" title="Instagram" aria-label="Instagram"><FaInstagram /></a>
-            <a href="" title="Facebook"  aria-label="Facebook"><FaFacebookF /></a>
-            <a href="#" title="Twitter"   aria-label="Twitter"><FaTwitter /></a>
+            <a href="https://www.facebook.com/moneyspotfintech" title="Facebook"  aria-label="Facebook"><FaFacebookF /></a>
+            <a href="https://twitter.com/moneyspotfintech" title="Twitter"   aria-label="Twitter"><FaTwitter /></a>
           </div>
         </div>
 
@@ -66,7 +66,8 @@ export default function Footer() {
         <div className="footer-links">
           <h4>Contact</h4>
           <a href={`tel:${PHONE}`}><FaPhone size={13} /> {PHONE_DISPLAY}</a>
-          <a href="mailto:support@moneyspot.in"><FaEnvelope size={13} /> support@moneyspot.in</a>
+          <a href="mailto:support@moneyspotfintech.com"><FaEnvelope size={13} /> support@moneyspotfintech.com</a>
+          <a href="mailto:info@moneyspotfintech.com"><FaEnvelope size={13} /> info@moneyspotfintech.com</a>
           <span><FaMapMarkerAlt size={13} /> Kadapa, Andhra Pradesh</span>
           <span><FaMapMarkerAlt size={13} /> Ananthapur, Andhra Pradesh</span>
           <span><FaMapMarkerAlt size={13} /> Bangalore, Karnataka</span>
