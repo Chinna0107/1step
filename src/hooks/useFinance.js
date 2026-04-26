@@ -258,12 +258,17 @@ export function useAdminTransactions(from, to) {
 
 // ── useAdminConfig ────────────────────────────────────────────
 export function useAdminConfig() {
-  const { data, loading, refetch } = useSWR(
+  const { data: master, loading: l1 } = useSWR(
     'admin:master',
     () => api('/master/all', { headers: authAdmin() }),
     TTL.master
   )
-  return { master: data, loading, refetch }
+  const { data: charges, loading: l2 } = useSWR(
+    'admin:charges',
+    () => api('/master/charges-all', { headers: authAdmin() }),
+    TTL.master
+  )
+  return { master, charges, loading: l1 || l2 }
 }
 
 // ── useFinanceControl ────────────────────────────────────────
