@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { useAddCustomer, useMyCustomers } from '../../hooks/useCustomers'
-import { getUserByRole } from '../../utils/tokenUtils'
+import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
+import { api } from '../../utils/api'
 import '../../pages/dashboard.css'
 
 const empty = {
   name: '', email: '', phone: '', pan: '', aadhar: '', acc_number: '',
-  branch: '', aadhar_img_url: '', pan_img_url: '', card_front_img_url: ''
+  branch: '', aadhar_img_url: '', pan_img_url: '', card_front_img_url: '',
+  referral_name: '', referral_phone: ''
 }
 
 const ImgField = ({ label, icon, field, value, onChange }) => (
@@ -43,6 +45,8 @@ export default function AddCustomer() {
   const branch = currentUser?.branch || ''
   const [form, setForm]         = useState({ ...empty, branch })
   const [showForm, setShowForm] = useState(false)
+  const [fraudAlert, setFraudAlert] = useState(null)
+  const [checkingFraud, setCheckingFraud] = useState(false)
 
   useEffect(() => {
     const pendingName = localStorage.getItem('pendingCustomerName')
@@ -55,8 +59,21 @@ export default function AddCustomer() {
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
+  const checkFraud = useCallback(async (phone) => {
+    if (!/^\d{10}$/.test(phone)) { setFraudAlert(null); return }
+    setCheckingFraud(true)
+    try {
+      const r = await api(`/fraud/check/${phone}`, {
+        headers: { Authorization: `Bearer ${getTokenByRole('employee') || getTokenByRole('admin')}` }
+      })
+      setFraudAlert(r.fraud ? r.entry : null)
+    } catch { setFraudAlert(null) }
+    setCheckingFraud(false)
+  }, [])
+
   const handleSubmit = async e => {
     e.preventDefault()
+    if (fraudAlert) return
     const ok = await submitCustomer(form)
     if (ok) {
       setForm({ ...empty, branch })
@@ -113,7 +130,22 @@ export default function AddCustomer() {
                   <div className="dash-form-group">
                     <label>Phone *</label>
                     <input required placeholder="10-digit phone" maxLength={10} value={form.phone}
-                      onChange={e => set('phone', e.target.value.replace(/\D/g, '').slice(0, 10))} />
+                      onChange={e => {
+                        const v = e.target.value.replace(/\D/g, '').slice(0, 10)
+                        set('phone', v)
+                        checkFraud(v)
+                      }} />
+                    {checkingFraud && <span style={{ fontSize: 11, color: '#9ca3af' }}>Checking fraud list...</span>}
+                    {fraudAlert && (
+                      <div style={{ marginTop: 8, background: '#fee2e2', border: '2px solid #fca5a5', borderRadius: 10, padding: '10px 14px' }}>
+                        <div style={{ fontWeight: 900, color: '#dc2626', fontSize: 14 }}>🚨 FRAUD ALERT — Onboarding Blocked</div>
+                        <div style={{ fontSize: 12, color: '#dc2626', marginTop: 4 }}>This mobile number is in the fraud list.</div>
+                        <div style={{ fontSize: 12, color: '#7f1d1d', marginTop: 4 }}>
+                          <strong>Name:</strong> {fraudAlert.name} &nbsp;|&nbsp;
+                          <strong>Reason:</strong> {fraudAlert.reason || 'Not specified'}
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <div className="dash-form-group">
                     <label>PAN Number *</label>
@@ -139,6 +171,23 @@ export default function AddCustomer() {
                   </div>
                 </div>
 
+                {/* ── Referral Details ── */}
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#402070', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12, marginTop: 20 }}>Referral Details (Optional)</div>
+                <div className="dash-form-grid" style={{ marginBottom: 20 }}>
+                  <div className="dash-form-group">
+                    <label>Referral Name</label>
+                    <input placeholder="Referred by (name)" value={form.referral_name} onChange={e => set('referral_name', e.target.value)} />
+                  </div>
+                  <div className="dash-form-group">
+                    <label>Referral Phone</label>
+                    <input placeholder="10-digit phone" maxLength={10} value={form.referral_phone}
+                      onChange={e => set('referral_phone', e.target.value.replace(/\D/g, '').slice(0, 10))} />
+                    {form.referral_phone && !/^\d{10}$/.test(form.referral_phone) && (
+                      <span className="dash-field-hint" style={{ color: '#dc2626', fontSize: 11 }}>Must be 10 digits</span>
+                    )}
+                  </div>
+                </div>
+
                 {/* ── Document Images ── */}
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#402070', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Document Images (paste URL after uploading)</div>
                 <div className="dash-form-grid">
@@ -153,7 +202,7 @@ export default function AddCustomer() {
                     Cancel
                   </button>
                   <button type="submit" className="dash-btn dash-btn-primary"
-                    disabled={loading || (form.pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.pan))}>
+                    disabled={loading || !!fraudAlert || (form.pan && !/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(form.pan)) || (form.referral_phone && !/^\d{10}$/.test(form.referral_phone))}>
                     {loading ? 'Submitting...' : '📤 Submit for Approval'}
                   </button>
                 </div>

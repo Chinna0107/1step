@@ -561,9 +561,10 @@ export default function Home() {
       {/* ═══ STATS ═══ */}
       <section className="stats-section">
         <div className="stats-grid">
-          {stats.map(s => (
-            <div className="stat-card" key={s.label}>
-              <div className="stat-icon"><s.Icon size={22} /></div>
+          {stats.map((s, i) => (
+            <div className="stat-item" key={s.label}>
+              {i !== 0 && <div className="stat-divider" />}
+              <div className="stat-icon"><s.Icon size={26} /></div>
               <div className="stat-value">
                 <Counter value={s.value} prefix={s.prefix} suffix={s.suffix} />
               </div>

@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   MdDashboard, MdInsights, MdStorefront, MdEmojiEvents,
   MdAccountBalance, MdPeople, MdSettings, MdAssessment, MdSecurity, MdLogout, MdChevronRight,
-  MdLock, MdFactCheck
+  MdLock, MdFactCheck, MdGppBad
 } from 'react-icons/md'
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { api } from '../../utils/api'
@@ -41,6 +41,7 @@ const NAV = [
     group: 'Reports',
     items: [
       { to: '/superadmin/customers',    icon: <MdPeople />,       label: 'Customers (All)' },
+      { to: '/superadmin/fraud',         icon: <MdGppBad />,       label: 'Fraud List' },
       { to: '/superadmin/reports',      icon: <MdAssessment />,   label: 'Reports & Downloads' },
       { to: '/superadmin/security',     icon: <MdSecurity />,     label: 'Security & Control' },
     ],

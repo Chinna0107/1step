@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
 import { useAdminExpenses } from '../../hooks/useFinance'
+import { api } from '../../utils/api'
+import { getTokenByRole } from '../../utils/tokenUtils'
 import '../../pages/dashboard.css'
 
 const fmt   = n => Number(parseFloat(n)||0).toLocaleString('en-IN')
@@ -9,7 +11,7 @@ const CATS  = ['Rent', 'Utilities', 'Salary', 'Maintenance', 'Marketing', 'Other
 const empty = { date: today, amount: '', category: '', note: '' }
 
 export default function Expenses() {
-  const { expenses, expSummary, totals, loading, msg: hookMsg, error: hookErr, addExpense, refetch } = useAdminExpenses()
+  const { expenses, expSummary, totals, loading, msg: hookMsg, error: hookErr, refetch } = useAdminExpenses()
   const [showForm, setShowForm] = useState(false)
   const [form, setForm]         = useState(empty)
   const [saving, setSaving]     = useState(false)
@@ -21,13 +23,18 @@ export default function Expenses() {
   const handleAdd = async e => {
     e.preventDefault(); setSaving(true); setMsg(''); setErr('')
     try {
-      await addExpense(form)
-      setMsg('✅ Expense added'); setForm(empty); setShowForm(false)
+      const r = await api('/finance/expenses', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${getTokenByRole('admin')}` },
+        body: JSON.stringify(form),
+      })
+      setMsg(`✅ Expense added & ₹${fmt(form.amount)} deducted from Bank (balance: ₹${fmt(r.bank_balance)})`)
+      setForm(empty); setShowForm(false); refetch()
     } catch (ex) { setErr(ex.message) }
     setSaving(false)
   }
 
-  const displayMsg = msg || hookMsg
+  const displayMsg = msg
   const displayErr = err || hookErr
 
   return (
@@ -50,7 +57,10 @@ export default function Expenses() {
           {/* Add Form */}
           {showForm && (
             <div className="dash-card" style={{ marginBottom: 20 }}>
-              <div className="dash-card-header"><h2>New Expense</h2></div>
+              <div className="dash-card-header">
+                <h2>New Expense</h2>
+                <span style={{ background: '#dbeafe', color: '#1e40af', padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>🏦 Deducts from Bank Account</span>
+              </div>
               <div className="dash-card-body">
                 <form onSubmit={handleAdd}>
                   <div className="dash-form-grid">

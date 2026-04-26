@@ -27,17 +27,34 @@ export default function SuperAdminCustomers() {
   const [viewTxns, setViewTxns]   = useState([])
   const [txnLoading, setTxnLoading] = useState(false)
   const [lightbox, setLightbox]   = useState(null)
+  const [tagMsg, setTagMsg]       = useState('')
+  const [tagging, setTagging]     = useState(false)
   const { branches }              = useBranches()
   const { customers, stats, branchStats, loading, load } = useSuperAdminCustomers(branch, status, search)
 
   const openCustomer = async (c) => {
     setViewCustomer(c)
+    setTagMsg('')
     setTxnLoading(true)
     try {
       const txns = await api(`/master/transactions?customer_id=${c.id}`, { headers: auth() })
       setViewTxns(Array.isArray(txns) ? txns : [])
     } catch { setViewTxns([]) }
     setTxnLoading(false)
+  }
+
+  const applyTag = async (tag) => {
+    setTagging(true); setTagMsg('')
+    try {
+      const r = await api(`/customers/${viewCustomer.id}/tag`, {
+        method: 'PATCH', headers: auth(),
+        body: JSON.stringify({ tag }),
+      })
+      setViewCustomer(v => ({ ...v, tag: r.customer.tag }))
+      setTagMsg(r.message)
+      load()
+    } catch (e) { setTagMsg('Error: ' + e.message) }
+    setTagging(false)
   }
 
   return (
@@ -145,6 +162,11 @@ export default function SuperAdminCustomers() {
                           <td>
                             <strong>{c.name}</strong>
                             <div style={{ fontSize: 11, color: '#9ca3af' }}>{c.email}</div>
+                            {c.tag && (
+                              <span style={{ background: c.tag === 'fraud' ? '#fee2e2' : c.tag === 'blacklisted' ? '#1f2937' : '#fef3c7', color: c.tag === 'fraud' ? '#dc2626' : c.tag === 'blacklisted' ? '#fff' : '#d97706', fontSize: 10, fontWeight: 800, padding: '1px 7px', borderRadius: 20, display: 'inline-block', marginTop: 3 }}>
+                                ⚠️ {c.tag.toUpperCase()}
+                              </span>
+                            )}
                           </td>
                           <td>
                             <a href={`tel:${c.phone}`} onClick={e => e.stopPropagation()}
@@ -225,6 +247,35 @@ export default function SuperAdminCustomers() {
                     <div style={{ fontSize: 13, fontWeight: 700, color: f.color || '#1a0a2e' }}>{f.value}</div>
                   </div>
                 ))}
+              </div>
+
+              {/* Tag Management */}
+              <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 }}>Customer Tag</div>
+              <div style={{ marginBottom: 20 }}>
+                {viewCustomer.tag && (
+                  <div style={{ background: viewCustomer.tag === 'fraud' ? '#fee2e2' : viewCustomer.tag === 'blacklisted' ? '#1f2937' : '#fef3c7', color: viewCustomer.tag === 'fraud' ? '#dc2626' : viewCustomer.tag === 'blacklisted' ? '#fff' : '#d97706', borderRadius: 10, padding: '10px 14px', fontWeight: 800, fontSize: 14, marginBottom: 10 }}>
+                    ⚠️ Current Tag: {viewCustomer.tag.toUpperCase()}
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                  {['fraud', 'blacklisted', 'suspicious', 'vip'].map(t => (
+                    <button key={t} disabled={tagging} onClick={() => applyTag(t)}
+                      style={{ padding: '7px 16px', borderRadius: 20, border: '2px solid', fontWeight: 700, fontSize: 12, cursor: 'pointer', transition: 'all 0.15s',
+                        borderColor: t === 'fraud' ? '#dc2626' : t === 'blacklisted' ? '#1f2937' : t === 'suspicious' ? '#d97706' : '#059669',
+                        background: viewCustomer.tag === t ? (t === 'fraud' ? '#dc2626' : t === 'blacklisted' ? '#1f2937' : t === 'suspicious' ? '#d97706' : '#059669') : '#fff',
+                        color: viewCustomer.tag === t ? '#fff' : (t === 'fraud' ? '#dc2626' : t === 'blacklisted' ? '#1f2937' : t === 'suspicious' ? '#d97706' : '#059669'),
+                      }}>
+                      {t === 'fraud' ? '🚨 Fraud' : t === 'blacklisted' ? '⛔ Blacklisted' : t === 'suspicious' ? '⚠️ Suspicious' : '👑 VIP'}
+                    </button>
+                  ))}
+                  {viewCustomer.tag && (
+                    <button disabled={tagging} onClick={() => applyTag(null)}
+                      style={{ padding: '7px 16px', borderRadius: 20, border: '2px solid #e2e8f0', background: '#f8fafc', color: '#64748b', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                      ✕ Clear Tag
+                    </button>
+                  )}
+                </div>
+                {tagMsg && <div style={{ marginTop: 8, fontSize: 12, color: tagMsg.startsWith('Error') ? '#dc2626' : '#059669', fontWeight: 600 }}>{tagMsg}</div>}
               </div>
 
               {/* Documents */}

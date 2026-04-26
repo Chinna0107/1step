@@ -31,6 +31,7 @@ import Configuration from './pages/superadmin/Configuration'
 import Reports from './pages/superadmin/Reports'
 import Security from './pages/superadmin/Security'
 import SuperAdminCustomers from './pages/superadmin/Customers'
+import FraudList from './pages/superadmin/FraudList'
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard'
@@ -141,6 +142,8 @@ export default function App() {
         <Route path="/superadmin/reports"    element={<SuperAdminRoute><Reports /></SuperAdminRoute>} />
         <Route path="/superadmin/customers"  element={<SuperAdminRoute><SuperAdminCustomers /></SuperAdminRoute>} />
         <Route path="/superadmin/security"   element={<SuperAdminRoute><Security /></SuperAdminRoute>} />
+        {/* <Route path="/admin/profile"          element={<AdminRoute><Profile Sidebar={AdminSidebar} isAdmin={true} /></AdminRoute>} /> */}
+        <Route path="/superadmin/fraud"      element={<SuperAdminRoute><FraudList /></SuperAdminRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin/dashboard"       element={<AdminRoute><AdminDashboard /></AdminRoute>} />

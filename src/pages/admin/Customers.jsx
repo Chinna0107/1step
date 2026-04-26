@@ -43,6 +43,10 @@ function CustomerDetailModal({ customer: c, onClose }) {
     { label: 'Reviewed By',   value: c.reviewed_by_name || '—' },
     { label: 'Reviewed At',   value: c.reviewed_at ? new Date(c.reviewed_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—' },
     { label: 'Member Since',  value: new Date(c.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) },
+    ...(c.referral_name || c.referral_phone ? [
+      { label: 'Referred By (Name)',   value: c.referral_name  || '—' },
+      { label: 'Referred By (Phone)',  value: c.referral_phone || '—' },
+    ] : []),
   ]
 
   const docs = [
@@ -315,7 +319,7 @@ export default function AdminCustomers() {
                             {c.card_front_img_url
                               ? <img src={c.card_front_img_url} alt="Card" onClick={() => setLightbox({ url: c.card_front_img_url, label: `${c.name} — Card` })}
                                   style={{ width: 32, height: 32, objectFit: 'cover', borderRadius: 4, cursor: 'pointer', border: '1.5px solid #e2e8f0' }} />
-                              : null}
+                              : <span style={{ fontSize: 10, color: '#9ca3af', background: '#f8fafc', padding: '2px 6px', borderRadius: 4 }}>No Card</span>}
                           </div>
                         </td>
                         <td>

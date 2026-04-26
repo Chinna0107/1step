@@ -289,9 +289,17 @@ export default function Services() {
                           const totalProfit = txns.reduce((s, t) => s + parseFloat(t.profit || 0), 0)
                           const isPremium = txns.length >= 10 || totalAmt >= 100000
                           const isVip     = txns.length >= 5  || totalAmt >= 50000
-                          const badge     = isPremium ? { label: '👑 Premium', bg: 'linear-gradient(135deg,#d97706,#f59e0b)', color: '#fff' }
+                          const tag       = customerProfile.tag
+                          const tagConfig = {
+                            fraud:       { bg: '#fee2e2', border: '#fca5a5', color: '#dc2626', icon: '🚨', label: 'FRAUD ALERT', msg: 'This customer is marked as FRAUD. Do NOT proceed with any transaction.' },
+                            blacklisted: { bg: '#1f2937', border: '#374151', color: '#fff',    icon: '⛔',    label: 'BLACKLISTED',   msg: 'This customer is blacklisted. Transactions are not allowed.' },
+                            suspicious:  { bg: '#fef3c7', border: '#fcd34d', color: '#92400e', icon: '⚠️',   label: 'SUSPICIOUS',    msg: 'This customer is flagged as suspicious. Proceed with caution.' },
+                            vip:         { bg: '#f0fdf4', border: '#86efac', color: '#166534', icon: '👑',   label: 'VIP CUSTOMER',  msg: 'This is a VIP customer. Provide priority service.' },
+                          }
+                          const tc = tag ? tagConfig[tag] : null
+                          const badge = !tag && (isPremium ? { label: '👑 Premium', bg: 'linear-gradient(135deg,#d97706,#f59e0b)', color: '#fff' }
                                           : isVip     ? { label: '⭐ VIP',     bg: 'linear-gradient(135deg,#7c3aed,#8b5cf6)', color: '#fff' }
-                                          : null
+                                          : null)
                           const serviceBreakdown = txns.reduce((acc, t) => {
                             const k = t.service_type || 'Other'
                             acc[k] = (acc[k] || 0) + 1
@@ -299,6 +307,17 @@ export default function Services() {
                           }, {})
                           return (
                             <div style={{ border:'1.5px solid #e2e8f0', borderRadius:16, overflow:'hidden', animation:'cd-card-in 0.4s ease both' }}>
+
+                              {/* Tag Warning Banner */}
+                              {tc && (
+                                <div style={{ background: tc.bg, border: `2px solid ${tc.border}`, padding: '12px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
+                                  <span style={{ fontSize: 28 }}>{tc.icon}</span>
+                                  <div>
+                                    <div style={{ fontWeight: 900, fontSize: 15, color: tc.color }}>{tc.label}</div>
+                                    <div style={{ fontSize: 12, color: tc.color, opacity: 0.85, marginTop: 2 }}>{tc.msg}</div>
+                                  </div>
+                                </div>
+                              )}
 
                               {/* Header */}
                               <div style={{ background:'linear-gradient(135deg,#1a0a2e 0%,#2d1155 50%,#c02040 100%)', padding:'16px 18px', position:'relative', overflow:'hidden' }}>
@@ -309,6 +328,7 @@ export default function Services() {
                                     <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
                                       <span style={{ fontWeight:900, color:'#fff', fontSize:17 }}>{customerProfile.name}</span>
                                       {badge && <span style={{ background:badge.bg, color:badge.color, fontSize:10, fontWeight:800, padding:'2px 8px', borderRadius:20 }}>{badge.label}</span>}
+                                      {tag && <span style={{ background: tc.bg, color: tc.color, fontSize:10, fontWeight:800, padding:'2px 8px', borderRadius:20, border:`1px solid ${tc.border}` }}>{tc.icon} {tc.label}</span>}
                                     </div>
                                     <div style={{ fontSize:11, color:'rgba(255,255,255,0.55)' }}>ID: #{customerProfile.id} · {customerProfile.branch || '—'}</div>
                                     <div style={{ fontSize:11, color:'rgba(255,255,255,0.55)', marginTop:2 }}>

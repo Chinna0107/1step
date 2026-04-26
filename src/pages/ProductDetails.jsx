@@ -94,10 +94,12 @@ const products = [
     ],
     howItWorks: [
       'Contact us or visit our nearest branch',
-      'Share your credit card bill details',
+      'Submit Your Card & KYC',
+      'Provide Aadhar + PAN + bill details and amount',
       'Confirm payment amount',
-      'Secure payment processed instantly',
-      'Receive confirmation & digital receipt',
+      'We pay your bill instantly',
+        'Amount settled to your Account (if needed)',
+      'Enjoy your cashback / rewards',
     ],
     requirements: [
       'Credit card statement or bill details',

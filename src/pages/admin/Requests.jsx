@@ -114,9 +114,17 @@ export default function Requests() {
                                   ? <button className="req-doc-btn" onClick={() => setLightbox({ url: c.aadhar_img_url, label: `${c.name} — Aadhar` })}>🪪 Aadhar</button>
                                   : <span className="req-no-doc">No Aadhar</span>}
                                 {c.pan_img_url
-                                  ? <button className="req-doc-btn" onClick={() => setLightbox({ url: c.pan_img_url, label: `${c.name} — PAN` })}>🪪 PAN</button>
+                                  ? <button className="req-doc-btn" onClick={() => setLightbox({ url: c.pan_img_url, label: `${c.name} — PAN` })}>🆔 PAN</button>
                                   : <span className="req-no-doc">No PAN</span>}
+                                {c.card_front_img_url
+                                  ? <button className="req-doc-btn" onClick={() => setLightbox({ url: c.card_front_img_url, label: `${c.name} — Card Front` })}>🏧 Card</button>
+                                  : <span className="req-no-doc">No Card</span>}
                               </div>
+                              {(c.referral_name || c.referral_phone) && (
+                                <div style={{ marginTop: 6, fontSize: 11, color: '#6b7280', background: '#f0f2f8', borderRadius: 6, padding: '4px 8px' }}>
+                                  👥 Ref: <strong>{c.referral_name || '—'}</strong>{c.referral_phone ? ` · ${c.referral_phone}` : ''}
+                                </div>
+                              )}
                             </td>
                             <td>{c.added_by_name}</td>
                             <td><span style={statusStyle(c.status)}>{c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></td>

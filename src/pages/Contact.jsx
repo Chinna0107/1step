@@ -19,31 +19,34 @@ const branches = [
     city: 'Kadapa',
     state: 'Andhra Pradesh',
     address: 'MoneySpot Fintech Services, Kadapa, Andhra Pradesh',
-    phone: '+91 98664 40477',
+    phone: '+91 90002 06618',
+    whatsapp: '919000206618',
     hours: 'Mon–Sat: 9AM–7PM',
     color: '#2b77e6',
     mapSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243647.3!2d78.8241!3d14.4673!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb14b1b3b3b3b3b%3A0x3b3b3b3b3b3b3b3b!2sKadapa%2C%20Andhra%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000',
-    mapsLink: 'https://maps.google.com/?q=Kadapa,Andhra+Pradesh',
+    mapsLink: 'https://share.google/dHzpRwNUH5Rk559ti',
   },
   {
     city: 'Anantapur',
     state: 'Andhra Pradesh',
     address: 'MoneySpot Fintech Services, Anantapur, Andhra Pradesh',
-    phone: '+91 98664 40477',
+    phone: '+91 99599 55416',
+    whatsapp: '919959955416',
     hours: 'Mon–Sat: 9AM–7PM',
     color: '#d97706',
     mapSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d243647.3!2d77.6006!3d14.6819!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb5a9b1b1b1b1b1%3A0x1b1b1b1b1b1b1b1b!2sAnantapur%2C%20Andhra%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000001',
-    mapsLink: 'https://maps.google.com/?q=Anantapur,Andhra+Pradesh',
+    mapsLink: 'https://share.google/JuIQjvvCJkA3V2sLx',
   },
   {
     city: 'Bangalore',
     state: 'Karnataka',
     address: 'MoneySpot Fintech Services, Bangalore, Karnataka',
-    phone: '+91 98664 40477',
+    phone: '+91 99025 78939',
+    whatsapp: '919902578939',
     hours: 'Mon–Sat: 9AM–7PM',
     color: '#10b981',
     mapSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d497698.9!2d77.3522!3d12.9716!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1670c9b44e6d%3A0xf8dfc3e8517e4fe0!2sBengaluru%2C%20Karnataka!5e0!3m2!1sen!2sin!4v1700000000002',
-    mapsLink: 'https://maps.google.com/?q=Bangalore,Karnataka',
+    mapsLink: 'https://share.google/kfD0BY5SsVtJC2OOA',
   },
 ]
 
@@ -221,7 +224,7 @@ export default function Contact() {
                     <a href={`tel:${b.phone.replace(/\s/g,'')}`} className="branch-btn branch-btn-call">
                       <FaPhoneAlt size={12} /> Call
                     </a>
-                    <a href={`https://wa.me/${PHONE.replace('+','')}`} target="_blank" rel="noopener noreferrer" className="branch-btn branch-btn-wa">
+                    <a href={`https://wa.me/${b.whatsapp}`} target="_blank" rel="noopener noreferrer" className="branch-btn branch-btn-wa">
                       <FaWhatsapp size={13} /> WhatsApp
                     </a>
                     <a href={b.mapsLink} target="_blank" rel="noopener noreferrer" className="branch-btn branch-btn-map">
