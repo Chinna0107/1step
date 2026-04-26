@@ -36,7 +36,10 @@ export default function EmployeePerformance() {
     const key = `perf:${period}:${from}:${to}`
     if (!force) {
       const cached = cacheGet(key)
-      if (cached) { setData(cached); setLoading(false); return }
+      // Only use cache if it has coins data
+      if (cached && cached.employees?.[0]?.coins !== undefined) {
+        setData(cached); setLoading(false); return
+      }
     }
     setLoading(true)
     const p = period === 'custom' ? `from=${from}&to=${to}` : `from=${period === 'today' ? today : monthStart}&to=${today}`

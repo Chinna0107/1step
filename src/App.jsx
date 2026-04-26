@@ -36,6 +36,7 @@ import SuperAdminCustomers from './pages/superadmin/Customers'
 import AdminDashboard from './pages/admin/Dashboard'
 import CreateEmployee from './pages/admin/CreateEmployee'
 import Requests from './pages/admin/Requests'
+import EmployeeDetails from './pages/admin/EmployeeDetails'
 import EmployeePerformance from './pages/admin/EmployeePerformance'
 import EmployeeAttendance from './pages/admin/EmployeeAttendance'
 import AdminInsights from './pages/admin/Insights'
@@ -53,6 +54,7 @@ import Expenses from './pages/admin/Expenses'
 import Settlements from './pages/admin/Settlements'
 import DailyClosing from './pages/admin/DailyClosing'
 import Profit from './pages/admin/Profit'
+
 
 // Employee Pages
 import EmployeeDashboard from './pages/employee/Dashboard'
@@ -158,6 +160,7 @@ export default function App() {
         <Route path="/admin/config"          element={<AdminRoute><AdminConfig /></AdminRoute>} />
         <Route path="/admin/create-employee" element={<AdminRoute><CreateEmployee /></AdminRoute>} />
         <Route path="/admin/requests"        element={<AdminRoute><Requests /></AdminRoute>} />
+        <Route path="/admin/employees"     element={<AdminRoute><EmployeeDetails /></AdminRoute>} />
         <Route path="/admin/performance"     element={<AdminRoute><EmployeePerformance /></AdminRoute>} />
         <Route path="/admin/attendance"      element={<AdminRoute><EmployeeAttendance /></AdminRoute>} />
         <Route path="/admin/leads"            element={<AdminRoute><AdminLeads /></AdminRoute>} />

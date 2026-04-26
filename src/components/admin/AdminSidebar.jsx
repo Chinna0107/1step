@@ -38,6 +38,7 @@ const NAV = [
     ]},
   { group: 'Employees',
     items: [
+      { to: '/admin/employees',    icon: <MdPeople />,       label: 'Employee Details' },
       { to: '/admin/performance',  icon: <MdBarChart />,     label: 'Performance' },
       { to: '/admin/attendance',   icon: <MdFactCheck />,    label: 'Attendance' },
       { to: '/admin/create-employee', icon: <MdPersonAdd />, label: 'Create Employee' },
@@ -45,7 +46,7 @@ const NAV = [
   { group: 'Customers',
     items: [
       { to: '/admin/requests',     icon: <MdInbox />,        label: 'Customer Requests' },
-      { to: '/admin/customers',    icon: <MdPeople />,       label: 'All Customers' },
+      { to: '/admin/customers',    icon: <MdPeople />,       label: 'Customer Details' },
     ]},
   { group: 'Reports',
     items: [

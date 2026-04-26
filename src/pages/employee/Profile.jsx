@@ -10,7 +10,7 @@ const authHeader = () => {
 }
 
 const fmt = n => Number(parseInt(n) || 0).toLocaleString('en-IN')
-const COINS_PER_RUPEE = 100
+const COINS_PER_RUPEE = 10// 10 coins = ₹1
 
 function ChangePasswordModal({ onClose }) {
   const [form, setForm]     = useState({ current_password: '', new_password: '', confirm_password: '' })

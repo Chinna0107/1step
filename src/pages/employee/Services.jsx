@@ -114,7 +114,7 @@ export default function Services() {
     const chargesAmt = parseFloat((amt * pct / 100).toFixed(2))
     const settledAmt = parseFloat((amt - chargesAmt).toFixed(2))
     const billRemain = parseFloat((billAmt > 0 && amt > 0 ? Math.max(0, billAmt - amt) : 0).toFixed(2))
-    // Total Collected = Bill Remaining Balance + Charges only
+    // Total Collected = Bill Remaining + Customer Charges on withdrawal
     const totalColl  = parseFloat((billRemain + chargesAmt).toFixed(2))
     setForm(f => ({
       ...f,
@@ -160,9 +160,7 @@ export default function Services() {
     if (!form.cust_pan.trim())  { setError('Customer PAN is required'); return }
     setSaving(true); setMsg(''); setError('')
     try {
-      const mainAmount = form.service_type === BILL_WITHDRAWAL
-        ? (parseFloat(form.total_collected) || parseFloat(form.amount) || 0)
-        : parseFloat(form.amount) || 0
+      const mainAmount = parseFloat(form.amount) || 0
       const r = await api('/master/transactions', {
         method: 'POST', headers: auth(),
         body: JSON.stringify({ ...form, amount: mainAmount }),
@@ -572,20 +570,23 @@ export default function Services() {
                     <th>PAN</th>
                     <th>Mobile</th>
                     <th>Service</th>
-                    <th>Platform</th>
-                    <th>Bank</th>
+                    <th>Bill Platform</th>
+                    <th>Bill Amount</th>
+                    <th>Wd. Platform</th>
                     <th>Card</th>
-                    <th>Amount</th>
-                    <th>Charges %</th>
-                    <th>Charges ₹</th>
-                    <th>Settled</th>
-                    <th>Mode</th>
+                    <th>Card Bank</th>
+                    <th>Wd. Amount</th>
+                    <th>Bill Remaining</th>
+                    <th>Total Collected</th>
+                    <th>Receive Mode</th>
                     <th>Note</th>
                     <th style={{ width: 60 }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {history.map(t => (
+                  {history.map(t => {
+                    const isBW = t.service_type === BILL_WITHDRAWAL
+                    return (
                     <tr key={t.id}>
                       <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
                         <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
@@ -595,14 +596,30 @@ export default function Services() {
                       <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_pan || '—'}</td>
                       <td style={{ fontSize: 11 }}>{t.cust_mobile || '—'}</td>
                       <td style={{ fontSize: 12 }}><strong>{t.service_type}</strong></td>
-                      <td style={{ fontSize: 12 }}>{t.platform || t.bill_platform || '—'}</td>
-                      <td style={{ fontSize: 12 }}>{t.bank || '—'}</td>
+                      {/* Bill Platform */}
+                      <td style={{ fontSize: 12 }}>{isBW ? (t.bill_platform || '—') : (t.platform || '—')}</td>
+                      {/* Bill Amount */}
+                      <td style={{ fontSize: 12, color: '#dc2626', fontWeight: isBW ? 700 : 400 }}>
+                        {isBW ? (t.bill_amount > 0 ? `₹${fmt(t.bill_amount)}` : '—') : '—'}
+                      </td>
+                      {/* Withdrawal Platform */}
+                      <td style={{ fontSize: 12 }}>{isBW ? (t.platform || '—') : '—'}</td>
+                      {/* Card */}
                       <td style={{ fontSize: 11 }}>{t.card ? `${t.card}${t.card_last4 ? ` ****${t.card_last4}` : ''}` : '—'}</td>
+                      {/* Card Bank */}
+                      <td style={{ fontSize: 11 }}>{t.card_bank || '—'}</td>
+                      {/* Withdrawal Amount */}
                       <td style={{ fontWeight: 700, color: '#059669', whiteSpace: 'nowrap' }}>₹{fmt(t.amount)}</td>
-                      <td style={{ color: '#d97706', fontSize: 12 }}>{t.charges_pct || 0}%</td>
-                      <td style={{ color: '#dc2626', fontSize: 12 }}>₹{fmt(t.charges_amount || 0)}</td>
-                      <td style={{ color: '#059669', fontWeight: 800, whiteSpace: 'nowrap' }}>₹{fmt(t.settled_amount || t.profit || 0)}</td>
-                      <td style={{ fontSize: 11 }}>{t.payment_mode || t.received_mode || '—'}</td>
+                      {/* Bill Remaining */}
+                      <td style={{ fontSize: 12, color: '#64748b' }}>
+                        {isBW ? `₹${fmt(t.bill_remaining || 0)}` : '—'}
+                      </td>
+                      {/* Total Collected */}
+                      <td style={{ fontWeight: 800, color: '#059669', whiteSpace: 'nowrap' }}>
+                        {isBW ? `₹${fmt(t.total_collected || 0)}` : `₹${fmt(t.settled_amount || 0)}`}
+                      </td>
+                      {/* Receive Mode */}
+                      <td style={{ fontSize: 11 }}>{t.received_mode || t.payment_mode || '—'}</td>
                       <td style={{ fontSize: 11, color: '#9ca3af', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.note || '—'}</td>
                       <td className="txn-action-cell">
                         <button className="txn-menu-btn" onClick={e => {
@@ -614,7 +631,8 @@ export default function Services() {
                         }}>⋯</button>
                       </td>
                     </tr>
-                  ))}
+                    )
+                  })}
                 </tbody>
               </table>
             </div>

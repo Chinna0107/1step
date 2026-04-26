@@ -27,6 +27,7 @@ import AdminSecurity from './pages/admin/Security';
 import AdminConfig from './pages/admin/Config';
 import CreateEmployee from './pages/admin/CreateEmployee';
 import Requests from './pages/admin/Requests';
+import EmployeeDetails from './pages/admin/EmployeeDetails';
 import EmployeePerformance from './pages/admin/EmployeePerformance';
 import EmployeeAttendance from './pages/admin/EmployeeAttendance';
 import FinanceDashboard from './pages/admin/FinanceDashboard';
@@ -83,6 +84,7 @@ export default function AppRoutes() {
       <Route path="/admin/config"          element={<AdminRoute><AdminConfig /></AdminRoute>} />
       <Route path="/admin/create-employee" element={<AdminRoute><CreateEmployee /></AdminRoute>} />
       <Route path="/admin/requests"        element={<AdminRoute><Requests /></AdminRoute>} />
+      <Route path="/admin/employees"     element={<AdminRoute><EmployeeDetails /></AdminRoute>} />
       <Route path="/admin/performance"     element={<AdminRoute><EmployeePerformance /></AdminRoute>} />
       <Route path="/admin/attendance"      element={<AdminRoute><EmployeeAttendance /></AdminRoute>} />
 
