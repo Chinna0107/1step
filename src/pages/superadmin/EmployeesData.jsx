@@ -76,7 +76,7 @@ export default function EmployeesData() {
                       <label>Branch / Location *</label>
                       <select required value={form.branch} onChange={e => set('branch', e.target.value)}>
                         <option value="">Select branch</option>
-                        {branches.map(b => <option key={b.id} value={b.city}>{b.city}</option>)}
+                        {branches.map(b => <option key={b.id} value={b.name}>{b.name}</option>)}
                       </select>
                     </div>
                     <div className="sa-form-group">
