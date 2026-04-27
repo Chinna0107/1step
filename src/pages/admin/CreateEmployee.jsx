@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
-import { getTokenByRole } from '../../utils/tokenUtils'
+import { getTokenByRole, getUserByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import '../../pages/dashboard.css'
 
@@ -12,6 +12,7 @@ export default function CreateEmployee() {
   const [msg, setMsg]       = useState('')
   const [error, setError]   = useState('')
   const [showPass, setShowPass] = useState(false)
+  const user = getUserByRole('admin')
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
 
@@ -35,6 +36,9 @@ export default function CreateEmployee() {
       <div className="dash-content">
         <div className="dash-topbar">
           <h1>Create Employee</h1>
+          {user?.branch && (
+            <div style={{ fontSize: 14, color: '#666' }}>Branch: <strong>{user.branch}</strong></div>
+          )}
         </div>
         <div className="dash-main">
           {msg   && <div className="dash-alert dash-alert-success">✅ {msg}</div>}
