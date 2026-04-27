@@ -3,6 +3,7 @@ import Sidebar from '../../components/superadmin/Sidebar'
 import { useSuperAdminFinance, useBranches, useSuperAdminWallets } from '../../hooks/useSuperAdmin'
 import { api } from '../../utils/api'
 import { getTokenByRole } from '../../utils/tokenUtils'
+import { cacheClear } from '../../utils/cache'
 import { SkeletonTable, SkeletonStats } from '../../components/superadmin/Skeleton'
 import './superadmin.css'
 import './Dashboard.css'
@@ -28,6 +29,12 @@ export default function Finance() {
   const [form, setForm]         = useState(emptyExp)
   const [saving, setSaving]     = useState(false)
   const [msg, setMsg]           = useState('')
+
+  // Clear stale wallet/finance cache on mount to pick up branch renames
+  useEffect(() => {
+    cacheClear('sa:wallets:all')
+    Object.keys(localStorage).filter(k => k.startsWith('sa:finance:')).forEach(k => cacheClear(k))
+  }, [])
   const [error, setError]       = useState('')
   const { branches }            = useBranches()
   const { ledger, expenses, expSummary, serviceSummary, daily, totals, loading, refetch, addExpense: hookAddExpense } = useSuperAdminFinance(from, to, branchFilter)

@@ -249,9 +249,9 @@ export default function EmployeeReports() {
       <div class="summary">
         <div class="s-box"><div class="s-label">Total Transactions</div><div class="s-val">${fmt(totals.count ?? 0)}</div></div>
         <div class="s-box"><div class="s-label">Total Value</div><div class="s-val">₹${fmt(totals.amount ?? 0)}</div></div>
-        <div class="s-box"><div class="s-label">Total Profit</div><div class="s-val">₹${fmt(totals.profit ?? 0)}</div></div>
+        <div class="s-box"><div class="s-label">Total Charges</div><div class="s-val">₹${fmt(totals.charges ?? 0)}</div></div>
       </div>
-      <table><thead><tr><th>${label}</th><th>Transactions</th><th>Total Amount</th><th>Total Profit</th></tr></thead>
+      <table><thead><tr><th>${label}</th><th>Transactions</th><th>Total Amount</th><th>Total Charges</th></tr></thead>
       <tbody>${rows}</tbody></table>
       </body></html>`
     const w = window.open('', '_blank')
@@ -306,7 +306,7 @@ export default function EmployeeReports() {
           {[
             { label: 'Total Transactions', value: fmt(totals.count ?? 0),    color: '#402070', icon: '📊' },
             { label: 'Total Value',        value: fmtVal(totals.amount ?? 0), color: '#059669', icon: '💰' },
-            { label: 'Total Profit',       value: fmtVal(totals.profit ?? 0), color: '#d4af37', icon: '📈' },
+            { label: 'Total Charges',       value: fmtVal(totals.profit ?? 0), color: '#d4af37', icon: '📈' },
             { label: 'Services Used',      value: serviceRows.length,         color: '#c02040', icon: '🔧' },
             { label: 'Platforms Used',     value: platformRows.length,        color: '#0ea5e9', icon: '📱' },
           ].map(c => (
@@ -484,7 +484,7 @@ export default function EmployeeReports() {
                       <th>{tab === 'service' ? 'Service' : 'Platform'}</th>
                       <th>Transactions</th>
                       <th>Total Amount</th>
-                      <th>Total Profit</th>
+                      <th>Total Charges</th>
                       <th>Avg Amount</th>
                       <th>Share</th>
                     </tr>
