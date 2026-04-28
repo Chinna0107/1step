@@ -207,6 +207,8 @@ function buildReceiptHTML(txn) {
   const chargesAmt    = parseFloat(txn.charges_amount || 0)
   const settledAmt    = parseFloat(txn.settled_amount || txn.profit || 0)
   const amount        = parseFloat(txn.amount || 0)
+  const netProfit     = parseFloat(txn.profit || 0)
+  const gst           = parseFloat((netProfit * 0.18).toFixed(2))
 
   return `<!DOCTYPE html>
 <html><head>
@@ -249,6 +251,14 @@ function buildReceiptHTML(txn) {
         <span class="settled-label">Settled Amount</span>
         <span class="settled-value">₹${fmt(settledAmt)}</span>
       </div>
+      <div class="settled-row">
+        <span class="settled-label">Net Profit</span>
+        <span class="settled-value" style="color:#7c3aed">₹${fmt(netProfit)}</span>
+      </div>
+      <div class="settled-row">
+        <span class="settled-label">GST (18% on Net Profit)</span>
+        <span class="settled-value" style="color:#dc2626">₹${fmt(gst)}</span>
+      </div>
     </div>
 
     ${txn.note ? `<div class="section-title">Note</div><div class="row"><span class="row-label">Note</span><span class="row-value">${txn.note}</span></div>` : ''}
@@ -278,6 +288,8 @@ export default function PrintReceipt({ txn, onClose, showFinancials = false }) {
   const chargesAmt = parseFloat(txn.charges_amount || 0)
   const settledAmt = parseFloat(txn.settled_amount || txn.profit || 0)
   const amount     = parseFloat(txn.amount || 0)
+  const netProfit  = parseFloat(txn.profit || 0)
+  const gst        = parseFloat((netProfit * 0.18).toFixed(2))
 
   const infoRows = [
     { label: 'Transaction ID', value: `#${txn.id}` },
@@ -381,12 +393,14 @@ export default function PrintReceipt({ txn, onClose, showFinancials = false }) {
                   <span style={{ fontSize: 11, color: '#64748b' }}>Settled Amount</span>
                   <span style={{ fontSize: 13, fontWeight: 800, color: '#059669' }}>₹{fmt(settledAmt)}</span>
                 </div>
-                {showFinancials && txn.profit !== undefined && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
-                    <span style={{ fontSize: 11, color: '#64748b' }}>Net Profit</span>
-                    <span style={{ fontSize: 13, fontWeight: 800, color: '#7c3aed' }}>₹{fmt(txn.profit)}</span>
-                  </div>
-                )}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 }}>
+                  <span style={{ fontSize: 11, color: '#64748b' }}>Net Profit</span>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: '#7c3aed' }}>₹{fmt(netProfit)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4, paddingTop: 4, borderTop: '1px dashed #d8b4fe' }}>
+                  <span style={{ fontSize: 11, color: '#64748b' }}>GST (18% on Net Profit)</span>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: '#dc2626' }}>₹{fmt(gst)}</span>
+                </div>
               </div>
 
               {txn.note && (

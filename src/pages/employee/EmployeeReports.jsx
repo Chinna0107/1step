@@ -5,7 +5,7 @@ import { api } from '../../utils/api'
 import { MdDownload, MdPictureAsPdf, MdTableChart, MdRefresh, MdFilterList } from 'react-icons/md'
 import './EmployeeReports.css'
 
-const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('employee') || getTokenByRole('admin')}` })
+const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('employee')}` })
 const fmt    = n => Number(n).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
 const today  = new Date().toISOString().split('T')[0]
@@ -27,10 +27,11 @@ function TxnDetailModal({ txn, onClose }) {
   const fields = [
     { label: 'Transaction ID', value: `#${txn.id}` },
     { label: 'Date & Time',    value: new Date(txn.created_at).toLocaleString('en-IN', { dateStyle:'medium', timeStyle:'short' }) },
-    { label: 'Customer',       value: txn.cust_name   || '—' },
-    { label: 'Customer PAN',   value: txn.cust_pan    || '—' },
-    { label: 'Customer Mobile',value: txn.cust_mobile || '—' },
-    { label: 'Aadhar',         value: txn.cust_aadhar || '—' },
+    { label: 'Customer',        value: txn.cust_name   || '—' },
+    { label: 'Customer PAN',    value: txn.cust_pan    || '—' },
+    { label: 'Customer Mobile', value: txn.cust_mobile || '—' },
+    { label: 'Customer Coins',  value: txn.customer_coins != null ? `🪙 ${txn.customer_coins}` : '—' },
+    { label: 'Aadhar',          value: txn.cust_aadhar || '—' },
     { label: 'Service',        value: txn.service_type || '—' },
     { label: 'Platform',       value: txn.platform || txn.bill_platform || '—' },
     { label: 'Bank',           value: txn.bank || '—' },

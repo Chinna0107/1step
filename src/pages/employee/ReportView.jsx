@@ -23,10 +23,11 @@ function TxnDetailModal({ txn, onClose, showFinancials }) {
   const fields = [
     { label: 'Transaction ID', value: `#${txn.id}` },
     { label: 'Date & Time',    value: new Date(txn.created_at).toLocaleString('en-IN') },
-    { label: 'Customer',       value: txn.cust_name || '—' },
-    { label: 'Customer PAN',   value: txn.cust_pan  || '—' },
-    { label: 'Customer Mobile',value: txn.cust_mobile || '—' },
-    { label: 'Service',        value: txn.service_type || '—' },
+    { label: 'Customer',        value: txn.cust_name || '—' },
+    { label: 'Customer PAN',    value: txn.cust_pan  || '—' },
+    { label: 'Customer Mobile', value: txn.cust_mobile || '—' },
+    { label: 'Customer Coins',  value: txn.customer_coins != null ? `🪙 ${txn.customer_coins}` : '—' },
+    { label: 'Service',         value: txn.service_type || '—' },
     { label: 'Platform',       value: txn.platform || txn.bill_platform || '—' },
     { label: 'Bank',           value: txn.bank || '—' },
     { label: 'Card Type',      value: txn.card || '—' },
@@ -38,7 +39,9 @@ function TxnDetailModal({ txn, onClose, showFinancials }) {
     { label: 'Received Mode',  value: txn.received_mode || '—' },
     ...(showFinancials ? [
       { label: 'Commission %',   value: `${txn.commission_pct || 0}%` },
-      { label: 'Net Profit',     value: `₹${fmt(txn.profit)}`, color: '#402070' },
+      { label: 'Net Profit',     value: `₹${fmt(txn.profit)}`,       color: '#402070' },
+      { label: 'GST (18%)',      value: `₹${fmt(txn.gst ?? (parseFloat(txn.profit||0)*0.18))}`, color: '#d97706' },
+      { label: 'Profit',          value: `₹${fmt((parseFloat(txn.profit||0) - parseFloat(txn.profit||0)*0.18).toFixed(2))}`, color: '#059669', bold: true },
     ] : []),
     { label: 'Employee',       value: txn.employee_name || '—' },
     { label: 'Branch',         value: txn.branch || '—' },
@@ -233,10 +236,20 @@ export default function ReportView({ authHeader, showFinancials = true, branches
               <div className="dash-stat-value" style={{ color: '#d97706' }}>{fmtVal(totals.charges_amount ?? 0)}</div>
             </div>
             {showFinancials && (
-              <div className="dash-stat">
-                <div className="dash-stat-label">Net Commission</div>
-                <div className="dash-stat-value" style={{ color: '#402070' }}>{fmtVal(totals.profit ?? 0)}</div>
-              </div>
+              <>
+                <div className="dash-stat">
+                  <div className="dash-stat-label">Net Profit</div>
+                  <div className="dash-stat-value" style={{ color: '#402070' }}>{fmtVal(totals.netProfit ?? totals.profit ?? 0)}</div>
+                </div>
+                <div className="dash-stat">
+                  <div className="dash-stat-label">GST (18%)</div>
+                  <div className="dash-stat-value" style={{ color: '#d97706' }}>{fmtVal(totals.gst ?? (parseFloat(totals.profit||0)*0.18))}</div>
+                </div>
+                <div className="dash-stat" style={{ background: 'linear-gradient(135deg,#ede9fe,#fce7f3)', border: '2px solid #402070' }}>
+                  <div className="dash-stat-label" style={{ fontWeight: 800 }}>Profit</div>
+                  <div className="dash-stat-value" style={{ color: '#059669', fontWeight: 900 }}>{fmtVal((parseFloat(totals.profit||0) - parseFloat(totals.profit||0)*0.18))}</div>
+                </div>
+              </>
             )}
           </div>
 
@@ -377,7 +390,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                     <th>Amount</th>
                     <th>Charges</th>
                     <th>Settled</th>
-                    {showFinancials && <th>Commission</th>}
+                    {showFinancials && <th>Profit</th>}
                     <th></th>
                   </tr>
                 </thead>
@@ -396,7 +409,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</td>
                       <td style={{ color: '#d97706' }}>₹{fmt(t.charges_amount || 0)}</td>
                       <td style={{ fontWeight: 600 }}>₹{fmt(t.settled_amount || 0)}</td>
-                      {showFinancials && <td style={{ color: '#402070', fontWeight: 700 }}>₹{fmt(t.profit || 0)}</td>}
+                      {showFinancials && <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt((parseFloat(t.profit||0) - parseFloat(t.profit||0)*0.18).toFixed(2))}</td>}
                       <td onClick={e => e.stopPropagation()}>
                         <button onClick={() => setPrintTxn(t)}
                           style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>

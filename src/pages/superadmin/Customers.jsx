@@ -150,7 +150,7 @@ export default function SuperAdminCustomers() {
               ) : (
                 <table className="sa-table">
                   <thead>
-                    <tr><th>Name</th><th>Phone</th><th>PAN</th><th>Branch</th><th>Documents</th><th>Added By</th><th>Txns</th><th>Total Amount</th><th>Status</th><th>Date</th></tr>
+                    <tr><th>Name</th><th>Phone</th><th>PAN</th><th>Branch</th><th>Coins</th><th>Documents</th><th>Added By</th><th>Txns</th><th>Total Amount</th><th>Status</th><th>Date</th></tr>
                   </thead>
                   <tbody>
                     {customers.map(c => {
@@ -174,6 +174,7 @@ export default function SuperAdminCustomers() {
                           </td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.pan}</td>
                           <td><span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{c.branch || '—'}</span></td>
+                          <td style={{ fontWeight: 700, color: '#d4af37', fontSize: 13 }}>🪙 {c.coins ?? 0}</td>
                           <td>
                             <div className="ci-doc-thumbs">
                               {c.aadhar_img_url
@@ -233,6 +234,7 @@ export default function SuperAdminCustomers() {
                 {[
                   { label: 'Phone',      value: viewCustomer.phone      || '—' },
                   { label: 'Email',      value: viewCustomer.email      || '—' },
+                  { label: 'Coins',      value: `🪙 ${viewCustomer.coins ?? 0}`, color: '#d4af37' },
                   { label: 'PAN',        value: viewCustomer.pan        || '—' },
                   { label: 'Aadhar',     value: viewCustomer.aadhar ? viewCustomer.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—' },
                   { label: 'Account No', value: viewCustomer.acc_number || '—' },

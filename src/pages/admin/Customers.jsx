@@ -35,6 +35,7 @@ function CustomerDetailModal({ customer: c, onClose }) {
     { label: 'Full Name',     value: c.name || '—' },
     { label: 'Email',         value: c.email || '—' },
     { label: 'Phone',         value: c.phone || '—' },
+    { label: 'Coins',         value: `🪙 ${c.coins ?? 0}`, color: '#d4af37' },
     { label: 'PAN Number',    value: c.pan || '—',    mono: true },
     { label: 'Aadhar Number', value: c.aadhar ? c.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—', mono: true },
     { label: 'Account No.',   value: c.acc_number || '—', mono: true },
@@ -290,7 +291,7 @@ export default function AdminCustomers() {
               {loading ? <div className="dash-loading">Loading...</div> : (
                 <table className="dash-table">
                   <thead>
-                    <tr><th>#</th><th>Name</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Branch</th><th>Documents</th><th>Status</th><th>Added By</th><th>Actions</th></tr>
+                    <tr><th>#</th><th>Name</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Branch</th><th>Coins</th><th>Documents</th><th>Status</th><th>Added By</th><th>Actions</th></tr>
                   </thead>
                   <tbody>
                     {filtered.map(c => (
@@ -306,6 +307,7 @@ export default function AdminCustomers() {
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.pan}</td>
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.aadhar ? c.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—'}</td>
                         <td style={{ fontSize: 12 }}>{c.branch || '—'}</td>
+                        <td style={{ fontWeight: 700, color: '#d4af37', fontSize: 13 }}>🪙 {c.coins ?? 0}</td>
                         <td onClick={e => e.stopPropagation()}>
                           <div style={{ display: 'flex', gap: 4 }}>
                             {c.aadhar_img_url
@@ -340,7 +342,7 @@ export default function AdminCustomers() {
                         </td>
                       </tr>
                     ))}
-                    {!filtered.length && <tr><td colSpan={10} className="dash-empty">No customers found</td></tr>}
+                    {!filtered.length && <tr><td colSpan={11} className="dash-empty">No customers found</td></tr>}
                   </tbody>
                 </table>
               )}
