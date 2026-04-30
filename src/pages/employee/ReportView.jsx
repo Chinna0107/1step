@@ -40,8 +40,8 @@ function TxnDetailModal({ txn, onClose, showFinancials }) {
     ...(showFinancials ? [
       { label: 'Commission %',   value: `${txn.commission_pct || 0}%` },
       { label: 'Net Profit',     value: `₹${fmt(txn.profit)}`,       color: '#402070' },
-      { label: 'GST (18%)',      value: `₹${fmt(txn.gst ?? (parseFloat(txn.profit||0)*0.18))}`, color: '#d97706' },
-      { label: 'Profit',          value: `₹${fmt((parseFloat(txn.profit||0) - parseFloat(txn.profit||0)*0.18).toFixed(2))}`, color: '#059669', bold: true },
+      { label: 'GST (18%)',      value: `₹${fmt(txn.gst ?? (parseFloat(txn.profit||0)*0.18))}`,                                    color: '#dc2626' },
+      { label: 'Total Profit',   value: `₹${fmt(txn.profitWithGst ?? (parseFloat(txn.profit||0)*0.82).toFixed(2))}`, color: '#059669', bold: true },
     ] : []),
     { label: 'Employee',       value: txn.employee_name || '—' },
     { label: 'Branch',         value: txn.branch || '—' },
@@ -246,7 +246,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                   <div className="dash-stat-value" style={{ color: '#d97706' }}>{fmtVal(totals.gst ?? (parseFloat(totals.profit||0)*0.18))}</div>
                 </div>
                 <div className="dash-stat" style={{ background: 'linear-gradient(135deg,#ede9fe,#fce7f3)', border: '2px solid #402070' }}>
-                  <div className="dash-stat-label" style={{ fontWeight: 800 }}>Profit</div>
+                  <div className="dash-stat-label" style={{ fontWeight: 800 }}>Total Profit</div>
                   <div className="dash-stat-value" style={{ color: '#059669', fontWeight: 900 }}>{fmtVal((parseFloat(totals.profit||0) - parseFloat(totals.profit||0)*0.18))}</div>
                 </div>
               </>
@@ -387,10 +387,13 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                     <th>Customer</th>
                     <th>Service</th>
                     <th>Platform</th>
+                    <th>W. Platform</th>
                     <th>Amount</th>
                     <th>Charges</th>
                     <th>Settled</th>
-                    {showFinancials && <th>Profit</th>}
+                    {showFinancials && <th>Net Profit</th>}
+                    {showFinancials && <th>GST (18%)</th>}
+                    {showFinancials && <th style={{ color: '#059669' }}>Total Profit</th>}
                     <th></th>
                   </tr>
                 </thead>
@@ -405,11 +408,14 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       {showFinancials && <td style={{ fontSize: 12 }}>{t.employee_name || '—'}</td>}
                       <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}</strong></td>
                       <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
-                      <td>{t.platform || t.bill_platform || '—'}</td>
+                      <td>{t.platform || '—'}</td>
+                      <td style={{ fontSize: 11, color: '#64748b' }}>{t.bill_platform || '—'}</td>
                       <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</td>
                       <td style={{ color: '#d97706' }}>₹{fmt(t.charges_amount || 0)}</td>
                       <td style={{ fontWeight: 600 }}>₹{fmt(t.settled_amount || 0)}</td>
-                      {showFinancials && <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt((parseFloat(t.profit||0) - parseFloat(t.profit||0)*0.18).toFixed(2))}</td>}
+                      {showFinancials && <td style={{ color: '#7c3aed', fontWeight: 700 }}>₹{fmt(parseFloat(t.profit||0).toFixed(2))}</td>}
+                      {showFinancials && <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt((parseFloat(t.profit||0)*0.18).toFixed(2))}</td>}
+                      {showFinancials && <td style={{ color: '#059669', fontWeight: 800 }}>₹{fmt((parseFloat(t.profit||0)*0.82).toFixed(2))}</td>}
                       <td onClick={e => e.stopPropagation()}>
                         <button onClick={() => setPrintTxn(t)}
                           style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
@@ -418,7 +424,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       </td>
                     </tr>
                   ))}
-                  {!txns.length && <tr><td colSpan={showFinancials ? 11 : 9} className="dash-empty">No transactions found</td></tr>}
+                  {!txns.length && <tr><td colSpan={showFinancials ? 13 : 7} className="dash-empty">No transactions found</td></tr>}
                 </tbody>
               </table>
             </div>

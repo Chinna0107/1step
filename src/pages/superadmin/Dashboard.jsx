@@ -5,7 +5,7 @@ import { getUserByRole } from '../../utils/tokenUtils'
 import { SkeletonStats, SkeletonTable, SkeletonRows } from '../../components/superadmin/Skeleton'
 import {
   MdTrendingUp, MdAccountBalanceWallet, MdMonetizationOn,
-  MdPeople, MdLock, MdNotifications, MdRefresh
+  MdPeople, MdLock, MdRefresh
 } from 'react-icons/md'
 import './Dashboard.css'
 
@@ -74,7 +74,6 @@ export default function SuperAdminDashboard() {
           </div>
           <div className="dash-topbar-right">
             <button className="dash-icon-btn" title="Refresh" onClick={refetch}><MdRefresh size={18} /></button>
-            <button className="dash-icon-btn" title="Notifications"><MdNotifications size={18} /></button>
             <div className="dash-user-chip">
               <div className="dash-user-avatar">{(user?.name || 'S')[0]}</div>
               <span>{user?.name || 'Super Admin'}</span>

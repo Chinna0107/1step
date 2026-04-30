@@ -53,12 +53,11 @@ export function useCustomerLogin() {
 
 // ── Profile — cached, no repeat hits ─────────────────────────
 export function useCustomerProfile() {
-  const [profile, setProfile] = useState(cache.profile)   // instant if cached
-  const [loading, setLoading] = useState(!isFresh(cache.profileTs))
+  const [profile, setProfile] = useState(null)   // always fresh-fetch for card_front_img_url
+  const [loading, setLoading] = useState(true)
   const [error, setError]     = useState('')
 
   useEffect(() => {
-    if (isFresh(cache.profileTs)) { setProfile(cache.profile); setLoading(false); return }
     setLoading(true)
     api('/customer/profile', { headers: authHeader() })
       .then(d => {

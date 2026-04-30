@@ -10,16 +10,35 @@ const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const fmt  = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
 
 function CustomerDetailModal({ customer: c, onClose }) {
-  const [txns, setTxns]       = useState(null)
-  const [txnLoad, setTxnLoad] = useState(false)
+  const [txns, setTxns]         = useState(null)
+  const [txnLoad, setTxnLoad]   = useState(false)
   const [lightbox, setLightbox] = useState(null)
-  const [tab, setTab]         = useState('details')
+  const [tab, setTab]           = useState('details')
+  const [editing, setEditing]   = useState(false)
+  const [imgUrls, setImgUrls]   = useState({ aadhar_img_url: c.aadhar_img_url || '', pan_img_url: c.pan_img_url || '', card_front_img_url: c.card_front_img_url || '' })
+  const [saving, setSaving]     = useState(false)
+  const [saveMsg, setSaveMsg]   = useState('')
+  const [customer, setCustomer] = useState(c)
+
+  const saveImages = async () => {
+    setSaving(true); setSaveMsg('')
+    try {
+      const data = await api(`/customers/${customer.id}/images`, {
+        method: 'PATCH', headers: { ...auth(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(imgUrls),
+      })
+      setCustomer(prev => ({ ...prev, ...data.customer }))
+      setSaveMsg('Images updated successfully!')
+      setEditing(false)
+    } catch (e) { setSaveMsg('Error: ' + e.message) }
+    setSaving(false)
+  }
 
   const loadTxns = async () => {
     if (txns) return
     setTxnLoad(true)
     try {
-      const data = await api(`/master/transactions?customer_id=${c.id}`, { headers: auth() })
+      const data = await api(`/master/transactions?customer_id=${customer.id}`, { headers: auth() })
       setTxns(Array.isArray(data) ? data : [])
     } catch { setTxns([]) }
     setTxnLoad(false)
@@ -31,30 +50,30 @@ function CustomerDetailModal({ customer: c, onClose }) {
   const statusBg    = s => s === 'approved' ? '#d1fae5' : s === 'rejected' ? '#fee2e2' : '#fef3c7'
 
   const fields = [
-    { label: 'Customer ID',   value: `#${c.id}` },
-    { label: 'Full Name',     value: c.name || '—' },
-    { label: 'Email',         value: c.email || '—' },
-    { label: 'Phone',         value: c.phone || '—' },
-    { label: 'Coins',         value: `🪙 ${c.coins ?? 0}`, color: '#d4af37' },
-    { label: 'PAN Number',    value: c.pan || '—',    mono: true },
-    { label: 'Aadhar Number', value: c.aadhar ? c.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—', mono: true },
-    { label: 'Account No.',   value: c.acc_number || '—', mono: true },
-    { label: 'Branch',        value: c.branch || '—' },
-    { label: 'Added By',      value: c.added_by_name || '—' },
-    { label: 'Reviewed By',   value: c.reviewed_by_name || '—' },
-    { label: 'Reviewed At',   value: c.reviewed_at ? new Date(c.reviewed_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—' },
-    { label: 'Member Since',  value: new Date(c.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) },
-    ...(c.referral_name || c.referral_phone ? [
-      { label: 'Referred By (Name)',   value: c.referral_name  || '—' },
-      { label: 'Referred By (Phone)',  value: c.referral_phone || '—' },
+    { label: 'Customer ID',   value: `#${customer.id}` },
+    { label: 'Full Name',     value: customer.name || '—' },
+    { label: 'Email',         value: customer.email || '—' },
+    { label: 'Phone',         value: customer.phone || '—' },
+    { label: 'Coins',         value: `🪙 ${customer.coins ?? 0}`, color: '#d4af37' },
+    { label: 'PAN Number',    value: customer.pan || '—',    mono: true },
+    { label: 'Aadhar Number', value: customer.aadhar ? customer.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—', mono: true },
+    { label: 'Account No.',   value: customer.acc_number || '—', mono: true },
+    { label: 'Branch',        value: customer.branch || '—' },
+    { label: 'Added By',      value: customer.added_by_name || '—' },
+    { label: 'Reviewed By',   value: customer.reviewed_by_name || '—' },
+    { label: 'Reviewed At',   value: customer.reviewed_at ? new Date(customer.reviewed_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—' },
+    { label: 'Member Since',  value: new Date(customer.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) },
+    ...(customer.referral_name || customer.referral_phone ? [
+      { label: 'Referred By (Name)',   value: customer.referral_name  || '—' },
+      { label: 'Referred By (Phone)',  value: customer.referral_phone || '—' },
     ] : []),
   ]
 
   const docs = [
-    { label: '🪪 Aadhaar Card', url: c.aadhar_img_url },
-    { label: '🆔 PAN Card',     url: c.pan_img_url },
-    { label: '🏧 Card Front',   url: c.card_front_img_url },
-  ].filter(d => d.url)
+    { key: 'aadhar_img_url',     label: '🪪 Aadhaar Card' },
+    { key: 'pan_img_url',        label: '🆔 PAN Card' },
+    { key: 'card_front_img_url', label: '🏧 Card Front' },
+  ]
 
   return (
     <div onClick={e => e.target === e.currentTarget && onClose()}
@@ -66,13 +85,13 @@ function CustomerDetailModal({ customer: c, onClose }) {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
               <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, fontWeight: 900, color: '#d4af37' }}>
-                {c.name?.[0]?.toUpperCase()}
+                {customer.name?.[0]?.toUpperCase()}
               </div>
               <div>
-                <div style={{ color: '#fff', fontWeight: 900, fontSize: 18 }}>{c.name}</div>
-                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 12, marginTop: 2 }}>{c.email} · {c.phone}</div>
-                <span style={{ background: statusBg(c.status), color: statusColor(c.status), padding: '2px 10px', borderRadius: 20, fontSize: 11, fontWeight: 800, marginTop: 6, display: 'inline-block' }}>
-                  {c.status === 'approved' ? '✅ Verified' : c.status === 'rejected' ? '❌ Rejected' : '⏳ Pending'}
+                <div style={{ color: '#fff', fontWeight: 900, fontSize: 18 }}>{customer.name}</div>
+                <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: 12, marginTop: 2 }}>{customer.email} · {customer.phone}</div>
+                <span style={{ background: statusBg(customer.status), color: statusColor(customer.status), padding: '2px 10px', borderRadius: 20, fontSize: 11, fontWeight: 800, marginTop: 6, display: 'inline-block' }}>
+                  {customer.status === 'approved' ? '✅ Verified' : customer.status === 'rejected' ? '❌ Rejected' : '⏳ Pending'}
                 </span>
               </div>
             </div>
@@ -110,33 +129,69 @@ function CustomerDetailModal({ customer: c, onClose }) {
           {/* ── Documents Tab ── */}
           {tab === 'documents' && (
             <div>
-              {docs.length === 0 ? (
-                <div className="dash-empty">No documents uploaded</div>
-              ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 16 }}>
-                  {docs.map(d => (
-                    <div key={d.label} style={{ background: '#f8fafc', borderRadius: 12, overflow: 'hidden', border: '1.5px solid #e2e8f0' }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#402070', padding: '8px 12px', borderBottom: '1px solid #e2e8f0' }}>{d.label}</div>
-                      <img src={d.url} alt={d.label} onClick={() => setLightbox({ url: d.url, label: `${c.name} — ${d.label}` })}
-                        style={{ width: '100%', height: 140, objectFit: 'cover', cursor: 'pointer', display: 'block' }} />
-                      <div style={{ padding: '8px 12px' }}>
-                        <a href={d.url} target="_blank" rel="noopener noreferrer"
-                          style={{ fontSize: 11, color: '#402070', fontWeight: 700, textDecoration: 'none' }}>🔗 Open Full Size</a>
+              {saveMsg && (
+                <div style={{ marginBottom: 12, padding: '8px 14px', borderRadius: 8, background: saveMsg.startsWith('Error') ? '#fee2e2' : '#d1fae5', color: saveMsg.startsWith('Error') ? '#dc2626' : '#059669', fontSize: 13, fontWeight: 600 }}>
+                  {saveMsg}
+                </div>
+              )}
+
+              {/* Edit / Save toolbar */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 14, gap: 8 }}>
+                {editing ? (
+                  <>
+                    <button onClick={() => { setEditing(false); setSaveMsg(''); setImgUrls({ aadhar_img_url: customer.aadhar_img_url || '', pan_img_url: customer.pan_img_url || '', card_front_img_url: customer.card_front_img_url || '' }) }}
+                      style={{ padding: '6px 16px', borderRadius: 8, border: '1.5px solid #e2e8f0', background: '#f8fafc', color: '#64748b', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                      Cancel
+                    </button>
+                    <button onClick={saveImages} disabled={saving}
+                      style={{ padding: '6px 16px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                      {saving ? 'Saving...' : '✓ Save Images'}
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={() => { setEditing(true); setSaveMsg('') }}
+                    style={{ padding: '6px 16px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.3)', background: '#fff', color: '#402070', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}>
+                    ✏️ Edit Images
+                  </button>
+                )}
+              </div>
+
+              {/* Document cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 16 }}>
+                {docs.map(d => {
+                  const url = editing ? imgUrls[d.key] : customer[d.key]
+                  return (
+                    <div key={d.key} style={{ background: '#f8fafc', borderRadius: 12, overflow: 'hidden', border: `1.5px solid ${editing ? 'rgba(64,32,112,0.3)' : '#e2e8f0'}` }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#402070', padding: '8px 12px', borderBottom: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span>{d.label}</span>
+                        {url && !editing && (
+                          <a href={url} target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: '#402070', textDecoration: 'none' }}>🔗</a>
+                        )}
                       </div>
+                      {url
+                        ? <img src={url} alt={d.label}
+                            onClick={() => !editing && setLightbox({ url, label: `${customer.name} — ${d.label}` })}
+                            style={{ width: '100%', height: 140, objectFit: 'cover', cursor: editing ? 'default' : 'pointer', display: 'block' }}
+                            onError={e => { e.currentTarget.style.display = 'none' }} />
+                        : <div style={{ height: 140, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#94a3b8', fontSize: 12, flexDirection: 'column', gap: 6 }}>
+                            <span style={{ fontSize: 28 }}>{d.label.split(' ')[0]}</span>
+                            <span>Not uploaded</span>
+                          </div>
+                      }
+                      {editing && (
+                        <div style={{ padding: '8px 10px', borderTop: '1px solid #e2e8f0' }}>
+                          <input
+                            placeholder="Paste image URL..."
+                            value={imgUrls[d.key]}
+                            onChange={e => setImgUrls(prev => ({ ...prev, [d.key]: e.target.value }))}
+                            style={{ width: '100%', padding: '5px 8px', borderRadius: 6, border: '1.5px solid rgba(64,32,112,0.2)', fontSize: 11, fontFamily: 'monospace', boxSizing: 'border-box', outline: 'none' }}
+                          />
+                        </div>
+                      )}
                     </div>
-                  ))}
-                </div>
-              )}
-              {docs.length === 0 && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 12, marginTop: 8 }}>
-                  {[['🪪 Aadhaar Card', c.aadhar_img_url], ['🆔 PAN Card', c.pan_img_url], ['🏧 Card Front', c.card_front_img_url]].map(([label]) => (
-                    <div key={label} style={{ background: '#f8fafc', borderRadius: 12, padding: 20, textAlign: 'center', border: '1.5px dashed #e2e8f0' }}>
-                      <div style={{ fontSize: 24, marginBottom: 8 }}>{label.split(' ')[0]}</div>
-                      <div style={{ fontSize: 12, color: '#9ca3af' }}>{label} not uploaded</div>
-                    </div>
-                  ))}
-                </div>
-              )}
+                  )
+                })}
+              </div>
             </div>
           )}
 
@@ -194,8 +249,8 @@ function CustomerDetailModal({ customer: c, onClose }) {
         {/* Footer */}
         <div style={{ padding: '14px 20px', borderTop: '1px solid #f1f5f9', display: 'flex', gap: 10, justifyContent: 'space-between', flexShrink: 0 }}>
           <div style={{ display: 'flex', gap: 8 }}>
-            <a href={`tel:${c.phone}`} style={{ padding: '8px 16px', borderRadius: 10, background: '#d1fae5', color: '#059669', fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>📞 Call</a>
-            <a href={`https://wa.me/${c.phone?.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${c.name}, this is MoneySpot. How can we help you?`)}`}
+            <a href={`tel:${customer.phone}`} style={{ padding: '8px 16px', borderRadius: 10, background: '#d1fae5', color: '#059669', fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>📞 Call</a>
+            <a href={`https://wa.me/${customer.phone?.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${customer.name}, this is MoneySpot. How can we help you?`)}`}
               target="_blank" rel="noopener noreferrer"
               style={{ padding: '8px 16px', borderRadius: 10, background: '#25D366', color: '#fff', fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>💬 WhatsApp</a>
           </div>

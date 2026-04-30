@@ -30,10 +30,12 @@ export default defineConfig(({ mode }) => {
             }
           },
         },
-        '/master':    { target: backendUrl, changeOrigin: true },
-        '/leads':     { target: backendUrl, changeOrigin: true },
-        '/fraud':     { target: backendUrl, changeOrigin: true },
-        '/finance':   { target: backendUrl, changeOrigin: true },
+        '/master':         { target: backendUrl, changeOrigin: true },
+        '/leads':          { target: backendUrl, changeOrigin: true },
+        '/fraud':          { target: backendUrl, changeOrigin: true },
+        '/finance':        { target: backendUrl, changeOrigin: true },
+        '/notifications':  { target: backendUrl, changeOrigin: true },
+        '/visitors':       { target: backendUrl, changeOrigin: true },
       },
     },
   }

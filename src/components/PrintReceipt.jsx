@@ -256,8 +256,12 @@ function buildReceiptHTML(txn) {
         <span class="settled-value" style="color:#7c3aed">₹${fmt(netProfit)}</span>
       </div>
       <div class="settled-row">
-        <span class="settled-label">GST (18% on Net Profit)</span>
-        <span class="settled-value" style="color:#dc2626">₹${fmt(gst)}</span>
+        <span class="settled-label">GST (18%)</span>
+        <span class="settled-value" style="color:#dc2626">- ₹${fmt(gst)}</span>
+      </div>
+      <div class="settled-row" style="border-top:1.5px solid #d8b4fe;margin-top:6px;padding-top:6px">
+        <span class="settled-label" style="font-weight:800;color:#059669">Total Profit</span>
+        <span class="settled-value" style="color:#059669;font-size:15px">₹${fmt((netProfit - gst).toFixed(2))}</span>
       </div>
     </div>
 
@@ -398,8 +402,12 @@ export default function PrintReceipt({ txn, onClose, showFinancials = false }) {
                   <span style={{ fontSize: 13, fontWeight: 800, color: '#7c3aed' }}>₹{fmt(netProfit)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 4, paddingTop: 4, borderTop: '1px dashed #d8b4fe' }}>
-                  <span style={{ fontSize: 11, color: '#64748b' }}>GST (18% on Net Profit)</span>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: '#dc2626' }}>₹{fmt(gst)}</span>
+                  <span style={{ fontSize: 11, color: '#64748b' }}>GST (18%)</span>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: '#dc2626' }}>- ₹{fmt(gst)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 6, paddingTop: 6, borderTop: '1.5px solid #d8b4fe' }}>
+                  <span style={{ fontSize: 12, fontWeight: 800, color: '#059669' }}>Total Profit</span>
+                  <span style={{ fontSize: 15, fontWeight: 900, color: '#059669' }}>₹{fmt((netProfit - gst).toFixed(2))}</span>
                 </div>
               </div>
 

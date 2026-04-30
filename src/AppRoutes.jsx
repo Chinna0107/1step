@@ -16,6 +16,7 @@ import Configuration from './pages/superadmin/Configuration';
 import Reports from './pages/superadmin/Reports';
 import Security from './pages/superadmin/Security';
 import FraudList from './pages/superadmin/FraudList';
+import Notifications from './pages/superadmin/Notifications';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
@@ -47,6 +48,8 @@ import AddCustomer from './pages/employee/AddCustomer';
 import Services from './pages/employee/Services';
 import EmployeeReports from './pages/employee/EmployeeReports';
 import Profile from './pages/employee/Profile';
+import EmployeeNotifications from './pages/employee/Notifications';
+import AdminNotifications from './pages/admin/Notifications';
 import EmployeeNavbar from './components/employee/EmployeeNavbar';
 import AdminSidebar from './components/admin/AdminSidebar';
 
@@ -63,7 +66,8 @@ export default function AppRoutes() {
       <Route path="/superadmin/branches"   element={<SuperAdminRoute><Branches /></SuperAdminRoute>} />
       <Route path="/superadmin/tracking"   element={<SuperAdminRoute><Tracking /></SuperAdminRoute>} />
       <Route path="/superadmin/finance"    element={<SuperAdminRoute><Finance /></SuperAdminRoute>} />
-      <Route path="/superadmin/config"     element={<SuperAdminRoute><Configuration /></SuperAdminRoute>} />
+      <Route path="/superadmin/config"         element={<SuperAdminRoute><Configuration /></SuperAdminRoute>} />
+      <Route path="/superadmin/notifications"  element={<SuperAdminRoute><Notifications /></SuperAdminRoute>} />
       <Route path="/superadmin/reports"    element={<SuperAdminRoute><Reports /></SuperAdminRoute>} />
       <Route path="/superadmin/security"   element={<SuperAdminRoute><Security /></SuperAdminRoute>} />
       <Route path="/superadmin/fraud"      element={<SuperAdminRoute><FraudList /></SuperAdminRoute>} />
@@ -89,6 +93,7 @@ export default function AppRoutes() {
       <Route path="/admin/employees"     element={<AdminRoute><EmployeeDetails /></AdminRoute>} />
       <Route path="/admin/performance"     element={<AdminRoute><EmployeePerformance /></AdminRoute>} />
       <Route path="/admin/attendance"      element={<AdminRoute><EmployeeAttendance /></AdminRoute>} />
+      <Route path="/admin/notifications"   element={<AdminRoute><AdminNotifications /></AdminRoute>} />
 
       {/* Employee Routes */}
       <Route path="/employee/dashboard"    element={<EmployeeRoute><EmployeeDashboard /></EmployeeRoute>} />
@@ -96,6 +101,7 @@ export default function AppRoutes() {
       <Route path="/employee/add-customer" element={<EmployeeRoute><AddCustomer /></EmployeeRoute>} />
       <Route path="/employee/services"     element={<EmployeeRoute><Services /></EmployeeRoute>} />
       <Route path="/employee/reports"      element={<EmployeeRoute><EmployeeReports /></EmployeeRoute>} />
+      <Route path="/employee/notifications" element={<EmployeeRoute><EmployeeNotifications /></EmployeeRoute>} />
       <Route path="/employee/profile"       element={<EmployeeRoute><Profile Sidebar={EmployeeNavbar} /></EmployeeRoute>} />
       <Route path="/admin/profile"          element={<AdminRoute><Profile Sidebar={AdminSidebar} isAdmin={true} /></AdminRoute>} />
 

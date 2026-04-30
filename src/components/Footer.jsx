@@ -1,17 +1,78 @@
 import { Link } from 'react-router-dom'
+import { useEffect, useState, useRef } from 'react'
 import { FaQuestionCircle, FaFileContract, FaUserShield } from 'react-icons/fa'
 import {
   FaWhatsapp, FaInstagram, FaFacebookF, FaTwitter,
   FaHome, FaBolt, FaInfoCircle, FaPhone, FaEnvelope,
   FaMapMarkerAlt, FaClock, FaCreditCard, FaExchangeAlt, FaFingerprint,
-  FaHeadset, FaShieldAlt
+  FaHeadset, FaShieldAlt, FaEye, FaCalendarDay, FaCalendarAlt, FaGlobe
 } from 'react-icons/fa'
+import { api } from '../utils/api'
 import './Footer.css'
 
 const PHONE = '+919866440477'
 const PHONE_DISPLAY = '+91 98664 40477'
 
+function useCountUp(target, duration = 1800) {
+  const [count, setCount] = useState(0)
+  const raf = useRef(null)
+  useEffect(() => {
+    if (!target) return
+    const start = performance.now()
+    const step = (now) => {
+      const progress = Math.min((now - start) / duration, 1)
+      // ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(Math.floor(eased * target))
+      if (progress < 1) raf.current = requestAnimationFrame(step)
+      else setCount(target)
+    }
+    raf.current = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf.current)
+  }, [target, duration])
+  return count
+}
+
+function CounterCard({ icon: Icon, label, target, color, delay = 0 }) {
+  const [active, setActive] = useState(false)
+  const count = useCountUp(active ? target : 0, 1800)
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (!target) return
+    const timer = setTimeout(() => setActive(true), delay)
+    return () => clearTimeout(timer)
+  }, [target, delay])
+
+  const fmt = n => Number(n || 0).toLocaleString('en-IN')
+
+  return (
+    <div className="fv-card" style={{ '--fv-color': color }} ref={ref}>
+      <div className="fv-card-glow" />
+      <div className="fv-icon-wrap">
+        <Icon size={18} />
+      </div>
+      <div className="fv-count">{target ? fmt(count) : '—'}</div>
+      <div className="fv-label">{label}</div>
+      <div className="fv-bar"><div className="fv-bar-fill" /></div>
+    </div>
+  )
+}
+
 export default function Footer() {
+  const [visitors, setVisitors] = useState(null)
+
+  useEffect(() => {
+    // Get or create a persistent visitor ID (survives refreshes, not new browsers)
+    let vid = localStorage.getItem('ms_visitor_id')
+    if (!vid) {
+      vid = crypto.randomUUID()
+      localStorage.setItem('ms_visitor_id', vid)
+    }
+    // Only counts once per unique visitor per day — backend ignores duplicates
+    api('/visitors/track', { method: 'POST', body: JSON.stringify({ visitor_id: vid }) }).catch(() => {})
+    api('/visitors/counts').then(setVisitors).catch(() => {})
+  }, [])
   return (
     <footer className="footer">
 
@@ -80,6 +141,21 @@ export default function Footer() {
           <FaShieldAlt size={13} className="footer-disclaimer-icon" />
           <p>All services are subject to KYC and compliance guidelines. Money Spot acts as a service provider / banking correspondent.</p>
         </div>
+
+        {/* ── Visitor Counter ── */}
+        <div className="fv-section">
+          <div className="fv-heading">
+            <FaEye size={14} />
+            <span>Live Visitor Stats</span>
+            <div className="fv-heading-line" />
+          </div>
+          <div className="fv-grid">
+            <CounterCard icon={FaCalendarDay}  label="Today"       target={visitors ? parseInt(visitors.today) : 0}  color="#d4af37" delay={0}   />
+            <CounterCard icon={FaCalendarAlt}  label="This Month"  target={visitors ? parseInt(visitors.month) : 0}  color="#c02040" delay={200} />
+            <CounterCard icon={FaGlobe}        label="All Time"    target={visitors ? parseInt(visitors.total) : 0}  color="#402070" delay={400} />
+          </div>
+        </div>
+
         <p>© {new Date().getFullYear()} MoneySpot. All rights reserved. | Fast · Secure · Trusted</p>
         <p className="footer-zewo">Developed with <span className="footer-heart"></span><b>passion   </b> by <span className="footer-zewo-brand"><a href="https://zewo.in" target="_blank" rel="noopener noreferrer">Zewo</a></span></p>
       </div>

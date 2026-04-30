@@ -7,6 +7,7 @@ import {
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
+import NotificationBell from '../NotificationBell'
 import nameImg from '../../assets/icons png/Money Spot Logo.png'
 import logoImg from '../../assets/icons png/MS Logo.png'
 import '../../pages/dashboard.css'
@@ -54,6 +55,7 @@ export default function EmployeeNavbar() {
         <span className="emp-user-name" style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
           <MdPerson size={16} /> {user?.name || 'Employee'}
         </span>
+        <NotificationBell role="employee" />
         <button className="emp-logout-btn" onClick={handleLogout}
           style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
           <MdLogout size={14} /> Logout

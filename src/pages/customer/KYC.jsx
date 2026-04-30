@@ -51,7 +51,7 @@ export default function CustomerKYC() {
               <div className="cust-card-header"><h2>KYC Documents</h2></div>
               <div className="cust-card-body">
                 <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-                  {[{ key: 'aadhar_img_url', label: '🪪 Aadhar Card' }, { key: 'pan_img_url', label: '🪪 PAN Card' }].map(doc => (
+                  {[{ key: 'aadhar_img_url', label: '🪪 Aadhar Card' }, { key: 'pan_img_url', label: '🆔 PAN Card' }, { key: 'card_front_img_url', label: '🏧 Card Front' }].map(doc => (
                     <div key={doc.key} className="kyc-doc-box">
                       <div className="kyc-doc-label">{doc.label}</div>
                       {profile?.[doc.key]

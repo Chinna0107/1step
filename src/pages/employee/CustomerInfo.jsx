@@ -132,6 +132,9 @@ export default function CustomerInfo() {
                           {c.pan_img_url
                             ? <img src={c.pan_img_url} alt="PAN" className="ci-thumb" title="PAN" onClick={e => { e.stopPropagation(); setLightbox({ url: c.pan_img_url, label: `${c.name} — PAN` }) }} />
                             : <span className="ci-no-doc">No PAN</span>}
+                          {c.card_front_img_url
+                            ? <img src={c.card_front_img_url} alt="Card" className="ci-thumb" title="Card Front" onClick={e => { e.stopPropagation(); setLightbox({ url: c.card_front_img_url, label: `${c.name} — Card Front` }) }} />
+                            : <span className="ci-no-doc">No Card</span>}
                         </div>
                       </td>
                       <td><span style={statusStyle(c.status)}>{c.status.charAt(0).toUpperCase()+c.status.slice(1)}</span></td>
@@ -191,6 +194,28 @@ export default function CustomerInfo() {
 
             {/* Body */}
             <div style={{ flex:1, overflowY:'auto', padding:'16px 20px' }}>
+
+              {/* Documents */}
+              {(selected.aadhar_img_url || selected.pan_img_url || selected.card_front_img_url) && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Documents</div>
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                    {[
+                      { url: selected.aadhar_img_url,     label: '🪪 Aadhaar' },
+                      { url: selected.pan_img_url,        label: '🆔 PAN Card' },
+                      { url: selected.card_front_img_url, label: '🏧 Card Front' },
+                    ].map(d => d.url && (
+                      <div key={d.label} style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
+                        <img src={d.url} alt={d.label}
+                          onClick={() => setLightbox({ url: d.url, label: `${selected.name} — ${d.label}` })}
+                          style={{ width: 100, height: 68, objectFit: 'cover', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', cursor: 'pointer' }}
+                          onError={e => { e.currentTarget.parentElement.style.display = 'none' }} />
+                        <span style={{ fontSize: 10, fontWeight: 700, color: '#64748b' }}>{d.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Service Breakdown */}
               {!txnLoading && Object.keys(serviceBreakdown).length > 0 && (
