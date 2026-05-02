@@ -32,6 +32,22 @@ export default function SuperAdminCustomers() {
   const { branches }              = useBranches()
   const { customers, stats, branchStats, loading, load } = useSuperAdminCustomers(branch, status, search)
 
+  const downloadImage = async (url, filename) => {
+    try {
+      const res  = await fetch(url)
+      const blob = await res.blob()
+      const ext  = blob.type.split('/')[1]?.split('+')[0] || 'jpg'
+      const a    = document.createElement('a')
+      a.href     = URL.createObjectURL(blob)
+      a.download = `${filename}.${ext}`
+      a.click()
+      URL.revokeObjectURL(a.href)
+    } catch {
+      // fallback: open in new tab
+      window.open(url, '_blank')
+    }
+  }
+
   const openCustomer = async (c) => {
     setViewCustomer(c)
     setTagMsg('')
@@ -284,19 +300,42 @@ export default function SuperAdminCustomers() {
               {(viewCustomer.aadhar_img_url || viewCustomer.pan_img_url || viewCustomer.card_front_img_url) && (
                 <>
                   <div style={{ fontSize: 11, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 }}>Documents</div>
-                  <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-                    {[{ url: viewCustomer.aadhar_img_url, label: 'Aadhar Card', icon: '🪪' },
-                      { url: viewCustomer.pan_img_url,   label: 'PAN Card',    icon: '💳' },
-                      { url: viewCustomer.card_front_img_url, label: 'Card Front', icon: '🏧' },
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(180px,1fr))', gap: 12, marginBottom: 20 }}>
+                    {[{ url: viewCustomer.aadhar_img_url, label: 'Aadhar Card', icon: '🪪', key: 'aadhar' },
+                      { url: viewCustomer.pan_img_url,        label: 'PAN Card',    icon: '🆔', key: 'pan' },
+                      { url: viewCustomer.card_front_img_url, label: 'Card Front',  icon: '🏧', key: 'card' },
                     ].filter(d => d.url).map(d => (
-                      <div key={d.label} style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'center' }}>
-                        <img src={d.url} alt={d.label}
-                          onClick={() => setLightbox({ url: d.url, label: `${viewCustomer.name} — ${d.label}` })}
-                          style={{ width: 120, height: 80, objectFit: 'cover', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', cursor: 'pointer', transition: 'transform 0.2s, box-shadow 0.2s' }}
-                          onMouseEnter={e => { e.target.style.transform='scale(1.05)'; e.target.style.boxShadow='0 4px 16px rgba(64,32,112,0.3)' }}
-                          onMouseLeave={e => { e.target.style.transform='scale(1)'; e.target.style.boxShadow='none' }}
-                        />
-                        <span style={{ fontSize: 11, fontWeight: 700, color: '#64748b' }}>{d.icon} {d.label}</span>
+                      <div key={d.key} style={{ background: '#f8fafc', borderRadius: 12, overflow: 'hidden', border: '1.5px solid #e2e8f0' }}>
+                        {/* Image */}
+                        <div style={{ position: 'relative' }}>
+                          <img src={d.url} alt={d.label}
+                            onClick={() => setLightbox({ url: d.url, label: `${viewCustomer.name} — ${d.label}`, filename: `${viewCustomer.name}_${d.key}` })}
+                            style={{ width: '100%', height: 120, objectFit: 'cover', cursor: 'pointer', display: 'block', transition: 'opacity 0.2s' }}
+                            onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+                            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                          />
+                          {/* Overlay zoom hint */}
+                          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.2s', pointerEvents: 'none' }}
+                            className="doc-zoom-hint">
+                            <span style={{ background: 'rgba(0,0,0,0.5)', color: '#fff', borderRadius: 20, padding: '4px 10px', fontSize: 11, fontWeight: 700 }}>🔍 View</span>
+                          </div>
+                        </div>
+                        {/* Label + actions */}
+                        <div style={{ padding: '8px 10px' }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: '#402070', marginBottom: 6 }}>{d.icon} {d.label}</div>
+                          <div style={{ display: 'flex', gap: 6 }}>
+                            <button
+                              onClick={() => setLightbox({ url: d.url, label: `${viewCustomer.name} — ${d.label}`, filename: `${viewCustomer.name}_${d.key}` })}
+                              style={{ flex: 1, padding: '5px 0', borderRadius: 6, border: '1.5px solid rgba(64,32,112,0.2)', background: '#fff', color: '#402070', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                              🔍 View
+                            </button>
+                            <button
+                              onClick={() => downloadImage(d.url, `${viewCustomer.name}_${d.key}`)}
+                              style={{ flex: 1, padding: '5px 0', borderRadius: 6, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                              ⬇ Download
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -364,7 +403,14 @@ export default function SuperAdminCustomers() {
           <div className="ci-lightbox-box" onClick={e => e.stopPropagation()}>
             <div className="ci-lightbox-header">
               <span>{lightbox.label}</span>
-              <button onClick={() => setLightbox(null)}>✕</button>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                <button
+                  onClick={() => downloadImage(lightbox.url, lightbox.filename || lightbox.label)}
+                  style={{ background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', padding: '4px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 12, fontWeight: 700, fontFamily: 'inherit' }}>
+                  ⬇ Download
+                </button>
+                <button onClick={() => setLightbox(null)}>✕</button>
+              </div>
             </div>
             <img src={lightbox.url} alt={lightbox.label} className="ci-lightbox-img" />
           </div>

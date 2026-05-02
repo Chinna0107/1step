@@ -4,29 +4,41 @@ import config from '../config'
 
 // Single shared AudioContext
 let sharedCtx = null
+let audioUnlocked = false
 
 export const unlockAudio = () => {
   try {
-    if (!sharedCtx) sharedCtx = new (window.AudioContext || window.webkitAudioContext)()
-    if (sharedCtx.state === 'suspended') sharedCtx.resume()
+    if (!sharedCtx) {
+      sharedCtx = new (window.AudioContext || window.webkitAudioContext)()
+    }
+    if (sharedCtx.state === 'suspended') {
+      sharedCtx.resume()
+    }
+    audioUnlocked = true
   } catch (_) {}
 }
 
-const playSOSSound = () => {
+const playSOSSound = async () => {
   try {
-    unlockAudio()
-    const ctx = sharedCtx
-    if (!ctx) return
+    // Always try to resume — browser may have suspended it
+    if (!sharedCtx) {
+      sharedCtx = new (window.AudioContext || window.webkitAudioContext)()
+    }
+    if (sharedCtx.state === 'suspended') {
+      await sharedCtx.resume()
+    }
+    if (sharedCtx.state !== 'running') return
 
-    // Police siren: two-tone wail (hi-lo alternating like real police siren)
-    const sirenDuration = 3.0  // total seconds
-    const cycleDuration = 0.5  // each hi-lo cycle
+    const ctx = sharedCtx
+
+    // Police siren: two-tone wail
+    const sirenDuration = 3.0
+    const cycleDuration = 0.5
     const cycles = Math.floor(sirenDuration / cycleDuration)
 
     for (let i = 0; i < cycles; i++) {
       const start = i * cycleDuration
 
-      // High tone
       const oscHi  = ctx.createOscillator()
       const gainHi = ctx.createGain()
       oscHi.connect(gainHi)
@@ -40,7 +52,6 @@ const playSOSSound = () => {
       oscHi.start(ctx.currentTime + start)
       oscHi.stop(ctx.currentTime + start + cycleDuration / 2)
 
-      // Low tone
       const oscLo  = ctx.createOscillator()
       const gainLo = ctx.createGain()
       oscLo.connect(gainLo)
