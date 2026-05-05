@@ -618,12 +618,18 @@ export default function Services() {
                   {history.map(t => {
                     const isBW = t.service_type === BILL_WITHDRAWAL
                     return (
-                    <tr key={t.id}>
+                    <tr key={t.id}
+                      style={{ backgroundColor: t.is_edited ? '#fef2f2' : '' }}
+                      onMouseEnter={e => e.currentTarget.style.background = t.is_edited ? '#fee2e2' : '#f0f2f8'}
+                      onMouseLeave={e => e.currentTarget.style.background = t.is_edited ? '#fef2f2' : ''}>
                       <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
+                        <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 11, color: t.is_edited ? '#dc2626' : '#402070' }}>
+                          #{t.id}{t.is_edited ? ' ✏️' : ''}
+                        </div>
                         <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
                         <div style={{ color: '#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
                       </td>
-                      <td><strong>{t.cust_name || '—'}</strong></td>
+                      <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}</strong></td>
                       <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_pan || '—'}</td>
                       <td style={{ fontSize: 11 }}>{t.cust_mobile || '—'}</td>
                       <td style={{ fontSize: 12 }}><strong>{t.service_type}</strong></td>
@@ -820,7 +826,11 @@ export default function Services() {
                         acc_no:         editTxn.acc_no,
                       }
                       const updated = await api(`/master/transactions/${editTxn.id}`, { method:'PATCH', headers: auth(), body: JSON.stringify(payload) })
-                      setHistory(h => h.map(t => t.id === editTxn.id ? { ...t, ...updated } : t))
+                      setHistory(h => {
+                        const newH = h.map(t => t.id === editTxn.id ? { ...t, ...updated } : t)
+                        cacheSet('svc:history', newH, TTL.dashboard)
+                        return newH
+                      })
                       setEditTxn(null)
                     } catch (err) { alert(err.message) }
                   }} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>💾 Save Changes</button>

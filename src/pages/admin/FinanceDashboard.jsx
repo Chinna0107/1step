@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
-import { getUserByRole } from '../../utils/tokenUtils'
+import { api } from '../../utils/api'
+import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
 import { useFinanceSummary, useFinanceData, useFinanceAlerts, useWallets, useFinanceControl } from '../../hooks/useFinance'
 import '../../pages/dashboard.css'
 
@@ -105,8 +106,6 @@ export default function FinanceDashboard() {
   const handleAddExp = async e => {
     e.preventDefault(); setSaving(true); setExpMsg('')
     try {
-      const { api } = await import('../../utils/api')
-      const { getTokenByRole } = await import('../../utils/tokenUtils')
       await api('/finance/expenses', { method:'POST', headers:{ Authorization:`Bearer ${getTokenByRole('admin')}` }, body:JSON.stringify(expForm) })
       setExpMsg('✅ Expense added'); setExpForm({ category:'', amount:'', date:today, note:'' }); setShowForm(false)
       refetch(true)
