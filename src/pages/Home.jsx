@@ -381,6 +381,19 @@ const S = {
 
 export default function Home() {
   const heroRef = useRef(null)
+  const [popup, setPopup] = useState(false)
+
+  // Show popup after 1.5s, only once per session
+  useEffect(() => {
+    if (sessionStorage.getItem('axis_popup_seen')) return
+    const t = setTimeout(() => setPopup(true), 1500)
+    return () => clearTimeout(t)
+  }, [])
+
+  const closePopup = () => {
+    setPopup(false)
+    sessionStorage.setItem('axis_popup_seen', '1')
+  }
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -797,6 +810,113 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* ═══ AXIS BANK POPUP ═══ */}
+      {popup && (
+        <div onClick={closePopup} style={{
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)',
+          zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 16, backdropFilter: 'blur(4px)', animation: 'fadeIn 0.3s ease',
+        }}>
+          <div onClick={e => e.stopPropagation()} style={{
+            background: '#fff', borderRadius: 24, width: '100%', maxWidth: 420,
+            overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.35)',
+            animation: 'popupSlideUp 0.35s cubic-bezier(0.34,1.56,0.64,1)',
+          }}>
+            {/* Header */}
+            <div style={{
+              background: 'linear-gradient(135deg, #c02040 0%, #8b0000 100%)',
+              padding: '22px 24px 18px', position: 'relative', textAlign: 'center',
+            }}>
+              {/* Axis Bank logo text */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 10 }}>
+                <div style={{
+                  background: '#fff', borderRadius: 10, padding: '6px 14px',
+                  fontWeight: 900, fontSize: 20, color: '#c02040', letterSpacing: '-0.5px',
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                }}>AXIS</div>
+                <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 13, fontWeight: 600 }}>Bank</div>
+              </div>
+              <div style={{
+                background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)',
+                borderRadius: 20, display: 'inline-block', padding: '4px 14px',
+                fontSize: 11, fontWeight: 700, color: '#fff', letterSpacing: 1,
+                textTransform: 'uppercase', marginBottom: 8,
+              }}>🎉 Special Offer</div>
+              <h2 style={{ color: '#fff', fontWeight: 900, fontSize: 20, margin: 0, lineHeight: 1.3 }}>
+                Apply for Axis Bank<br />Credit Card Today!
+              </h2>
+              <button onClick={closePopup} style={{
+                position: 'absolute', top: 14, right: 14,
+                background: 'rgba(255,255,255,0.2)', border: 'none', color: '#fff',
+                width: 30, height: 30, borderRadius: '50%', cursor: 'pointer',
+                fontSize: 16, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                fontWeight: 700, lineHeight: 1,
+              }}>✕</button>
+            </div>
+
+            {/* Body */}
+            <div style={{ padding: '20px 24px 24px' }}>
+              {/* Benefits */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 20 }}>
+                {[
+                  { icon: '🎁', text: 'Welcome Benefits' },
+                  { icon: '✈️', text: 'Travel Rewards' },
+                  { icon: '💰', text: 'Cashback Offers' },
+                  { icon: '🛡️', text: 'Zero Fraud Liability' },
+                ].map(b => (
+                  <div key={b.text} style={{
+                    background: '#fef2f2', borderRadius: 10, padding: '10px 12px',
+                    display: 'flex', alignItems: 'center', gap: 8,
+                    border: '1px solid #fecaca',
+                  }}>
+                    <span style={{ fontSize: 18 }}>{b.icon}</span>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: '#7f1d1d' }}>{b.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              <p style={{ fontSize: 13, color: '#64748b', textAlign: 'center', margin: '0 0 18px', lineHeight: 1.6 }}>
+                Get exclusive rewards, cashback & travel benefits with Axis Bank Credit Card.
+                Apply now through MoneySpot!
+              </p>
+
+              {/* CTA Button */}
+              <a
+                href="https://web.axis.bank.in/DigitalChannel/WebForm/?ipa100&axisreferralcode=D180000500"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closePopup}
+                style={{
+                  display: 'block', textAlign: 'center', textDecoration: 'none',
+                  background: 'linear-gradient(135deg, #c02040, #8b0000)',
+                  color: '#fff', fontWeight: 800, fontSize: 15,
+                  padding: '14px 24px', borderRadius: 12,
+                  boxShadow: '0 8px 24px rgba(192,32,64,0.35)',
+                  transition: 'transform 0.2s, box-shadow 0.2s',
+                  letterSpacing: 0.3,
+                }}
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(192,32,64,0.5)' }}
+                onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(192,32,64,0.35)' }}
+              >
+                Apply Now →
+              </a>
+
+              <button onClick={closePopup} style={{
+                display: 'block', width: '100%', marginTop: 10,
+                background: 'none', border: 'none', color: '#94a3b8',
+                fontSize: 12, cursor: 'pointer', fontFamily: 'inherit',
+                padding: '6px 0',
+              }}>Maybe later</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes popupSlideUp { from { opacity: 0; transform: translateY(40px) scale(0.95) } to { opacity: 1; transform: translateY(0) scale(1) } }
+      `}</style>
 
     </div>
   )
