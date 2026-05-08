@@ -175,64 +175,14 @@ export default function CustomerCoins() {
             <div className="coins-card-header">
               <span>🎁</span>
               <h2>Redeem Coins</h2>
+              <span className="coins-card-badge" style={{ background: '#fef9c3', color: '#92400e' }}>Coming Soon</span>
             </div>
-            <div className="coins-card-body">
-              {msg   && <div className="coins-alert coins-alert-success">✅ {msg}</div>}
-              {error && <div className="coins-alert coins-alert-error">❌ {error}</div>}
-
-              <div className="coins-redeem-balance">
-                <span className="coins-redeem-bal-label">Your Balance</span>
-                <span className="coins-redeem-bal-val">🪙 {fmt(balance)}</span>
+            <div className="coins-card-body coins-redeem-locked">
+              <div className="coins-coming-soon">
+                <div className="coins-coming-icon">🔒</div>
+                <div className="coins-coming-title">Redemption Coming Soon</div>
+                <div className="coins-coming-desc">We're working on the coin redemption feature. Stay tuned — it will be available soon!</div>
               </div>
-
-              <div className="coins-slider-wrap">
-                <label className="coins-slider-label">
-                  Coins to Redeem: <strong>{fmt(redeemAmt)}</strong>
-                </label>
-                <input
-                  type="range"
-                  min={10}
-                  max={Math.max(10, maxRedeem)}
-                  step={10}
-                  value={Math.min(redeemAmt, Math.max(10, maxRedeem))}
-                  onChange={e => setRedeemAmt(Number(e.target.value))}
-                  className="coins-slider"
-                  disabled={balance < 10}
-                />
-                <div className="coins-slider-range">
-                  <span>10</span>
-                  <span>{fmt(Math.max(10, maxRedeem))}</span>
-                </div>
-              </div>
-
-              <div className="coins-redeem-preview">
-                <div className="coins-preview-row">
-                  <span>Coins to use</span>
-                  <span className="coins-preview-coins">🪙 {fmt(redeemAmt)}</span>
-                </div>
-                <div className="coins-preview-row">
-                  <span>Discount value</span>
-                  <span className="coins-preview-discount">₹{fmt(discount)}</span>
-                </div>
-                <div className="coins-preview-row">
-                  <span>Remaining coins</span>
-                  <span>{fmt(Math.max(0, balance - redeemAmt))}</span>
-                </div>
-              </div>
-
-              <button
-                className="coins-redeem-btn"
-                onClick={handleRedeem}
-                disabled={redeeming || balance < 10}
-              >
-                {redeeming ? 'Redeeming...' : `🎁 Redeem ${fmt(redeemAmt)} Coins for ₹${fmt(discount)}`}
-              </button>
-
-              {balance < 10 && (
-                <div className="coins-need-more">
-                  You need {10 - balance} more coins to redeem. Keep transacting!
-                </div>
-              )}
             </div>
           </div>
 

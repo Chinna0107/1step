@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import CustomerSidebar from '../../components/customer/CustomerSidebar'
 import '../../components/customer/CustomerSidebar.css'
 
@@ -70,7 +71,31 @@ export function CustomerNotifications() {
   )
 }
 
+const WHATSAPP_NUMBER = '919866440477'
+
 export function CustomerSupport() {
+  const [form, setForm] = useState({ name: '', mobile: '', subject: '', message: '' })
+
+  const handleSubmit = () => {
+    const { name, mobile, subject, message } = form
+    if (!name.trim() || !mobile.trim() || !subject.trim() || !message.trim())
+      return alert('Please fill in all fields before submitting.')
+
+    const text = `Hello MoneySpot Support! 👋
+
+*Support Ticket*
+----------------------------
+*Name:* ${name}
+*Mobile:* ${mobile}
+*Subject:* ${subject}
+*Message:* ${message}
+----------------------------
+Please assist me at the earliest.`
+
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`, '_blank')
+    setForm({ name: '', mobile: '', subject: '', message: '' })
+  }
+
   return (
     <div className="cust-page">
       <CustomerSidebar />
@@ -83,7 +108,7 @@ export function CustomerSupport() {
               <div style={{ fontSize: 36, marginBottom: 10 }}>💬</div>
               <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>WhatsApp Support</div>
               <p style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>Chat with us instantly on WhatsApp for quick help</p>
-              <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20support." target="_blank" rel="noopener noreferrer" className="cust-btn cust-btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi%20MoneySpot%2C%20I%20need%20support.`} target="_blank" rel="noopener noreferrer" className="cust-btn cust-btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>
                 Open WhatsApp
               </a>
             </div>
@@ -93,7 +118,7 @@ export function CustomerSupport() {
               <div style={{ fontSize: 36, marginBottom: 10 }}>📞</div>
               <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>Call Branch</div>
               <p style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>Speak directly with your branch representative</p>
-              <a href="tel:+919866440477" className="cust-btn" style={{ display: 'inline-block', textDecoration: 'none', background: '#f1f5f9', color: '#402070', border: '1.5px solid rgba(64,32,112,0.2)', padding: '11px 22px', borderRadius: 8, fontSize: 13, fontWeight: 700 }}>
+              <a href={`tel:+${WHATSAPP_NUMBER}`} className="cust-btn" style={{ display: 'inline-block', textDecoration: 'none', background: '#f1f5f9', color: '#402070', border: '1.5px solid rgba(64,32,112,0.2)', padding: '11px 22px', borderRadius: 8, fontSize: 13, fontWeight: 700 }}>
                 Call Now
               </a>
             </div>
@@ -103,9 +128,23 @@ export function CustomerSupport() {
         <div className="cust-card">
           <div className="cust-card-header"><h2>Raise a Support Ticket</h2></div>
           <div className="cust-card-body">
-            <div className="cust-form-group"><label>Subject</label><input placeholder="e.g. Transaction issue, Account query..." /></div>
-            <div className="cust-form-group"><label>Message</label><textarea rows={4} placeholder="Describe your issue in detail..." style={{ resize: 'vertical' }} /></div>
-            <button className="cust-btn cust-btn-primary" onClick={() => alert('Ticket submitted! We will contact you via WhatsApp shortly.')}>📤 Submit Ticket</button>
+            <div className="cust-form-group">
+              <label>Full Name</label>
+              <input placeholder="Your full name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} />
+            </div>
+            <div className="cust-form-group">
+              <label>Mobile Number</label>
+              <input placeholder="Your mobile number" value={form.mobile} onChange={e => setForm(p => ({ ...p, mobile: e.target.value }))} />
+            </div>
+            <div className="cust-form-group">
+              <label>Subject</label>
+              <input placeholder="e.g. Transaction issue, Account query..." value={form.subject} onChange={e => setForm(p => ({ ...p, subject: e.target.value }))} />
+            </div>
+            <div className="cust-form-group">
+              <label>Message</label>
+              <textarea rows={4} placeholder="Describe your issue in detail..." style={{ resize: 'vertical' }} value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} />
+            </div>
+            <button className="cust-btn cust-btn-primary" onClick={handleSubmit}>💬 Submit via WhatsApp</button>
           </div>
         </div>
       </div>
@@ -143,7 +182,7 @@ export function CustomerSecurity() {
         <div className="cust-card" style={{ marginTop: 20 }}>
           <div className="cust-card-header"><h2>Security Tips</h2></div>
           <div className="cust-card-body">
-            {['Never share your PAN or mobile OTP with anyone, including MoneySpot staff.', 'Always log out after using the portal on shared devices.', 'Report any suspicious activity immediately to your branch.', 'Keep your registered mobile number updated with us.'].map((tip, i) => (
+            {['Never share your PAN or mobile OTP with anyone.', 'Always log out after using the portal on shared devices.', 'Report any suspicious activity immediately to your branch.', 'Keep your registered mobile number updated with us.'].map((tip, i) => (
               <div key={i} style={{ display: 'flex', gap: 10, padding: '10px 0', borderBottom: i < 3 ? '1px solid #f1f5f9' : 'none', fontSize: 13, color: '#334155' }}>
                 <span style={{ color: '#059669', fontWeight: 700 }}>✓</span> {tip}
               </div>
