@@ -57,7 +57,7 @@ export default function CustomerCoins() {
             { icon: '🪙', label: 'Available Coins',  value: fmt(balance),        color: '#d4af37', sub: `≈ ₹${fmt(Math.floor(balance / 10))} redeemable` },
             { icon: '📈', label: 'Total Earned',      value: fmt(totalEarned),    color: '#059669', sub: 'Coins earned on transactions' },
             { icon: '🎁', label: 'Total Redeemed',    value: fmt(totalRedeemed),  color: '#c02040', sub: `₹${fmt(Math.floor(totalRedeemed / 10))} saved` },
-            { icon: '💡', label: 'Redeem Rate',       value: '10 = ₹1',           color: '#402070', sub: '1 coin = ₹0.10 (10 paise)' },
+            // { icon: '💡', label: 'Redeem Rate',       value: 'upda',           color: '#402070', sub: '1 coin = ₹0.10 (10 paise)' },
           ].map((c, i) => (
             <div key={i} className="coins-sum-card" style={{ '--cc': c.color, animationDelay: `${i * 80}ms` }}>
               <div className="coins-sum-glow" />
@@ -194,10 +194,10 @@ export default function CustomerCoins() {
             </div>
             <div className="coins-card-body">
               {[
-                { icon: '💳', step: '1', title: 'Make a Transaction', desc: 'Every ₹1 you spend earns you 1 MoneySpot Coin automatically.' },
-                { icon: '🪙', step: '2', title: 'Coins Accumulate', desc: 'Coins are credited instantly after each transaction. No minimum required to earn.' },
-                { icon: '🎁', step: '3', title: 'Redeem for Discounts', desc: 'Use 10 coins to get ₹1 off on your next transaction. Minimum 10 coins to redeem.' },
-                { icon: '♾️', step: '4', title: 'No Expiry', desc: 'Your MoneySpot Coins never expire. Accumulate as many as you want!' },
+                { icon: '💳', step: '1', title: 'Updated soon', desc: 'It will updated soon...' },
+                // { icon: '🪙', step: '2', title: 'Coins Accumulate', desc: 'Coins are credited instantly after each transaction. No minimum required to earn.' },
+                // { icon: '🎁', step: '3', title: 'Redeem for Discounts', desc: 'Use 10 coins to get ₹1 off on your next transaction. Minimum 10 coins to redeem.' },
+                // { icon: '♾️', step: '4', title: 'No Expiry', desc: 'Your MoneySpot Coins never expire. Accumulate as many as you want!' },
               ].map((s, i) => (
                 <div key={i} className="coins-step" style={{ animationDelay: `${i * 80}ms` }}>
                   <div className="coins-step-num">{s.step}</div>
