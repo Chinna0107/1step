@@ -199,17 +199,18 @@ export default function CustomerTransactions() {
               ) : (
                 <table className="cust-table">
                   <thead>
-                    <tr><th>#</th><th>Service</th><th>Platform</th><th>Bank</th><th>Amount</th><th>Date</th><th>Receipt</th></tr>
+                    <tr><th>#</th><th>Date</th><th>Service</th><th>Txn Amount</th><th>Charges %</th><th>Charges</th><th>Settled Amount</th><th>Receipt</th></tr>
                   </thead>
                   <tbody>
                     {txns.map(t => (
                       <tr key={t.id}>
-                        <td style={{ color: '#94a3b8' }}>#{t.id}</td>
-                        <td>{t.service_type || '—'}</td>
-                        <td>{t.platform || '—'}</td>
-                        <td>{t.bank || '—'}</td>
-                        <td><strong>₹{parseFloat(t.amount).toLocaleString('en-IN')}</strong></td>
-                        <td>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                        <td style={{ color: '#94a3b8', fontSize: 12 }}>#{t.id}</td>
+                        <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
+                        <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
+                        <td><strong style={{ color: '#1a0a2e' }}>₹{fmt(t.amount)}</strong></td>
+                        <td style={{ color: '#d97706', fontWeight: 700 }}>{parseFloat(t.charges_pct || 0)}%</td>
+                        <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt(t.charges_amount)}</td>
+                        <td><strong style={{ color: '#059669' }}>₹{fmt(t.settled_amount)}</strong></td>
                         <td>
                           <button onClick={() => openPrint(t)}
                             style={{ background: 'linear-gradient(135deg,#402070,#c02040)', border: 'none', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
