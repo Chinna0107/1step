@@ -144,12 +144,8 @@ function buildReceiptHTML(t) {
       </div>
       <hr class="amt-divider">
       <div class="total-row">
-        <span class="total-label">Total Paid</span>
-        <span class="total-val">₹${fmt(amount)}</span>
-      </div>
-      <div class="settled-row">
-        <span class="settled-label">Settled Amount</span>
-        <span class="settled-val" style="color:#059669">₹${fmt(settled)}</span>
+        <span class="total-label">Settled Amount</span>
+        <span class="total-val" style="color:#059669">₹${fmt(settled)}</span>
       </div>
     </div>
 
@@ -210,7 +206,7 @@ export default function CustomerTransactions() {
                         <td><strong style={{ color: '#1a0a2e' }}>₹{fmt(t.amount)}</strong></td>
                         <td style={{ color: '#d97706', fontWeight: 700 }}>{parseFloat(t.charges_pct || 0)}%</td>
                         <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt(t.charges_amount)}</td>
-                        <td><strong style={{ color: '#059669' }}>₹{fmt(t.settled_amount)}</strong></td>
+        <td><strong style={{ color: '#059669', fontSize: 15, background: '#d1fae5', padding: '4px 10px', borderRadius: 8 }}>₹{fmt(t.settled_amount)}</strong></td>
                         <td>
                           <button onClick={() => openPrint(t)}
                             style={{ background: 'linear-gradient(135deg,#402070,#c02040)', border: 'none', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>

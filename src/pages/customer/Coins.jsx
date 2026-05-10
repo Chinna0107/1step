@@ -236,7 +236,7 @@ export default function CustomerCoins() {
                       <td style={{ fontSize: 12, color: '#64748b' }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                       <td><strong>{t.service_type || '—'}</strong></td>
                       <td><span style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</span></td>
-                      <td><span className="coins-earned-tag">🪙 +{fmt(Math.floor(parseFloat(t.amount || 0)))}</span></td>
+                      <td><span className="coins-earned-tag">🪙 +{fmt(Math.floor(parseFloat(t.amount || 0) / 10))}</span></td>
                     </tr>
                   ))}
                 </tbody>
