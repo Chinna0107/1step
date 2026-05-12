@@ -73,6 +73,56 @@ export default function SuperAdminCustomers() {
     setTagging(false)
   }
 
+  const exportData = async (format) => {
+    try {
+      const params = new URLSearchParams()
+      if (branch) params.append('branch', branch)
+      if (status) params.append('status', status)
+      if (search) params.append('search', search)
+      
+      const url = `/customers/export/${format}?${params.toString()}`
+      
+      // Use config.API_URL for proper URL construction
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+      const fullUrl = `${apiUrl}${url}`
+      
+      console.log(`Requesting export: ${fullUrl}`)
+      
+      // Use fetch directly for file downloads, not the api utility
+      const response = await fetch(fullUrl, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${getTokenByRole('superadmin')}`
+        }
+      })
+      
+      console.log(`Export response status: ${response.status}`)
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Export error response:', errorText)
+        throw new Error(`Export failed: ${response.status} - ${errorText}`)
+      }
+      
+      const blob = await response.blob()
+      console.log(`Export blob size: ${blob.size} bytes`)
+      
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = `customers_${new Date().toISOString().split('T')[0]}.${format === 'excel' ? 'xlsx' : 'pdf'}`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(downloadUrl)
+      
+      console.log(`✅ ${format.toUpperCase()} export completed successfully`)
+    } catch (error) {
+      console.error('Export error:', error)
+      alert(`Export failed: ${error.message}`)
+    }
+  }
+
   return (
     <div className="sa-page">
       <Sidebar />
@@ -152,6 +202,42 @@ export default function SuperAdminCustomers() {
                 ✕ Clear
               </button>
             )}
+            
+            {/* Export Buttons */}
+            <div style={{ display: 'flex', gap: 8, marginLeft: 'auto' }}>
+              <button 
+                onClick={() => exportData('excel')}
+                disabled={loading}
+                style={{ 
+                  padding: '9px 14px', 
+                  borderRadius: 8, 
+                  border: 'none', 
+                  background: loading ? '#9ca3af' : '#059669', 
+                  color: '#fff', 
+                  fontSize: 13, 
+                  cursor: loading ? 'not-allowed' : 'pointer', 
+                  fontFamily: 'inherit', 
+                  fontWeight: 700 
+                }}>
+                📊 Export Excel
+              </button>
+              <button 
+                onClick={() => exportData('pdf')}
+                disabled={loading}
+                style={{ 
+                  padding: '9px 14px', 
+                  borderRadius: 8, 
+                  border: 'none', 
+                  background: loading ? '#9ca3af' : '#dc2626', 
+                  color: '#fff', 
+                  fontSize: 13, 
+                  cursor: loading ? 'not-allowed' : 'pointer', 
+                  fontFamily: 'inherit', 
+                  fontWeight: 700 
+                }}>
+                📄 Export PDF
+              </button>
+            </div>
           </div>
 
           {/* ── Table ── */}

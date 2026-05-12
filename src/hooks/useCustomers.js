@@ -93,5 +93,22 @@ export function useCustomerRequests() {
     } catch (e) { setError(e.message) }
   }
 
-  return { pending, all, loading, error, msg, approve, reject }
+  const updateCustomer = async (id, customerData) => {
+    setMsg(''); setError('')
+    try {
+      const r = await api(`/customers/${id}/update`, {
+        method: 'PATCH',
+        headers: adminHeaders(),
+        body: JSON.stringify(customerData)
+      })
+      setMsg(r.message)
+      cacheClear('customer_requests')
+      refetch(true)
+      return r
+    } catch (e) {
+      throw new Error(e.message)
+    }
+  }
+
+  return { pending, all, loading, error, msg, approve, reject, updateCustomer }
 }

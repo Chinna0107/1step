@@ -9,16 +9,93 @@ import '../employee/CustomerInfo.css'
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const fmt  = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
 
-function CustomerDetailModal({ customer: c, onClose }) {
+function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
   const [txns, setTxns]         = useState(null)
   const [txnLoad, setTxnLoad]   = useState(false)
   const [lightbox, setLightbox] = useState(null)
   const [tab, setTab]           = useState('details')
   const [editing, setEditing]   = useState(false)
+  const [editingDetails, setEditingDetails] = useState(false)
   const [imgUrls, setImgUrls]   = useState({ aadhar_img_url: c.aadhar_img_url || '', pan_img_url: c.pan_img_url || '', card_front_img_url: c.card_front_img_url || '' })
   const [saving, setSaving]     = useState(false)
   const [saveMsg, setSaveMsg]   = useState('')
   const [customer, setCustomer] = useState(c)
+  const [editForm, setEditForm] = useState({
+    name: c.name || '',
+    email: c.email || '',
+    phone: c.phone || '',
+    pan: c.pan || '',
+    aadhar: c.aadhar || '',
+    acc_number: c.acc_number || '',
+    referral_name: c.referral_name || '',
+    referral_phone: c.referral_phone || '',
+  })
+  const [editError, setEditError] = useState('')
+
+  const handleCustomerUpdate = async () => {
+    // Validation
+    if (!editForm.name?.trim()) {
+      setEditError('Name is required')
+      return
+    }
+    if (!editForm.email?.trim()) {
+      setEditError('Email is required')
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(editForm.email.trim())) {
+      setEditError('Please enter a valid email address')
+      return
+    }
+    if (!editForm.phone?.trim()) {
+      setEditError('Phone is required')
+      return
+    }
+    if (!/^\d{10}$/.test(editForm.phone.trim())) {
+      setEditError('Phone must be exactly 10 digits')
+      return
+    }
+    if (!editForm.pan?.trim()) {
+      setEditError('PAN is required')
+      return
+    }
+    if (!/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(editForm.pan.trim().toUpperCase())) {
+      setEditError('PAN must be in format ABCDE1234F')
+      return
+    }
+    if (editForm.aadhar?.trim() && !/^\d{12}$/.test(editForm.aadhar.trim())) {
+      setEditError('Aadhar must be exactly 12 digits')
+      return
+    }
+    if (editForm.referral_phone?.trim() && !/^\d{10}$/.test(editForm.referral_phone.trim())) {
+      setEditError('Referral phone must be exactly 10 digits')
+      return
+    }
+
+    setSaving(true)
+    setEditError('')
+    try {
+      await onUpdate(customer.id, {
+        ...editForm,
+        pan: editForm.pan.trim().toUpperCase(),
+        phone: editForm.phone.trim(),
+        aadhar: editForm.aadhar?.trim() || null,
+        referral_phone: editForm.referral_phone?.trim() || null,
+      })
+      setCustomer(prev => ({ ...prev, ...editForm }))
+      setEditingDetails(false)
+      setSaveMsg('Customer details updated successfully!')
+      setTimeout(() => setSaveMsg(''), 3000) // Clear message after 3 seconds
+    } catch (err) {
+      setEditError(err.message || 'Failed to update customer')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const handleEditChange = (field, value) => {
+    setEditForm(prev => ({ ...prev, [field]: value }))
+    if (editError) setEditError('')
+  }
 
   const saveImages = async () => {
     setSaving(true); setSaveMsg('')
@@ -116,13 +193,167 @@ function CustomerDetailModal({ customer: c, onClose }) {
 
           {/* ── Details Tab ── */}
           {tab === 'details' && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
-              {fields.map(f => (
-                <div key={f.label} style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px' }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{f.label}</div>
-                  <div style={{ fontSize: 13, fontWeight: 700, color: '#1a0a2e', fontFamily: f.mono ? 'monospace' : 'inherit', wordBreak: 'break-all' }}>{f.value}</div>
+            <div>
+              {/* Edit/Save Controls */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#402070' }}>
+                  {editingDetails ? '✏️ Editing Customer Details' : '👤 Customer Information'}
                 </div>
-              ))}
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {editingDetails ? (
+                    <>
+                      <button 
+                        onClick={() => {
+                          setEditingDetails(false)
+                          setEditError('')
+                          setEditForm({
+                            name: customer.name || '',
+                            email: customer.email || '',
+                            phone: customer.phone || '',
+                            pan: customer.pan || '',
+                            aadhar: customer.aadhar || '',
+                            acc_number: customer.acc_number || '',
+                            referral_name: customer.referral_name || '',
+                            referral_phone: customer.referral_phone || '',
+                          })
+                        }}
+                        style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', color: '#6b7280', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        onClick={handleCustomerUpdate}
+                        disabled={saving}
+                        style={{ padding: '6px 12px', borderRadius: 6, border: 'none', background: saving ? '#9ca3af' : 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontSize: 12, fontWeight: 700, cursor: saving ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
+                      >
+                        {saving ? 'Saving...' : '✓ Save Changes'}
+                      </button>
+                    </>
+                  ) : (
+                    <button 
+                      onClick={() => setEditingDetails(true)}
+                      style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid rgba(64,32,112,0.3)', background: '#fff', color: '#402070', fontSize: 12, fontWeight: 700, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}
+                    >
+                      ✏️ Edit Details
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Error Message */}
+              {editError && (
+                <div style={{ background: '#fee2e2', color: '#dc2626', padding: '10px 14px', borderRadius: 8, marginBottom: 16, fontSize: 13, fontWeight: 600 }}>
+                  {editError}
+                </div>
+              )}
+
+              {/* Success Message */}
+              {saveMsg && (
+                <div style={{ background: '#d1fae5', color: '#059669', padding: '10px 14px', borderRadius: 8, marginBottom: 16, fontSize: 13, fontWeight: 600 }}>
+                  {saveMsg}
+                </div>
+              )}
+              
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                {editingDetails ? (
+                  // Edit Form
+                  <>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(64,32,112,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Full Name *</div>
+                      <input
+                        type="text"
+                        value={editForm.name}
+                        onChange={e => handleEditChange('name', e.target.value)}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#1a0a2e', outline: 'none' }}
+                      />
+                    </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(64,32,112,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Email *</div>
+                      <input
+                        type="email"
+                        value={editForm.email}
+                        onChange={e => handleEditChange('email', e.target.value)}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#1a0a2e', outline: 'none' }}
+                      />
+                    </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(64,32,112,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Phone *</div>
+                      <input
+                        type="tel"
+                        value={editForm.phone}
+                        onChange={e => {
+                          const value = e.target.value.replace(/\D/g, '')
+                          if (value.length <= 10) handleEditChange('phone', value)
+                        }}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#1a0a2e', outline: 'none' }}
+                        maxLength={10}
+                      />
+                    </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(64,32,112,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>PAN *</div>
+                      <input
+                        type="text"
+                        value={editForm.pan}
+                        onChange={e => handleEditChange('pan', e.target.value.toUpperCase())}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#1a0a2e', outline: 'none', textTransform: 'uppercase', fontFamily: 'monospace' }}
+                        maxLength={10}
+                      />
+                    </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(64,32,112,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Aadhar</div>
+                      <input
+                        type="text"
+                        value={editForm.aadhar}
+                        onChange={e => {
+                          const value = e.target.value.replace(/\D/g, '')
+                          if (value.length <= 12) handleEditChange('aadhar', value)
+                        }}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#1a0a2e', outline: 'none', fontFamily: 'monospace' }}
+                        maxLength={12}
+                      />
+                    </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(64,32,112,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Account Number</div>
+                      <input
+                        type="text"
+                        value={editForm.acc_number}
+                        onChange={e => handleEditChange('acc_number', e.target.value)}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#1a0a2e', outline: 'none', fontFamily: 'monospace' }}
+                      />
+                    </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(64,32,112,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Referral Name</div>
+                      <input
+                        type="text"
+                        value={editForm.referral_name}
+                        onChange={e => handleEditChange('referral_name', e.target.value)}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#1a0a2e', outline: 'none' }}
+                      />
+                    </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(64,32,112,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Referral Phone</div>
+                      <input
+                        type="tel"
+                        value={editForm.referral_phone}
+                        onChange={e => {
+                          const value = e.target.value.replace(/\D/g, '')
+                          if (value.length <= 10) handleEditChange('referral_phone', value)
+                        }}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#1a0a2e', outline: 'none' }}
+                        maxLength={10}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  // Display Mode
+                  fields.map(f => (
+                    <div key={f.label} style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{f.label}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#1a0a2e', fontFamily: f.mono ? 'monospace' : 'inherit', wordBreak: 'break-all' }}>{f.value}</div>
+                    </div>
+                  ))
+                )}
+              </div>
             </div>
           )}
 
@@ -275,7 +506,7 @@ function CustomerDetailModal({ customer: c, onClose }) {
 }
 
 export default function AdminCustomers() {
-  const { all, loading, error, msg, approve, reject } = useCustomerRequests()
+  const { all, loading, error, msg, approve, reject, updateCustomer } = useCustomerRequests()
   const [search,     setSearch]     = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [selected,   setSelected]   = useState(null)
@@ -392,7 +623,15 @@ export default function AdminCustomers() {
                               <button className="dash-btn dash-btn-danger  dash-btn-sm" onClick={() => reject(c.id)}>❌</button>
                             </div>
                           ) : (
-                            <span style={{ fontSize: 11, color: '#9ca3af' }}>{c.reviewed_by_name || '—'}</span>
+                            <div style={{ display: 'flex', gap: 4, alignItems: 'center' }}>
+                              <button 
+                                onClick={() => setSelected(c)}
+                                style={{ padding: '4px 8px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', color: '#402070', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}
+                              >
+                                ✏️ Edit
+                              </button>
+                              <span style={{ fontSize: 11, color: '#9ca3af' }}>{c.reviewed_by_name || '—'}</span>
+                            </div>
                           )}
                         </td>
                       </tr>
@@ -406,7 +645,7 @@ export default function AdminCustomers() {
         </div>
       </div>
 
-      {selected && <CustomerDetailModal customer={selected} onClose={() => setSelected(null)} />}
+      {selected && <CustomerDetailModal customer={selected} onClose={() => setSelected(null)} onUpdate={updateCustomer} />}
 
       {lightbox && (
         <div onClick={() => setLightbox(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20 }}>

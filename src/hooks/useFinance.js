@@ -240,11 +240,11 @@ export function useAdminReports() {
 }
 
 // ── useAdminTransactions ──────────────────────────────────────
-export function useAdminTransactions(from, to) {
+export function useAdminTransactions(from, to, page = 1) {
   const { data, loading, refetch } = useSWR(
-    `admin:txns:${from}:${to}`,
+    `admin:txns:${from}:${to}:${page}`,
     () => {
-      const p = new URLSearchParams({ from, to })
+      const p = new URLSearchParams({ from, to, page: page.toString() })
       return api(`/dashboard/reports?${p}`, { headers: authAdmin() })
     },
     TTL.dashboard
@@ -252,6 +252,7 @@ export function useAdminTransactions(from, to) {
   return {
     transactions: data?.transactions ?? [],
     totals:       data?.totals       ?? {},
+    pagination:   data?.pagination   ?? {},
     loading, refetch,
   }
 }

@@ -91,10 +91,11 @@ function TxnDetailModal({ txn, onClose }) {
 export default function AdminTransactions() {
   const [from, setFrom]         = useState(today)
   const [to, setTo]             = useState(today)
+  const [page, setPage]         = useState(1)
   const [printTxn, setPrintTxn] = useState(null)
   const [viewTxn, setViewTxn]   = useState(null)
 
-  const { transactions: txns, totals, loading, refetch } = useAdminTransactions(from, to)
+  const { transactions: txns, totals, pagination, loading, refetch } = useAdminTransactions(from, to, page)
 
   return (
     <div className="dash-page">
@@ -104,7 +105,7 @@ export default function AdminTransactions() {
           <h1>Transaction Management</h1>
           <div className="dash-topbar-right">
             <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none', padding: '7px 14px' }} onClick={refetch}><MdRefresh /></button>
-            <span className="dash-badge">{loading ? '...' : txns.length} Records</span>
+            <span className="dash-badge">{loading ? '...' : `Page ${page} of ${pagination?.totalPages || 1}`} Records</span>
           </div>
         </div>
 
@@ -129,9 +130,9 @@ export default function AdminTransactions() {
                   <label>To Date</label>
                   <input type="date" value={to} onChange={e => setTo(e.target.value)} />
                 </div>
-                <button className="dash-btn dash-btn-primary" onClick={refetch}><MdFilterList /> Filter</button>
+                <button className="dash-btn dash-btn-primary" onClick={() => { setPage(1); refetch() }}><MdFilterList /> Filter</button>
                 <button className="dash-btn" style={{ background: '#f0f2f8', color: '#666', border: 'none' }}
-                  onClick={() => { setFrom(today); setTo(today); setTimeout(refetch, 0) }}>Today</button>
+                  onClick={() => { setFrom(today); setTo(today); setPage(1); setTimeout(refetch, 0) }}>Today</button>
               </div>
             </div>
           </div>
@@ -139,7 +140,7 @@ export default function AdminTransactions() {
           {/* Table */}
           <div className="dash-card">
             <div className="dash-card-header">
-              <h2>Transactions ({txns.length})</h2>
+              <h2>Transactions (Page {page} - {fmt(txns.length)} of {fmt(totals.count ?? 0)})</h2>
               <div style={{ fontSize: 13, color: '#9ca3af' }}>
                 Total: <strong style={{ color: '#059669' }}>{fmtVal(totals.amount ?? 0)}</strong> · Profit: <strong style={{ color: '#d4af37' }}>{fmtVal(totals.profit ?? 0)}</strong>
               </div>
@@ -218,6 +219,50 @@ export default function AdminTransactions() {
               )}
             </div>
           </div>
+
+          {/* Pagination */}
+          {pagination && pagination.totalPages > 1 && (
+            <div className="dash-card">
+              <div className="dash-card-body" style={{ padding: '16px 22px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ fontSize: 14, color: '#6b7280' }}>
+                  Showing {((page - 1) * 500) + 1} to {Math.min(page * 500, totals.count)} of {fmt(totals.count)} transactions
+                </div>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                  <button 
+                    onClick={() => { setPage(1); refetch() }}
+                    disabled={page === 1}
+                    style={{ padding: '6px 12px', border: '1px solid #d1d5db', borderRadius: 6, background: page === 1 ? '#f9fafb' : '#fff', color: page === 1 ? '#9ca3af' : '#374151', cursor: page === 1 ? 'not-allowed' : 'pointer' }}
+                  >
+                    First
+                  </button>
+                  <button 
+                    onClick={() => { setPage(page - 1); refetch() }}
+                    disabled={!pagination.hasPrev}
+                    style={{ padding: '6px 12px', border: '1px solid #d1d5db', borderRadius: 6, background: !pagination.hasPrev ? '#f9fafb' : '#fff', color: !pagination.hasPrev ? '#9ca3af' : '#374151', cursor: !pagination.hasPrev ? 'not-allowed' : 'pointer' }}
+                  >
+                    Previous
+                  </button>
+                  <span style={{ padding: '6px 12px', fontSize: 14, fontWeight: 600, color: '#402070' }}>
+                    Page {page} of {pagination.totalPages}
+                  </span>
+                  <button 
+                    onClick={() => { setPage(page + 1); refetch() }}
+                    disabled={!pagination.hasNext}
+                    style={{ padding: '6px 12px', border: '1px solid #d1d5db', borderRadius: 6, background: !pagination.hasNext ? '#f9fafb' : '#fff', color: !pagination.hasNext ? '#9ca3af' : '#374151', cursor: !pagination.hasNext ? 'not-allowed' : 'pointer' }}
+                  >
+                    Next
+                  </button>
+                  <button 
+                    onClick={() => { setPage(pagination.totalPages); refetch() }}
+                    disabled={page === pagination.totalPages}
+                    style={{ padding: '6px 12px', border: '1px solid #d1d5db', borderRadius: 6, background: page === pagination.totalPages ? '#f9fafb' : '#fff', color: page === pagination.totalPages ? '#9ca3af' : '#374151', cursor: page === pagination.totalPages ? 'not-allowed' : 'pointer' }}
+                  >
+                    Last
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
         </div>
       </div>

@@ -43,8 +43,25 @@ export default function EmployeePerformance() {
     }
     setLoading(true)
     const p = period === 'custom' ? `from=${from}&to=${to}` : `from=${period === 'today' ? today : monthStart}&to=${today}`
-    api(`/dashboard/admin/stats?${p}`, { headers: auth() })
-      .then(d => { cacheSet(key, d, TTL.dashboard); setData(d); setLoading(false) })
+    
+    // Use the new performance endpoint with better filtering
+    api(`/finance/performance?${p}`, { headers: auth() })
+      .then(d => { 
+        // Transform the data to match the expected format
+        const transformedData = {
+          employees: d.performance || [],
+          attendance: [], // This would need to come from a separate endpoint
+          stats: {
+            totalTransactions: d.performance?.reduce((sum, emp) => sum + emp.transaction_count, 0) || 0,
+            totalAmount: d.performance?.reduce((sum, emp) => sum + parseFloat(emp.total_amount || 0), 0) || 0,
+            totalProfit: d.performance?.reduce((sum, emp) => sum + parseFloat(emp.total_profit || 0), 0) || 0
+          },
+          branchSummary: d.branchSummary || []
+        }
+        cacheSet(key, transformedData, TTL.dashboard)
+        setData(transformedData)
+        setLoading(false)
+      })
       .catch(() => setLoading(false))
   }, [period, from, to])
 
@@ -57,14 +74,20 @@ export default function EmployeePerformance() {
   const maxTxn   = Math.max(1, ...employees.map(e => e.txn))
   const maxValue = Math.max(1, ...employees.map(e => e.value))
 
-  // Merge attendance into employees
+  // Merge attendance into employees - update field mapping
   const attMap = {}
   attendance.forEach(a => { attMap[a.employee_name] = a })
 
   const enriched = employees.map(e => ({
     ...e,
-    att: attMap[e.name] || null,
-    rating: RATING(e.txn),
+    // Map new API fields to expected format
+    name: e.employee_name || e.name,
+    txn: e.transaction_count || e.txn || 0,
+    value: e.total_amount || e.value || 0,
+    profit: e.total_profit || e.profit || 0,
+    coins: e.coins || 0,
+    att: attMap[e.employee_name || e.name] || null,
+    rating: RATING(e.transaction_count || e.txn || 0),
   }))
 
   const totalTxn    = enriched.reduce((s, e) => s + e.txn, 0)

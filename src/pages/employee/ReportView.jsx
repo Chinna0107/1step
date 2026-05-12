@@ -92,20 +92,26 @@ export default function ReportView({ authHeader, showFinancials = true, branches
   const [branch, setBranch]     = useState('')
   const [empId, setEmpId]       = useState('')
   const [tab, setTab]           = useState('service')
+  const [page, setPage]         = useState(1)
   const [selectedTxn, setSelectedTxn] = useState(null)
   const [printTxn, setPrintTxn]       = useState(null)
 
-  const load = useCallback(() => {
+  const load = useCallback((p = page) => {
     setLoading(true)
-    const p = new URLSearchParams({ from, to })
-    if (branch) p.set('branch', branch)
-    if (empId)  p.set('employee_id', empId)
-    api(`/dashboard/reports?${p}`, { headers: authHeader() })
+    const params = new URLSearchParams({ from, to, page: p })
+    if (branch) params.set('branch', branch)
+    if (empId)  params.set('employee_id', empId)
+    api(`/dashboard/reports?${params}`, { headers: authHeader() })
       .then(d => { setData(d); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [from, to, branch, empId, authHeader])
+  }, [from, to, branch, empId, page, authHeader])
 
   useEffect(() => { load() }, [load])
+
+  // Reset to page 1 when filters change
+  const generate = () => { setPage(1); load(1) }
+
+  const goPage = (p) => { setPage(p); load(p) }
 
   const txns            = data?.transactions    ?? []
   const totals          = data?.totals          ?? {}
@@ -118,23 +124,47 @@ export default function ReportView({ authHeader, showFinancials = true, branches
   // ── Export CSV ──
   const exportCSV = () => {
     if (!txns.length) return
-    const h = 'ID,Date,Employee,Branch,Service,Platform,Amount,Charges,Settled' + (showFinancials ? ',Commission' : '')
-    const r = txns.map(t => [
+    const headers = [
+      'ID','Date','Time','Employee','Branch',
+      'Customer','Customer PAN','Customer Mobile',
+      'Service','Platform','W.Platform','Bank','Card Type','Card Last4',
+      'Amount','Charges%','Charges','Settled',
+      'Payment Mode','Received Mode',
+      ...(showFinancials ? ['Net Profit','GST(18%)','Total Profit'] : []),
+      'Note'
+    ]
+    const rows = txns.map(t => [
       t.id,
       new Date(t.created_at).toLocaleDateString('en-IN'),
+      new Date(t.created_at).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),
       t.employee_name || '',
       t.branch || '',
+      t.cust_name || '',
+      t.cust_pan || '',
+      t.cust_mobile || '',
       t.service_type || '',
       t.platform || '',
+      t.bill_platform || '',
+      t.bank || '',
+      t.card || '',
+      t.card_last4 ? `****${t.card_last4}` : '',
       t.amount,
+      t.charges_pct || 0,
       t.charges_amount || 0,
       t.settled_amount || 0,
-      ...(showFinancials ? [t.profit || 0] : []),
+      t.payment_mode || '',
+      t.received_mode || '',
+      ...(showFinancials ? [
+        parseFloat(t.profit||0).toFixed(2),
+        (parseFloat(t.profit||0)*0.18).toFixed(2),
+        (parseFloat(t.profit||0)*0.82).toFixed(2),
+      ] : []),
+      `"${(t.note||'').replace(/"/g,'""')}"`,
     ].join(','))
-    const blob = new Blob([h + '\n' + r.join('\n')], { type: 'text/csv' })
+    const blob = new Blob([headers.join(',') + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' })
     const a = document.createElement('a')
     a.href = URL.createObjectURL(blob)
-    a.download = `report_${from}_${to}.csv`
+    a.download = `transactions_${from}_${to}.csv`
     a.click()
   }
 
@@ -214,7 +244,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
             </select>
           </div>
         )}
-        <button className="dash-btn dash-btn-primary" onClick={load}>🔍 Generate</button>
+        <button className="dash-btn dash-btn-primary" onClick={generate}>🔍 Generate</button>
         <button className="dash-btn" style={{ background: '#d1fae5', color: '#059669', border: 'none' }} onClick={exportCSV}>📊 CSV</button>
         <button className="dash-btn" style={{ background: '#fee2e2', color: '#dc2626', border: 'none' }} onClick={exportPDF}>📄 PDF</button>
       </div>
@@ -375,7 +405,29 @@ export default function ReportView({ authHeader, showFinancials = true, branches
           {/* ── Transactions Table ── */}
           <div className="dash-card">
             <div className="dash-card-header">
-              <h2>📋 Transactions ({txns.length})</h2>
+              <h2>📋 Transactions ({txns.length}{data?.pagination ? ` of ${data.pagination.total}` : ''})</h2>
+              {data?.pagination && data.pagination.totalPages > 1 && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <button onClick={() => goPage(page - 1)} disabled={!data.pagination.hasPrev}
+                    style={{ padding: '4px 10px', borderRadius: 6, border: '1.5px solid #e2e8f0', background: data.pagination.hasPrev ? '#fff' : '#f8fafc', color: data.pagination.hasPrev ? '#402070' : '#cbd5e1', cursor: data.pagination.hasPrev ? 'pointer' : 'default', fontWeight: 700, fontSize: 13 }}>
+                    ‹
+                  </button>
+                  {Array.from({ length: data.pagination.totalPages }, (_, i) => i + 1).map(p => (
+                    <button key={p} onClick={() => goPage(p)}
+                      style={{ padding: '4px 10px', borderRadius: 6, border: '1.5px solid', fontWeight: 700, fontSize: 12, cursor: 'pointer',
+                        borderColor: p === page ? '#402070' : '#e2e8f0',
+                        background:  p === page ? '#402070' : '#fff',
+                        color:       p === page ? '#fff'    : '#64748b' }}>
+                      {p}
+                    </button>
+                  ))}
+                  <button onClick={() => goPage(page + 1)} disabled={!data.pagination.hasNext}
+                    style={{ padding: '4px 10px', borderRadius: 6, border: '1.5px solid #e2e8f0', background: data.pagination.hasNext ? '#fff' : '#f8fafc', color: data.pagination.hasNext ? '#402070' : '#cbd5e1', cursor: data.pagination.hasNext ? 'pointer' : 'default', fontWeight: 700, fontSize: 13 }}>
+                    ›
+                  </button>
+                  <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 4 }}>Page {page} of {data.pagination.totalPages}</span>
+                </div>
+              )}
             </div>
             <div className="dash-table-wrap">
               <table className="dash-table">
