@@ -24,6 +24,7 @@ function EmployeeDetailModal({ emp, onClose }) {
     try {
       const data = await api(`/dashboard/reports?employee_id=${emp.id}&from=2020-01-01&to=${today}`, { headers: auth() })
       setTxns(data?.transactions ?? [])
+      if (data?.totals) setTxnMeta({ count: data.totals.count, amount: data.totals.amount, profit: data.totals.profit })
     } catch { setTxns([]) }
     setTxnLoad(false)
   }, [emp.id, txns])
@@ -67,11 +68,13 @@ function EmployeeDetailModal({ emp, onClose }) {
     { label: 'Joined',        value: new Date(emp.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) },
   ]
 
-  const txnTotals = txns ? {
+  const [txnMeta, setTxnMeta] = useState(null)
+
+  const txnTotals = txnMeta ?? (txns ? {
     count:  txns.length,
     amount: txns.reduce((s,t) => s + parseFloat(t.amount||0), 0),
     profit: txns.reduce((s,t) => s + parseFloat(t.profit||0), 0),
-  } : null
+  } : null)
 
   return (
     <div onClick={e => e.target === e.currentTarget && onClose()}

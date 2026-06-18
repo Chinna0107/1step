@@ -205,7 +205,10 @@ function buildReceiptHTML(txn) {
 
   const chargesPct    = parseFloat(txn.charges_pct || txn.commission_pct || 0)
   const chargesAmt    = parseFloat(txn.charges_amount || 0)
-  const settledAmt    = parseFloat(txn.settled_amount || txn.profit || 0)
+  const isBillWd      = txn.service_type === 'Bill Pay + Withdrawal'
+  const settledAmt    = isBillWd
+    ? parseFloat(txn.total_collected || txn.settled_amount || 0)
+    : parseFloat(txn.settled_amount || txn.profit || 0)
   const amount        = parseFloat(txn.amount || 0)
   const netProfit     = parseFloat(txn.profit || 0)
   const gst           = parseFloat((netProfit * 0.18).toFixed(2))
@@ -290,7 +293,10 @@ export default function PrintReceipt({ txn, onClose, showFinancials = false }) {
 
   const chargesPct = parseFloat(txn.charges_pct || txn.commission_pct || 0)
   const chargesAmt = parseFloat(txn.charges_amount || 0)
-  const settledAmt = parseFloat(txn.settled_amount || txn.profit || 0)
+  const isBillWd   = txn.service_type === 'Bill Pay + Withdrawal'
+  const settledAmt = isBillWd
+    ? parseFloat(txn.total_collected || txn.settled_amount || 0)
+    : parseFloat(txn.settled_amount || txn.profit || 0)
   const amount     = parseFloat(txn.amount || 0)
   const netProfit  = parseFloat(txn.profit || 0)
   const gst        = parseFloat((netProfit * 0.18).toFixed(2))

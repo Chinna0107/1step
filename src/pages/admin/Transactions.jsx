@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
 import { useAdminTransactions } from '../../hooks/useFinance'
-import { MdPrint, MdFilterList, MdRefresh } from 'react-icons/md'
+import { MdPrint, MdFilterList, MdRefresh, MdFileDownload } from 'react-icons/md'
 import PrintReceipt from '../../components/PrintReceipt'
+import { getTokenByRole } from '../../utils/tokenUtils'
 import '../../pages/dashboard.css'
 
 const fmt    = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
@@ -10,6 +11,22 @@ const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/
 const today  = new Date().toISOString().split('T')[0]
 
 const BILL_WITHDRAWAL = 'Bill Pay + Withdrawal'
+
+const exportTransactions = async (format, from, to) => {
+  const token = getTokenByRole('admin')
+  const p = new URLSearchParams({ from, to, format, export: 'true' })
+  const res = await fetch(`/dashboard/reports/export?${p}`, {
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  if (!res.ok) { alert('Export failed'); return }
+  const blob = await res.blob()
+  const url  = URL.createObjectURL(blob)
+  const a    = document.createElement('a')
+  a.href     = url
+  a.download = `transactions_${from}_to_${to}.${format === 'excel' ? 'xlsx' : 'pdf'}`
+  a.click()
+  URL.revokeObjectURL(url)
+}
 
 function TxnDetailModal({ txn, onClose }) {
   const fields = [
@@ -33,7 +50,7 @@ function TxnDetailModal({ txn, onClose }) {
     { label: 'Amount',          value: `₹${fmt(txn.amount)}`,              color: '#059669' },
     { label: 'Charges %',       value: `${txn.charges_pct || 0}%`,          color: '#d97706' },
     { label: 'Charges ₹',       value: `₹${fmt(txn.charges_amount || 0)}`,  color: '#d97706' },
-    { label: 'Settled Amount',  value: `₹${fmt(txn.settled_amount || 0)}`,  color: '#402070' },
+    { label: 'Settled Amount',  value: `₹${fmt(txn.service_type === 'Bill Pay + Withdrawal' ? (txn.total_collected || txn.settled_amount || 0) : (txn.settled_amount || 0))}`,  color: '#402070' },
     { label: 'Net Profit',      value: `₹${fmt(txn.profit || 0)}`,          color: '#7c3aed' },
     ...(txn.service_type === BILL_WITHDRAWAL ? [
       { label: 'Bill Platform',   value: txn.bill_platform || '—' },
@@ -105,6 +122,14 @@ export default function AdminTransactions() {
           <h1>Transaction Management</h1>
           <div className="dash-topbar-right">
             <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none', padding: '7px 14px' }} onClick={refetch}><MdRefresh /></button>
+            <button className="dash-btn" style={{ background: '#d1fae5', color: '#059669', border: 'none', padding: '7px 14px', display:'flex', alignItems:'center', gap:4, fontWeight:700, fontSize:12 }}
+              onClick={() => exportTransactions('excel', from, to)}>
+              <MdFileDownload size={15} /> Excel
+            </button>
+            <button className="dash-btn" style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '7px 14px', display:'flex', alignItems:'center', gap:4, fontWeight:700, fontSize:12 }}
+              onClick={() => exportTransactions('pdf', from, to)}>
+              <MdFileDownload size={15} /> PDF
+            </button>
             <span className="dash-badge">{loading ? '...' : `Page ${page} of ${pagination?.totalPages || 1}`} Records</span>
           </div>
         </div>
@@ -194,14 +219,14 @@ export default function AdminTransactions() {
                             ? <span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{t.platform || t.bill_platform}</span>
                             : '—'}
                         </td>
-                        <td style={{ fontSize: 11 }}>{t.bank || '—'}</td>
+                        <td style={{ fontSize: 11 }}>{t.bank || t.card_bank || '—'}</td>
                         <td style={{ fontSize: 11 }}>
                           {t.card ? `${t.card}${t.card_last4 ? ` ****${t.card_last4}` : ''}` : '—'}
                         </td>
                         <td style={{ color: '#059669', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.amount)}</td>
                         <td style={{ color: '#d97706', fontSize: 12 }}>{t.charges_pct || 0}%</td>
                         <td style={{ color: '#dc2626', fontSize: 12 }}>₹{fmt(t.charges_amount || 0)}</td>
-                        <td style={{ color: '#402070', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.settled_amount || 0)}</td>
+                        <td style={{ color: '#402070', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.service_type === 'Bill Pay + Withdrawal' ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0))}</td>
                         <td style={{ color: '#7c3aed', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.profit || 0)}</td>
                         <td style={{ fontSize: 11 }}>{t.payment_mode || t.received_mode || '—'}</td>
                         <td style={{ fontSize: 11, color: '#9ca3af', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.note || '—'}</td>
