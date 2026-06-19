@@ -126,11 +126,11 @@ export default function ReportView({ authHeader, showFinancials = true, branches
     if (!txns.length) return
     const headers = [
       'ID','Date','Time','Employee','Branch',
-      'Customer','Customer PAN','Customer Mobile',
+      'Customer','Customer PAN','Customer Mobile','Customer Coins',
       'Service','Platform','W.Platform','Bank','Card Type','Card Last4',
       'Amount','Charges%','Charges','Settled',
       'Payment Mode','Received Mode',
-      ...(showFinancials ? ['Net Profit','GST(18%)','Total Profit'] : []),
+      ...(showFinancials ? ['Net Profit','GST(18%)','Total Profit (After GST)'] : []),
       'Note'
     ]
     const rows = txns.map(t => [
@@ -142,6 +142,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
       t.cust_name || '',
       t.cust_pan || '',
       t.cust_mobile || '',
+      t.customer_coins ?? 0,
       t.service_type || '',
       t.platform || '',
       t.bill_platform || '',
@@ -437,6 +438,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                     <th>Date</th>
                     {showFinancials && <th>Employee</th>}
                     <th>Customer</th>
+                    <th>Coins</th>
                     <th>Service</th>
                     <th>Platform</th>
                     <th>W. Platform</th>
@@ -459,6 +461,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                       {showFinancials && <td style={{ fontSize: 12 }}>{t.employee_name || '—'}</td>}
                       <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}</strong></td>
+                      <td style={{ color: '#d4af37', fontWeight: 700, fontSize: 12 }}>🪙 {t.customer_coins ?? 0}</td>
                       <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
                       <td>{t.platform || '—'}</td>
                       <td style={{ fontSize: 11, color: '#64748b' }}>{t.bill_platform || '—'}</td>
@@ -476,7 +479,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       </td>
                     </tr>
                   ))}
-                  {!txns.length && <tr><td colSpan={showFinancials ? 13 : 7} className="dash-empty">No transactions found</td></tr>}
+                  {!txns.length && <tr><td colSpan={showFinancials ? 14 : 8} className="dash-empty">No transactions found</td></tr>}
                 </tbody>
               </table>
             </div>

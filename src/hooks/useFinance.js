@@ -231,12 +231,15 @@ export function useAdminSecurity() {
 
 // ── useAdminReports ───────────────────────────────────────────
 export function useAdminReports() {
-  const { data, loading, refetch } = useSWR(
+  const { data: empData, loading: l1 } = useSWR(
     'admin:employees',
     () => api('/dashboard/employees', { headers: authAdmin() }),
     TTL.list
   )
-  return { employees: data ?? [], loading, refetch }
+  // Admin is branch-scoped, so branch filter is implicit — pass empty array
+  // (ReportView will not render branch dropdown when branches=[],
+  //  the backend already scopes by admin's branch)
+  return { employees: empData ?? [], branches: [], loading: l1 }
 }
 
 // ── useAdminTransactions ──────────────────────────────────────

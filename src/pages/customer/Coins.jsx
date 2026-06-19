@@ -54,7 +54,7 @@ export default function CustomerCoins() {
         {/* ── Summary Cards ── */}
         <div className="coins-summary">
           {[
-            { icon: '🪙', label: 'Available Coins',  value: fmt(balance),        color: '#d4af37', sub: `≈ ₹${fmt(Math.floor(balance / 10))} redeemable` },
+            // { icon: '🪙', label: 'Available Coins',  value: fmt(balance),        color: '#d4af37', sub: `≈ ₹${fmt(Math.floor(balance / 10))} redeemable` },
             { icon: '📈', label: 'Total Earned',      value: fmt(totalEarned),    color: '#059669', sub: 'Coins earned on transactions' },
             { icon: '🎁', label: 'Total Redeemed',    value: fmt(totalRedeemed),  color: '#c02040', sub: `₹${fmt(Math.floor(totalRedeemed / 10))} saved` },
             // { icon: '💡', label: 'Redeem Rate',       value: 'upda',           color: '#402070', sub: '1 coin = ₹0.10 (10 paise)' },
