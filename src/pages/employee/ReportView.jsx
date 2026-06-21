@@ -21,35 +21,45 @@ const COLORS = ['#402070','#c02040','#d4af37','#059669','#0ea5e9','#f59e0b','#8b
 function TxnDetailModal({ txn, onClose, showFinancials }) {
   if (!txn) return null
   const fields = [
-    { label: 'Transaction ID', value: `#${txn.id}` },
-    { label: 'Date & Time',    value: new Date(txn.created_at).toLocaleString('en-IN') },
-    { label: 'Customer',        value: txn.cust_name || '—' },
-    { label: 'Customer PAN',    value: txn.cust_pan  || '—' },
-    { label: 'Customer Mobile', value: txn.cust_mobile || '—' },
-    { label: 'Customer Coins',  value: txn.customer_coins != null ? `🪙 ${txn.customer_coins}` : '—' },
-    { label: 'Service',         value: txn.service_type || '—' },
-    { label: 'Platform',       value: txn.platform || txn.bill_platform || '—' },
-    { label: 'Bank',           value: txn.bank || '—' },
-    { label: 'Card Type',      value: txn.card || '—' },
-    { label: 'Card Last 4',    value: txn.card_last4 || '—' },
-    { label: 'Amount',         value: `₹${fmt(txn.amount)}`,          color: '#059669' },
-    { label: 'Charges',        value: `₹${fmt(txn.charges_amount)}`,  color: '#d97706' },
-    { label: 'Settled Amount', value: `₹${fmt(txn.settled_amount)}` },
-    { label: 'Payment Mode',   value: txn.payment_mode  || '—' },
-    { label: 'Received Mode',  value: txn.received_mode || '—' },
+    { label: 'Transaction ID',      value: `#${txn.id}` },
+    { label: 'Date & Time',         value: new Date(txn.created_at).toLocaleString('en-IN') },
+    { label: 'Employee',            value: txn.employee_name || '—' },
+    { label: 'Branch',              value: txn.branch || '—' },
+    { label: 'Customer',            value: txn.cust_name || '—' },
+    { label: 'Customer PAN',        value: txn.cust_pan  || '—' },
+    { label: 'Customer Mobile',     value: txn.cust_mobile || '—' },
+    { label: 'Customer Aadhar',     value: txn.cust_aadhar || '—' },
+    { label: 'Account No.',         value: txn.acc_no || '—' },
+    { label: 'Customer Coins',      value: txn.customer_coins != null ? `🪙 ${txn.customer_coins}` : '—' },
+    { label: 'Service',             value: txn.service_type || '—' },
+    { label: 'Platform',            value: txn.platform || txn.bill_platform || '—' },
+    { label: 'Bill Platform',       value: txn.bill_platform || '—' },
+    { label: 'Bank',                value: txn.bank || '—' },
+    { label: 'Card Type',           value: txn.card || '—' },
+    { label: 'Card Bank',           value: txn.card_bank || '—' },
+    { label: 'Card Last 4',         value: txn.card_last4 ? `****${txn.card_last4}` : '—' },
+    { label: 'Payment Mode',        value: txn.payment_mode  || '—' },
+    { label: 'Received Mode',       value: txn.received_mode || '—' },
+    { label: 'Amount',              value: `₹${fmt(txn.amount)}`,                  color: '#059669' },
+    { label: 'Charges %',           value: `${txn.charges_pct || 0}%`,               color: '#d97706' },
+    { label: 'Charges ₹',           value: `₹${fmt(txn.charges_amount)}`,            color: '#d97706' },
+    { label: 'Settled Amount',      value: `₹${fmt(txn.settled_amount)}` },
+    ...(txn.service_type === 'Bill Pay + Withdrawal' ? [
+      { label: 'Bill Amount',       value: `₹${fmt(txn.bill_amount || 0)}` },
+      { label: 'Bill Remaining',    value: `₹${fmt(txn.bill_remaining || 0)}` },
+      { label: 'Total Collected',   value: `₹${fmt(txn.total_collected || 0)}`, color: '#059669' },
+    ] : []),
     ...(showFinancials ? [
-      { label: 'Commission %',   value: `${txn.commission_pct || 0}%` },
-      { label: 'Net Profit',     value: `₹${fmt(txn.profit)}`,       color: '#402070' },
-      { label: 'GST (18%)',      value: `₹${fmt(txn.gst ?? (parseFloat(txn.profit||0)*0.18))}`,                                    color: '#dc2626' },
-      { label: 'Total Profit',   value: `₹${fmt(txn.profitWithGst ?? (parseFloat(txn.profit||0)*0.82).toFixed(2))}`, color: '#059669', bold: true },
+      { label: 'Commission %',      value: `${txn.commission_pct || 0}%` },
+      { label: 'Net Profit',        value: `₹${fmt(txn.profit)}`,                   color: '#402070' },
+      { label: 'GST (18%)',         value: `₹${fmt(txn.gst ?? (parseFloat(txn.profit||0)*0.18))}`,                                     color: '#dc2626' },
+      { label: 'Total Profit',      value: `₹${fmt(txn.profitWithGst ?? (parseFloat(txn.profit||0)*0.82).toFixed(2))}`, color: '#059669', bold: true },
     ] : []),
-    { label: 'Employee',       value: txn.employee_name || '—' },
-    { label: 'Branch',         value: txn.branch || '—' },
     ...(txn.is_edited ? [
-      { label: 'Edited',         value: 'Yes', color: '#dc2626' },
-      { label: 'Edited At',      value: txn.edited_at ? new Date(txn.edited_at).toLocaleString('en-IN') : '—', color: '#dc2626' },
+      { label: 'Edited',            value: 'Yes', color: '#dc2626' },
+      { label: 'Edited At',         value: txn.edited_at ? new Date(txn.edited_at).toLocaleString('en-IN') : '—', color: '#dc2626' },
     ] : []),
-    { label: 'Note',           value: txn.note || '—' },
+    { label: 'Note', value: txn.note || '—', full: true },
   ]
 
   return (
@@ -68,9 +78,9 @@ function TxnDetailModal({ txn, onClose, showFinancials }) {
         <div style={{ overflowY:'auto', padding:24 }}>
           <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:10 }}>
             {fields.map(f => (
-              <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px' }}>
+              <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px', ...(f.full ? { gridColumn: '1/-1' } : {}) }}>
                 <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
-                <div style={{ fontSize:14, fontWeight:700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
+                <div style={{ fontSize:14, fontWeight: f.bold ? 800 : 700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
               </div>
             ))}
           </div>
@@ -126,9 +136,9 @@ export default function ReportView({ authHeader, showFinancials = true, branches
     if (!txns.length) return
     const headers = [
       'ID','Date','Time','Employee','Branch',
-      'Customer','Customer PAN','Customer Mobile','Customer Coins',
+      'Customer','Customer PAN','Customer Mobile','Customer Aadhar','Account No','Customer Coins',
       'Service','Platform','W.Platform','Bank','Card Type','Card Last4',
-      'Amount','Charges%','Charges','Settled',
+      'Amount','Charges%','Charges','Settled','Bill Amount','Bill Remaining','Total Collected',
       'Payment Mode','Received Mode',
       ...(showFinancials ? ['Net Profit','GST(18%)','Total Profit (After GST)'] : []),
       'Note'
@@ -142,17 +152,22 @@ export default function ReportView({ authHeader, showFinancials = true, branches
       t.cust_name || '',
       t.cust_pan || '',
       t.cust_mobile || '',
+      t.cust_aadhar || '',
+      t.acc_no || '',
       t.customer_coins ?? 0,
       t.service_type || '',
       t.platform || '',
       t.bill_platform || '',
-      t.bank || '',
+      t.bank || t.card_bank || '',
       t.card || '',
       t.card_last4 ? `****${t.card_last4}` : '',
       t.amount,
       t.charges_pct || 0,
       t.charges_amount || 0,
-      t.settled_amount || 0,
+      t.service_type === 'Bill Pay + Withdrawal' ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0),
+      t.bill_amount || 0,
+      t.bill_remaining || 0,
+      t.total_collected || 0,
       t.payment_mode || '',
       t.received_mode || '',
       ...(showFinancials ? [
@@ -438,13 +453,20 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                     <th>Date</th>
                     {showFinancials && <th>Employee</th>}
                     <th>Customer</th>
+                    <th>PAN</th>
+                    <th>Mobile</th>
                     <th>Coins</th>
                     <th>Service</th>
                     <th>Platform</th>
                     <th>W. Platform</th>
+                    <th>Bank</th>
+                    <th>Card</th>
+                    <th>Acc No</th>
                     <th>Amount</th>
                     <th>Charges</th>
                     <th>Settled</th>
+                    <th>Pay Mode</th>
+                    <th>Recv Mode</th>
                     {showFinancials && <th>Net Profit</th>}
                     {showFinancials && <th>GST (18%)</th>}
                     {showFinancials && <th style={{ color: '#059669' }}>Total Profit</th>}
@@ -461,13 +483,20 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                       {showFinancials && <td style={{ fontSize: 12 }}>{t.employee_name || '—'}</td>}
                       <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}</strong></td>
+                      <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_pan || '—'}</td>
+                      <td style={{ fontSize: 11 }}>{t.cust_mobile || '—'}</td>
                       <td style={{ color: '#d4af37', fontWeight: 700, fontSize: 12 }}>🪙 {t.customer_coins ?? 0}</td>
                       <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
                       <td>{t.platform || '—'}</td>
                       <td style={{ fontSize: 11, color: '#64748b' }}>{t.bill_platform || '—'}</td>
+                      <td style={{ fontSize: 11 }}>{t.bank || t.card_bank || '—'}</td>
+                      <td style={{ fontSize: 11 }}>{t.card ? `${t.card}${t.card_last4 ? ` ****${t.card_last4}` : ''}` : '—'}</td>
+                      <td style={{ fontSize: 11, color: '#64748b' }}>{t.acc_no || '—'}</td>
                       <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</td>
                       <td style={{ color: '#d97706' }}>₹{fmt(t.charges_amount || 0)}</td>
-                      <td style={{ fontWeight: 600 }}>₹{fmt(t.settled_amount || 0)}</td>
+                      <td style={{ fontWeight: 600 }}>₹{fmt(t.service_type === 'Bill Pay + Withdrawal' ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0))}</td>
+                      <td style={{ fontSize: 11 }}>{t.payment_mode || '—'}</td>
+                      <td style={{ fontSize: 11 }}>{t.received_mode || '—'}</td>
                       {showFinancials && <td style={{ color: '#7c3aed', fontWeight: 700 }}>₹{fmt(parseFloat(t.profit||0).toFixed(2))}</td>}
                       {showFinancials && <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt((parseFloat(t.profit||0)*0.18).toFixed(2))}</td>}
                       {showFinancials && <td style={{ color: '#059669', fontWeight: 800 }}>₹{fmt((parseFloat(t.profit||0)*0.82).toFixed(2))}</td>}
@@ -479,7 +508,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       </td>
                     </tr>
                   ))}
-                  {!txns.length && <tr><td colSpan={showFinancials ? 14 : 8} className="dash-empty">No transactions found</td></tr>}
+                  {!txns.length && <tr><td colSpan={showFinancials ? 21 : 15} className="dash-empty">No transactions found</td></tr>}
                 </tbody>
               </table>
             </div>
