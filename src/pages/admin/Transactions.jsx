@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import * as XLSX from 'xlsx'
 import AdminSidebar from '../../components/admin/AdminSidebar'
 import { useAdminTransactions } from '../../hooks/useFinance'
 import { MdPrint, MdFilterList, MdRefresh, MdFileDownload } from 'react-icons/md'
 import PrintReceipt from '../../components/PrintReceipt'
 import { getTokenByRole } from '../../utils/tokenUtils'
+import { api } from '../../utils/api'
 import '../../pages/dashboard.css'
 
 const fmt    = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
@@ -12,20 +14,55 @@ const today  = new Date().toISOString().split('T')[0]
 
 const BILL_WITHDRAWAL = 'Bill Pay + Withdrawal'
 
-const exportTransactions = async (format, from, to) => {
+const buildExcelRows = (txns) => txns.map(t => ({
+  'ID':               t.id,
+  'Date':             new Date(t.created_at).toLocaleDateString('en-IN'),
+  'Time':             new Date(t.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+  'Employee':         t.employee_name || '',
+  'Branch':           t.branch || '',
+  'Customer':         t.cust_name || '',
+  'Customer PAN':     t.cust_pan || '',
+  'Customer Mobile':  t.cust_mobile || '',
+  'Customer Aadhar':  t.cust_aadhar || '',
+  'Account No':       t.acc_no || '',
+  'Customer Coins':   t.customer_coins ?? 0,
+  'Service':          t.service_type || '',
+  'Platform':         t.platform || '',
+  'Bill Platform':    t.bill_platform || '',
+  'Bank':             t.bank || t.card_bank || '',
+  'Card Type':        t.card || '',
+  'Card Last4':       t.card_last4 ? `****${t.card_last4}` : '',
+  'Payment Mode':     t.payment_mode || '',
+  'Received Mode':    t.received_mode || '',
+  'Amount (₹)':       parseFloat(t.amount) || 0,
+  'Charges %':        t.charges_pct || 0,
+  'Charges (₹)':      parseFloat(t.charges_amount) || 0,
+  'Settled (₹)':      parseFloat(t.service_type === BILL_WITHDRAWAL ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0)),
+  'Bill Amount (₹)':  parseFloat(t.bill_amount) || 0,
+  'Bill Remaining (₹)': parseFloat(t.bill_remaining) || 0,
+  'Total Collected (₹)': parseFloat(t.total_collected) || 0,
+  'Net Profit (₹)':   parseFloat(t.profit) || 0,
+  'GST 18% (₹)':      parseFloat((parseFloat(t.profit || 0) * 0.18).toFixed(2)),
+  'Total Profit After GST (₹)': parseFloat((parseFloat(t.profit || 0) * 0.82).toFixed(2)),
+  'Note':             t.note || '',
+}))
+
+const exportAllToExcel = async (from, to) => {
   const token = getTokenByRole('admin')
-  const p = new URLSearchParams({ from, to, format, export: 'true' })
-  const res = await fetch(`/dashboard/reports/export?${p}`, {
-    headers: { Authorization: `Bearer ${token}` }
-  })
-  if (!res.ok) { alert('Export failed'); return }
-  const blob = await res.blob()
-  const url  = URL.createObjectURL(blob)
-  const a    = document.createElement('a')
-  a.href     = url
-  a.download = `transactions_${from}_to_${to}.${format === 'excel' ? 'xlsx' : 'pdf'}`
-  a.click()
-  URL.revokeObjectURL(url)
+  let allTxns = []
+  let page = 1
+  while (true) {
+    const p = new URLSearchParams({ from, to, page: page.toString() })
+    const data = await api(`/dashboard/reports?${p}`, { headers: { Authorization: `Bearer ${token}` } })
+    allTxns = allTxns.concat(data?.transactions ?? [])
+    if (!data?.pagination?.hasNext) break
+    page++
+  }
+  if (!allTxns.length) { alert('No transactions to export'); return }
+  const ws = XLSX.utils.json_to_sheet(buildExcelRows(allTxns))
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, 'Transactions')
+  XLSX.writeFile(wb, `transactions_${from}_to_${to}.xlsx`)
 }
 
 function TxnDetailModal({ txn, onClose }) {
@@ -123,12 +160,8 @@ export default function AdminTransactions() {
           <div className="dash-topbar-right">
             <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none', padding: '7px 14px' }} onClick={refetch}><MdRefresh /></button>
             <button className="dash-btn" style={{ background: '#d1fae5', color: '#059669', border: 'none', padding: '7px 14px', display:'flex', alignItems:'center', gap:4, fontWeight:700, fontSize:12 }}
-              onClick={() => exportTransactions('excel', from, to)}>
+              onClick={() => exportAllToExcel(from, to)}>
               <MdFileDownload size={15} /> Excel
-            </button>
-            <button className="dash-btn" style={{ background: '#fee2e2', color: '#dc2626', border: 'none', padding: '7px 14px', display:'flex', alignItems:'center', gap:4, fontWeight:700, fontSize:12 }}
-              onClick={() => exportTransactions('pdf', from, to)}>
-              <MdFileDownload size={15} /> PDF
             </button>
             <span className="dash-badge">{loading ? '...' : `Page ${page} of ${pagination?.totalPages || 1}`} Records</span>
           </div>

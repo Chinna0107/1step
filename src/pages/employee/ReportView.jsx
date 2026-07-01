@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
+import * as XLSX from 'xlsx'
 import { api } from '../../utils/api'
 import PrintReceipt from '../../components/PrintReceipt'
 import { MdPrint } from 'react-icons/md'
@@ -131,57 +132,83 @@ export default function ReportView({ authHeader, showFinancials = true, branches
   const activeRows = tab === 'service' ? serviceSummary : platformSummary
   const maxAmt     = Math.max(1, ...activeRows.map(r => r.amount))
 
-  // ── Export CSV ──
-  const exportCSV = () => {
-    if (!txns.length) return
-    const headers = [
-      'ID','Date','Time','Employee','Branch',
-      'Customer','Customer PAN','Customer Mobile','Customer Aadhar','Account No','Customer Coins',
-      'Service','Platform','W.Platform','Bank','Card Type','Card Last4',
-      'Amount','Charges%','Charges','Settled','Bill Amount','Bill Remaining','Total Collected',
-      'Payment Mode','Received Mode',
-      ...(showFinancials ? ['Net Profit','GST(18%)','Total Profit (After GST)'] : []),
-      'Note'
-    ]
-    const rows = txns.map(t => [
-      t.id,
-      new Date(t.created_at).toLocaleDateString('en-IN'),
-      new Date(t.created_at).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),
-      t.employee_name || '',
-      t.branch || '',
-      t.cust_name || '',
-      t.cust_pan || '',
-      t.cust_mobile || '',
-      t.cust_aadhar || '',
-      t.acc_no || '',
-      t.customer_coins ?? 0,
-      t.service_type || '',
-      t.platform || '',
-      t.bill_platform || '',
-      t.bank || t.card_bank || '',
-      t.card || '',
-      t.card_last4 ? `****${t.card_last4}` : '',
-      t.amount,
-      t.charges_pct || 0,
-      t.charges_amount || 0,
-      t.service_type === 'Bill Pay + Withdrawal' ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0),
-      t.bill_amount || 0,
-      t.bill_remaining || 0,
-      t.total_collected || 0,
-      t.payment_mode || '',
-      t.received_mode || '',
-      ...(showFinancials ? [
-        parseFloat(t.profit||0).toFixed(2),
-        (parseFloat(t.profit||0)*0.18).toFixed(2),
-        (parseFloat(t.profit||0)*0.82).toFixed(2),
-      ] : []),
-      `"${(t.note||'').replace(/"/g,'""')}"`,
-    ].join(','))
-    const blob = new Blob([headers.join(',') + '\n' + rows.join('\n')], { type: 'text/csv;charset=utf-8;' })
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(blob)
-    a.download = `transactions_${from}_${to}.csv`
-    a.click()
+  // ── Export Excel (all pages, all sheets) ──
+  const exportExcel = async () => {
+    setLoading(true)
+    try {
+      let allTxns = []
+      let p = 1
+      while (true) {
+        const params = new URLSearchParams({ from, to, page: p })
+        if (branch) params.set('branch', branch)
+        if (empId)  params.set('employee_id', empId)
+        const d = await api(`/dashboard/reports?${params}`, { headers: authHeader() })
+        allTxns = allTxns.concat(d?.transactions ?? [])
+        if (!d?.pagination?.hasNext) break
+        p++
+      }
+
+      const txnRows = allTxns.map(t => ({
+        'ID':                   t.id,
+        'Date':                 new Date(t.created_at).toLocaleDateString('en-IN'),
+        'Time':                 new Date(t.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }),
+        'Employee':             t.employee_name || '',
+        'Branch':               t.branch || '',
+        'Customer':             t.cust_name || '',
+        'Customer PAN':         t.cust_pan || '',
+        'Customer Mobile':      t.cust_mobile || '',
+        'Customer Aadhar':      t.cust_aadhar || '',
+        'Account No':           t.acc_no || '',
+        'Customer Coins':       t.customer_coins ?? 0,
+        'Service':              t.service_type || '',
+        'Platform':             t.platform || '',
+        'Bill Platform':        t.bill_platform || '',
+        'Bank':                 t.bank || t.card_bank || '',
+        'Card Type':            t.card || '',
+        'Card Last4':           t.card_last4 ? `****${t.card_last4}` : '',
+        'Payment Mode':         t.payment_mode || '',
+        'Received Mode':        t.received_mode || '',
+        'Amount (₹)':           parseFloat(t.amount) || 0,
+        'Charges %':            t.charges_pct || 0,
+        'Charges (₹)':          parseFloat(t.charges_amount) || 0,
+        'Settled (₹)':          parseFloat(t.service_type === 'Bill Pay + Withdrawal' ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0)),
+        'Bill Amount (₹)':      parseFloat(t.bill_amount) || 0,
+        'Bill Remaining (₹)':   parseFloat(t.bill_remaining) || 0,
+        'Total Collected (₹)':  parseFloat(t.total_collected) || 0,
+        ...(showFinancials ? {
+          'Net Profit (₹)':     parseFloat(t.profit) || 0,
+          'GST 18% (₹)':        parseFloat((parseFloat(t.profit || 0) * 0.18).toFixed(2)),
+          'Total Profit After GST (₹)': parseFloat((parseFloat(t.profit || 0) * 0.82).toFixed(2)),
+        } : {}),
+        'Note': t.note || '',
+      }))
+
+      const svcRows = serviceSummary.map(s => ({
+        'Service':              s.name,
+        'Transactions':         s.count,
+        'Total Amount (₹)':     parseFloat(s.amount) || 0,
+        'Settled (₹)':          parseFloat(s.settled) || 0,
+        'Customer Charges (₹)': parseFloat(s.customer_charges) || 0,
+        ...(showFinancials ? {
+          'Platform Charges (₹)': parseFloat(s.platform_charges) || 0,
+          'Commission (₹)':       parseFloat(s.commission) || 0,
+        } : {}),
+      }))
+
+      const platRows = platformSummary.map(p => ({
+        'Platform':         p.name,
+        'Transactions':     p.count,
+        'Total Amount (₹)': parseFloat(p.amount) || 0,
+      }))
+
+      const wb = XLSX.utils.book_new()
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(txnRows),  'Transactions')
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(svcRows),  'Service Summary')
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(platRows), 'Platform Summary')
+      XLSX.writeFile(wb, `report_${from}_${to}.xlsx`)
+    } finally {
+      setLoading(false)
+    }
   }
 
   // ── Export PDF ──
@@ -261,7 +288,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
           </div>
         )}
         <button className="dash-btn dash-btn-primary" onClick={generate}>🔍 Generate</button>
-        <button className="dash-btn" style={{ background: '#d1fae5', color: '#059669', border: 'none' }} onClick={exportCSV}>📊 CSV</button>
+        <button className="dash-btn" style={{ background: '#d1fae5', color: '#059669', border: 'none' }} onClick={exportExcel}>📊 Excel</button>
         <button className="dash-btn" style={{ background: '#fee2e2', color: '#dc2626', border: 'none' }} onClick={exportPDF}>📄 PDF</button>
       </div>
 
