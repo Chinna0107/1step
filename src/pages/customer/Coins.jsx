@@ -213,7 +213,7 @@ export default function CustomerCoins() {
         </div>
 
         {/* ── Recent Earning History ── */}
-        <div className="coins-card">
+        {/* <div className="coins-card">
           <div className="coins-card-header">
             <span>📋</span>
             <h2>Earning History</h2>
@@ -243,7 +243,7 @@ export default function CustomerCoins() {
               </table>
             )}
           </div>
-        </div>
+        </div> */}
 
       </div>
     </div>

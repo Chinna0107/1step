@@ -18,7 +18,16 @@ export default defineConfig(({ mode }) => {
       historyApiFallback: true,
       proxy: {
         '/auth':      { target: backendUrl, changeOrigin: true },
-        '/dashboard': { target: backendUrl, changeOrigin: true },
+        '/dashboard': {
+          target: backendUrl,
+          changeOrigin: true,
+          bypass(req) {
+            // Only bypass GET requests with no Authorization header (page navigations)
+            if (req.method === 'GET' && !req.headers.authorization) {
+              return '/index.html'
+            }
+          },
+        },
         '/customers': { target: backendUrl, changeOrigin: true },
         '/customer': {
           target: backendUrl,

@@ -44,10 +44,39 @@ export default function Services() {
   const [menuPos, setMenuPos]     = useState({ top: 0, left: 0 })
   const [editTxn, setEditTxn]     = useState(null)
   const [viewTxn, setViewTxn]     = useState(null)
+  const [attendance, setAttendance]   = useState(null)
+  const [attLoading, setAttLoading]   = useState(true)
+  const [attFetched, setAttFetched]   = useState(false)
+  const [checkingIn, setCheckingIn]   = useState(false)
 
   const { lookup } = useCharges()
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+
+  // Fetch today's attendance on mount
+  useEffect(() => {
+    setAttLoading(true)
+    api('/dashboard/employee/stats', { headers: auth() })
+      .then(d => { setAttendance(d?.attendance ?? null); setAttFetched(true); setAttLoading(false) })
+      .catch(() => { setAttFetched(false); setAttLoading(false) })
+  }, [])
+
+  const handleCheckIn = async () => {
+    setCheckingIn(true); setError('')
+    try {
+      await api('/dashboard/attendance/mark', { method: 'POST', headers: { ...auth(), 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'check_in' }) })
+      const d = await api('/dashboard/employee/stats', { headers: auth() })
+      setAttendance(d?.attendance ?? null)
+      setAttFetched(true)
+    } catch (e) {
+      if (e.message?.includes('foreign key') || e.message?.includes('violates')) {
+        setError('Session error — please log out and log back in.')
+      } else {
+        setError(e.message)
+      }
+    }
+    setCheckingIn(false)
+  }
 
   useEffect(() => {
     // Serve from cache instantly, then revalidate in background
@@ -186,9 +215,37 @@ export default function Services() {
     setSaving(false)
   }
 
-  if (!master) return (
+  if (!master || attLoading) return (
     <div className="emp-page"><EmployeeNavbar />
       <div className="emp-page-content"><div className="dash-loading">Loading services...</div></div>
+    </div>
+  )
+
+  // ── Check-in gate ──
+  if (attFetched && !attendance?.check_in) return (
+    <div className="emp-page">
+      <EmployeeNavbar />
+      <div className="emp-page-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '70vh' }}>
+        <div style={{ background: '#fff', borderRadius: 20, padding: '48px 40px', textAlign: 'center', maxWidth: 420, width: '100%', boxShadow: '0 8px 40px rgba(0,0,0,0.1)' }}>
+          <div style={{ fontSize: 64, marginBottom: 16 }}>🔒</div>
+          <h2 style={{ fontSize: 22, fontWeight: 900, color: '#1a0a2e', marginBottom: 8 }}>Check-In Required</h2>
+          <p style={{ fontSize: 14, color: '#64748b', marginBottom: 28, lineHeight: 1.6 }}>
+            You need to check in for today before you can record transactions.
+          </p>
+          {error && <div className="dash-alert dash-alert-error" style={{ marginBottom: 16 }}>{error}</div>}
+          <button
+            onClick={handleCheckIn}
+            disabled={checkingIn}
+            style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px 36px', fontSize: 15, fontWeight: 800, cursor: 'pointer', width: '100%' }}>
+            {checkingIn ? 'Checking In...' : '✅ Check In Now'}
+          </button>
+          <button
+            onClick={() => navigate('/employee/dashboard')}
+            style={{ marginTop: 12, background: 'none', border: '1.5px solid #e2e8f0', borderRadius: 12, padding: '12px 36px', fontSize: 14, fontWeight: 700, cursor: 'pointer', width: '100%', color: '#64748b' }}>
+            ← Go to Dashboard
+          </button>
+        </div>
+      </div>
     </div>
   )
 
