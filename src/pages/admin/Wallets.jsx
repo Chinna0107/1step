@@ -11,9 +11,9 @@ const fmtV = n => { const v = parseFloat(n)||0; if (v >= 100000) return `₹${(v
 
 const Modal = ({ title, onClose, children }) => (
   <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 200, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-    <div style={{ background: '#fff', borderRadius: 14, padding: 28, width: 380, boxShadow: '0 8px 40px rgba(64,32,112,0.2)' }}>
+    <div style={{ background: '#fff', borderRadius: 14, padding: 28, width: 380, boxShadow: '0 8px 40px rgba(13,31,61,0.2)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
-        <h3 style={{ margin: 0, color: '#402070', fontWeight: 800 }}>{title}</h3>
+        <h3 style={{ margin: 0, color: '#0d1f3d', fontWeight: 800 }}>{title}</h3>
         <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: '#9ca3af' }}>✕</button>
       </div>
       {children}
@@ -92,9 +92,9 @@ export default function Wallets() {
 
           {/* Summary Stats */}
           <div className="dash-stats" style={{ gridTemplateColumns: 'repeat(3,1fr)', marginBottom: 24 }}>
-            <div className="dash-stat" style={{ borderTop: '3px solid #402070' }}>
+            <div className="dash-stat" style={{ borderTop: '3px solid #0d1f3d' }}>
               <div className="dash-stat-label">Total Wallet Balance</div>
-              <div className="dash-stat-value" style={{ color: '#402070' }}>{fmtV(totalBalance)}</div>
+              <div className="dash-stat-value" style={{ color: '#0d1f3d' }}>{fmtV(totalBalance)}</div>
               <div className="dash-stat-sub">Across all platforms & branches</div>
             </div>
             <div className="dash-stat" style={{ borderTop: '3px solid #059669' }}>
@@ -112,9 +112,9 @@ export default function Wallets() {
           {loading ? <div className="dash-loading">Loading...</div> : (
             Object.entries(byBranch).map(([branch, bWallets]) => (
               <div key={branch} style={{ marginBottom: 28 }}>
-                <div style={{ fontSize: 13, fontWeight: 800, color: '#402070', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <div style={{ fontSize: 13, fontWeight: 800, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12, display: 'flex', alignItems: 'center', gap: 8 }}>
                   🏦 {branch}
-                  <span style={{ background: '#ede9fe', color: '#402070', padding: '2px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>
+                  <span style={{ background: '#ede9fe', color: '#0d1f3d', padding: '2px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>
                     {bWallets.length} wallets · {fmtV(bWallets.reduce((s, w) => s + parseFloat(w.balance||0), 0))} total
                   </span>
                 </div>
@@ -122,7 +122,7 @@ export default function Wallets() {
                   {bWallets.map(w => {
                     const profit = parseFloat(w.today_inflow||0) - parseFloat(w.today_outflow||0)
                     return (
-                      <div key={w.id} className="dash-card" style={{ marginBottom: 0, borderTop: `3px solid ${w.wallet_type === 'platform' ? '#402070' : w.wallet_type === 'cash' ? '#059669' : '#0ea5e9'}` }}>
+                      <div key={w.id} className="dash-card" style={{ marginBottom: 0, borderTop: `3px solid ${w.wallet_type === 'platform' ? '#0d1f3d' : w.wallet_type === 'cash' ? '#059669' : '#0ea5e9'}` }}>
                         <div className="dash-card-header">
                           <div>
                             <h2 style={{ fontSize: 14, margin: 0 }}>
@@ -131,7 +131,7 @@ export default function Wallets() {
                             {w.platform && <div style={{ fontSize: 11, color: '#9ca3af', marginTop: 2 }}>Platform: {w.platform}</div>}
                           </div>
                           <div style={{ textAlign: 'right' }}>
-                            <div style={{ fontSize: 20, fontWeight: 900, color: parseFloat(w.balance) >= 0 ? '#402070' : '#dc2626' }}>
+                            <div style={{ fontSize: 20, fontWeight: 900, color: parseFloat(w.balance) >= 0 ? '#0d1f3d' : '#dc2626' }}>
                               ₹{fmt(w.balance)}
                             </div>
                             <div style={{ fontSize: 10, color: '#9ca3af' }}>Current Balance</div>
@@ -164,7 +164,7 @@ export default function Wallets() {
                           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: '#64748b', marginBottom: 12 }}>
                             <span>Month In: <strong style={{ color: '#059669' }}>₹{fmt(w.month_inflow||0)}</strong></span>
                             <span>Month Out: <strong style={{ color: '#dc2626' }}>₹{fmt(w.month_outflow||0)}</strong></span>
-                            <span>Txns: <strong style={{ color: '#402070' }}>{w.today_txns||0}</strong></span>
+                            <span>Txns: <strong style={{ color: '#0d1f3d' }}>{w.today_txns||0}</strong></span>
                           </div>
 
                           {/* Actions */}
@@ -173,7 +173,7 @@ export default function Wallets() {
                               onClick={() => { reset(); setModal({ type: 'add', wallet: w }) }}>➕ Add</button>
                             <button className="dash-btn dash-btn-danger dash-btn-sm" style={{ flex: 1 }}
                               onClick={() => { reset(); setModal({ type: 'deduct', wallet: w }) }}>➖ Deduct</button>
-                            <button className="dash-btn dash-btn-sm" style={{ flex: 1, background: '#f0f2f8', color: '#402070', border: 'none' }}
+                            <button className="dash-btn dash-btn-sm" style={{ flex: 1, background: '#f0f2f8', color: '#0d1f3d', border: 'none' }}
                               onClick={() => { reset(); setModal({ type: 'transfer', wallet: w }) }}>🔄</button>
                           </div>
                         </div>
@@ -220,7 +220,7 @@ export default function Wallets() {
               {modal.type !== 'transfer' && (
                 <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', marginBottom: 14, fontSize: 12 }}>
                   <div style={{ color: '#64748b' }}>Current Balance</div>
-                  <div style={{ fontSize: 20, fontWeight: 900, color: '#402070' }}>₹{fmt(modal.wallet.balance)}</div>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: '#0d1f3d' }}>₹{fmt(modal.wallet.balance)}</div>
                   <div style={{ color: '#9ca3af', marginTop: 4, fontSize: 11 }}>
                     Note: Balance = Net after platform charges deducted
                   </div>

@@ -16,7 +16,7 @@ const timeAgo = (date) => {
 }
 
 const TARGET_LABELS = { all: '👥 All', admin: '🛡️ Admins Only', employee: '👤 Employees Only' }
-const TARGET_COLORS = { all: '#402070', admin: '#059669', employee: '#d97706' }
+const TARGET_COLORS = { all: '#0d1f3d', admin: '#059669', employee: '#d97706' }
 
 export default function Notifications() {
   const { notifications, unreadCount } = useNotifications('superadmin')
@@ -92,7 +92,7 @@ export default function Notifications() {
                     <label>Message *</label>
                     <textarea required rows={3} placeholder="Write your message..."
                       value={form.message} onChange={e => set('message', e.target.value)}
-                      style={{ resize: 'vertical', fontFamily: 'inherit', fontSize: 14, padding: '10px 12px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', width: '100%' }} />
+                      style={{ resize: 'vertical', fontFamily: 'inherit', fontSize: 14, padding: '10px 12px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', width: '100%' }} />
                   </div>
                   <div className="sa-form-group" style={{ gridColumn: '1 / -1' }}>
                     <label>Image URL <span style={{ fontWeight: 400, color: '#9ca3af' }}>(optional)</span></label>
@@ -101,7 +101,7 @@ export default function Notifications() {
                       onChange={e => { set('image_url', e.target.value); setPreview(e.target.value.trim()) }}
                       style={{ fontFamily: 'monospace', fontSize: 13 }} />
                     {preview && (
-                      <div style={{ marginTop: 10, borderRadius: 10, overflow: 'hidden', border: '1.5px solid rgba(64,32,112,0.15)', maxWidth: 360, position: 'relative' }}>
+                      <div style={{ marginTop: 10, borderRadius: 10, overflow: 'hidden', border: '1.5px solid rgba(13,31,61,0.15)', maxWidth: 360, position: 'relative' }}>
                         <img src={preview} alt="preview"
                           onError={e => { e.target.style.display = 'none' }}
                           onLoad={e => { e.target.style.display = 'block' }}
@@ -136,7 +136,7 @@ export default function Notifications() {
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                      <span style={{ fontWeight: 800, fontSize: 14, color: '#1a0a2e' }}>{n.title}</span>
+                      <span style={{ fontWeight: 800, fontSize: 14, color: '#081427' }}>{n.title}</span>
                       <span style={{ fontSize: 11, fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: TARGET_COLORS[n.target] + '20', color: TARGET_COLORS[n.target] }}>
                         {TARGET_LABELS[n.target]}
                       </span>

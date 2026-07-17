@@ -139,7 +139,7 @@ export default function SuperAdminCustomers() {
           {/* ── Stats ── */}
           <div className="dash-stats-row" style={{ marginBottom: 20 }}>
             {[
-              { label: 'Total Customers', value: fmt(stats.total    ?? 0), color: '#402070', icon: '👥' },
+              { label: 'Total Customers', value: fmt(stats.total    ?? 0), color: '#0d1f3d', icon: '👥' },
               { label: 'Approved',        value: fmt(stats.approved ?? 0), color: '#059669', icon: '✅' },
               { label: 'Pending KYC',     value: fmt(stats.pending  ?? 0), color: '#d97706', icon: '⏳' },
               { label: 'Rejected',        value: fmt(stats.rejected ?? 0), color: '#dc2626', icon: '❌' },
@@ -159,12 +159,12 @@ export default function SuperAdminCustomers() {
           {branchStats.length > 0 && (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 12, marginBottom: 20 }}>
               {branchStats.map(b => (
-                <div key={b.branch} className="sa-card" style={{ cursor: 'pointer', border: branch === b.branch ? '2px solid #402070' : '2px solid transparent' }}
+                <div key={b.branch} className="sa-card" style={{ cursor: 'pointer', border: branch === b.branch ? '2px solid #0d1f3d' : '2px solid transparent' }}
                   onClick={() => setBranch(branch === b.branch ? '' : b.branch)}>
                   <div className="sa-card-body" style={{ padding: '14px 16px' }}>
-                    <div style={{ fontWeight: 800, color: '#1a0a2e', fontSize: 15, marginBottom: 8 }}>🏦 {b.branch || 'Unknown'}</div>
+                    <div style={{ fontWeight: 800, color: '#081427', fontSize: 15, marginBottom: 8 }}>🏦 {b.branch || 'Unknown'}</div>
                     <div style={{ display: 'flex', gap: 12, fontSize: 12 }}>
-                      <span style={{ color: '#64748b' }}>Total: <strong style={{ color: '#402070' }}>{b.total}</strong></span>
+                      <span style={{ color: '#64748b' }}>Total: <strong style={{ color: '#0d1f3d' }}>{b.total}</strong></span>
                       <span style={{ color: '#059669' }}>✅ {b.approved}</span>
                       <span style={{ color: '#d97706' }}>⏳ {b.pending}</span>
                     </div>
@@ -275,7 +275,7 @@ export default function SuperAdminCustomers() {
                               style={{ color: '#059669', fontWeight: 700, textDecoration: 'none' }}>📞 {c.phone}</a>
                           </td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.pan}</td>
-                          <td><span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{c.branch || '—'}</span></td>
+                          <td><span style={{ background: '#ede9fe', color: '#0d1f3d', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{c.branch || '—'}</span></td>
                           <td style={{ fontWeight: 700, color: '#d4af37', fontSize: 13 }}>🪙 {c.coins ?? 0}</td>
                           <td>
                             <div className="ci-doc-thumbs">
@@ -291,7 +291,7 @@ export default function SuperAdminCustomers() {
                             </div>
                           </td>
                           <td style={{ fontSize: 12 }}>{c.added_by_name || '—'}</td>
-                          <td style={{ fontWeight: 700, color: '#402070', textAlign: 'center' }}>{c.txn_count || 0}</td>
+                          <td style={{ fontWeight: 700, color: '#0d1f3d', textAlign: 'center' }}>{c.txn_count || 0}</td>
                           <td style={{ color: '#059669', fontWeight: 700 }}>{c.total_amount > 0 ? fmtVal(c.total_amount) : '—'}</td>
                           <td><span style={{ background: ss.bg, color: ss.color, padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{c.status}</span></td>
                           <td style={{ fontSize: 12, color: '#64748b' }}>{new Date(c.created_at).toLocaleDateString('en-IN')}</td>
@@ -314,7 +314,7 @@ export default function SuperAdminCustomers() {
             style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 700, maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 64px rgba(0,0,0,0.2)' }}>
 
             {/* Header */}
-            <div style={{ background: 'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+            <div style={{ background: 'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
               <div>
                 <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>Customer Profile</div>
                 <div style={{ color: '#fff', fontWeight: 900, fontSize: 20, marginTop: 2 }}>{viewCustomer.name}</div>
@@ -348,7 +348,7 @@ export default function SuperAdminCustomers() {
                 ].map(f => (
                   <div key={f.label} style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px' }}>
                     <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{f.label}</div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: f.color || '#1a0a2e' }}>{f.value}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: f.color || '#081427' }}>{f.value}</div>
                   </div>
                 ))}
               </div>
@@ -408,16 +408,16 @@ export default function SuperAdminCustomers() {
                         </div>
                         {/* Label + actions */}
                         <div style={{ padding: '8px 10px' }}>
-                          <div style={{ fontSize: 11, fontWeight: 700, color: '#402070', marginBottom: 6 }}>{d.icon} {d.label}</div>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: '#0d1f3d', marginBottom: 6 }}>{d.icon} {d.label}</div>
                           <div style={{ display: 'flex', gap: 6 }}>
                             <button
                               onClick={() => setLightbox({ url: d.url, label: `${viewCustomer.name} — ${d.label}`, filename: `${viewCustomer.name}_${d.key}` })}
-                              style={{ flex: 1, padding: '5px 0', borderRadius: 6, border: '1.5px solid rgba(64,32,112,0.2)', background: '#fff', color: '#402070', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                              style={{ flex: 1, padding: '5px 0', borderRadius: 6, border: '1.5px solid rgba(13,31,61,0.2)', background: '#fff', color: '#0d1f3d', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                               🔍 View
                             </button>
                             <button
                               onClick={() => downloadImage(d.url, `${viewCustomer.name}_${d.key}`)}
-                              style={{ flex: 1, padding: '5px 0', borderRadius: 6, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                              style={{ flex: 1, padding: '5px 0', borderRadius: 6, border: 'none', background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', fontSize: 11, fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                               ⬇ Download
                             </button>
                           </div>
@@ -463,7 +463,7 @@ export default function SuperAdminCustomers() {
                     </tbody>
                     <tfoot>
                       <tr style={{ background: '#f0f2f8', fontWeight: 800, borderTop: '2px solid #e2e8f0' }}>
-                        <td colSpan={3} style={{ padding: '8px 12px', color: '#402070' }}>Total ({viewTxns.length} txns)</td>
+                        <td colSpan={3} style={{ padding: '8px 12px', color: '#0d1f3d' }}>Total ({viewTxns.length} txns)</td>
                         <td style={{ padding: '8px 12px', textAlign: 'right', color: '#059669' }}>₹{fmt(viewTxns.reduce((s, t) => s + parseFloat(t.amount || 0), 0))}</td>
                         <td style={{ padding: '8px 12px', textAlign: 'right', color: '#d4af37' }}>₹{fmt(viewTxns.reduce((s, t) => s + parseFloat(t.profit || 0), 0))}</td>
                         <td></td>
@@ -476,7 +476,7 @@ export default function SuperAdminCustomers() {
 
             <div style={{ padding: '14px 24px', borderTop: '1px solid #f1f5f9', display: 'flex', justifyContent: 'flex-end', flexShrink: 0 }}>
               <button onClick={() => setViewCustomer(null)}
-                style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>
+                style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>
                 Close
               </button>
             </div>

@@ -23,7 +23,7 @@ function StatMini({ icon, label, value, color }) {
       <div style={{ width: 36, height: 36, borderRadius: 8, background: `${color}18`, color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{icon}</div>
       <div>
         <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5 }}>{label}</div>
-        <div style={{ fontSize: 16, fontWeight: 900, color: '#1a0a2e' }}>{value}</div>
+        <div style={{ fontSize: 16, fontWeight: 900, color: '#081427' }}>{value}</div>
       </div>
     </div>
   )
@@ -96,7 +96,7 @@ export default function Branches() {
 
           {/* ── Summary Stats ── */}
           <div className="dash-stats-row" style={{ marginBottom: 24 }}>
-            <div className="dash-stat" style={{ '--c': '#402070' }}>
+            <div className="dash-stat" style={{ '--c': '#0d1f3d' }}>
               <div className="dash-stat-icon"><MdStorefront /></div>
               <div className="dash-stat-body">
                 <span className="dash-stat-label">Active Branches</span>
@@ -104,7 +104,7 @@ export default function Branches() {
                 <span className="dash-stat-sub">of {branches.length} total</span>
               </div>
             </div>
-            <div className="dash-stat" style={{ '--c': '#c02040' }}>
+            <div className="dash-stat" style={{ '--c': '#1a365d' }}>
               <div className="dash-stat-icon"><MdBarChart /></div>
               <div className="dash-stat-body">
                 <span className="dash-stat-label">Txns Today</span>
@@ -159,17 +159,17 @@ export default function Branches() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: 20, marginBottom: 24 }}>
               {branches.map((b, i) => (
                 <div key={b.id} className="sa-card branch-card"
-                  style={{ borderTop: `4px solid ${b.is_active ? (i === 0 ? '#d4af37' : '#402070') : '#e2e8f0'}`, opacity: b.is_active ? 1 : 0.6, cursor: 'pointer' }}
+                  style={{ borderTop: `4px solid ${b.is_active ? (i === 0 ? '#d4af37' : '#0d1f3d') : '#e2e8f0'}`, opacity: b.is_active ? 1 : 0.6, cursor: 'pointer' }}
                   onClick={() => setSelected(selected?.id === b.id ? null : b)}>
 
                   {/* Card Header */}
-                  <div className="sa-card-header" style={{ background: b.is_active ? 'linear-gradient(135deg,rgba(64,32,112,0.04),rgba(192,32,64,0.02))' : '#f8fafc' }}>
+                  <div className="sa-card-header" style={{ background: b.is_active ? 'linear-gradient(135deg,rgba(13,31,61,0.04),rgba(26,54,93,0.02))' : '#f8fafc' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-                      <div style={{ width: 40, height: 40, borderRadius: 10, background: b.is_active ? 'linear-gradient(135deg,#402070,#c02040)' : '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 20 }}>
+                      <div style={{ width: 40, height: 40, borderRadius: 10, background: b.is_active ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 20 }}>
                         <MdStorefront />
                       </div>
                       <div>
-                        <div style={{ fontWeight: 800, fontSize: 15, color: '#1a0a2e' }}>{b.name}</div>
+                        <div style={{ fontWeight: 800, fontSize: 15, color: '#081427' }}>{b.name}</div>
                         <div style={{ fontSize: 12, color: '#64748b', display: 'flex', alignItems: 'center', gap: 4 }}>
                           <MdLocationOn size={12} />{b.city}
                           {b.manager && b.manager !== '—' && <><span>·</span><MdPerson size={12} />{b.manager}</>}
@@ -185,8 +185,8 @@ export default function Branches() {
                   {/* Stats Grid */}
                   <div className="sa-card-body">
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 14 }}>
-                      <StatMini icon={<MdBarChart />}            color="#402070" label="Txns Today"   value={fmt(b.txnToday)} />
-                      <StatMini icon={<MdAccountBalanceWallet />} color="#c02040" label="Value Today"  value={fmtVal(b.valToday)} />
+                      <StatMini icon={<MdBarChart />}            color="#0d1f3d" label="Txns Today"   value={fmt(b.txnToday)} />
+                      <StatMini icon={<MdAccountBalanceWallet />} color="#1a365d" label="Value Today"  value={fmtVal(b.valToday)} />
                       <StatMini icon={<MdMonetizationOn />}       color="#d4af37" label="Profit Today" value={fmtVal(b.profToday)} />
                       <StatMini icon={<MdPeople />}               color="#059669" label="Employees"    value={fmt(b.employees)} />
                     </div>
@@ -201,7 +201,7 @@ export default function Branches() {
                         <div style={{
                           height: '100%', borderRadius: 999,
                           width: `${maxTxn > 0 ? Math.round(b.txnToday / maxTxn * 100) : 0}%`,
-                          background: i === 0 ? 'linear-gradient(90deg,#d4af37,#f59e0b)' : 'linear-gradient(90deg,#402070,#c02040)',
+                          background: i === 0 ? 'linear-gradient(90deg,#d4af37,#f59e0b)' : 'linear-gradient(90deg,#0d1f3d,#1a365d)',
                           transition: 'width 1s cubic-bezier(0.34,1.56,0.64,1)'
                         }} />
                       </div>
@@ -289,7 +289,7 @@ export default function Branches() {
                           <td>{b.city}</td>
                           <td>{fmt(b.employees)}</td>
                           <td>{fmt(b.customers)}</td>
-                          <td><strong style={{ color: '#402070' }}>{fmt(b.txnToday)}</strong></td>
+                          <td><strong style={{ color: '#0d1f3d' }}>{fmt(b.txnToday)}</strong></td>
                           <td style={{ color: '#059669', fontWeight: 700 }}>{fmtVal(b.valToday)}</td>
                           <td style={{ color: '#d4af37', fontWeight: 700 }}>{fmtVal(b.profToday)}</td>
                           <td>{fmt(b.txnMonth)}</td>

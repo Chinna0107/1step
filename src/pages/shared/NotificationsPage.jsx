@@ -11,7 +11,7 @@ const timeAgo = (date) => {
   return new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
-const TARGET_COLOR = { all: '#402070', admin: '#059669', employee: '#d97706' }
+const TARGET_COLOR = { all: '#0d1f3d', admin: '#059669', employee: '#d97706' }
 const TARGET_LABEL = { all: 'All Staff', admin: 'Admins', employee: 'Employees' }
 
 export default function NotificationsPage({ role, Sidebar, layout = 'sidebar' }) {

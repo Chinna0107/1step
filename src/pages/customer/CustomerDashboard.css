@@ -4,7 +4,7 @@
 
 /* ── Hero ── */
 .cd-hero {
-  background: linear-gradient(135deg, #1a0a2e 0%, #2d1155 60%, #c02040 100%);
+  background: linear-gradient(135deg, #081427 0%, #2d1155 60%, #1a365d 100%);
   border-radius: 20px;
   padding: 28px 24px;
   margin-bottom: 24px;
@@ -19,8 +19,8 @@
   filter: blur(50px);
   pointer-events: none;
 }
-.cd-orb1 { width: 250px; height: 250px; background: rgba(192,32,64,0.25); top: -80px; right: -40px; animation: cd-orb 8s ease-in-out infinite alternate; }
-.cd-orb2 { width: 180px; height: 180px; background: rgba(64,32,112,0.3);  bottom: -60px; left: 30%; animation: cd-orb 10s ease-in-out infinite alternate-reverse; }
+.cd-orb1 { width: 250px; height: 250px; background: rgba(26,54,93,0.25); top: -80px; right: -40px; animation: cd-orb 8s ease-in-out infinite alternate; }
+.cd-orb2 { width: 180px; height: 180px; background: rgba(13,31,61,0.3);  bottom: -60px; left: 30%; animation: cd-orb 10s ease-in-out infinite alternate-reverse; }
 
 @keyframes cd-orb {
   from { transform: translate(0,0) scale(1); }
@@ -111,7 +111,7 @@
 
 .cd-stat-icon  { font-size: 22px; margin-bottom: 8px; }
 .cd-stat-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-.cd-stat-value { font-size: 22px; font-weight: 900; color: #1a0a2e; line-height: 1; }
+.cd-stat-value { font-size: 22px; font-weight: 900; color: #081427; line-height: 1; }
 
 /* ── Grid ── */
 .cd-grid {
@@ -138,7 +138,7 @@
   gap: 10px;
   padding: 16px 20px;
   border-bottom: 1px solid #f1f5f9;
-  background: linear-gradient(135deg, rgba(64,32,112,0.02), rgba(192,32,64,0.01));
+  background: linear-gradient(135deg, rgba(13,31,61,0.02), rgba(26,54,93,0.01));
 }
 
 .cd-card-icon { font-size: 18px; }
@@ -147,13 +147,13 @@
   flex: 1;
   font-size: 14px;
   font-weight: 800;
-  color: #1a0a2e;
+  color: #081427;
   margin: 0;
 }
 
 .cd-card-badge {
   background: #ede9fe;
-  color: #402070;
+  color: #0d1f3d;
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 11px;
@@ -183,7 +183,7 @@
 }
 .cd-info-row:last-child { border-bottom: none; }
 .cd-info-label { color: #64748b; font-weight: 600; }
-.cd-info-value { color: #1a0a2e; font-weight: 700; text-align: right; max-width: 55%; word-break: break-all; }
+.cd-info-value { color: #081427; font-weight: 700; text-align: right; max-width: 55%; word-break: break-all; }
 
 /* ── Quick Actions ── */
 .cd-quick-grid {
@@ -213,7 +213,7 @@
 }
 
 .cd-quick-icon  { font-size: 24px; }
-.cd-quick-label { font-size: 10px; font-weight: 700; color: #1a0a2e; text-align: center; line-height: 1.2; }
+.cd-quick-label { font-size: 10px; font-weight: 700; color: #081427; text-align: center; line-height: 1.2; }
 
 /* ── Table ── */
 .cd-tr {
@@ -224,7 +224,7 @@
 
 .cd-platform-tag {
   background: #ede9fe;
-  color: #402070;
+  color: #0d1f3d;
   padding: 2px 8px;
   border-radius: 20px;
   font-size: 11px;
@@ -240,7 +240,7 @@
 
 /* ── Support Banner ── */
 .cd-support-banner {
-  background: linear-gradient(135deg, #1a0a2e, #402070);
+  background: linear-gradient(135deg, #081427, #0d1f3d);
   border-radius: 16px;
   padding: 22px 24px;
   position: relative;
@@ -253,7 +253,7 @@
   position: absolute;
   width: 180px; height: 180px;
   border-radius: 50%;
-  background: rgba(192,32,64,0.2);
+  background: rgba(26,54,93,0.2);
   filter: blur(40px);
   right: -40px; top: -40px;
   animation: cd-orb 6s ease-in-out infinite alternate;

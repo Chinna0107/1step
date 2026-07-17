@@ -55,7 +55,7 @@ export default function CreateEmployee() {
                   </div>
                   <div className="dash-form-group">
                     <label>Email *</label>
-                    <input required type="email" placeholder="employee@moneyspot.com" value={form.email} onChange={e => set('email', e.target.value)} />
+                    <input required type="email" placeholder="employee@1stepfinancecare.com" value={form.email} onChange={e => set('email', e.target.value)} />
                   </div>
                   <div className="dash-form-group">
                     <label>Mobile *</label>

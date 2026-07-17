@@ -82,7 +82,7 @@ function EmployeeDetailModal({ emp, onClose }) {
       <div style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:660, maxHeight:'92vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 32px 80px rgba(0,0,0,0.3)' }}>
 
         {/* Header */}
-        <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', flexShrink:0 }}>
+        <div style={{ background:'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding:'20px 24px', flexShrink:0 }}>
           <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
             <div style={{ display:'flex', alignItems:'center', gap:14 }}>
               {emp.photo_url
@@ -112,7 +112,7 @@ function EmployeeDetailModal({ emp, onClose }) {
               <button key={key} onClick={() => handleTab(key)}
                 style={{ padding:'6px 14px', borderRadius:20, border:'none', cursor:'pointer', fontSize:12, fontWeight:700,
                   background: tab===key ? '#fff' : 'rgba(255,255,255,0.15)',
-                  color: tab===key ? '#402070' : 'rgba(255,255,255,0.8)' }}>
+                  color: tab===key ? '#0d1f3d' : 'rgba(255,255,255,0.8)' }}>
                 {label}
               </button>
             ))}
@@ -128,7 +128,7 @@ function EmployeeDetailModal({ emp, onClose }) {
               {fields.map(f => (
                 <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px' }}>
                   <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
-                  <div style={{ fontSize:13, fontWeight:700, color:'#1a0a2e', fontFamily:f.mono?'monospace':'inherit', wordBreak:'break-all' }}>{f.value}</div>
+                  <div style={{ fontSize:13, fontWeight:700, color:'#081427', fontFamily:f.mono?'monospace':'inherit', wordBreak:'break-all' }}>{f.value}</div>
                 </div>
               ))}
             </div>
@@ -143,12 +143,12 @@ function EmployeeDetailModal({ emp, onClose }) {
                 <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))', gap:16 }}>
                   {docs.map(d => (
                     <div key={d.label} style={{ background:'#f8fafc', borderRadius:12, overflow:'hidden', border:'1.5px solid #e2e8f0' }}>
-                      <div style={{ fontSize:12, fontWeight:700, color:'#402070', padding:'8px 12px', borderBottom:'1px solid #e2e8f0' }}>{d.label}</div>
+                      <div style={{ fontSize:12, fontWeight:700, color:'#0d1f3d', padding:'8px 12px', borderBottom:'1px solid #e2e8f0' }}>{d.label}</div>
                       <img src={d.url} alt={d.label} onClick={() => setLightbox({ url:d.url, label:`${emp.name} — ${d.label}` })}
                         style={{ width:'100%', height:140, objectFit:'cover', cursor:'pointer', display:'block' }} />
                       <div style={{ padding:'8px 12px' }}>
                         <a href={d.url} target="_blank" rel="noopener noreferrer"
-                          style={{ fontSize:11, color:'#402070', fontWeight:700, textDecoration:'none' }}>🔗 Open Full Size</a>
+                          style={{ fontSize:11, color:'#0d1f3d', fontWeight:700, textDecoration:'none' }}>🔗 Open Full Size</a>
                       </div>
                     </div>
                   ))}
@@ -166,7 +166,7 @@ function EmployeeDetailModal({ emp, onClose }) {
                 <>
                   <div style={{ display:'grid', gridTemplateColumns:'repeat(3,1fr)', gap:12, marginBottom:16 }}>
                     {[
-                      { label:'Total Txns',   value: txnTotals.count,              color:'#402070' },
+                      { label:'Total Txns',   value: txnTotals.count,              color:'#0d1f3d' },
                       { label:'Total Amount', value: fmtV(txnTotals.amount),       color:'#059669' },
                       { label:'Total Profit', value: fmtV(txnTotals.profit),       color:'#d97706' },
                     ].map(s => (
@@ -183,14 +183,14 @@ function EmployeeDetailModal({ emp, onClose }) {
                         <tbody>
                           {txns.map(t => (
                             <tr key={t.id}>
-                              <td style={{ fontFamily:'monospace', color:'#402070', fontWeight:700, fontSize:11 }}>#{t.id}</td>
+                              <td style={{ fontFamily:'monospace', color:'#0d1f3d', fontWeight:700, fontSize:11 }}>#{t.id}</td>
                               <td style={{ fontSize:11 }}>
                                 <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
                                 <div style={{ color:'#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</div>
                               </td>
                               <td><strong>{t.cust_name||'—'}</strong><div style={{ fontSize:11,color:'#9ca3af' }}>{t.cust_pan||''}</div></td>
                               <td style={{ fontSize:12 }}>{t.service_type||'—'}</td>
-                              <td><span style={{ background:'#ede9fe',color:'#402070',padding:'2px 8px',borderRadius:20,fontSize:11,fontWeight:700 }}>{t.platform||t.bill_platform||'—'}</span></td>
+                              <td><span style={{ background:'#ede9fe',color:'#0d1f3d',padding:'2px 8px',borderRadius:20,fontSize:11,fontWeight:700 }}>{t.platform||t.bill_platform||'—'}</span></td>
                               <td style={{ color:'#059669',fontWeight:700 }}>₹{fmt(t.amount)}</td>
                               <td style={{ color:'#d97706',fontWeight:700 }}>₹{fmt(t.profit||0)}</td>
                             </tr>
@@ -217,7 +217,7 @@ function EmployeeDetailModal({ emp, onClose }) {
                     {[
                       { label:'Present Days', value: att.filter(a=>a.status==='Present').length, color:'#059669' },
                       { label:'Late Check-ins', value: att.filter(a => { if(!a.check_in) return false; const [h,m]=a.check_in.split(':').map(Number); return h*60+m > 9*60+15 }).length, color:'#d97706' },
-                      { label:'Total Minutes', value: att.reduce((s,a)=>s+(a.minutes||0),0), color:'#402070' },
+                      { label:'Total Minutes', value: att.reduce((s,a)=>s+(a.minutes||0),0), color:'#0d1f3d' },
                     ].map(s => (
                       <div key={s.label} style={{ background:'#f8fafc', borderRadius:10, padding:'12px 14px', textAlign:'center' }}>
                         <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', marginBottom:4 }}>{s.label}</div>
@@ -256,17 +256,17 @@ function EmployeeDetailModal({ emp, onClose }) {
         <div style={{ padding:'14px 20px', borderTop:'1px solid #f1f5f9', display:'flex', gap:10, justifyContent:'space-between', flexShrink:0 }}>
           <div style={{ display:'flex', gap:8 }}>
             {emp.mobile && <a href={`tel:${emp.mobile}`} style={{ padding:'8px 16px', borderRadius:10, background:'#d1fae5', color:'#059669', fontWeight:700, fontSize:13, textDecoration:'none' }}>📞 Call</a>}
-            {emp.mobile && <a href={`https://wa.me/${emp.mobile.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${emp.name}, this is MoneySpot management.`)}`} target="_blank" rel="noopener noreferrer"
+            {emp.mobile && <a href={`https://wa.me/${emp.mobile.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${emp.name}, this is 1 Step Finance Care management.`)}`} target="_blank" rel="noopener noreferrer"
               style={{ padding:'8px 16px', borderRadius:10, background:'#25D366', color:'#fff', fontWeight:700, fontSize:13, textDecoration:'none' }}>💬 WhatsApp</a>}
           </div>
-          <button onClick={onClose} style={{ padding:'8px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+          <button onClick={onClose} style={{ padding:'8px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0d1f3d,#1a365d)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
         </div>
       </div>
 
       {lightbox && (
         <div onClick={() => setLightbox(null)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.85)', zIndex:2000, display:'flex', alignItems:'center', justifyContent:'center', padding:20 }}>
           <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:16, overflow:'hidden', maxWidth:700, width:'100%' }}>
-            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'12px 16px', background:'#1a0a2e' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', padding:'12px 16px', background:'#081427' }}>
               <span style={{ color:'#fff', fontWeight:700 }}>{lightbox.label}</span>
               <button onClick={() => setLightbox(null)} style={{ background:'rgba(255,255,255,0.15)', border:'none', color:'#fff', width:28, height:28, borderRadius:'50%', cursor:'pointer' }}>✕</button>
             </div>
@@ -321,14 +321,14 @@ export default function AdminEmployeeDetails() {
           </div>
           <div className="dash-topbar-right">
             <input placeholder="Search name / email / mobile / PAN..." value={search} onChange={e => setSearch(e.target.value)}
-              style={{ padding:'7px 14px', borderRadius:8, border:'1.5px solid rgba(64,32,112,0.2)', fontFamily:'inherit', fontSize:13, width:280 }} />
+              style={{ padding:'7px 14px', borderRadius:8, border:'1.5px solid rgba(13,31,61,0.2)', fontFamily:'inherit', fontSize:13, width:280 }} />
             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-              style={{ padding:'7px 12px', borderRadius:8, border:'1.5px solid rgba(64,32,112,0.2)', fontFamily:'inherit', fontSize:13 }}>
+              style={{ padding:'7px 12px', borderRadius:8, border:'1.5px solid rgba(13,31,61,0.2)', fontFamily:'inherit', fontSize:13 }}>
               <option value="">All Status</option>
               <option value="active">✅ Active</option>
               <option value="inactive">❌ Inactive</option>
             </select>
-            <button className="dash-btn" style={{ background:'#f0f2f8', color:'#402070', border:'none' }} onClick={() => { cacheClear('admin:employees'); load(true) }}>🔄</button>
+            <button className="dash-btn" style={{ background:'#f0f2f8', color:'#0d1f3d', border:'none' }} onClick={() => { cacheClear('admin:employees'); load(true) }}>🔄</button>
           </div>
         </div>
 
@@ -337,12 +337,12 @@ export default function AdminEmployeeDetails() {
           {/* Stats */}
           <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:16, marginBottom:20 }}>
             {[
-              { label:'Total',    value:counts.total,    color:'#402070', bg:'#ede9fe', icon:'👥' },
+              { label:'Total',    value:counts.total,    color:'#0d1f3d', bg:'#ede9fe', icon:'👥' },
               { label:'Active',   value:counts.active,   color:'#059669', bg:'#d1fae5', icon:'✅' },
               { label:'Inactive', value:counts.inactive, color:'#dc2626', bg:'#fee2e2', icon:'❌' },
               { label:'Admins',   value:counts.admins,   color:'#7c3aed', bg:'#ede9fe', icon:'🔑' },
             ].map(s => (
-              <div key={s.label} style={{ background:'#fff', borderRadius:14, padding:'16px 18px', boxShadow:'0 2px 12px rgba(64,32,112,0.08)', borderLeft:`4px solid ${s.color}`, display:'flex', alignItems:'center', gap:12 }}>
+              <div key={s.label} style={{ background:'#fff', borderRadius:14, padding:'16px 18px', boxShadow:'0 2px 12px rgba(13,31,61,0.08)', borderLeft:`4px solid ${s.color}`, display:'flex', alignItems:'center', gap:12 }}>
                 <div style={{ width:40, height:40, borderRadius:10, background:s.bg, display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, flexShrink:0 }}>{s.icon}</div>
                 <div>
                   <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5 }}>{s.label}</div>
@@ -369,12 +369,12 @@ export default function AdminEmployeeDetails() {
                       <tr key={e.id} onClick={() => setSelected(e)} style={{ cursor:'pointer' }}
                         onMouseEnter={el => el.currentTarget.style.background = '#f0f2f8'}
                         onMouseLeave={el => el.currentTarget.style.background = ''}>
-                        <td style={{ fontFamily:'monospace', color:'#402070', fontWeight:700, fontSize:11 }}>#{e.id}</td>
+                        <td style={{ fontFamily:'monospace', color:'#0d1f3d', fontWeight:700, fontSize:11 }}>#{e.id}</td>
                         <td>
                           <div style={{ display:'flex', alignItems:'center', gap:8 }}>
                             {e.photo_url
                               ? <img src={e.photo_url} alt={e.name} style={{ width:30, height:30, borderRadius:'50%', objectFit:'cover', flexShrink:0 }} />
-                              : <div style={{ width:30, height:30, borderRadius:'50%', background:'linear-gradient(135deg,#402070,#c02040)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:900, color:'#fff', flexShrink:0 }}>{e.name?.[0]?.toUpperCase()}</div>
+                              : <div style={{ width:30, height:30, borderRadius:'50%', background:'linear-gradient(135deg,#0d1f3d,#1a365d)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:13, fontWeight:900, color:'#fff', flexShrink:0 }}>{e.name?.[0]?.toUpperCase()}</div>
                             }
                             <div>
                               <strong>{e.name}</strong>

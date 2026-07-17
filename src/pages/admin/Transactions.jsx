@@ -87,7 +87,7 @@ function TxnDetailModal({ txn, onClose }) {
     { label: 'Amount',          value: `₹${fmt(txn.amount)}`,              color: '#059669' },
     { label: 'Charges %',       value: `${txn.charges_pct || 0}%`,          color: '#d97706' },
     { label: 'Charges ₹',       value: `₹${fmt(txn.charges_amount || 0)}`,  color: '#d97706' },
-    { label: 'Settled Amount',  value: `₹${fmt(txn.service_type === 'Bill Pay + Withdrawal' ? (txn.total_collected || txn.settled_amount || 0) : (txn.settled_amount || 0))}`,  color: '#402070' },
+    { label: 'Settled Amount',  value: `₹${fmt(txn.service_type === 'Bill Pay + Withdrawal' ? (txn.total_collected || txn.settled_amount || 0) : (txn.settled_amount || 0))}`,  color: '#0d1f3d' },
     { label: 'Net Profit',      value: `₹${fmt(txn.profit || 0)}`,          color: '#7c3aed' },
     ...(txn.service_type === BILL_WITHDRAWAL ? [
       { label: 'Bill Platform',   value: txn.bill_platform || '—' },
@@ -103,7 +103,7 @@ function TxnDetailModal({ txn, onClose }) {
       style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
       <div style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 580, maxHeight: '92vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 64px rgba(0,0,0,0.25)' }}>
         {/* Header */}
-        <div style={{ background: 'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+        <div style={{ background: 'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
           <div>
             <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>Transaction Details</div>
             <div style={{ color: '#fff', fontWeight: 900, fontSize: 18, marginTop: 2 }}>#{txn.id} · {txn.service_type || 'Transaction'}</div>
@@ -120,7 +120,7 @@ function TxnDetailModal({ txn, onClose }) {
             {fields.map(f => (
               <div key={f.label} style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', ...(f.full ? { gridColumn: '1/-1' } : {}) }}>
                 <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{f.label}</div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: f.color || '#1a0a2e', wordBreak: 'break-all' }}>{f.value}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: f.color || '#081427', wordBreak: 'break-all' }}>{f.value}</div>
               </div>
             ))}
           </div>
@@ -129,13 +129,13 @@ function TxnDetailModal({ txn, onClose }) {
         {/* Footer */}
         <div style={{ padding: '14px 20px', borderTop: '1px solid #f1f5f9', display: 'flex', gap: 10, justifyContent: 'flex-end', flexShrink: 0 }}>
           {txn.cust_mobile && (
-            <a href={`https://wa.me/${txn.cust_mobile.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${txn.cust_name}, your ${txn.service_type} of ₹${fmt(txn.amount)} processed. Settled: ₹${fmt(txn.settled_amount || 0)}. - MoneySpot`)}`}
+            <a href={`https://wa.me/${txn.cust_mobile.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${txn.cust_name}, your ${txn.service_type} of ₹${fmt(txn.amount)} processed. Settled: ₹${fmt(txn.settled_amount || 0)}. - 1 Step Finance Care`)}`}
               target="_blank" rel="noopener noreferrer"
               style={{ padding: '10px 18px', borderRadius: 10, background: '#25D366', color: '#fff', fontWeight: 700, fontSize: 13, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6 }}>
               💬 WhatsApp
             </a>
           )}
-          <button onClick={onClose} style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>Close</button>
+          <button onClick={onClose} style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>Close</button>
         </div>
       </div>
     </div>
@@ -158,7 +158,7 @@ export default function AdminTransactions() {
         <div className="dash-topbar">
           <h1>Transaction Management</h1>
           <div className="dash-topbar-right">
-            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none', padding: '7px 14px' }} onClick={refetch}><MdRefresh /></button>
+            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#0d1f3d', border: 'none', padding: '7px 14px' }} onClick={refetch}><MdRefresh /></button>
             <button className="dash-btn" style={{ background: '#d1fae5', color: '#059669', border: 'none', padding: '7px 14px', display:'flex', alignItems:'center', gap:4, fontWeight:700, fontSize:12 }}
               onClick={() => exportAllToExcel(from, to)}>
               <MdFileDownload size={15} /> Excel
@@ -235,7 +235,7 @@ export default function AdminTransactions() {
                         style={{ cursor: 'pointer', background: t.is_edited ? '#fef2f2' : '' }}
                         onMouseEnter={e => e.currentTarget.style.background = t.is_edited ? '#fee2e2' : '#f0f2f8'}
                         onMouseLeave={e => e.currentTarget.style.background = t.is_edited ? '#fef2f2' : ''}>
-                        <td style={{ fontFamily: 'monospace', color: t.is_edited ? '#dc2626' : '#402070', fontWeight: 700, fontSize: 11 }}>
+                        <td style={{ fontFamily: 'monospace', color: t.is_edited ? '#dc2626' : '#0d1f3d', fontWeight: 700, fontSize: 11 }}>
                           #{t.id}{t.is_edited ? ' ✏️' : ''}
                         </td>
                         <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
@@ -249,7 +249,7 @@ export default function AdminTransactions() {
                         <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
                         <td>
                           {(t.platform || t.bill_platform)
-                            ? <span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{t.platform || t.bill_platform}</span>
+                            ? <span style={{ background: '#ede9fe', color: '#0d1f3d', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{t.platform || t.bill_platform}</span>
                             : '—'}
                         </td>
                         <td style={{ fontSize: 11 }}>{t.bank || t.card_bank || '—'}</td>
@@ -259,13 +259,13 @@ export default function AdminTransactions() {
                         <td style={{ color: '#059669', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.amount)}</td>
                         <td style={{ color: '#d97706', fontSize: 12 }}>{t.charges_pct || 0}%</td>
                         <td style={{ color: '#dc2626', fontSize: 12 }}>₹{fmt(t.charges_amount || 0)}</td>
-                        <td style={{ color: '#402070', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.service_type === 'Bill Pay + Withdrawal' ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0))}</td>
+                        <td style={{ color: '#0d1f3d', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.service_type === 'Bill Pay + Withdrawal' ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0))}</td>
                         <td style={{ color: '#7c3aed', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.profit || 0)}</td>
                         <td style={{ fontSize: 11 }}>{t.payment_mode || t.received_mode || '—'}</td>
                         <td style={{ fontSize: 11, color: '#9ca3af', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.note || '—'}</td>
                         <td onClick={e => e.stopPropagation()}>
                           <button onClick={() => setPrintTxn(t)}
-                            style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
+                            style={{ background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4, fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
                             <MdPrint size={13} /> Print
                           </button>
                         </td>
@@ -300,7 +300,7 @@ export default function AdminTransactions() {
                   >
                     Previous
                   </button>
-                  <span style={{ padding: '6px 12px', fontSize: 14, fontWeight: 600, color: '#402070' }}>
+                  <span style={{ padding: '6px 12px', fontSize: 14, fontWeight: 600, color: '#0d1f3d' }}>
                     Page {page} of {pagination.totalPages}
                   </span>
                   <button 

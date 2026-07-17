@@ -10,8 +10,8 @@ import './Dashboard.css'
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
 
 const ROLES = [
-  { role: 'Super Admin', permissions: ['Full Access', 'User Management', 'Reports', 'Config', 'Security'], color: '#c02040' },
-  { role: 'Admin',       permissions: ['Branch Management', 'Employee Management', 'Reports', 'Attendance'], color: '#402070' },
+  { role: 'Super Admin', permissions: ['Full Access', 'User Management', 'Reports', 'Config', 'Security'], color: '#1a365d' },
+  { role: 'Admin',       permissions: ['Branch Management', 'Employee Management', 'Reports', 'Attendance'], color: '#0d1f3d' },
   { role: 'Employee',    permissions: ['Transactions', 'Customer Info', 'Services', 'Attendance'], color: '#10b981' },
 ]
 
@@ -59,7 +59,7 @@ export default function Security() {
           <div className="dash-topbar-right">
             {['users','rbac'].map(t => (
               <button key={t} className="sa-btn sa-btn-sm"
-                style={{ background: tab === t ? 'linear-gradient(135deg,#402070,#c02040)' : '#f4f5fb',
+                style={{ background: tab === t ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f4f5fb',
                          color: tab === t ? '#fff' : '#666', border: '1px solid #e8eaf0' }}
                 onClick={() => setTab(t)}>
                 {t === 'users' ? '🔓 Users' : '🔑 RBAC'}
@@ -75,8 +75,8 @@ export default function Security() {
               <>
                 {[
                   { label: 'Active Users',    value: active, color: '#10b981' },
-                  { label: 'Frozen Accounts', value: frozen, color: '#c02040' },
-                  { label: 'Total Admins',    value: admins, color: '#402070' },
+                  { label: 'Frozen Accounts', value: frozen, color: '#1a365d' },
+                  { label: 'Total Admins',    value: admins, color: '#0d1f3d' },
                   { label: 'Total Employees', value: empls,  color: '#d4af37' },
                 ].map(s => (
                   <div key={s.label} className="dash-stat" style={{ '--c': s.color }}>

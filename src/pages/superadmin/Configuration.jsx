@@ -261,7 +261,7 @@ function ServiceCharges({ service, branches, platforms, cards }) {
                   const platRate  = getPlatformRate(service.hasCard ? row.name : null)
                   return (
                     <tr key={row.id} style={{ borderBottom: '1px solid #f0f2f8', background: isEditing ? '#fffbf0' : 'white' }}>
-                      <td style={{ ...td, fontWeight: 700, color: '#402070' }}>
+                      <td style={{ ...td, fontWeight: 700, color: '#0d1f3d' }}>
                         {service.hasCard ? row.name : 'Flat Rate'}
                       </td>
 
@@ -387,7 +387,7 @@ export default function Configuration() {
                   <button key={s.value} onClick={() => setActiveService(s.value)}
                     style={{
                       padding: '6px 16px', borderRadius: 20, fontSize: 13, cursor: 'pointer', border: 'none',
-                      background: activeService === s.value ? '#402070' : '#f0f2f8',
+                      background: activeService === s.value ? '#0d1f3d' : '#f0f2f8',
                       color: activeService === s.value ? '#fff' : '#555',
                       fontWeight: activeService === s.value ? 700 : 400,
                     }}>

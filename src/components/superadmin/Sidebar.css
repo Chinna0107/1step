@@ -2,7 +2,7 @@
 .sa-sidebar {
   width: 260px;
   min-height: 100vh;
-  background: linear-gradient(180deg, #0c0620 0%, #180c38 50%, #1a0830 100%);
+  background: linear-gradient(180deg, #050912 0%, #0a1324 50%, #1a0830 100%);
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -108,7 +108,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   color: #fff;
   font-size: 13px;
   font-weight: 800;
@@ -116,7 +116,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 0 10px rgba(192,32,64,0.3);
+  box-shadow: 0 0 10px rgba(26,54,93,0.3);
 }
 
 .sa-user-info { min-width: 0; overflow: hidden; }
@@ -186,7 +186,7 @@
 }
 
 .sa-nav-link.active {
-  background: linear-gradient(135deg, rgba(64,32,112,0.55), rgba(192,32,64,0.35));
+  background: linear-gradient(135deg, rgba(13,31,61,0.55), rgba(26,54,93,0.35));
   color: #fff;
   border-color: rgba(212,175,55,0.25);
   font-weight: 700;
@@ -231,9 +231,9 @@
 .sa-logout-btn {
   width: 100%;
   padding: 11px 12px;
-  background: rgba(192,32,64,0.15);
+  background: rgba(26,54,93,0.15);
   color: rgba(255,255,255,0.75);
-  border: 1px solid rgba(192,32,64,0.3);
+  border: 1px solid rgba(26,54,93,0.3);
   border-radius: 10px;
   cursor: pointer;
   font-size: 13.5px;
@@ -249,11 +249,11 @@
 }
 
 .sa-logout-btn:hover {
-  background: #c02040;
-  border-color: #c02040;
+  background: #1a365d;
+  border-color: #1a365d;
   color: #fff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(192,32,64,0.4);
+  box-shadow: 0 4px 14px rgba(26,54,93,0.4);
 }
 
 /* Scrollbar */

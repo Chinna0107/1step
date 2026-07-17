@@ -8,8 +8,8 @@ import {
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { api } from '../../utils/api'
 import { getTokenByRole, getUserByRole } from '../../utils/tokenUtils'
-import logoImg from '../../assets/icons png/MS Logo.png'
-import nameImg from '../../assets/icons png/Money Spot Logo.png'
+import logoImg from '../../assets/logo.png'
+import nameImg from '../../assets/logo.png'
 import './Sidebar.css'
 
 const NAV = [
@@ -71,10 +71,10 @@ export default function Sidebar() {
     <aside className={`sa-sidebar ${collapsed ? 'collapsed' : ''}`}>
       {/* Brand */}
       <div className="sa-sidebar-brand">
-        <img src={logoImg} alt="MoneySpot" className="sa-brand-logo" />
+        <img src={logoImg} alt="1 Step Finance Care" className="sa-brand-logo" />
         {!collapsed && (
           <div className="sa-brand-text">
-            <img src={nameImg} alt="MoneySpot" className="sa-brand-name-img" />
+            <img src={nameImg} alt="1 Step Finance Care" className="sa-brand-name-img" />
             <span className="sa-brand-role">
               <MdLock size={10} style={{ marginRight: 4 }} />Super Admin
             </span>

@@ -228,7 +228,7 @@ export default function Services() {
       <div className="emp-page-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '70vh' }}>
         <div style={{ background: '#fff', borderRadius: 20, padding: '48px 40px', textAlign: 'center', maxWidth: 420, width: '100%', boxShadow: '0 8px 40px rgba(0,0,0,0.1)' }}>
           <div style={{ fontSize: 64, marginBottom: 16 }}>🔒</div>
-          <h2 style={{ fontSize: 22, fontWeight: 900, color: '#1a0a2e', marginBottom: 8 }}>Check-In Required</h2>
+          <h2 style={{ fontSize: 22, fontWeight: 900, color: '#081427', marginBottom: 8 }}>Check-In Required</h2>
           <p style={{ fontSize: 14, color: '#64748b', marginBottom: 28, lineHeight: 1.6 }}>
             You need to check in for today before you can record transactions.
           </p>
@@ -236,7 +236,7 @@ export default function Services() {
           <button
             onClick={handleCheckIn}
             disabled={checkingIn}
-            style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px 36px', fontSize: 15, fontWeight: 800, cursor: 'pointer', width: '100%' }}>
+            style={{ background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px 36px', fontSize: 15, fontWeight: 800, cursor: 'pointer', width: '100%' }}>
             {checkingIn ? 'Checking In...' : '✅ Check In Now'}
           </button>
           <button
@@ -281,7 +281,7 @@ export default function Services() {
   )
 
   const roInp = (k, color) => (
-    <input readOnly value={form[k] === 0 || form[k] === '' ? '' : form[k]} style={{ background: '#f8fafc', color: color || '#402070', fontWeight: 700 }} />
+    <input readOnly value={form[k] === 0 || form[k] === '' ? '' : form[k]} style={{ background: '#f8fafc', color: color || '#0d1f3d', fontWeight: 700 }} />
   )
 
   return (
@@ -303,7 +303,7 @@ export default function Services() {
                 <div style={{ display: 'flex', gap: 6 }}>
                   {['search', 'manual'].map(m => (
                     <button key={m} type="button" className="dash-btn dash-btn-sm"
-                      style={{ background: custMode === m ? 'linear-gradient(135deg,#402070,#c02040)' : '#f0f2f8', color: custMode === m ? '#fff' : '#666', border: 'none' }}
+                      style={{ background: custMode === m ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f0f2f8', color: custMode === m ? '#fff' : '#666', border: 'none' }}
                       onClick={() => { setCustMode(m); clearCustomer() }}>
                       {m === 'search' ? '🔍 From Profile' : '✏️ Manual Entry'}
                     </button>
@@ -316,13 +316,13 @@ export default function Services() {
                     <div style={{ position: 'relative', marginBottom: 12, zIndex: 200 }}>
                       <input placeholder="Search by name, phone or PAN..." value={search}
                         onChange={e => { setSearch(e.target.value); if (form.customer_id) clearCustomer() }}
-                        style={{ width: '100%', padding: '10px 14px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', fontFamily: 'inherit', fontSize: 14, boxSizing: 'border-box' }} />
+                        style={{ width: '100%', padding: '10px 14px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', fontFamily: 'inherit', fontSize: 14, boxSizing: 'border-box' }} />
 
                       {filteredCusts.length > 0 && !form.customer_id && (
                         <div className="customer-search-dropdown" style={{ zIndex: 1000 }}>
                           {filteredCusts.map(c => (
                             <div key={c.id} onClick={() => selectCustomer(c)} className="customer-search-item">
-                              <div style={{ fontWeight: 700, color: '#402070', fontSize: 14 }}>{c.name}</div>
+                              <div style={{ fontWeight: 700, color: '#0d1f3d', fontSize: 14 }}>{c.name}</div>
                               <div style={{ fontSize: 12, color: '#9ca3af' }}>{c.phone} · PAN: {c.pan}</div>
                             </div>
                           ))}
@@ -331,10 +331,10 @@ export default function Services() {
 
                       {search.length >= 2 && filteredCusts.length === 0 && !form.customer_id && (
                         <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', borderRadius: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.12)', border: '1.5px solid #e2e8f0', zIndex: 1000, padding: 16, marginTop: 4 }}>
-                          <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>No customer found for <strong style={{ color: '#1a0a2e' }}>'{search}'</strong></div>
+                          <div style={{ fontSize: 13, color: '#6b7280', marginBottom: 12 }}>No customer found for <strong style={{ color: '#081427' }}>'{search}'</strong></div>
                           <button type="button"
                             onClick={() => { localStorage.setItem('pendingCustomerName', search); navigate('/employee/add-customer') }}
-                            style={{ width: '100%', padding: '12px 16px', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+                            style={{ width: '100%', padding: '12px 16px', background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', border: 'none', borderRadius: 10, cursor: 'pointer', fontSize: 14, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
                             ➕ Add "{search}" as New Customer
                           </button>
                         </div>
@@ -388,9 +388,9 @@ export default function Services() {
                               )}
 
                               {/* Header */}
-                              <div style={{ background:'linear-gradient(135deg,#1a0a2e 0%,#2d1155 50%,#c02040 100%)', padding:'16px 18px', position:'relative', overflow:'hidden' }}>
+                              <div style={{ background:'linear-gradient(135deg,#081427 0%,#2d1155 50%,#1a365d 100%)', padding:'16px 18px', position:'relative', overflow:'hidden' }}>
                                 <div style={{ position:'absolute', top:-30, right:-30, width:120, height:120, borderRadius:'50%', background:'rgba(212,175,55,0.15)', filter:'blur(20px)' }} />
-                                <div style={{ position:'absolute', bottom:-20, left:'20%', width:80, height:80, borderRadius:'50%', background:'rgba(64,32,112,0.3)', filter:'blur(15px)' }} />
+                                <div style={{ position:'absolute', bottom:-20, left:'20%', width:80, height:80, borderRadius:'50%', background:'rgba(13,31,61,0.3)', filter:'blur(15px)' }} />
                                 <div style={{ position:'relative', zIndex:1, display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
                                   <div>
                                     <div style={{ display:'flex', alignItems:'center', gap:8, marginBottom:4 }}>
@@ -410,10 +410,10 @@ export default function Services() {
                               {/* Stats Row */}
                               <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', background:'#f8fafc', borderBottom:'1px solid #e2e8f0' }}>
                                 {[
-                                  { label:'Transactions', value: txns.length,          color:'#402070' },
+                                  { label:'Transactions', value: txns.length,          color:'#0d1f3d' },
                                   { label:'Total Amount', value: totalAmt >= 100000 ? `₹${(totalAmt/100000).toFixed(1)}L` : totalAmt >= 1000 ? `₹${(totalAmt/1000).toFixed(1)}K` : `₹${totalAmt}`, color:'#059669' },
                                   { label:'Total Charges', value: totalProfit >= 1000 ? `₹${(totalProfit/1000).toFixed(1)}K` : `₹${totalProfit.toFixed(0)}`, color:'#d4af37' },
-                                  { label:'Avg / Txn',    value: txns.length ? (totalAmt/txns.length >= 1000 ? `₹${((totalAmt/txns.length)/1000).toFixed(1)}K` : `₹${Math.round(totalAmt/txns.length)}`) : '—', color:'#c02040' },
+                                  { label:'Avg / Txn',    value: txns.length ? (totalAmt/txns.length >= 1000 ? `₹${((totalAmt/txns.length)/1000).toFixed(1)}K` : `₹${Math.round(totalAmt/txns.length)}`) : '—', color:'#1a365d' },
                                 ].map((s, i) => (
                                   <div key={i} style={{ padding:'10px 12px', textAlign:'center', borderRight: i < 3 ? '1px solid #e2e8f0' : 'none' }}>
                                     <div style={{ fontSize:9, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.4 }}>{s.label}</div>
@@ -435,13 +435,13 @@ export default function Services() {
                                   { icon:'📅', label:'Member Since',value: customerProfile.created_at ? new Date(customerProfile.created_at).toLocaleDateString('en-IN') : '—' },
                                   ...(customerProfile.reviewed_by_name ? [{ icon:'✅', label:'Approved By', value: customerProfile.reviewed_by_name }] : []),
                                   ...(customerProfile.reviewed_at ? [{ icon:'📅', label:'Approved On', value: new Date(customerProfile.reviewed_at).toLocaleDateString('en-IN') }] : []),
-                                  ...(customerProfile.pan_img_url ? [{ icon:'🖼️', label:'PAN Image', value: <a href={customerProfile.pan_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.pan_img_url} alt="PAN" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(64,32,112,0.2)', cursor:'pointer' }} /></a> }] : []),
-                                  ...(customerProfile.aadhar_img_url ? [{ icon:'🖼️', label:'Aadhar Image', value: <a href={customerProfile.aadhar_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.aadhar_img_url} alt="Aadhar" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(64,32,112,0.2)', cursor:'pointer' }} /></a> }] : []),
-                                  ...(customerProfile.card_front_img_url ? [{ icon:'🏧', label:'Card Front', value: <a href={customerProfile.card_front_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.card_front_img_url} alt="Card" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(64,32,112,0.2)', cursor:'pointer' }} /></a> }] : []),
+                                  ...(customerProfile.pan_img_url ? [{ icon:'🖼️', label:'PAN Image', value: <a href={customerProfile.pan_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.pan_img_url} alt="PAN" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(13,31,61,0.2)', cursor:'pointer' }} /></a> }] : []),
+                                  ...(customerProfile.aadhar_img_url ? [{ icon:'🖼️', label:'Aadhar Image', value: <a href={customerProfile.aadhar_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.aadhar_img_url} alt="Aadhar" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(13,31,61,0.2)', cursor:'pointer' }} /></a> }] : []),
+                                  ...(customerProfile.card_front_img_url ? [{ icon:'🏧', label:'Card Front', value: <a href={customerProfile.card_front_img_url} target="_blank" rel="noopener noreferrer"><img src={customerProfile.card_front_img_url} alt="Card" style={{ width:60, height:40, objectFit:'cover', borderRadius:4, border:'1.5px solid rgba(13,31,61,0.2)', cursor:'pointer' }} /></a> }] : []),
                                 ].map((f, i) => (
                                   <div key={i} style={{ background:'#fff', padding:'8px 14px' }}>
                                     <div style={{ fontSize:9, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.4 }}>{f.icon} {f.label}</div>
-                                    <div style={{ fontSize:12, fontWeight:700, color:'#1a0a2e', marginTop:2, wordBreak:'break-all' }}>{f.value}</div>
+                                    <div style={{ fontSize:12, fontWeight:700, color:'#081427', marginTop:2, wordBreak:'break-all' }}>{f.value}</div>
                                   </div>
                                 ))}
                               </div>
@@ -452,7 +452,7 @@ export default function Services() {
                                   <div style={{ fontSize:9, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.4, marginBottom:8 }}>Service Breakdown</div>
                                   <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
                                     {Object.entries(serviceBreakdown).map(([svc, cnt]) => (
-                                      <span key={svc} style={{ background:'#ede9fe', color:'#402070', padding:'3px 10px', borderRadius:20, fontSize:11, fontWeight:700 }}>
+                                      <span key={svc} style={{ background:'#ede9fe', color:'#0d1f3d', padding:'3px 10px', borderRadius:20, fontSize:11, fontWeight:700 }}>
                                         {svc} ×{cnt}
                                       </span>
                                     ))}
@@ -603,7 +603,7 @@ export default function Services() {
               <div className="dash-card" style={{ marginBottom: 16 }}>
                 <div className="dash-card-header"><h2>👤 Customer</h2></div>
                 <div className="dash-card-body" style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13 }}>
-                  <div style={{ fontWeight: 800, color: '#402070', fontSize: 15 }}>{form.cust_name}</div>
+                  <div style={{ fontWeight: 800, color: '#0d1f3d', fontSize: 15 }}>{form.cust_name}</div>
                   <div style={{ color: '#6b7280' }}>PAN: <strong>{form.cust_pan || '—'}</strong></div>
                   <div style={{ color: '#6b7280' }}>Mobile: <strong>{form.cust_mobile || '—'}</strong></div>
                 </div>
@@ -634,7 +634,7 @@ export default function Services() {
                 <div className="dash-card-header"><h2>🚀 Getting Started</h2></div>
                 <div className="dash-card-body" style={{ textAlign: 'center', padding: 24 }}>
                   <div style={{ fontSize: 48, marginBottom: 16 }}>👤</div>
-                  <div style={{ fontSize: 15, fontWeight: 600, color: '#402070', marginBottom: 8 }}>Select a Customer</div>
+                  <div style={{ fontSize: 15, fontWeight: 600, color: '#0d1f3d', marginBottom: 8 }}>Select a Customer</div>
                   <div style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.5 }}>Search for an existing customer or add a new one to start.</div>
                 </div>
               </div>
@@ -680,7 +680,7 @@ export default function Services() {
                       onMouseEnter={e => e.currentTarget.style.background = t.is_edited ? '#fee2e2' : '#f0f2f8'}
                       onMouseLeave={e => e.currentTarget.style.background = t.is_edited ? '#fef2f2' : ''}>
                       <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
-                        <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 11, color: t.is_edited ? '#dc2626' : '#402070' }}>
+                        <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 11, color: t.is_edited ? '#dc2626' : '#0d1f3d' }}>
                           #{t.id}{t.is_edited ? ' ✏️' : ''}
                         </div>
                         <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
@@ -739,7 +739,7 @@ export default function Services() {
             style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
             <div onClick={e => e.stopPropagation()}
               style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:520, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
-              <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+              <div style={{ background:'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
                 <div>
                   <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Transaction Details</div>
                   <div style={{ color:'#fff', fontWeight:900, fontSize:18, marginTop:2 }}>#{viewTxn.id} · {viewTxn.service_type}</div>
@@ -764,7 +764,7 @@ export default function Services() {
                     { label:'Amount',         value: `₹${fmt(viewTxn.amount)}`,              color:'#059669' },
                     { label:'Charges %',      value: `${viewTxn.charges_pct || 0}%`,           color:'#d97706' },
                     { label:'Charges ₹',      value: `₹${fmt(viewTxn.charges_amount || 0)}`,  color:'#d97706' },
-                    { label:'Settled Amount', value: `₹${fmt(viewTxn.settled_amount || 0)}`,  color:'#402070' },
+                    { label:'Settled Amount', value: `₹${fmt(viewTxn.settled_amount || 0)}`,  color:'#0d1f3d' },
                     ...(viewTxn.service_type === BILL_WITHDRAWAL ? [
                       { label:'Bill Platform',  value: viewTxn.bill_platform || '—' },
                       { label:'Bill Amount',    value: `₹${fmt(viewTxn.bill_amount || 0)}` },
@@ -777,18 +777,18 @@ export default function Services() {
                   ].map(f => (
                     <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px', ...(f.full ? { gridColumn:'1/-1' } : {}) }}>
                       <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
-                      <div style={{ fontSize:14, fontWeight:700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
+                      <div style={{ fontSize:14, fontWeight:700, color: f.color || '#081427', wordBreak:'break-all' }}>{f.value}</div>
                     </div>
                   ))}
                 </div>
               </div>
               <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', gap:10, justifyContent:'flex-end' }}>
-                <a href={`https://wa.me/${viewTxn.cust_mobile?.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${viewTxn.cust_name}, your ${viewTxn.service_type} of ₹${fmt(viewTxn.amount)} processed. Settled: ₹${fmt(viewTxn.settled_amount || 0)}. - MoneySpot`)}`}
+                <a href={`https://wa.me/${viewTxn.cust_mobile?.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${viewTxn.cust_name}, your ${viewTxn.service_type} of ₹${fmt(viewTxn.amount)} processed. Settled: ₹${fmt(viewTxn.settled_amount || 0)}. - 1 Step Finance Care`)}`}
                   target="_blank" rel="noopener noreferrer"
                   style={{ padding:'10px 20px', borderRadius:10, background:'#25D366', color:'#fff', fontWeight:700, fontSize:13, textDecoration:'none', display:'flex', alignItems:'center', gap:6 }}>
                   💬 WhatsApp
                 </a>
-                <button onClick={() => setViewTxn(null)} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+                <button onClick={() => setViewTxn(null)} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0d1f3d,#1a365d)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
               </div>
             </div>
           </div>
@@ -820,7 +820,7 @@ export default function Services() {
           return (
             <div onClick={() => setEditTxn(null)} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
               <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:600, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
-                <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+                <div style={{ background:'linear-gradient(135deg,#081427,#0d1f3d)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
                   <div>
                     <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Edit Transaction</div>
                     <div style={{ color:'#fff', fontWeight:900, fontSize:16 }}>#{editTxn.id} · {editTxn.service_type}</div>
@@ -855,7 +855,7 @@ export default function Services() {
                     {isBW && eInp('total_collected', 'Total Collected (₹)', 'number')}
                     <div className="dash-form-group" style={{ gridColumn:'1/-1' }}>
                       <label>Note / Remarks</label>
-                      <textarea rows={2} value={ef.note || ''} onChange={e => setEf({ note: e.target.value })} style={{ width:'100%', padding:'10px 14px', borderRadius:8, border:'1.5px solid rgba(64,32,112,0.2)', fontSize:14, fontFamily:'inherit', resize:'vertical', boxSizing:'border-box' }} />
+                      <textarea rows={2} value={ef.note || ''} onChange={e => setEf({ note: e.target.value })} style={{ width:'100%', padding:'10px 14px', borderRadius:8, border:'1.5px solid rgba(13,31,61,0.2)', fontSize:14, fontFamily:'inherit', resize:'vertical', boxSizing:'border-box' }} />
                     </div>
                   </div>
                 </div>
@@ -890,7 +890,7 @@ export default function Services() {
                       })
                       setEditTxn(null)
                     } catch (err) { alert(err.message) }
-                  }} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>💾 Save Changes</button>
+                  }} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0d1f3d,#1a365d)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>💾 Save Changes</button>
                 </div>
               </div>
             </div>
@@ -907,7 +907,7 @@ export default function Services() {
                   <button className="txn-menu-item" onClick={() => { setViewTxn(t); setMenuTxnId(null) }}>👁️ View Details</button>
                   <button className="txn-menu-item" onClick={() => { setEditTxn(t); setMenuTxnId(null) }}>✏️ Edit</button>
                   <a className="txn-menu-item txn-menu-wa"
-                    href={`https://wa.me/${t.cust_mobile?.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${t.cust_name}, your ${t.service_type} transaction of ₹${fmt(t.amount)} on ${new Date(t.created_at).toLocaleDateString('en-IN')} has been processed. Settled: ₹${fmt(t.settled_amount || 0)}. - MoneySpot`)}`}
+                    href={`https://wa.me/${t.cust_mobile?.replace(/\D/g,'')}?text=${encodeURIComponent(`Hi ${t.cust_name}, your ${t.service_type} transaction of ₹${fmt(t.amount)} on ${new Date(t.created_at).toLocaleDateString('en-IN')} has been processed. Settled: ₹${fmt(t.settled_amount || 0)}. - 1 Step Finance Care`)}`}
                     target="_blank" rel="noopener noreferrer"
                     onClick={() => setMenuTxnId(null)}>💬 Send WhatsApp</a>
                 </>

@@ -53,7 +53,7 @@ export default function AdminsData() {
                     </div>
                     <div className="sa-form-group">
                       <label>Email *</label>
-                      <input required type="email" placeholder="admin@moneyspot.com" value={form.email}
+                      <input required type="email" placeholder="1stepcreditcard@gmail.com" value={form.email}
                         onChange={e => set('email', e.target.value)} />
                     </div>
                     <div className="sa-form-group">

@@ -17,7 +17,7 @@ const SERVICE_ICONS = {
   'Only Bill Payment':     '🧾',
 }
 
-const COLORS = ['#402070','#c02040','#d4af37','#059669','#0ea5e9','#f59e0b','#8b5cf6','#ec4899']
+const COLORS = ['#0d1f3d','#1a365d','#d4af37','#059669','#0ea5e9','#f59e0b','#8b5cf6','#ec4899']
 
 function TxnDetailModal({ txn, onClose, showFinancials }) {
   if (!txn) return null
@@ -52,7 +52,7 @@ function TxnDetailModal({ txn, onClose, showFinancials }) {
     ] : []),
     ...(showFinancials ? [
       { label: 'Commission %',      value: `${txn.commission_pct || 0}%` },
-      { label: 'Net Profit',        value: `₹${fmt(txn.profit)}`,                   color: '#402070' },
+      { label: 'Net Profit',        value: `₹${fmt(txn.profit)}`,                   color: '#0d1f3d' },
       { label: 'GST (18%)',         value: `₹${fmt(txn.gst ?? (parseFloat(txn.profit||0)*0.18))}`,                                     color: '#dc2626' },
       { label: 'Total Profit',      value: `₹${fmt(txn.profitWithGst ?? (parseFloat(txn.profit||0)*0.82).toFixed(2))}`, color: '#059669', bold: true },
     ] : []),
@@ -68,7 +68,7 @@ function TxnDetailModal({ txn, onClose, showFinancials }) {
       style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
       <div style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:560, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
         {/* Header */}
-        <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+        <div style={{ background:'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
           <div>
             <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Transaction Details</div>
             <div style={{ color:'#fff', fontWeight:900, fontSize:18, marginTop:2 }}>{SERVICE_ICONS[txn.service_type] || '📋'} {txn.service_type || 'Transaction'}</div>
@@ -81,14 +81,14 @@ function TxnDetailModal({ txn, onClose, showFinancials }) {
             {fields.map(f => (
               <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px', ...(f.full ? { gridColumn: '1/-1' } : {}) }}>
                 <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
-                <div style={{ fontSize:14, fontWeight: f.bold ? 800 : 700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
+                <div style={{ fontSize:14, fontWeight: f.bold ? 800 : 700, color: f.color || '#081427', wordBreak:'break-all' }}>{f.value}</div>
               </div>
             ))}
           </div>
         </div>
         {/* Footer */}
         <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', justifyContent:'flex-end', flexShrink:0 }}>
-          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0d1f3d,#1a365d)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
         </div>
       </div>
     </div>
@@ -224,19 +224,19 @@ export default function ReportView({ authHeader, showFinancials = true, branches
     ).join('')
     const html = `<html><head><title>${label} Report</title>
       <style>
-        body { font-family: Arial, sans-serif; padding: 24px; color: #1a0a2e; }
-        h2   { color: #402070; }
+        body { font-family: Arial, sans-serif; padding: 24px; color: #081427; }
+        h2   { color: #0d1f3d; }
         p    { color: #64748b; font-size: 13px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 16px; }
-        th { background: #402070; color: #fff; padding: 10px 14px; text-align: left; }
+        th { background: #0d1f3d; color: #fff; padding: 10px 14px; text-align: left; }
         td { padding: 9px 14px; border-bottom: 1px solid #e2e8f0; }
         tr:nth-child(even) td { background: #f8fafc; }
         .summary { display: flex; gap: 20px; margin: 16px 0; }
         .s-box { background: #f0f2f8; border-radius: 8px; padding: 10px 18px; }
         .s-label { font-size: 11px; color: #64748b; text-transform: uppercase; }
-        .s-val   { font-size: 20px; font-weight: 800; color: #402070; }
+        .s-val   { font-size: 20px; font-weight: 800; color: #0d1f3d; }
       </style></head><body>
-      <h2>MoneySpot — ${label}-wise Report</h2>
+      <h2>1 Step Finance Care — ${label}-wise Report</h2>
       <p>Period: ${from} → ${to}${branch ? ` · Branch: ${branch}` : ''}</p>
       <div class="summary">
         <div class="s-box"><div class="s-label">Transactions</div><div class="s-val">${fmt(totals.count ?? 0)}</div></div>
@@ -312,13 +312,13 @@ export default function ReportView({ authHeader, showFinancials = true, branches
               <>
                 <div className="dash-stat">
                   <div className="dash-stat-label">Net Profit</div>
-                  <div className="dash-stat-value" style={{ color: '#402070' }}>{fmtVal(totals.netProfit ?? totals.profit ?? 0)}</div>
+                  <div className="dash-stat-value" style={{ color: '#0d1f3d' }}>{fmtVal(totals.netProfit ?? totals.profit ?? 0)}</div>
                 </div>
                 <div className="dash-stat">
                   <div className="dash-stat-label">GST (18%)</div>
                   <div className="dash-stat-value" style={{ color: '#d97706' }}>{fmtVal(totals.gst ?? (parseFloat(totals.profit||0)*0.18))}</div>
                 </div>
-                <div className="dash-stat" style={{ background: 'linear-gradient(135deg,#ede9fe,#fce7f3)', border: '2px solid #402070' }}>
+                <div className="dash-stat" style={{ background: 'linear-gradient(135deg,#ede9fe,#fce7f3)', border: '2px solid #0d1f3d' }}>
                   <div className="dash-stat-label" style={{ fontWeight: 800 }}>Total Profit</div>
                   <div className="dash-stat-value" style={{ color: '#059669', fontWeight: 900 }}>{fmtVal((parseFloat(totals.profit||0) - parseFloat(totals.profit||0)*0.18))}</div>
                 </div>
@@ -331,12 +331,12 @@ export default function ReportView({ authHeader, showFinancials = true, branches
             <button
               onClick={() => setTab('service')}
               className="dash-btn"
-              style={{ background: tab === 'service' ? '#402070' : '#f1f5f9', color: tab === 'service' ? '#fff' : '#64748b', border: 'none', fontWeight: 700 }}
+              style={{ background: tab === 'service' ? '#0d1f3d' : '#f1f5f9', color: tab === 'service' ? '#fff' : '#64748b', border: 'none', fontWeight: 700 }}
             >🔧 Service-wise</button>
             <button
               onClick={() => setTab('platform')}
               className="dash-btn"
-              style={{ background: tab === 'platform' ? '#402070' : '#f1f5f9', color: tab === 'platform' ? '#fff' : '#64748b', border: 'none', fontWeight: 700 }}
+              style={{ background: tab === 'platform' ? '#0d1f3d' : '#f1f5f9', color: tab === 'platform' ? '#fff' : '#64748b', border: 'none', fontWeight: 700 }}
             >📱 Platform-wise</button>
           </div>
 
@@ -352,7 +352,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                   const pct = Math.round((r.amount / maxAmt) * 100)
                   return (
                     <div key={r.name} style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                      <div style={{ width: 140, fontSize: 12, fontWeight: 700, color: '#1a0a2e', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flexShrink: 0 }}>
+                      <div style={{ width: 140, fontSize: 12, fontWeight: 700, color: '#081427', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flexShrink: 0 }}>
                         {SERVICE_ICONS[r.name] || ''} {r.name}
                       </div>
                       <div style={{ flex: 1, height: 26, background: '#f1f5f9', borderRadius: 8, overflow: 'hidden' }}>
@@ -361,7 +361,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                         </div>
                       </div>
                       <div style={{ width: 90, textAlign: 'right', flexShrink: 0 }}>
-                        <div style={{ fontSize: 13, fontWeight: 800, color: '#1a0a2e' }}>{fmtVal(r.amount)}</div>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: '#081427' }}>{fmtVal(r.amount)}</div>
                         <div style={{ fontSize: 11, color: '#94a3b8' }}>{r.count} txns</div>
                       </div>
                     </div>
@@ -387,7 +387,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       <Row label="Cust. Charges"    value={`₹${fmt(s.customer_charges)}`} color="#d97706" />
                       {showFinancials && <>
                         <Row label="Platform Charges" value={`₹${fmt(s.platform_charges)}`} color="#dc2626" />
-                        <Row label="Commission"       value={`₹${fmt(s.commission)}`}       color="#402070" bold />
+                        <Row label="Commission"       value={`₹${fmt(s.commission)}`}       color="#0d1f3d" bold />
                       </>}
                     </div>
                   </div>
@@ -452,20 +452,20 @@ export default function ReportView({ authHeader, showFinancials = true, branches
               {data?.pagination && data.pagination.totalPages > 1 && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <button onClick={() => goPage(page - 1)} disabled={!data.pagination.hasPrev}
-                    style={{ padding: '4px 10px', borderRadius: 6, border: '1.5px solid #e2e8f0', background: data.pagination.hasPrev ? '#fff' : '#f8fafc', color: data.pagination.hasPrev ? '#402070' : '#cbd5e1', cursor: data.pagination.hasPrev ? 'pointer' : 'default', fontWeight: 700, fontSize: 13 }}>
+                    style={{ padding: '4px 10px', borderRadius: 6, border: '1.5px solid #e2e8f0', background: data.pagination.hasPrev ? '#fff' : '#f8fafc', color: data.pagination.hasPrev ? '#0d1f3d' : '#cbd5e1', cursor: data.pagination.hasPrev ? 'pointer' : 'default', fontWeight: 700, fontSize: 13 }}>
                     ‹
                   </button>
                   {Array.from({ length: data.pagination.totalPages }, (_, i) => i + 1).map(p => (
                     <button key={p} onClick={() => goPage(p)}
                       style={{ padding: '4px 10px', borderRadius: 6, border: '1.5px solid', fontWeight: 700, fontSize: 12, cursor: 'pointer',
-                        borderColor: p === page ? '#402070' : '#e2e8f0',
-                        background:  p === page ? '#402070' : '#fff',
+                        borderColor: p === page ? '#0d1f3d' : '#e2e8f0',
+                        background:  p === page ? '#0d1f3d' : '#fff',
                         color:       p === page ? '#fff'    : '#64748b' }}>
                       {p}
                     </button>
                   ))}
                   <button onClick={() => goPage(page + 1)} disabled={!data.pagination.hasNext}
-                    style={{ padding: '4px 10px', borderRadius: 6, border: '1.5px solid #e2e8f0', background: data.pagination.hasNext ? '#fff' : '#f8fafc', color: data.pagination.hasNext ? '#402070' : '#cbd5e1', cursor: data.pagination.hasNext ? 'pointer' : 'default', fontWeight: 700, fontSize: 13 }}>
+                    style={{ padding: '4px 10px', borderRadius: 6, border: '1.5px solid #e2e8f0', background: data.pagination.hasNext ? '#fff' : '#f8fafc', color: data.pagination.hasNext ? '#0d1f3d' : '#cbd5e1', cursor: data.pagination.hasNext ? 'pointer' : 'default', fontWeight: 700, fontSize: 13 }}>
                     ›
                   </button>
                   <span style={{ fontSize: 12, color: '#9ca3af', marginLeft: 4 }}>Page {page} of {data.pagination.totalPages}</span>
@@ -506,7 +506,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       style={{ cursor: 'pointer', backgroundColor: t.is_edited ? '#fef2f2' : '' }}
                       onMouseEnter={e => e.currentTarget.style.background = t.is_edited ? '#fee2e2' : '#f0f2f8'}
                       onMouseLeave={e => e.currentTarget.style.background = t.is_edited ? '#fef2f2' : ''}>
-                      <td style={{ fontFamily: 'monospace', color: t.is_edited ? '#dc2626' : '#402070', fontWeight: 700, fontSize: 11 }}>#{t.id}{t.is_edited ? ' ✏️' : ''}</td>
+                      <td style={{ fontFamily: 'monospace', color: t.is_edited ? '#dc2626' : '#0d1f3d', fontWeight: 700, fontSize: 11 }}>#{t.id}{t.is_edited ? ' ✏️' : ''}</td>
                       <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                       {showFinancials && <td style={{ fontSize: 12 }}>{t.employee_name || '—'}</td>}
                       <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}</strong></td>
@@ -529,7 +529,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       {showFinancials && <td style={{ color: '#059669', fontWeight: 800 }}>₹{fmt((parseFloat(t.profit||0)*0.82).toFixed(2))}</td>}
                       <td onClick={e => e.stopPropagation()}>
                         <button onClick={() => setPrintTxn(t)}
-                          style={{ background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
+                          style={{ background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', border: 'none', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 11, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 3, fontFamily: 'inherit' }}>
                           <MdPrint size={13} /> Print
                         </button>
                       </td>

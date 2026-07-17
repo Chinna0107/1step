@@ -35,7 +35,7 @@ export default function DailyClosing() {
               {new Date().toLocaleDateString('en-IN', { weekday:'long', day:'numeric', month:'long', year:'numeric' })}
             </p>
           </div>
-          <button className="dash-btn" onClick={refetch} style={{ background:'#f0f2f8', color:'#402070', border:'none' }}>↻ Refresh</button>
+          <button className="dash-btn" onClick={refetch} style={{ background:'#f0f2f8', color:'#0d1f3d', border:'none' }}>↻ Refresh</button>
         </div>
         <div className="dash-main">
 
@@ -55,7 +55,7 @@ export default function DailyClosing() {
               <div className="dash-card-body">
                 <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))', gap:12, marginBottom:20 }}>
                   {[
-                    { label:'Opening Balance',  val:preview.opening,  color:'#402070', icon:'🏦' },
+                    { label:'Opening Balance',  val:preview.opening,  color:'#0d1f3d', icon:'🏦' },
                     { label:'+ Today Inflow',   val:preview.inflow,   color:'#059669', icon:'📈' },
                     { label:'− Today Outflow',  val:preview.outflow,  color:'#dc2626', icon:'📉' },
                     { label:'Wallet Balance',   val:preview.closing,  color:'#d4af37', icon:'💰', big:true },
@@ -78,7 +78,7 @@ export default function DailyClosing() {
                     {wallets.map(w => (
                       <div key={w.id} style={{ background:'#f0f2f8', borderRadius:8, padding:'8px 14px', fontSize:13 }}>
                         <span style={{ color:'#64748b' }}>{w.name}: </span>
-                        <strong style={{ color:'#402070' }}>₹{Number(parseFloat(w.balance)||0).toLocaleString('en-IN')}</strong>
+                        <strong style={{ color:'#0d1f3d' }}>₹{Number(parseFloat(w.balance)||0).toLocaleString('en-IN')}</strong>
                       </div>
                     ))}
                   </div>
@@ -107,7 +107,7 @@ export default function DailyClosing() {
                     {closings.map(h => (
                       <tr key={h.id}>
                         <td style={{ fontWeight:600 }}>{new Date(h.date).toLocaleDateString('en-IN', { weekday:'short', day:'numeric', month:'short' })}</td>
-                        <td style={{ color:'#402070', fontWeight:700 }}>{fmt(h.opening_balance)}</td>
+                        <td style={{ color:'#0d1f3d', fontWeight:700 }}>{fmt(h.opening_balance)}</td>
                         <td style={{ color:'#059669', fontWeight:700 }}>+{fmt(h.total_inflow ?? 0)}</td>
                         <td style={{ color:'#dc2626', fontWeight:700 }}>-{fmt(h.total_outflow ?? 0)}</td>
                         <td style={{ color:'#d4af37', fontWeight:900, fontSize:15 }}>{fmt(h.closing_balance)}</td>

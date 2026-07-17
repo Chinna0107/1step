@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, #1a0a2e, #402070, #c02040);
+  background: linear-gradient(135deg, #081427, #0d1f3d, #1a365d);
   border-radius: 16px;
   padding: 20px 28px;
   margin-bottom: 24px;
@@ -62,7 +62,7 @@
 .profit-section-title {
   font-size: 13px;
   font-weight: 800;
-  color: #402070;
+  color: #0d1f3d;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 8px 14px;

@@ -47,7 +47,7 @@ export default function Ledger() {
               <div className="dash-stat-value" style={{ color: '#dc2626' }}>{fmtV(totalDebit)}</div>
               <div className="dash-stat-sub">Outflows recorded</div>
             </div>
-            <div className="dash-stat" style={{ borderTop: '3px solid #402070' }}>
+            <div className="dash-stat" style={{ borderTop: '3px solid #0d1f3d' }}>
               <div className="dash-stat-label">Net</div>
               <div className="dash-stat-value" style={{ color: totalCredit - totalDebit >= 0 ? '#059669' : '#dc2626' }}>{fmtV(totalCredit - totalDebit)}</div>
               <div className="dash-stat-sub">{rows.length} entries</div>
@@ -81,7 +81,7 @@ export default function Ledger() {
                           {r.type === 'credit' ? '+' : '-'}₹{fmt(r.amount)}
                         </td>
                         <td style={{ fontWeight: 600 }}>{r.wallet_name || '—'}</td>
-                        <td style={{ fontWeight: 700, color: '#402070' }}>₹{fmt(r.balance)}</td>
+                        <td style={{ fontWeight: 700, color: '#0d1f3d' }}>₹{fmt(r.balance)}</td>
                         <td style={{ color: '#6b7280', fontSize: 12, maxWidth: 200 }}>{r.remarks || '—'}</td>
                       </tr>
                     ))}

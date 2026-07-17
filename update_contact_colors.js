@@ -1,0 +1,11 @@
+const fs = require('fs');
+let content = fs.readFileSync('src/pages/Contact.css', 'utf8');
+content = content.replace(/#060d1a/gi, '#081427');
+content = content.replace(/#0f1e35/gi, '#0c1c38');
+content = content.replace(/#1a1040/gi, '#050912');
+content = content.replace(/#f0cc5a/gi, '#d4af37');
+content = content.replace(/#080f20/gi, '#081427');
+content = content.replace(/#0d1828/gi, '#050912');
+content = content.replace(/#1a365d/gi, '#081427');
+content = content.replace(/#0d1f3d/gi, '#050912');
+fs.writeFileSync('src/pages/Contact.css', content);

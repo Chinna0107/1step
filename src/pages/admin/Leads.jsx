@@ -90,12 +90,12 @@ export default function AdminLeads() {
       </tr>`
     }).join('')
     const html = `<html><head><title>Leads Report</title>
-    <style>body{font-family:Arial;padding:24px;color:#1a0a2e}h2{color:#402070}
+    <style>body{font-family:Arial;padding:24px;color:#081427}h2{color:#0d1f3d}
     table{width:100%;border-collapse:collapse;font-size:12px}
-    th{background:#402070;color:#fff;padding:8px 12px;text-align:left}
+    th{background:#0d1f3d;color:#fff;padding:8px 12px;text-align:left}
     td{padding:7px 12px;border-bottom:1px solid #e2e8f0}
     tr:nth-child(even)td{background:#f8fafc}</style></head>
-    <body><h2>MoneySpot — Leads Report</h2>
+    <body><h2>1 Step Finance Care — Leads Report</h2>
     <p>${filtered.length} leads · Exported ${new Date().toLocaleString('en-IN')}</p>
     <table><thead><tr><th>#</th><th>Name</th><th>Mobile</th><th>Type</th><th>Amount</th><th>Status</th><th>Branch</th><th>Employee</th><th>Date</th></tr></thead>
     <tbody>${rows}</tbody></table></body></html>`
@@ -112,7 +112,7 @@ export default function AdminLeads() {
           <div className="dash-topbar-right">
             <button className="dash-btn" style={{ background: '#d1fae5', color: '#059669', border: 'none' }} onClick={exportExcel}>📊 Excel</button>
             <button className="dash-btn" style={{ background: '#fee2e2', color: '#dc2626', border: 'none' }} onClick={exportPDF}>📄 PDF</button>
-            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none' }} onClick={load}>🔄 Refresh</button>
+            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#0d1f3d', border: 'none' }} onClick={load}>🔄 Refresh</button>
           </div>
         </div>
         <div className="dash-main">
@@ -120,7 +120,7 @@ export default function AdminLeads() {
           {/* Stats */}
           <div className="dash-stats">
             {[
-              { label: 'Total',      value: stats.total      ?? 0, color: '#402070' },
+              { label: 'Total',      value: stats.total      ?? 0, color: '#0d1f3d' },
               { label: 'New',        value: stats.today      ?? 0, color: '#d97706' },
               { label: 'In Process', value: stats.in_process ?? 0, color: '#2563eb' },
               { label: 'Approved',   value: stats.approved   ?? 0, color: '#059669' },
@@ -141,7 +141,7 @@ export default function AdminLeads() {
               <input placeholder="Search name, mobile, email, branch..."
                 value={search} onChange={e => setSearch(e.target.value)}
                 style={{ width: '100%', paddingLeft: 32, paddingRight: 12, paddingTop: 9, paddingBottom: 9, borderRadius: 8, border: '1.5px solid #e2e8f0', fontSize: 13, fontFamily: 'inherit', boxSizing: 'border-box', outline: 'none' }}
-                onFocus={e => e.target.style.borderColor = '#402070'}
+                onFocus={e => e.target.style.borderColor = '#0d1f3d'}
                 onBlur={e => e.target.style.borderColor = '#e2e8f0'} />
               {search && <button onClick={() => setSearch('')} style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#9ca3af' }}>✕</button>}
             </div>
@@ -179,7 +179,7 @@ export default function AdminLeads() {
                       const sc = STATUS_CONFIG[l.status] || STATUS_CONFIG.new
                       return (
                         <tr key={l.id}>
-                          <td style={{ fontFamily: 'monospace', color: '#402070', fontWeight: 700, fontSize: 11 }}>#{l.id}</td>
+                          <td style={{ fontFamily: 'monospace', color: '#0d1f3d', fontWeight: 700, fontSize: 11 }}>#{l.id}</td>
                           <td><strong>{l.cust_name}</strong><div style={{ fontSize: 11, color: '#9ca3af' }}>{l.email || '—'}</div></td>
                           <td><a href={`tel:${l.mobile}`} style={{ color: '#059669', fontWeight: 700, textDecoration: 'none' }}>📞 {l.mobile}</a></td>
                           <td style={{ fontSize: 12 }}>{LEAD_TYPES.find(t => t.value === l.lead_type)?.label || l.lead_type}</td>
@@ -197,7 +197,7 @@ export default function AdminLeads() {
                           <td style={{ fontSize: 12 }}>{new Date(l.created_at).toLocaleDateString('en-IN')}</td>
                           <td>
                             <button onClick={() => setViewLead(l)}
-                              style={{ background: '#ede9fe', color: '#402070', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>
+                              style={{ background: '#ede9fe', color: '#0d1f3d', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontSize: 12, fontWeight: 700 }}>
                               👁️ View
                             </button>
                           </td>
@@ -216,7 +216,7 @@ export default function AdminLeads() {
       {viewLead && (
         <div onClick={() => setViewLead(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16 }}>
           <div onClick={e => e.stopPropagation()} style={{ background: '#fff', borderRadius: 20, width: '100%', maxWidth: 580, maxHeight: '90vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 24px 64px rgba(0,0,0,0.2)' }}>
-            <div style={{ background: 'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
+            <div style={{ background: 'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
               <div>
                 <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1 }}>Lead #{viewLead.id}</div>
                 <div style={{ color: '#fff', fontWeight: 900, fontSize: 18, marginTop: 2 }}>{viewLead.cust_name}</div>
@@ -255,7 +255,7 @@ export default function AdminLeads() {
                     <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 4 }}>{f.label}</div>
                     {f.link
                       ? <a href={f.link} style={{ fontSize: 13, fontWeight: 700, color: '#059669', textDecoration: 'none' }}>{f.value}</a>
-                      : <div style={{ fontSize: 13, fontWeight: 700, color: f.color || '#1a0a2e' }}>{f.value}</div>}
+                      : <div style={{ fontSize: 13, fontWeight: 700, color: f.color || '#081427' }}>{f.value}</div>}
                   </div>
                 ))}
               </div>
@@ -271,7 +271,7 @@ export default function AdminLeads() {
                   <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                     {[['🪪 Aadhaar', viewLead.aadhar_url], ['🆔 PAN', viewLead.pan_url], ['📊 Bank Stmt', viewLead.bank_stmt_url], ['📄 Payslip', viewLead.payslip_url]].map(([label, url]) =>
                       url ? <a key={label} href={url} target="_blank" rel="noopener noreferrer"
-                        style={{ padding: '6px 12px', background: '#ede9fe', color: '#402070', borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>{label}</a> : null
+                        style={{ padding: '6px 12px', background: '#ede9fe', color: '#0d1f3d', borderRadius: 8, fontSize: 12, fontWeight: 700, textDecoration: 'none' }}>{label}</a> : null
                     )}
                   </div>
                 </div>
@@ -280,11 +280,11 @@ export default function AdminLeads() {
             <div style={{ padding: '14px 24px', borderTop: '1px solid #f1f5f9', display: 'flex', gap: 10, justifyContent: 'space-between', flexShrink: 0 }}>
               <div style={{ display: 'flex', gap: 8 }}>
                 <a href={`tel:${viewLead.mobile}`} style={{ padding: '10px 18px', borderRadius: 10, background: '#d1fae5', color: '#059669', fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>📞 Call</a>
-                <a href={`https://wa.me/${viewLead.mobile}?text=${encodeURIComponent(`Hi ${viewLead.cust_name}, regarding your ${viewLead.lead_type} application. - MoneySpot`)}`}
+                <a href={`https://wa.me/${viewLead.mobile}?text=${encodeURIComponent(`Hi ${viewLead.cust_name}, regarding your ${viewLead.lead_type} application. - 1 Step Finance Care`)}`}
                   target="_blank" rel="noopener noreferrer"
                   style={{ padding: '10px 18px', borderRadius: 10, background: '#25D366', color: '#fff', fontWeight: 700, fontSize: 13, textDecoration: 'none' }}>💬 WhatsApp</a>
               </div>
-              <button onClick={() => setViewLead(null)} style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>Close</button>
+              <button onClick={() => setViewLead(null)} style={{ padding: '10px 24px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>Close</button>
             </div>
           </div>
         </div>

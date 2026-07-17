@@ -111,7 +111,7 @@ export default function Expenses() {
           <div className="dash-card">
             <div className="dash-card-header">
               <h2>All Expenses ({expenses.length})</h2>
-              <button className="dash-btn dash-btn-sm" onClick={refetch} style={{ background: '#f0f2f8', color: '#402070', border: 'none' }}>↻ Refresh</button>
+              <button className="dash-btn dash-btn-sm" onClick={refetch} style={{ background: '#f0f2f8', color: '#0d1f3d', border: 'none' }}>↻ Refresh</button>
             </div>
             <div className="dash-table-wrap">
               {loading ? <div className="dash-loading">Loading...</div> : (
@@ -124,7 +124,7 @@ export default function Expenses() {
                       <tr key={e.id}>
                         <td style={{ fontSize: 12 }}>{new Date(e.date).toLocaleDateString('en-IN')}</td>
                         <td style={{ fontWeight: 700, color: '#dc2626' }}>₹{fmt(e.amount)}</td>
-                        <td><span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{e.category}</span></td>
+                        <td><span style={{ background: '#ede9fe', color: '#0d1f3d', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{e.category}</span></td>
                         <td style={{ fontSize: 12, color: '#9ca3af' }}>{e.note || '—'}</td>
                       </tr>
                     ))}

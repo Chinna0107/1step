@@ -28,7 +28,7 @@ export default function AdminConfig() {
             {items?.map(item => (
               <tr key={item.id}>
                 <td><strong>{item.name}</strong></td>
-                {valueKey && <td style={{ color: '#402070', fontWeight: 700 }}>{item[valueKey]}%</td>}
+                {valueKey && <td style={{ color: '#0d1f3d', fontWeight: 700 }}>{item[valueKey]}%</td>}
                 <td><span className={`dash-status ${item.is_active ? 'active' : 'inactive'}`}>{item.is_active ? 'Active' : 'Inactive'}</span></td>
               </tr>
             ))}
@@ -104,7 +104,7 @@ export default function AdminConfig() {
                       <button key={svc} onClick={() => setActiveSvc(svc)}
                         style={{
                           padding: '6px 14px', borderRadius: 20, border: 'none', cursor: 'pointer', fontSize: 13,
-                          background: activeSvc === svc ? '#402070' : '#f3f4f6',
+                          background: activeSvc === svc ? '#0d1f3d' : '#f3f4f6',
                           color: activeSvc === svc ? '#fff' : '#374151', fontWeight: activeSvc === svc ? 700 : 400,
                         }}>
                         {SERVICE_ICONS[svc]} {svc}

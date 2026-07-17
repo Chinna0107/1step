@@ -47,7 +47,7 @@ export default function NotificationBell({ role }) {
         <span style={{
           position: 'absolute',
           top: 4, right: 4,
-          background: '#c02040',
+          background: '#1a365d',
           color: '#fff',
           fontSize: 9,
           fontWeight: 900,

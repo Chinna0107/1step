@@ -141,7 +141,7 @@ export default function NotFound() {
 const S = {
   page: {
     minHeight: '100vh',
-    background: 'linear-gradient(160deg, #0c0620 0%, #180c38 45%, #2a1050 75%, #180c38 100%)',
+    background: 'linear-gradient(160deg, #050912 0%, #0a1324 45%, #081427 75%, #0a1324 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -155,7 +155,7 @@ const S = {
     top: '-150px', right: '-150px',
     width: 600, height: 600,
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(192,32,64,0.18), transparent 65%)',
+    background: 'radial-gradient(circle, rgba(26,54,93,0.18), transparent 65%)',
     filter: 'blur(60px)',
     pointerEvents: 'none',
   },
@@ -164,7 +164,7 @@ const S = {
     bottom: '-150px', left: '-150px',
     width: 550, height: 550,
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(64,32,112,0.22), transparent 65%)',
+    background: 'radial-gradient(circle, rgba(13,31,61,0.22), transparent 65%)',
     filter: 'blur(60px)',
     pointerEvents: 'none',
   },
@@ -179,7 +179,7 @@ const S = {
   particle: {
     position: 'absolute',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(212,175,55,0.7), rgba(192,32,64,0.3))',
+    background: 'radial-gradient(circle, rgba(212,175,55,0.7), rgba(26,54,93,0.3))',
     pointerEvents: 'none',
   },
   content: {
@@ -234,7 +234,7 @@ const S = {
     height: 3,
     margin: '0 auto 28px',
     borderRadius: 999,
-    background: 'linear-gradient(90deg, #402070, #c02040, #d4af37)',
+    background: 'linear-gradient(90deg, #0d1f3d, #1a365d, #d4af37)',
   },
   title: {
     fontSize: 'clamp(1.6rem, 4vw, 2.4rem)',
@@ -269,7 +269,7 @@ const S = {
     padding: '13px 28px',
     borderRadius: 12,
     background: 'linear-gradient(135deg, #d4af37 0%, #f0cc55 100%)',
-    color: '#0c0620',
+    color: '#050912',
     boxShadow: '0 6px 24px rgba(212,175,55,0.28)',
     transition: 'all 0.25s ease',
     letterSpacing: '0.2px',

@@ -50,8 +50,8 @@ export default function CustomerDashboard() {
           {tLoading ? [1,2,3,4,5].map(i => <SkeletonStat key={i} />) : (
             <>
               {[
-                { icon: '💳', label: 'Total Transactions', value: total, color: '#402070' },
-                { icon: '₹',  label: 'Total Amount',       value: `₹${fmt(amount)}`, color: '#c02040' },
+                { icon: '💳', label: 'Total Transactions', value: total, color: '#0d1f3d' },
+                { icon: '₹',  label: 'Total Amount',       value: `₹${fmt(amount)}`, color: '#1a365d' },
                 { icon: '✅', label: 'Successful',          value: success, color: '#059669' },
                 { icon: '🪙', label: 'MS Coins',            value: fmt(coinsBal), color: '#b8860b' },
                 { icon: '🏦', label: 'Branch',              value: profile?.branch || '—', color: '#d97706', small: true },
@@ -105,14 +105,14 @@ export default function CustomerDashboard() {
             <div className="cd-card-body">
               <div className="cd-quick-grid">
                 {[
-                  { icon: '💸', label: 'Money Transfer', color: '#402070' },
-                  { icon: '💳', label: 'Card Withdrawal', color: '#c02040' },
+                  { icon: '💸', label: 'Money Transfer', color: '#0d1f3d' },
+                  { icon: '💳', label: 'Card Withdrawal', color: '#1a365d' },
                   { icon: '📄', label: 'Bill Payment', color: '#059669' },
                   { icon: '🏧', label: 'AEPS', color: '#d97706' },
                   { icon: '📈', label: 'CIBIL Check', color: '#0284c7' },
                   { icon: '🛡️', label: 'Insurance', color: '#7c3aed' },
                 ].map((a, i) => (
-                  <a key={i} href="https://wa.me/919866440477" target="_blank" rel="noopener noreferrer"
+                  <a key={i} href="https://wa.me/919581611711" target="_blank" rel="noopener noreferrer"
                     className="cd-quick-btn" style={{ '--qc': a.color, animationDelay: `${i * 60}ms` }}>
                     <span className="cd-quick-icon">{a.icon}</span>
                     <span className="cd-quick-label">{a.label}</span>
@@ -166,8 +166,8 @@ export default function CustomerDashboard() {
               <div className="cd-support-sub">Our team is available 24/7 to assist you</div>
             </div>
             <div className="cd-support-btns">
-              <a href="https://wa.me/919866440477" target="_blank" rel="noopener noreferrer" className="cd-wa-btn">💬 WhatsApp</a>
-              <a href="tel:+919866440477" className="cd-call-btn">📞 Call</a>
+              <a href="https://wa.me/919581611711" target="_blank" rel="noopener noreferrer" className="cd-wa-btn">💬 WhatsApp</a>
+              <a href="tel:+919581611711" className="cd-call-btn">📞 Call</a>
             </div>
           </div>
         </div>

@@ -114,7 +114,7 @@ export default function EmployeePerformance() {
             {['today', 'month', 'custom'].map(p => (
               <button key={p} onClick={() => setPeriod(p)}
                 style={{ padding: '6px 14px', borderRadius: 20, border: 'none', fontWeight: 700, fontSize: 12, cursor: 'pointer',
-                  background: period === p ? 'linear-gradient(135deg,#402070,#c02040)' : '#f0f2f8',
+                  background: period === p ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f0f2f8',
                   color: period === p ? '#fff' : '#64748b' }}>
                 {p === 'today' ? '📅 Today' : p === 'month' ? '📆 This Month' : '🗓 Custom'}
               </button>
@@ -132,12 +132,12 @@ export default function EmployeePerformance() {
               {[['cards','⊞'],['table','☰']].map(([v, icon]) => (
                 <button key={v} onClick={() => setView(v)}
                   style={{ padding: '6px 12px', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: 13,
-                    background: view === v ? '#402070' : 'transparent', color: view === v ? '#fff' : '#64748b' }}>
+                    background: view === v ? '#0d1f3d' : 'transparent', color: view === v ? '#fff' : '#64748b' }}>
                   {icon}
                 </button>
               ))}
             </div>
-            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#402070', border: 'none' }} onClick={() => load(true)}>🔄</button>
+            <button className="dash-btn" style={{ background: '#f0f2f8', color: '#0d1f3d', border: 'none' }} onClick={() => load(true)}>🔄</button>
           </div>
         </div>
 
@@ -146,14 +146,14 @@ export default function EmployeePerformance() {
           {/* Summary stats — 3 per row */}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16, marginBottom: 20 }}>
             {[
-              { label: 'Total Transactions', value: loading ? '—' : fmt(totalTxn),    color: '#402070', bg: '#ede9fe', icon: '🔢' },
+              { label: 'Total Transactions', value: loading ? '—' : fmt(totalTxn),    color: '#0d1f3d', bg: '#ede9fe', icon: '🔢' },
               { label: 'Total Value',         value: loading ? '—' : fmtVal(totalValue),  color: '#059669', bg: '#d1fae5', icon: '💰' },
               { label: 'Total Profit',        value: loading ? '—' : fmtVal(totalProfit), color: '#d97706', bg: '#fef3c7', icon: '📈' },
               { label: 'Present Today',       value: loading ? '—' : present,          color: '#059669', bg: '#d1fae5', icon: '✅' },
               { label: 'Late Check-ins',      value: loading ? '—' : late,             color: '#f59e0b', bg: '#fef9c3', icon: '⏰' },
               { label: 'No Activity',         value: loading ? '—' : noActivity,       color: '#dc2626', bg: '#fee2e2', icon: '🚨' },
             ].map(s => (
-              <div key={s.label} style={{ background: '#fff', borderRadius: 16, padding: '18px 20px', boxShadow: '0 2px 12px rgba(64,32,112,0.08)', borderLeft: `4px solid ${s.color}`, display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
+              <div key={s.label} style={{ background: '#fff', borderRadius: 16, padding: '18px 20px', boxShadow: '0 2px 12px rgba(13,31,61,0.08)', borderLeft: `4px solid ${s.color}`, display: 'flex', alignItems: 'center', gap: 14, minWidth: 0 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>{s.icon}</div>
                 <div style={{ minWidth: 0 }}>
                   <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.6, marginBottom: 3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.label}</div>
@@ -168,7 +168,7 @@ export default function EmployeePerformance() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: 16 }}>
               {loading
                 ? [1,2,3].map(i => (
-                    <div key={i} style={{ background: '#fff', borderRadius: 16, padding: 20, boxShadow: '0 2px 12px rgba(64,32,112,0.08)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div key={i} style={{ background: '#fff', borderRadius: 16, padding: 20, boxShadow: '0 2px 12px rgba(13,31,61,0.08)', display: 'flex', flexDirection: 'column', gap: 12 }}>
                       <Skel w="60%" h={16} /><Skel w="40%" h={28} /><Skel h={8} /><Skel w="80%" h={12} />
                     </div>
                   ))
@@ -178,12 +178,12 @@ export default function EmployeePerformance() {
                     const valuePct = Math.round(e.value / maxValue * 100)
                     const barColor = txnPct >= 80 ? '#059669' : txnPct >= 50 ? '#d97706' : txnPct >= 20 ? '#f59e0b' : '#dc2626'
                     return (
-                      <div key={e.id} style={{ background: '#fff', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 16px rgba(64,32,112,0.09)', border: '1.5px solid #f0f2f8', transition: 'transform 0.2s, box-shadow 0.2s' }}
-                        onMouseEnter={el => { el.currentTarget.style.transform = 'translateY(-3px)'; el.currentTarget.style.boxShadow = '0 8px 28px rgba(64,32,112,0.14)' }}
-                        onMouseLeave={el => { el.currentTarget.style.transform = ''; el.currentTarget.style.boxShadow = '0 2px 16px rgba(64,32,112,0.09)' }}>
+                      <div key={e.id} style={{ background: '#fff', borderRadius: 16, overflow: 'hidden', boxShadow: '0 2px 16px rgba(13,31,61,0.09)', border: '1.5px solid #f0f2f8', transition: 'transform 0.2s, box-shadow 0.2s' }}
+                        onMouseEnter={el => { el.currentTarget.style.transform = 'translateY(-3px)'; el.currentTarget.style.boxShadow = '0 8px 28px rgba(13,31,61,0.14)' }}
+                        onMouseLeave={el => { el.currentTarget.style.transform = ''; el.currentTarget.style.boxShadow = '0 2px 16px rgba(13,31,61,0.09)' }}>
 
                         {/* Card header */}
-                        <div style={{ background: 'linear-gradient(135deg,#1a0a2e,#402070)', padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ background: 'linear-gradient(135deg,#081427,#0d1f3d)', padding: '14px 18px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                             <div style={{ width: 38, height: 38, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 900, color: '#d4af37' }}>
                               {e.name?.[0]?.toUpperCase()}
@@ -203,7 +203,7 @@ export default function EmployeePerformance() {
                         {/* Stats grid */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', borderBottom: '1px solid #f0f2f8' }}>
                           {[
-                            { label: 'Transactions', value: e.txn,          color: '#402070' },
+                            { label: 'Transactions', value: e.txn,          color: '#0d1f3d' },
                             { label: 'Value',         value: fmtVal(e.value), color: '#059669' },
                             { label: 'Profit',        value: fmtVal(e.profit),color: '#d97706' },
                           ].map((s, j) => (
@@ -295,7 +295,7 @@ export default function EmployeePerformance() {
                               </span>
                             </td>
                             <td><strong>{e.name}</strong></td>
-                            <td style={{ fontWeight: 700, color: '#402070' }}>{e.txn}</td>
+                            <td style={{ fontWeight: 700, color: '#0d1f3d' }}>{e.txn}</td>
                             <td style={{ color: '#059669', fontWeight: 700 }}>{fmtVal(e.value)}</td>
                             <td style={{ color: '#d97706', fontWeight: 700 }}>{fmtVal(e.profit)}</td>
                             <td style={{ color: '#b8860b', fontWeight: 700 }}>🪙 {e.coins ?? 0}</td>

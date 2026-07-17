@@ -82,12 +82,12 @@ export default function CustomerKYC() {
       <style>{`
         .kyc-doc-box { flex: 1; min-width: 200px; }
         .kyc-doc-label { font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.4px; }
-        .kyc-doc-img { width: 100%; max-width: 280px; height: 160px; object-fit: cover; border-radius: 8px; border: 1.5px solid rgba(64,32,112,0.2); cursor: pointer; transition: transform 0.2s; }
+        .kyc-doc-img { width: 100%; max-width: 280px; height: 160px; object-fit: cover; border-radius: 8px; border: 1.5px solid rgba(13,31,61,0.2); cursor: pointer; transition: transform 0.2s; }
         .kyc-doc-img:hover { transform: scale(1.02); }
         .kyc-doc-empty { width: 280px; height: 160px; background: #f8fafc; border: 2px dashed #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 13px; }
         .kyc-lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 20px; }
         .kyc-lightbox-box { background: #fff; border-radius: 12px; overflow: hidden; max-width: 600px; width: 100%; }
-        .kyc-lightbox-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: linear-gradient(135deg, #402070, #c02040); color: #fff; font-size: 13px; font-weight: 700; }
+        .kyc-lightbox-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; background: linear-gradient(135deg, #0d1f3d, #1a365d); color: #fff; font-size: 13px; font-weight: 700; }
         .kyc-lightbox-header button { background: rgba(255,255,255,0.2); border: none; color: #fff; width: 26px; height: 26px; border-radius: 50%; cursor: pointer; font-size: 13px; }
       `}</style>
     </div>

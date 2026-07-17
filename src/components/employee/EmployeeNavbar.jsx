@@ -8,8 +8,8 @@ import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import NotificationBell from '../NotificationBell'
-import nameImg from '../../assets/icons png/Money Spot Logo.png'
-import logoImg from '../../assets/icons png/MS Logo.png'
+import nameImg from '../../assets/logo.png'
+import logoImg from '../../assets/logo.png'
 import '../../pages/dashboard.css'
 
 const links = [
@@ -40,8 +40,8 @@ export default function EmployeeNavbar() {
   return (
     <nav className="emp-navbar">
       <div className="emp-navbar-brand">
-        <img src={logoImg} alt="MoneySpot" style={{ height: 32, width: 32, objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(192,32,64,0.5))' }} />
-        <img src={nameImg} alt="MoneySpot" style={{ height: 24, width: 'auto', objectFit: 'contain' }} />
+        <img src={logoImg} alt="1 Step Finance Care" style={{ height: 32, width: 32, objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(26,54,93,0.5))' }} />
+        <img src={nameImg} alt="1 Step Finance Care" style={{ height: 24, width: 'auto', objectFit: 'contain' }} />
         <span>Employee Portal</span>
       </div>
       <div className="emp-navbar-links">

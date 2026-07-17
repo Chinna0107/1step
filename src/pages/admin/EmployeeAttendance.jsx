@@ -28,7 +28,7 @@ export default function EmployeeAttendance() {
           <h1>Employee Attendance</h1>
           <div className="dash-topbar-right">
             <input type="date" value={date} onChange={e => setDate(e.target.value)}
-              style={{ padding: '7px 12px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', fontFamily: 'inherit', fontSize: 13 }} />
+              style={{ padding: '7px 12px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', fontFamily: 'inherit', fontSize: 13 }} />
           </div>
         </div>
         <div className="dash-main">

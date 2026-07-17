@@ -14,14 +14,14 @@ export function CustomerOffers() {
     <div className="cust-page">
       <CustomerSidebar />
       <div className="cust-content">
-        <div className="cust-topbar"><h1>💰 Offers & Benefits</h1><p>Exclusive rewards for MoneySpot customers</p></div>
+        <div className="cust-topbar"><h1>💰 Offers & Benefits</h1><p>Exclusive rewards for 1 Step Finance Care customers</p></div>
         <div className="cust-grid" style={{ marginBottom: 20 }}>
           {offers.map((o, i) => (
             <div key={i} className="cust-card" style={{ margin: 0 }}>
               <div className="cust-card-body">
                 <div style={{ fontSize: 28, marginBottom: 10 }}>{o.icon}</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-                  <strong style={{ fontSize: 14, color: '#1a0a2e' }}>{o.title}</strong>
+                  <strong style={{ fontSize: 14, color: '#081427' }}>{o.title}</strong>
                   <span className={`cust-badge ${o.tag === 'Active' ? 'cust-badge-success' : o.tag === 'Eligible' ? 'cust-badge-pending' : ''}`}
                     style={o.tag === 'Coming Soon' ? { background: '#f1f5f9', color: '#64748b' } : {}}>
                     {o.tag}
@@ -39,7 +39,7 @@ export function CustomerOffers() {
 
 export function CustomerNotifications() {
   const notifs = [
-    { icon: '✅', title: 'Account Approved', msg: 'Your MoneySpot account has been approved successfully.', time: 'Today', type: 'success' },
+    { icon: '✅', title: 'Account Approved', msg: 'Your 1 Step Finance Care account has been approved successfully.', time: 'Today', type: 'success' },
     { icon: '💳', title: 'New Service Available', msg: 'CIBIL Check & Repair service is now available at your branch.', time: 'Yesterday', type: 'info' },
     { icon: '🎁', title: 'Cashback Offer', msg: 'Get 0.5% cashback on DMT transactions this week!', time: '2 days ago', type: 'offer' },
   ]
@@ -58,7 +58,7 @@ export function CustomerNotifications() {
               <div key={i} style={{ display: 'flex', gap: 14, padding: '16px 20px', borderBottom: i < notifs.length - 1 ? '1px solid #f1f5f9' : 'none', alignItems: 'flex-start' }}>
                 <div style={{ width: 38, height: 38, borderRadius: '50%', background: colors[n.type], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{n.icon}</div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: 13, color: '#1a0a2e' }}>{n.title}</div>
+                  <div style={{ fontWeight: 700, fontSize: 13, color: '#081427' }}>{n.title}</div>
                   <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>{n.msg}</div>
                 </div>
                 <div style={{ fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap' }}>{n.time}</div>
@@ -71,7 +71,7 @@ export function CustomerNotifications() {
   )
 }
 
-const WHATSAPP_NUMBER = '919866440477'
+const WHATSAPP_NUMBER = '919581611711'
 
 export function CustomerSupport() {
   const [form, setForm] = useState({ name: '', mobile: '', subject: '', message: '' })
@@ -81,7 +81,7 @@ export function CustomerSupport() {
     if (!name.trim() || !mobile.trim() || !subject.trim() || !message.trim())
       return alert('Please fill in all fields before submitting.')
 
-    const text = `Hello MoneySpot Support! 👋
+    const text = `Hello 1 Step Finance Care Support! 👋
 
 *Support Ticket*
 ----------------------------
@@ -108,7 +108,7 @@ Please assist me at the earliest.`
               <div style={{ fontSize: 36, marginBottom: 10 }}>💬</div>
               <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>WhatsApp Support</div>
               <p style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>Chat with us instantly on WhatsApp for quick help</p>
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi%20MoneySpot%2C%20I%20need%20support.`} target="_blank" rel="noopener noreferrer" className="cust-btn cust-btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>
+              <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi%201 Step Finance Care%2C%20I%20need%20support.`} target="_blank" rel="noopener noreferrer" className="cust-btn cust-btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>
                 Open WhatsApp
               </a>
             </div>
@@ -118,7 +118,7 @@ Please assist me at the earliest.`
               <div style={{ fontSize: 36, marginBottom: 10 }}>📞</div>
               <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>Call Branch</div>
               <p style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>Speak directly with your branch representative</p>
-              <a href={`tel:+${WHATSAPP_NUMBER}`} className="cust-btn" style={{ display: 'inline-block', textDecoration: 'none', background: '#f1f5f9', color: '#402070', border: '1.5px solid rgba(64,32,112,0.2)', padding: '11px 22px', borderRadius: 8, fontSize: 13, fontWeight: 700 }}>
+              <a href={`tel:+${WHATSAPP_NUMBER}`} className="cust-btn" style={{ display: 'inline-block', textDecoration: 'none', background: '#f1f5f9', color: '#0d1f3d', border: '1.5px solid rgba(13,31,61,0.2)', padding: '11px 22px', borderRadius: 8, fontSize: 13, fontWeight: 700 }}>
                 Call Now
               </a>
             </div>
@@ -170,7 +170,7 @@ export function CustomerSecurity() {
               <div className="cust-card-body">
                 <div style={{ fontSize: 28, marginBottom: 10 }}>{s.icon}</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                  <strong style={{ fontSize: 14, color: '#1a0a2e' }}>{s.title}</strong>
+                  <strong style={{ fontSize: 14, color: '#081427' }}>{s.title}</strong>
                   <span className="cust-badge cust-badge-success">{s.status}</span>
                 </div>
                 <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>{s.desc}</p>

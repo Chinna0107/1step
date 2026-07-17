@@ -58,7 +58,7 @@ export default function Requests() {
           <h1>{section === 'leads' ? '🎯 Lead Requests' : 'Customer Requests'}</h1>
           <div className="dash-topbar-right">
             <span className="dash-badge">🔔 {pending.length} Pending Customers</span>
-            <span className="dash-badge" style={{ background: '#ede9fe', color: '#402070', marginLeft: 8 }}>🎯 {leads.length} New Leads</span>
+            <span className="dash-badge" style={{ background: '#ede9fe', color: '#0d1f3d', marginLeft: 8 }}>🎯 {leads.length} New Leads</span>
           </div>
         </div>
         <div className="dash-main">
@@ -67,13 +67,13 @@ export default function Requests() {
           <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
             <button onClick={() => setSection('customers')}
               style={{ padding: '10px 24px', borderRadius: 10, border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer',
-                background: section === 'customers' ? 'linear-gradient(135deg,#402070,#c02040)' : '#f0f2f8',
+                background: section === 'customers' ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f0f2f8',
                 color: section === 'customers' ? '#fff' : '#64748b' }}>
               👥 Customer Requests ({pending.length})
             </button>
             <button onClick={() => setSection('leads')}
               style={{ padding: '10px 24px', borderRadius: 10, border: 'none', fontWeight: 700, fontSize: 14, cursor: 'pointer',
-                background: section === 'leads' ? 'linear-gradient(135deg,#402070,#c02040)' : '#f0f2f8',
+                background: section === 'leads' ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f0f2f8',
                 color: section === 'leads' ? '#fff' : '#64748b' }}>
               🎯 Lead Requests ({leads.length})
             </button>
@@ -155,7 +155,7 @@ export default function Requests() {
               <div className="dash-card">
                 <div className="dash-card-header">
                   <h2>🎯 New Lead Requests ({leads.length})</h2>
-                  <button className="dash-btn" onClick={loadLeads} style={{ background: '#f0f2f8', color: '#402070', border: 'none', fontSize: 12 }}>🔄 Refresh</button>
+                  <button className="dash-btn" onClick={loadLeads} style={{ background: '#f0f2f8', color: '#0d1f3d', border: 'none', fontSize: 12 }}>🔄 Refresh</button>
                 </div>
                 <div className="dash-table-wrap">
                   {leadsLoading ? <div className="dash-loading">Loading...</div> : leads.length === 0 ? (
@@ -168,7 +168,7 @@ export default function Requests() {
                       <tbody>
                         {leads.map(l => (
                           <tr key={l.id}>
-                            <td style={{ fontFamily: 'monospace', color: '#402070', fontWeight: 700, fontSize: 11 }}>#{l.id}</td>
+                            <td style={{ fontFamily: 'monospace', color: '#0d1f3d', fontWeight: 700, fontSize: 11 }}>#{l.id}</td>
                             <td>
                               <strong>{l.cust_name}</strong>
                               {l.email && <div style={{ fontSize: 11, color: '#9ca3af' }}>{l.email}</div>}

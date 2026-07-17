@@ -4,7 +4,7 @@
 
 /* ── Hero ── */
 .coins-hero {
-  background: linear-gradient(135deg, #1a0a2e 0%, #2d1155 50%, #b8860b 100%);
+  background: linear-gradient(135deg, #081427 0%, #2d1155 50%, #b8860b 100%);
   border-radius: 20px;
   padding: 28px 24px;
   margin-bottom: 24px;
@@ -20,7 +20,7 @@
   pointer-events: none;
 }
 .coins-orb1 { width: 220px; height: 220px; background: rgba(212,175,55,0.3); top: -60px; right: -30px; animation: coins-orb 8s ease-in-out infinite alternate; }
-.coins-orb2 { width: 160px; height: 160px; background: rgba(64,32,112,0.3);  bottom: -50px; left: 25%; animation: coins-orb 10s ease-in-out infinite alternate-reverse; }
+.coins-orb2 { width: 160px; height: 160px; background: rgba(13,31,61,0.3);  bottom: -50px; left: 25%; animation: coins-orb 10s ease-in-out infinite alternate-reverse; }
 
 @keyframes coins-orb {
   from { transform: translate(0,0) scale(1); }
@@ -94,7 +94,7 @@
 }
 
 .coins-sum-icon  { font-size: 22px; margin-bottom: 8px; }
-.coins-sum-val   { font-size: 22px; font-weight: 900; color: #1a0a2e; line-height: 1; margin-bottom: 4px; }
+.coins-sum-val   { font-size: 22px; font-weight: 900; color: #081427; line-height: 1; margin-bottom: 4px; }
 .coins-sum-label { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
 .coins-sum-sub   { font-size: 11px; color: #64748b; }
 
@@ -122,7 +122,7 @@
   gap: 10px;
   padding: 16px 20px;
   border-bottom: 1px solid #f1f5f9;
-  background: linear-gradient(135deg, rgba(212,175,55,0.04), rgba(64,32,112,0.02));
+  background: linear-gradient(135deg, rgba(212,175,55,0.04), rgba(13,31,61,0.02));
 }
 
 .coins-card-header span:first-child { font-size: 18px; }
@@ -131,7 +131,7 @@
   flex: 1;
   font-size: 14px;
   font-weight: 800;
-  color: #1a0a2e;
+  color: #081427;
   margin: 0;
 }
 
@@ -176,7 +176,7 @@
   letter-spacing: 0.4px;
   margin-bottom: 10px;
 }
-.coins-slider-label strong { color: #1a0a2e; font-size: 15px; }
+.coins-slider-label strong { color: #081427; font-size: 15px; }
 
 .coins-slider {
   width: 100%;
@@ -231,7 +231,7 @@
   width: 100%;
   padding: 14px;
   background: linear-gradient(135deg, #b8860b, #d4af37, #f59e0b);
-  color: #1a0a2e;
+  color: #081427;
   border: none;
   border-radius: 12px;
   font-size: 14px;
@@ -268,7 +268,7 @@
 }
 
 .coins-coming-icon  { font-size: 40px; margin-bottom: 4px; }
-.coins-coming-title { font-size: 16px; font-weight: 800; color: #1a0a2e; }
+.coins-coming-title { font-size: 16px; font-weight: 800; color: #081427; }
 .coins-coming-desc  { font-size: 13px; color: #64748b; line-height: 1.5; max-width: 260px; }
 
 /* ── Steps ── */
@@ -285,7 +285,7 @@
 .coins-step-num {
   width: 24px; height: 24px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   color: #fff;
   font-size: 11px;
   font-weight: 800;
@@ -297,7 +297,7 @@
 }
 
 .coins-step-icon  { font-size: 22px; flex-shrink: 0; }
-.coins-step-title { font-size: 13px; font-weight: 800; color: #1a0a2e; margin-bottom: 3px; }
+.coins-step-title { font-size: 13px; font-weight: 800; color: #081427; margin-bottom: 3px; }
 .coins-step-desc  { font-size: 12px; color: #64748b; line-height: 1.4; }
 
 /* ── Gifts Section ── */
@@ -331,7 +331,7 @@
 .coins-gifts-title {
   font-size: 22px;
   font-weight: 900;
-  color: #1a0a2e;
+  color: #081427;
   margin: 0 0 6px;
 }
 
@@ -347,7 +347,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: linear-gradient(135deg, #1a0a2e, #402070);
+  background: linear-gradient(135deg, #081427, #0d1f3d);
   border-radius: 14px;
   padding: 14px 20px;
   flex-shrink: 0;
@@ -427,7 +427,7 @@
   bottom: 10px;
   right: 10px;
   background: rgba(212,175,55,0.92);
-  color: #1a0a2e;
+  color: #081427;
   font-size: 11px;
   font-weight: 900;
   padding: 4px 10px;
@@ -443,7 +443,7 @@
 .gift-name {
   font-size: 14px;
   font-weight: 800;
-  color: #1a0a2e;
+  color: #081427;
   margin-bottom: 4px;
 }
 

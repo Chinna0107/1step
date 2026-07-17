@@ -6,7 +6,7 @@ import './superadmin.css'
 import './Dashboard.css'
 
 const fmtVal = n => { const v = parseFloat(n)||0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${v.toLocaleString('en-IN')}` }
-const COLORS  = ['#402070','#c02040','#d4af37','#10b981','#0284c7','#7c3aed']
+const COLORS  = ['#0d1f3d','#1a365d','#d4af37','#10b981','#0284c7','#7c3aed']
 
 export default function Insights() {
   const [period, setPeriod] = useState('today')
@@ -31,7 +31,7 @@ export default function Insights() {
           <div className="dash-topbar-right">
             {['today','week','month'].map(p => (
               <button key={p} className="sa-btn sa-btn-sm"
-                style={{ background: period === p ? 'linear-gradient(135deg,#402070,#c02040)' : '#f4f5fb',
+                style={{ background: period === p ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f4f5fb',
                          color: period === p ? '#fff' : '#666', border: '1px solid #e8eaf0' }}
                 onClick={() => setPeriod(p)}>
                 {p.charAt(0).toUpperCase() + p.slice(1)}
@@ -134,9 +134,9 @@ export default function Insights() {
                         <td style={{ minWidth: 120 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             <div style={{ flex: 1, height: 6, background: '#f0f2f8', borderRadius: 999, overflow: 'hidden' }}>
-                              <div style={{ width: `${e.pct}%`, height: '100%', background: 'linear-gradient(90deg,#402070,#c02040)', borderRadius: 999, transition: 'width 0.6s ease' }} />
+                              <div style={{ width: `${e.pct}%`, height: '100%', background: 'linear-gradient(90deg,#0d1f3d,#1a365d)', borderRadius: 999, transition: 'width 0.6s ease' }} />
                             </div>
-                            <span style={{ fontSize: 12, fontWeight: 700, color: '#402070' }}>{e.pct}%</span>
+                            <span style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d' }}>{e.pct}%</span>
                           </div>
                         </td>
                       </tr>

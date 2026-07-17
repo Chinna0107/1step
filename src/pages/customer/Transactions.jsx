@@ -11,7 +11,7 @@ const RECEIPT_CSS = `
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; display: flex; justify-content: center; padding: 20px; }
   .receipt { background: #fff; width: 400px; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.15); }
   .receipt-header {
-    background: linear-gradient(135deg, #1a0a2e 0%, #402070 50%, #c02040 100%);
+    background: linear-gradient(135deg, #081427 0%, #0d1f3d 50%, #1a365d 100%);
     padding: 28px 24px 32px; text-align: center; color: #fff; position: relative;
   }
   .receipt-header::after {
@@ -37,7 +37,7 @@ const RECEIPT_CSS = `
   }
   .receipt-body { padding: 32px 22px 20px; }
   .section-title {
-    font-size: 9px; font-weight: 800; color: #402070;
+    font-size: 9px; font-weight: 800; color: #0d1f3d;
     text-transform: uppercase; letter-spacing: 2px;
     margin: 18px 0 8px; padding-bottom: 5px;
     border-bottom: 2px solid #f0f2f8;
@@ -50,7 +50,7 @@ const RECEIPT_CSS = `
   }
   .row:last-child { border-bottom: none; }
   .row-label { font-size: 12px; color: #64748b; font-weight: 500; flex-shrink: 0; }
-  .row-value { font-size: 12px; font-weight: 700; color: #1a0a2e; text-align: right; word-break: break-all; }
+  .row-value { font-size: 12px; font-weight: 700; color: #081427; text-align: right; word-break: break-all; }
   .amount-box {
     background: linear-gradient(135deg, #f8f5ff, #fdf2f8);
     border-radius: 12px; padding: 16px 18px; margin: 18px 0;
@@ -61,14 +61,14 @@ const RECEIPT_CSS = `
   .amt-val { font-size: 13px; font-weight: 800; }
   .amt-divider { border: none; border-top: 1.5px dashed #d8b4fe; margin: 10px 0; }
   .total-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0 0; }
-  .total-label { font-size: 15px; font-weight: 900; color: #402070; }
-  .total-val { font-size: 22px; font-weight: 900; color: #402070; }
+  .total-label { font-size: 15px; font-weight: 900; color: #0d1f3d; }
+  .total-val { font-size: 22px; font-weight: 900; color: #0d1f3d; }
   .settled-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0 0; }
   .settled-label { font-size: 11px; color: #64748b; }
   .settled-val { font-size: 13px; font-weight: 800; }
   .note-box { background: #fef9e7; border-radius: 8px; padding: 10px 14px; font-size: 11px; color: #92400e; border: 1px solid #fde68a; margin-top: 12px; }
   .receipt-footer {
-    background: linear-gradient(135deg, #1a0a2e, #402070);
+    background: linear-gradient(135deg, #081427, #0d1f3d);
     padding: 20px 24px; text-align: center; color: rgba(255,255,255,0.8); position: relative;
   }
   .receipt-footer::before {
@@ -105,13 +105,13 @@ function buildReceiptHTML(t) {
   return `<!DOCTYPE html>
 <html><head>
   <meta charset="UTF-8">
-  <title>Receipt #${t.id} — MoneySpot</title>
+  <title>Receipt #${t.id} — 1 Step Finance Care</title>
   <style>${RECEIPT_CSS}</style>
 </head><body>
 <div class="receipt">
   <div class="receipt-header">
     <div class="logo-wrap">
-      <img class="logo-img" src="https://moneyspotfintech.com/favicon.png" alt="MoneySpot" onerror="this.style.display='none'" />
+      <img class="logo-img" src="https://1stepfinancecare.com/favicon.png" alt="1 Step Finance Care" onerror="this.style.display='none'" />
       <div class="brand-name">MONEY<span>SPOT</span></div>
     </div>
     <div class="brand-sub">Fintech Services</div>
@@ -153,11 +153,11 @@ function buildReceiptHTML(t) {
   </div>
 
   <div class="receipt-footer">
-    <div class="footer-thanks">Thank you for choosing MoneySpot!</div>
-    <div class="footer-phone">📞 +91 98664 40477</div>
+    <div class="footer-thanks">Thank you for choosing 1 Step Finance Care!</div>
+    <div class="footer-phone">📞 +91 95816 11711</div>
     <div class="footer-note">This is a computer generated receipt</div>
   </div>
-  <div class="watermark">moneyspotfintech.com</div>
+  <div class="watermark">1stepfinancecare.com</div>
 </div>
 </body></html>`
 }
@@ -203,13 +203,13 @@ export default function CustomerTransactions() {
                         <td style={{ color: '#94a3b8', fontSize: 12 }}>#{t.id}</td>
                         <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                         <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
-                        <td><strong style={{ color: '#1a0a2e' }}>₹{fmt(t.amount)}</strong></td>
+                        <td><strong style={{ color: '#081427' }}>₹{fmt(t.amount)}</strong></td>
                         <td style={{ color: '#d97706', fontWeight: 700 }}>{parseFloat(t.charges_pct || 0)}%</td>
                         <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt(t.charges_amount)}</td>
         <td><strong style={{ color: '#059669', fontSize: 15, background: '#d1fae5', padding: '4px 10px', borderRadius: 8 }}>₹{fmt(t.settled_amount)}</strong></td>
                         <td>
                           <button onClick={() => openPrint(t)}
-                            style={{ background: 'linear-gradient(135deg,#402070,#c02040)', border: 'none', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
+                            style={{ background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', border: 'none', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
                             🖨️ Print
                           </button>
                         </td>

@@ -75,7 +75,7 @@ export default function CustomerInfo() {
             { icon:'✅', label:'Approved', val: approved, color:'#059669', status:'approved' },
             { icon:'⏳', label:'Pending',  val: pending,  color:'#d97706', status:'pending'  },
             { icon:'❌', label:'Rejected', val: rejected, color:'#dc2626', status:'rejected' },
-            { icon:'👥', label:'Total',    val: customers.length, color:'#402070', status:'' },
+            { icon:'👥', label:'Total',    val: customers.length, color:'#0d1f3d', status:'' },
           ].map(s => (
             <div key={s.label} className="dash-stat" style={{ cursor:'pointer' }}
               onClick={() => setFilterStatus(filterStatus === s.status ? '' : s.status)}>
@@ -120,7 +120,7 @@ export default function CustomerInfo() {
                       style={{ cursor:'pointer' }}
                       onMouseEnter={e => e.currentTarget.style.background='#faf5ff'}
                       onMouseLeave={e => e.currentTarget.style.background=''}>
-                      <td><strong style={{ color:'#402070' }}>{c.name}</strong></td>
+                      <td><strong style={{ color:'#0d1f3d' }}>{c.name}</strong></td>
                       <td style={{ fontSize:12 }}>{c.phone}</td>
                       <td style={{ fontSize:12 }}>{c.pan}</td>
                       <td style={{ fontSize:12 }}>{c.branch || '—'}</td>
@@ -163,7 +163,7 @@ export default function CustomerInfo() {
             animation:'slideInRight 0.25s ease',
           }}>
             {/* Header */}
-            <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', flexShrink:0 }}>
+            <div style={{ background:'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding:'20px 24px', flexShrink:0 }}>
               <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start' }}>
                 <div>
                   <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Customer Profile</div>
@@ -208,7 +208,7 @@ export default function CustomerInfo() {
                       <div key={d.label} style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'center' }}>
                         <img src={d.url} alt={d.label}
                           onClick={() => setLightbox({ url: d.url, label: `${selected.name} — ${d.label}` })}
-                          style={{ width: 100, height: 68, objectFit: 'cover', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', cursor: 'pointer' }}
+                          style={{ width: 100, height: 68, objectFit: 'cover', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', cursor: 'pointer' }}
                           onError={e => { e.currentTarget.parentElement.style.display = 'none' }} />
                         <span style={{ fontSize: 10, fontWeight: 700, color: '#64748b' }}>{d.label}</span>
                       </div>
@@ -223,7 +223,7 @@ export default function CustomerInfo() {
                   <div style={{ fontSize:11, fontWeight:700, color:'#9ca3af', textTransform:'uppercase', letterSpacing:0.5, marginBottom:8 }}>Service Breakdown</div>
                   <div style={{ display:'flex', flexWrap:'wrap', gap:6 }}>
                     {Object.entries(serviceBreakdown).map(([svc, cnt]) => (
-                      <span key={svc} style={{ background:'#ede9fe', color:'#402070', padding:'4px 12px', borderRadius:20, fontSize:12, fontWeight:700 }}>
+                      <span key={svc} style={{ background:'#ede9fe', color:'#0d1f3d', padding:'4px 12px', borderRadius:20, fontSize:12, fontWeight:700 }}>
                         {svc} ×{cnt}
                       </span>
                     ))}

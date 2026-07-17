@@ -80,7 +80,7 @@ export default function ServicesData() {
               <span style={{ fontSize: 20 }}>🚫</span>
               <div><div className="sa-stat-mini-val">{inactive.length}</div><div className="sa-stat-mini-label">Blocked Services</div></div>
             </div>
-            <div className="sa-stat-mini" style={{ borderColor: '#402070' }}>
+            <div className="sa-stat-mini" style={{ borderColor: '#0d1f3d' }}>
               <span style={{ fontSize: 20 }}>📋</span>
               <div><div className="sa-stat-mini-val">{rows.length}</div><div className="sa-stat-mini-label">Total Services</div></div>
             </div>
@@ -113,7 +113,7 @@ export default function ServicesData() {
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                             <span style={{ fontSize: 22 }}>{SERVICE_ICONS[s.name] || '🔧'}</span>
                             <div>
-                              <strong style={{ color: s.is_active ? '#1a0a2e' : '#94a3b8' }}>{s.name}</strong>
+                              <strong style={{ color: s.is_active ? '#081427' : '#94a3b8' }}>{s.name}</strong>
                               {!s.is_active && (
                                 <div style={{ fontSize: 11, color: '#dc2626', fontWeight: 600 }}>🚫 Blocked — hidden from employees</div>
                               )}
@@ -121,7 +121,7 @@ export default function ServicesData() {
                           </div>
                         </td>
                         <td>
-                          <span style={{ fontWeight: 700, color: '#402070', fontSize: 15 }}>{s.commission}%</span>
+                          <span style={{ fontWeight: 700, color: '#0d1f3d', fontSize: 15 }}>{s.commission}%</span>
                         </td>
                         <td>
                           <span className={`sa-status ${s.is_active ? 'active' : 'inactive'}`}>

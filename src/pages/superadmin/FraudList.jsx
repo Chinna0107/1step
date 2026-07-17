@@ -103,7 +103,7 @@ export default function FraudList() {
             <div className="sa-card-header">
               <h2>Fraud Entries ({list.length})</h2>
               <button className="dash-btn dash-btn-sm" onClick={load}
-                style={{ background: '#f0f2f8', color: '#402070', border: 'none' }}>↻ Refresh</button>
+                style={{ background: '#f0f2f8', color: '#0d1f3d', border: 'none' }}>↻ Refresh</button>
             </div>
             <div className="sa-table-wrap">
               {loading ? <div className="dash-loading">Loading...</div> : list.length === 0 ? (

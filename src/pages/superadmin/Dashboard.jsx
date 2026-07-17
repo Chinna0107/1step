@@ -89,11 +89,11 @@ export default function SuperAdminDashboard() {
           <div className="dash-stats-row">
             {loading ? <SkeletonStats count={4} /> : (
               <>
-                <StatCard icon={<MdTrendingUp />}           color="#402070"
+                <StatCard icon={<MdTrendingUp />}           color="#0d1f3d"
                   label="Transactions Today"
                   value={fmt(s.txnToday ?? 0)}
                   sub={`Month: ${fmt(s.txnMonth ?? 0)}`} />
-                <StatCard icon={<MdAccountBalanceWallet />} color="#c02040"
+                <StatCard icon={<MdAccountBalanceWallet />} color="#1a365d"
                   label="Total Txn Value"
                   value={fmtVal(s.valueToday ?? 0)}
                   sub={`Month: ${fmtVal(s.valueMonth ?? 0)}`} />
@@ -120,7 +120,7 @@ export default function SuperAdminDashboard() {
                     <div key={p.name} className="dash-platform-row">
                       <span className="dash-platform-name">{p.name}</span>
                       <div className="dash-platform-bar-wrap">
-                        <div className="dash-platform-bar" style={{ width: `${p.pct}%`, background: 'linear-gradient(90deg,#402070,#c02040)' }} />
+                        <div className="dash-platform-bar" style={{ width: `${p.pct}%`, background: 'linear-gradient(90deg,#0d1f3d,#1a365d)' }} />
                       </div>
                       <span className="dash-platform-val">{p.txn} txn</span>
                       <span className="dash-platform-val2">{fmtVal(p.value)}</span>

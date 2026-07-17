@@ -103,8 +103,8 @@ export default function AdminDashboard() {
               <div className="dash-card-body">
                 {loading ? <Skel /> : top ? (
                   <>
-                    <div style={{ fontSize: 16, fontWeight: 800, color: '#402070' }}>🏆 {top.name}</div>
-                    <div style={{ fontSize: 22, fontWeight: 900, color: '#c02040', margin: '6px 0' }}>{fmtVal(top.value)}</div>
+                    <div style={{ fontSize: 16, fontWeight: 800, color: '#0d1f3d' }}>🏆 {top.name}</div>
+                    <div style={{ fontSize: 22, fontWeight: 900, color: '#1a365d', margin: '6px 0' }}>{fmtVal(top.value)}</div>
                     <div style={{ fontSize: 12, color: '#9ca3af' }}>{top.txn} transactions today</div>
                   </>
                 ) : <div style={{ color: '#9ca3af', fontSize: 13 }}>No transactions today</div>}
@@ -115,7 +115,7 @@ export default function AdminDashboard() {
               <div className="dash-card-body">
                 {loading ? <Skel /> : (
                   <>
-                    <div style={{ fontSize: 22, fontWeight: 900, color: '#402070' }}>{fmt(s.custToday ?? 0)}</div>
+                    <div style={{ fontSize: 22, fontWeight: 900, color: '#0d1f3d' }}>{fmt(s.custToday ?? 0)}</div>
                     <div style={{ fontSize: 12, color: '#9ca3af', marginTop: 4 }}>New today</div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#059669', marginTop: 8 }}>Total: {fmt(s.custTotal ?? 0)}</div>
                   </>
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
                             <div style={{ flex: 1, height: 6, background: '#f0f2f8', borderRadius: 999, overflow: 'hidden' }}>
                               <div style={{ width: `${e.pct}%`, height: '100%', background: e.pct >= 80 ? '#10b981' : e.pct >= 50 ? '#d97706' : '#ef4444', borderRadius: 999 }} />
                             </div>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: '#402070' }}>{e.pct}%</span>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: '#0d1f3d' }}>{e.pct}%</span>
                           </div>
                         </td>
                       </tr>

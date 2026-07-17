@@ -21,7 +21,7 @@ Disallow: /employee/
 # Block query strings
 Disallow: /*?*
 
-Sitemap: https://moneyspotfintech.com/sitemap.xml
+Sitemap: https://1stepfinancecare.com/sitemap.xml
 
 # Crawl-delay for bots
 User-agent: AhrefsBot

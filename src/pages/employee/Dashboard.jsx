@@ -125,11 +125,11 @@ export default function EmployeeDashboard() {
         <div className="ed-stats">
           {loading ? [1,2,3,4].map(i => <div key={i} className="ed-stat-skel" />) : (
             <>
-              <StatCard icon={<MdTrendingUp />}           color="#402070" delay={0}
+              <StatCard icon={<MdTrendingUp />}           color="#0d1f3d" delay={0}
                 label="Transactions Today" value={<AnimatedNumber value={s.txnToday ?? 0} />}
                 sub={`Month: ${fmt(s.txnMonth ?? 0)}`}
                 growth={s.txnGrowth} />
-              <StatCard icon={<MdAccountBalanceWallet />} color="#c02040" delay={100}
+              <StatCard icon={<MdAccountBalanceWallet />} color="#1a365d" delay={100}
                 label="Value Handled Today" value={fmtVal(s.valueToday ?? 0)}
                 sub={`Month: ${fmtVal(s.valueMonth ?? 0)}`}
                 growth={s.valueGrowth} />
@@ -137,7 +137,7 @@ export default function EmployeeDashboard() {
                 label="Transactions This Month" value={<AnimatedNumber value={s.txnMonth ?? 0} />}
                 sub={`Today: ${fmt(s.txnToday ?? 0)}`} />
               <StatCard icon={<MdStar />}                 color="#059669" delay={300}
-                label="MoneySpot Coins" value={<AnimatedNumber value={profile.coins ?? 0} prefix="🪙 " />}
+                label="1 Step Finance Care Coins" value={<AnimatedNumber value={profile.coins ?? 0} prefix="🪙 " />}
                 sub="Earn more by working longer" />
             </>
           )}
@@ -195,7 +195,7 @@ export default function EmployeeDashboard() {
                 </div>
                 <div className="ed-target-extra-item">
                   <span>📊 Txns This Month</span>
-                  <strong style={{ color: '#402070' }}>{fmt(s.txnMonth ?? 0)}</strong>
+                  <strong style={{ color: '#0d1f3d' }}>{fmt(s.txnMonth ?? 0)}</strong>
                 </div>
               </div>
             </div>
@@ -231,7 +231,7 @@ export default function EmployeeDashboard() {
                 <div className="ed-att-divider" />
                 <div className="ed-att-box">
                   <div className="ed-att-label">Check Out</div>
-                  <div className="ed-att-time" style={{ color: att?.check_out ? '#c02040' : '#94a3b8' }}>
+                  <div className="ed-att-time" style={{ color: att?.check_out ? '#1a365d' : '#94a3b8' }}>
                     {att?.check_out || (att?.check_in ? 'Pending' : '—')}
                   </div>
                   {att?.minutes > 0 && (
@@ -327,7 +327,7 @@ export default function EmployeeDashboard() {
           <div className="ed-coins-inner">
             <div className="ed-coins-icon">🪙</div>
             <div style={{ flex: 1 }}>
-              <div className="ed-coins-label">MoneySpot Coins Balance</div>
+              <div className="ed-coins-label">1 Step Finance Care Coins Balance</div>
               <div className="ed-coins-value">{loading ? '...' : fmt(profile.coins ?? 0)}</div>
               <div className="ed-coins-hint">📈 Txn coins: 40 for Bill Pay+Withdrawal · 20 for others</div>
               <div className="ed-coins-hint" style={{ marginTop: 4 }}>⏱ Attendance coins: 5 per min beyond 500 min/day</div>

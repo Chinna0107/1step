@@ -100,9 +100,9 @@ export default function Settlements() {
               <div className="dash-stat-value" style={{ color: '#059669' }}>₹{fmt(receivedAmt)}</div>
               <div className="dash-stat-sub">{done.length} settlements</div>
             </div>
-            <div className="dash-stat" style={{ borderTop: '3px solid #402070' }}>
+            <div className="dash-stat" style={{ borderTop: '3px solid #0d1f3d' }}>
               <div className="dash-stat-label">📊 Total</div>
-              <div className="dash-stat-value" style={{ color: '#402070' }}>₹{fmt(pendingAmt + receivedAmt)}</div>
+              <div className="dash-stat-value" style={{ color: '#0d1f3d' }}>₹{fmt(pendingAmt + receivedAmt)}</div>
               <div className="dash-stat-sub">{all.length} total</div>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function Settlements() {
                     {rows.map(r => (
                       <tr key={r.id}>
                         <td><strong>{r.platform}</strong></td>
-                        <td style={{ fontWeight: 700, color: '#402070' }}>₹{fmt(r.amount)}</td>
+                        <td style={{ fontWeight: 700, color: '#0d1f3d' }}>₹{fmt(r.amount)}</td>
                         <td>
                           <span style={{ padding: '3px 10px', borderRadius: 20, fontSize: 11, fontWeight: 700, background: r.status === 'pending' ? '#fef3c7' : '#d1fae5', color: r.status === 'pending' ? '#d97706' : '#059669' }}>
                             {r.status}

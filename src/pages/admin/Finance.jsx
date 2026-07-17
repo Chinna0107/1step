@@ -287,7 +287,7 @@ export default function AdminFinance() {
                         {(data?.expenses || []).map(e => (
                           <tr key={e.id}>
                             <td>{new Date(e.date).toLocaleDateString('en-IN')}</td>
-                            <td><span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{e.category}</span></td>
+                            <td><span style={{ background: '#ede9fe', color: '#0d1f3d', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{e.category}</span></td>
                             <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt(e.amount)}</td>
                             <td style={{ color: '#9ca3af', fontSize: 12 }}>{e.note || '—'}</td>
                             <td style={{ fontSize: 12 }}>{e.created_by_name || '—'}</td>
@@ -337,7 +337,7 @@ export default function AdminFinance() {
                           <tr key={p.employee_id}>
                             <td><strong>{p.employee_name}</strong></td>
                             <td>{p.branch}</td>
-                            <td style={{ fontWeight: 700, color: '#402070' }}>{p.transaction_count}</td>
+                            <td style={{ fontWeight: 700, color: '#0d1f3d' }}>{p.transaction_count}</td>
                             <td style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(p.total_amount)}</td>
                             <td style={{ color: '#d4af37', fontWeight: 700 }}>₹{fmt(p.total_profit)}</td>
                             <td style={{ color: '#64748b' }}>₹{fmt(p.avg_transaction_amount)}</td>
@@ -390,7 +390,7 @@ export default function AdminFinance() {
                         {expenses.map(e => (
                           <tr key={e.id}>
                             <td><strong>{e.branch}</strong></td>
-                            <td><span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{e.category}</span></td>
+                            <td><span style={{ background: '#ede9fe', color: '#0d1f3d', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{e.category}</span></td>
                             <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt(e.amount)}</td>
                             <td>{new Date(e.date).toLocaleDateString('en-IN')}</td>
                             <td style={{ color: '#9ca3af', fontSize: 12 }}>{e.note || '—'}</td>

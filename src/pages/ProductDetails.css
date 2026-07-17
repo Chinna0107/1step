@@ -241,8 +241,8 @@
   justify-content: center;
   border: 1px solid rgba(212,175,55,0.2);
   box-shadow:
-    0 0 40px rgba(64,32,112,0.3),
-    0 0 80px rgba(192,32,64,0.15),
+    0 0 40px rgba(13,31,61,0.3),
+    0 0 80px rgba(26,54,93,0.15),
     0 20px 60px rgba(0,0,0,0.5);
   transition: box-shadow 0.4s ease, transform 0.4s ease;
   z-index: 2;
@@ -252,8 +252,8 @@
 .product-hero-image-wrap:hover {
   transform: scale(1.04);
   box-shadow:
-    0 0 60px rgba(64,32,112,0.5),
-    0 0 100px rgba(192,32,64,0.25),
+    0 0 60px rgba(13,31,61,0.5),
+    0 0 100px rgba(26,54,93,0.25),
     0 30px 80px rgba(0,0,0,0.6);
 }
 
@@ -309,14 +309,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   color: #fff;
-  box-shadow: 0 6px 20px rgba(64,32,112,0.35);
+  box-shadow: 0 6px 20px rgba(13,31,61,0.35);
   transition: all 0.25s ease;
 }
 .btn-call:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 30px rgba(192,32,64,0.5);
+  box-shadow: 0 10px 30px rgba(26,54,93,0.5);
 }
 
 .btn-wa-lg, .btn-call-lg {
@@ -394,7 +394,7 @@
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, var(--gold), var(--ms-crimson, #c02040), var(--gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--gold), var(--ms-crimson, #1a365d), var(--gold), transparent);
   background-size: 200% 100%;
   animation: stats-sweep 3s linear infinite;
 }
@@ -835,7 +835,7 @@
 /* ── Branch Banner ── */
 .pd-branch-banner {
   position: relative;
-  background: linear-gradient(135deg, rgba(64,32,112,0.5), rgba(192,32,64,0.4));
+  background: linear-gradient(135deg, rgba(13,31,61,0.5), rgba(26,54,93,0.4));
   border: 1px solid rgba(212,175,55,0.4);
   border-left: 4px solid var(--gold);
   border-radius: var(--r-lg);

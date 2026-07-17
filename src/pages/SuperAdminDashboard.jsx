@@ -38,7 +38,7 @@ export default function SuperAdminDashboard() {
     <div className="dashboard">
       <aside className="dash-sidebar">
         <div className="dash-brand">
-          <span className="dash-brand-name">MoneySpot</span>
+          <span className="dash-brand-name">1 Step Finance Care</span>
           <span className="dash-role-badge superadmin">Super Admin</span>
         </div>
         <nav className="dash-nav">

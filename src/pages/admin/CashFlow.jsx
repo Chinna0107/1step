@@ -119,7 +119,7 @@ export default function CashFlow() {
 
           {/* Profit Formula */}
           {!loading && (
-            <div style={{ marginTop: 16, background: 'linear-gradient(135deg,#1a0a2e,#402070)', borderRadius: 14, padding: '16px 24px', color: '#fff' }}>
+            <div style={{ marginTop: 16, background: 'linear-gradient(135deg,#081427,#0d1f3d)', borderRadius: 14, padding: '16px 24px', color: '#fff' }}>
               <div style={{ fontSize: 11, fontWeight: 700, opacity: 0.6, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 8 }}>Profit Calculation</div>
               <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap', fontSize: 14, fontWeight: 700 }}>
                 <span style={{ color: '#d4af37' }}>Customer Charges (₹{fmt(inflow.customerCharges??0)})</span>

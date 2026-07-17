@@ -24,7 +24,7 @@
 .np-title {
   font-size: 22px;
   font-weight: 900;
-  color: #1a0a2e;
+  color: #081427;
   margin: 0;
 }
 .np-sub {
@@ -35,16 +35,16 @@
 .np-mark-all {
   padding: 8px 18px;
   border-radius: 10px;
-  border: 1.5px solid rgba(64,32,112,0.2);
+  border: 1.5px solid rgba(13,31,61,0.2);
   background: #fff;
-  color: #402070;
+  color: #0d1f3d;
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
 }
-.np-mark-all:hover { background: #402070; color: #fff; border-color: #402070; }
+.np-mark-all:hover { background: #0d1f3d; color: #fff; border-color: #0d1f3d; }
 
 /* ── Body ── */
 .np-body {
@@ -87,12 +87,12 @@
   transition: all 0.2s;
 }
 .np-filter-btn.active {
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   color: #fff;
   border-color: transparent;
 }
 .np-filter-badge {
-  background: #c02040;
+  background: #1a365d;
   color: #fff;
   font-size: 10px;
   font-weight: 900;
@@ -119,7 +119,7 @@
   position: relative;
 }
 .np-item:hover  { background: #faf5ff; }
-.np-item.active { background: #f0ebff; border-left: 3px solid #402070; padding-left: 13px; }
+.np-item.active { background: #f0ebff; border-left: 3px solid #0d1f3d; padding-left: 13px; }
 .np-item.unread { background: #fdf8ff; }
 .np-item.unread:hover { background: #f5eeff; }
 
@@ -142,7 +142,7 @@
   top: -3px; right: -3px;
   width: 10px; height: 10px;
   border-radius: 50%;
-  background: #c02040;
+  background: #1a365d;
   border: 2px solid #fff;
 }
 
@@ -150,13 +150,13 @@
 .np-item-title {
   font-size: 13px;
   font-weight: 800;
-  color: #1a0a2e;
+  color: #081427;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 3px;
 }
-.np-item.unread .np-item-title { color: #402070; }
+.np-item.unread .np-item-title { color: #0d1f3d; }
 .np-item-msg {
   font-size: 12px;
   color: #64748b;
@@ -204,7 +204,7 @@
   background: #fff;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(64,32,112,0.08);
+  box-shadow: 0 4px 24px rgba(13,31,61,0.08);
   border: 1px solid #f0f2f8;
 }
 
@@ -237,7 +237,7 @@
 .np-detail-title {
   font-size: 24px;
   font-weight: 900;
-  color: #1a0a2e;
+  color: #081427;
   margin: 0 0 12px;
   line-height: 1.3;
 }
@@ -254,7 +254,7 @@
 
 .np-detail-divider {
   height: 1px;
-  background: linear-gradient(90deg, rgba(64,32,112,0.15), transparent);
+  background: linear-gradient(90deg, rgba(13,31,61,0.15), transparent);
   margin-bottom: 20px;
 }
 

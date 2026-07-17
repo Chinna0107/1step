@@ -10,8 +10,8 @@ import {
 import { api } from '../utils/api'
 import './Footer.css'
 
-const PHONE = '+919866440477'
-const PHONE_DISPLAY = '+91 98664 40477'
+const PHONE = '+919581611711'
+const PHONE_DISPLAY = '+91 95816 11711'
 
 function useCountUp(target, duration = 1800) {
   const [count, setCount] = useState(0)
@@ -89,14 +89,14 @@ export default function Footer() {
       <div className="footer-inner">
         <div className="footer-brand">
           <div className="footer-logo">
-            <span className="logo-money">Money</span><span className="logo-spot">Spot</span>
+            <span className="logo-one">One</span><span className="logo-step">Step</span>
           </div>
-          <p>Your trusted partner for fast, secure financial transactions. Serving 10,000+ customers across Kadapa, Ananthapur & Bangalore.</p>
+          <p>Your trusted partner for fast, secure financial transactions. Serving 5,000+ customers across Kadapa.</p>
           <div className="footer-social">
             <a href={`https://wa.me/${PHONE}`} title="WhatsApp" aria-label="WhatsApp" target="_blank" rel="noopener noreferrer"><FaWhatsapp /></a>
-            <a href="https://www.instagram.com/moneyspot_official" title="Instagram" aria-label="Instagram"><FaInstagram /></a>
-            <a href="https://www.facebook.com/moneyspotfintech" title="Facebook"  aria-label="Facebook"><FaFacebookF /></a>
-            <a href="https://twitter.com/moneyspotfintech" title="Twitter"   aria-label="Twitter"><FaTwitter /></a>
+            <a href="https://www.instagram.com/1step_all_credit_card_payments?utm_source=qr&igsh=MXNqeGpheGxhNHR1MA%3D%3D" title="Instagram" aria-label="Instagram"><FaInstagram /></a>
+            <a href="https://www.facebook.com/onestepfinancecare" title="Facebook"  aria-label="Facebook"><FaFacebookF /></a>
+            <a href="https://twitter.com/onestepfinancecare" title="Twitter"   aria-label="Twitter"><FaTwitter /></a>
           </div>
         </div>
 
@@ -127,11 +127,11 @@ export default function Footer() {
         <div className="footer-links">
           <h4>Contact</h4>
           <a href={`tel:${PHONE}`}><FaPhone size={13} /> {PHONE_DISPLAY}</a>
-          <a href="mailto:support@moneyspotfintech.com"><FaEnvelope size={13} /> support@moneyspotfintech.com</a>
-          <a href="mailto:info@moneyspotfintech.com"><FaEnvelope size={13} /> info@moneyspotfintech.com</a>
+          <a href="mailto:support@1stepfinancecare.com"><FaEnvelope size={13} /> support@1stepfinancecare.com</a>
+          <a href="mailto:info@1stepfinancecare.com"><FaEnvelope size={13} /> info@1stepfinancecare.com</a>
           <span><FaMapMarkerAlt size={13} /> Kadapa, Andhra Pradesh</span>
-          <span><FaMapMarkerAlt size={13} /> Ananthapur, Andhra Pradesh</span>
-          <span><FaMapMarkerAlt size={13} /> Bangalore, Karnataka</span>
+          {/* <span><FaMapMarkerAlt size={13} /> Ananthapur, Andhra Pradesh</span> */}
+          {/* <span><FaMapMarkerAlt size={13} /> Bangalore, Karnataka</span> */}
           <span><FaClock size={13} /> 24×7 Available</span>
         </div>
       </div>
@@ -139,7 +139,7 @@ export default function Footer() {
       <div className="footer-bottom">
         <div className="footer-disclaimer">
           <FaShieldAlt size={13} className="footer-disclaimer-icon" />
-          <p>All services are subject to KYC and compliance guidelines. Money Spot acts as a service provider / banking correspondent.</p>
+          <p>All services are subject to KYC and compliance guidelines. 1 Step Finance Care acts as a service provider / banking correspondent.</p>
         </div>
 
         {/* ── Visitor Counter ── */}
@@ -150,13 +150,13 @@ export default function Footer() {
             <div className="fv-heading-line" />
           </div>
           <div className="fv-grid">
-            <CounterCard icon={FaCalendarDay}  label="Today"       target={visitors ? parseInt(visitors.today) : 0}  color="#d4af37" delay={0}   />
-            <CounterCard icon={FaCalendarAlt}  label="This Month"  target={visitors ? parseInt(visitors.month) : 0}  color="#c02040" delay={200} />
-            <CounterCard icon={FaGlobe}        label="All Time"    target={visitors ? parseInt(visitors.total) : 0}  color="#402070" delay={400} />
+            <CounterCard icon={FaCalendarDay}  label="Today"       target={visitors ? parseInt(visitors.today) : 0}  color="#f0cc5a" delay={0}   />
+            <CounterCard icon={FaCalendarAlt}  label="This Month"  target={visitors ? parseInt(visitors.month) : 0}  color="#d4af37" delay={200} />
+            <CounterCard icon={FaGlobe}        label="All Time"    target={visitors ? parseInt(visitors.total) : 0}  color="#a8891c" delay={400} />
           </div>
         </div>
 
-        <p>© {new Date().getFullYear()} MoneySpot. All rights reserved. | Fast · Secure · Trusted</p>
+        <p>© {new Date().getFullYear()} 1 Step Finance Care. All rights reserved. | Fast · Secure · Trusted</p>
         <p className="footer-zewo">Developed with <span className="footer-heart"></span><b>passion   </b> by <span className="footer-zewo-brand"><a href="https://zewo.in" target="_blank" rel="noopener noreferrer">Zewo</a></span></p>
       </div>
     </footer>

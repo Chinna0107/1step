@@ -43,7 +43,7 @@ function ChangePasswordModal({ onClose }) {
         boxShadow: '0 20px 60px rgba(0,0,0,0.2)', overflow: 'hidden',
       }}>
         {/* Header */}
-        <div style={{ background: 'linear-gradient(135deg, #402070, #c02040)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div style={{ background: 'linear-gradient(135deg, #0d1f3d, #1a365d)', padding: '20px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ color: '#fff', fontWeight: 800, fontSize: 16 }}>🔒 Change Password</div>
             <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12, marginTop: 2 }}>Keep your account secure</div>
@@ -78,7 +78,7 @@ function ChangePasswordModal({ onClose }) {
                 Cancel
               </button>
               <button type="submit" disabled={saving}
-                style={{ flex: 2, padding: '11px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg, #402070, #c02040)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>
+                style={{ flex: 2, padding: '11px', borderRadius: 8, border: 'none', background: 'linear-gradient(135deg, #0d1f3d, #1a365d)', color: '#fff', fontWeight: 700, cursor: 'pointer', fontSize: 14 }}>
                 {saving ? 'Saving...' : '🔒 Update Password'}
               </button>
             </div>
@@ -156,7 +156,7 @@ export default function Profile({ Sidebar, isAdmin = false }) {
             <div style={{ padding: '32px 40px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 1 }}>My Profile</div>
-                <h1 style={{ margin: '4px 0 0', fontSize: 26, fontWeight: 900, color: '#1a0a2e' }}>Employee ID Card</h1>
+                <h1 style={{ margin: '4px 0 0', fontSize: 26, fontWeight: 900, color: '#081427' }}>Employee ID Card</h1>
               </div>
               <button className="profile-change-pw-btn" onClick={() => setShowPwModal(true)}>🔒 Change Password</button>
             </div>
@@ -168,7 +168,7 @@ export default function Profile({ Sidebar, isAdmin = false }) {
                 <div className="id-card-header">
                   <div className="id-card-header-orb" />
                   <div className="id-card-header-orb2" />
-                  <div className="id-card-logo">💰 MoneySpot</div>
+                  <div className="id-card-logo">💰 1 Step Finance Care</div>
                   <div className="id-card-type">Employee Identity Card</div>
                 </div>
 
@@ -236,7 +236,7 @@ export default function Profile({ Sidebar, isAdmin = false }) {
             <div style={{ padding: '0 40px 40px' }}>
               <button
                 onClick={() => setShowCoins(v => !v)}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', border: 'none', borderRadius: 12, padding: '12px 24px', fontWeight: 800, fontSize: 15, cursor: 'pointer', marginBottom: showCoins ? 16 : 0, width: '100%', justifyContent: 'space-between' }}>
+                style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', border: 'none', borderRadius: 12, padding: '12px 24px', fontWeight: 800, fontSize: 15, cursor: 'pointer', marginBottom: showCoins ? 16 : 0, width: '100%', justifyContent: 'space-between' }}>
                 <span>🪙 Coins — {fmt(coins)} balance</span>
                 <span style={{ fontSize: 12, opacity: 0.8 }}>{showCoins ? '▲ Hide' : '▼ Show & Redeem'}</span>
               </button>
@@ -245,8 +245,8 @@ export default function Profile({ Sidebar, isAdmin = false }) {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
 
                   {/* Redeem Panel */}
-                  <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 16px rgba(64,32,112,0.08)', border: '1px solid #f0f2f8' }}>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: '#402070', marginBottom: 4 }}>🎁 Redeem Coins</div>
+                  <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 16px rgba(13,31,61,0.08)', border: '1px solid #f0f2f8' }}>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: '#0d1f3d', marginBottom: 4 }}>🎁 Redeem Coins</div>
                     <div style={{ fontSize: 12, color: '#9ca3af', marginBottom: 16 }}>{COINS_PER_RUPEE} coins = ₹1 &nbsp;·&nbsp; Min: {COINS_PER_RUPEE} coins</div>
 
                     {/* Balance display */}
@@ -279,22 +279,22 @@ export default function Profile({ Sidebar, isAdmin = false }) {
                         {[100, 500, 1000, 2000].filter(v => v <= coins).map(v => (
                           <button key={v} type="button"
                             onClick={() => setRedeemAmt(String(v))}
-                            style={{ padding: '4px 10px', borderRadius: 20, border: '1.5px solid #e5e7eb', background: redeemAmt === String(v) ? '#402070' : '#f8fafc', color: redeemAmt === String(v) ? '#fff' : '#374151', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+                            style={{ padding: '4px 10px', borderRadius: 20, border: '1.5px solid #e5e7eb', background: redeemAmt === String(v) ? '#0d1f3d' : '#f8fafc', color: redeemAmt === String(v) ? '#fff' : '#374151', fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
                             {fmt(v)}
                           </button>
                         ))}
                       </div>
 
                       <button type="submit" disabled={redeeming || !redeemAmt || parseInt(redeemAmt) < COINS_PER_RUPEE || parseInt(redeemAmt) > coins}
-                        style={{ width: '100%', padding: '11px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#402070,#c02040)', color: '#fff', fontWeight: 800, fontSize: 14, cursor: 'pointer', opacity: (redeeming || !redeemAmt || parseInt(redeemAmt) < COINS_PER_RUPEE || parseInt(redeemAmt) > coins) ? 0.5 : 1 }}>
+                        style={{ width: '100%', padding: '11px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', fontWeight: 800, fontSize: 14, cursor: 'pointer', opacity: (redeeming || !redeemAmt || parseInt(redeemAmt) < COINS_PER_RUPEE || parseInt(redeemAmt) > coins) ? 0.5 : 1 }}>
                         {redeeming ? 'Processing...' : `🎁 Redeem ${redeemAmt ? fmt(redeemAmt) : ''} Coins`}
                       </button>
                     </form>
                   </div>
 
                   {/* History Panel */}
-                  <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 16px rgba(64,32,112,0.08)', border: '1px solid #f0f2f8', maxHeight: 380, overflowY: 'auto' }}>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: '#402070', marginBottom: 16 }}>📜 Coins History</div>
+                  <div style={{ background: '#fff', borderRadius: 14, padding: 24, boxShadow: '0 2px 16px rgba(13,31,61,0.08)', border: '1px solid #f0f2f8', maxHeight: 380, overflowY: 'auto' }}>
+                    <div style={{ fontSize: 14, fontWeight: 800, color: '#0d1f3d', marginBottom: 16 }}>📜 Coins History</div>
                     {coinHistory.length === 0
                       ? <div style={{ color: '#9ca3af', fontSize: 13, textAlign: 'center', padding: 20 }}>No coin activity yet</div>
                       : coinHistory.map(h => (

@@ -37,7 +37,7 @@ export default function CustomerCoins() {
           <div className="coins-hero-orb coins-orb2" />
           <div className="coins-hero-inner">
             <div>
-              <div className="coins-hero-label">MoneySpot Rewards</div>
+              <div className="coins-hero-label">1 Step Finance Care Rewards</div>
               <h1 className="coins-hero-title">🪙 Your Coins</h1>
               <div className="coins-hero-sub">Earn coins on every transaction · Redeem 10 coins = ₹1 discount</div>
             </div>
@@ -56,8 +56,8 @@ export default function CustomerCoins() {
           {[
             // { icon: '🪙', label: 'Available Coins',  value: fmt(balance),        color: '#d4af37', sub: `≈ ₹${fmt(Math.floor(balance / 10))} redeemable` },
             { icon: '📈', label: 'Total Earned',      value: fmt(totalEarned),    color: '#059669', sub: 'Coins earned on transactions' },
-            { icon: '🎁', label: 'Total Redeemed',    value: fmt(totalRedeemed),  color: '#c02040', sub: `₹${fmt(Math.floor(totalRedeemed / 10))} saved` },
-            // { icon: '💡', label: 'Redeem Rate',       value: 'upda',           color: '#402070', sub: '1 coin = ₹0.10 (10 paise)' },
+            { icon: '🎁', label: 'Total Redeemed',    value: fmt(totalRedeemed),  color: '#1a365d', sub: `₹${fmt(Math.floor(totalRedeemed / 10))} saved` },
+            // { icon: '💡', label: 'Redeem Rate',       value: 'upda',           color: '#0d1f3d', sub: '1 coin = ₹0.10 (10 paise)' },
           ].map((c, i) => (
             <div key={i} className="coins-sum-card" style={{ '--cc': c.color, animationDelay: `${i * 80}ms` }}>
               <div className="coins-sum-glow" />
@@ -124,10 +124,10 @@ export default function CustomerCoins() {
                 img: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=300&q=80&auto=format&fit=crop',
               },
               {
-                name: 'MoneySpot Gift Box',
-                desc: 'Exclusive curated gift hamper from MoneySpot Fintech',
+                name: '1 Step Finance Care Gift Box',
+                desc: 'Exclusive curated gift hamper from 1 Step Finance Care Fintech',
                 coins: 80000,
-                color: '#c02040',
+                color: '#1a365d',
                 img: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=300&q=80&auto=format&fit=crop',
               },
             ].map((g, i) => {
@@ -197,7 +197,7 @@ export default function CustomerCoins() {
                 { icon: '💳', step: '1', title: 'Updated soon', desc: 'It will updated soon...' },
                 // { icon: '🪙', step: '2', title: 'Coins Accumulate', desc: 'Coins are credited instantly after each transaction. No minimum required to earn.' },
                 // { icon: '🎁', step: '3', title: 'Redeem for Discounts', desc: 'Use 10 coins to get ₹1 off on your next transaction. Minimum 10 coins to redeem.' },
-                // { icon: '♾️', step: '4', title: 'No Expiry', desc: 'Your MoneySpot Coins never expire. Accumulate as many as you want!' },
+                // { icon: '♾️', step: '4', title: 'No Expiry', desc: 'Your 1 Step Finance Care Coins never expire. Accumulate as many as you want!' },
               ].map((s, i) => (
                 <div key={i} className="coins-step" style={{ animationDelay: `${i * 80}ms` }}>
                   <div className="coins-step-num">{s.step}</div>

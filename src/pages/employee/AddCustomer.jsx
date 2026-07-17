@@ -95,7 +95,7 @@ export default function AddCustomer() {
         <div className="emp-page-header">
           <h1>Add New Customer</h1>
           <div style={{ display: 'flex', gap: 10 }}>
-            <button className="dash-btn" onClick={() => navigate(-1)} style={{ background: '#f0f2f8', color: '#402070', border: 'none' }}>
+            <button className="dash-btn" onClick={() => navigate(-1)} style={{ background: '#f0f2f8', color: '#0d1f3d', border: 'none' }}>
               ← Back
             </button>
             <button className="dash-btn dash-btn-primary" onClick={() => setShowForm(v => !v)}>
@@ -117,7 +117,7 @@ export default function AddCustomer() {
               <form onSubmit={handleSubmit}>
 
                 {/* ── Personal Info ── */}
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#402070', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Personal Information</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Personal Information</div>
                 <div className="dash-form-grid" style={{ marginBottom: 20 }}>
                   <div className="dash-form-group">
                     <label>Full Name *</label>
@@ -167,12 +167,12 @@ export default function AddCustomer() {
                   </div>
                   <div className="dash-form-group">
                     <label>Branch</label>
-                    <input readOnly value={form.branch} style={{ background: '#f8fafc', color: '#402070', fontWeight: 700, cursor: 'not-allowed' }} />
+                    <input readOnly value={form.branch} style={{ background: '#f8fafc', color: '#0d1f3d', fontWeight: 700, cursor: 'not-allowed' }} />
                   </div>
                 </div>
 
                 {/* ── Referral Details ── */}
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#402070', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12, marginTop: 20 }}>Referral Details (Optional)</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12, marginTop: 20 }}>Referral Details (Optional)</div>
                 <div className="dash-form-grid" style={{ marginBottom: 20 }}>
                   <div className="dash-form-group">
                     <label>Referral Name</label>
@@ -189,7 +189,7 @@ export default function AddCustomer() {
                 </div>
 
                 {/* ── Document Images ── */}
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#402070', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Document Images (paste URL after uploading)</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Document Images (paste URL after uploading)</div>
                 <div className="dash-form-grid">
                   <ImgField label="Aadhar Card Image"    icon="🪪" field="aadhar_img_url"      value={form.aadhar_img_url}      onChange={set} />
                   <ImgField label="PAN Card Image"       icon="💳" field="pan_img_url"         value={form.pan_img_url}         onChange={set} />

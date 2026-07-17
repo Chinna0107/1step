@@ -21,7 +21,7 @@
 /* ── Header ── */
 .er-header {
   position: relative;
-  background: linear-gradient(135deg, #1a0a2e 0%, #2d1155 50%, #3d1040 100%);
+  background: linear-gradient(135deg, #081427 0%, #2d1155 50%, #3d1040 100%);
   border-radius: 0 0 28px 28px;
   padding: 32px 28px 36px;
   margin: 0 -24px 28px;
@@ -92,8 +92,8 @@
 .er-btn-ghost   { background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
 .er-btn-ghost:hover { background: rgba(255,255,255,0.2); }
 .er-btn-excel   { background: linear-gradient(135deg, #059669, #10b981); color: #fff; }
-.er-btn-pdf     { background: linear-gradient(135deg, #c02040, #ef4444); color: #fff; }
-.er-btn-primary { background: linear-gradient(135deg, #402070, #6d28d9); color: #fff; }
+.er-btn-pdf     { background: linear-gradient(135deg, #1a365d, #ef4444); color: #fff; }
+.er-btn-primary { background: linear-gradient(135deg, #0d1f3d, #6d28d9); color: #fff; }
 .er-btn-sm      { padding: 6px 12px; font-size: 12px; border-radius: 8px; }
 
 /* ── Filters ── */
@@ -110,7 +110,7 @@
 }
 
 .er-filter-icon {
-  color: #402070;
+  color: #0d1f3d;
   display: flex;
   align-items: center;
   padding-bottom: 2px;
@@ -136,11 +136,11 @@
   border-radius: 8px;
   font-size: 13px;
   font-family: inherit;
-  color: #1a0a2e;
+  color: #081427;
   outline: none;
   transition: border-color 0.2s;
 }
-.er-filter-group input:focus { border-color: #402070; }
+.er-filter-group input:focus { border-color: #0d1f3d; }
 
 /* ── Summary Cards ── */
 .er-summary {
@@ -163,7 +163,7 @@
 .er-sum-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
 
 .er-sum-icon  { font-size: 22px; margin-bottom: 8px; }
-.er-sum-val   { font-size: 22px; font-weight: 900; color: #1a0a2e; line-height: 1; margin-bottom: 4px; }
+.er-sum-val   { font-size: 22px; font-weight: 900; color: #081427; line-height: 1; margin-bottom: 4px; }
 .er-sum-label { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.4px; }
 
 /* ── Tabs ── */
@@ -187,8 +187,8 @@
   font-family: inherit;
   transition: all 0.2s;
 }
-.er-tab:hover  { border-color: #402070; color: #402070; }
-.er-tab.active { background: #402070; border-color: #402070; color: #fff; box-shadow: 0 4px 12px rgba(64,32,112,0.3); }
+.er-tab:hover  { border-color: #0d1f3d; color: #0d1f3d; }
+.er-tab.active { background: #0d1f3d; border-color: #0d1f3d; color: #fff; box-shadow: 0 4px 12px rgba(13,31,61,0.3); }
 
 .er-tab-actions { margin-left: auto; display: flex; gap: 8px; }
 
@@ -213,13 +213,13 @@
 .er-chart-header h2 {
   font-size: 15px;
   font-weight: 800;
-  color: #1a0a2e;
+  color: #081427;
   margin: 0;
 }
 
 .er-chart-badge {
   background: #ede9fe;
-  color: #402070;
+  color: #0d1f3d;
   padding: 3px 10px;
   border-radius: 20px;
   font-size: 11px;
@@ -240,7 +240,7 @@
   width: 130px;
   font-size: 12px;
   font-weight: 700;
-  color: #1a0a2e;
+  color: #081427;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -280,7 +280,7 @@
   flex-shrink: 0;
 }
 
-.er-bar-amt { font-size: 13px; font-weight: 800; color: #1a0a2e; }
+.er-bar-amt { font-size: 13px; font-weight: 800; color: #081427; }
 .er-bar-cnt { font-size: 11px; color: #94a3b8; }
 
 /* ── Breakdown Grid ── */
@@ -313,7 +313,7 @@
 .er-bc-name {
   font-size: 13px;
   font-weight: 800;
-  color: #1a0a2e;
+  color: #081427;
   margin-bottom: 14px;
   white-space: nowrap;
   overflow: hidden;
@@ -326,9 +326,9 @@
   margin-bottom: 12px;
 }
 
-.er-bc-val    { font-size: 15px; font-weight: 900; color: #1a0a2e; }
+.er-bc-val    { font-size: 15px; font-weight: 900; color: #081427; }
 .er-bc-profit { color: #059669; }
-.er-bc-count  { color: #402070; }
+.er-bc-count  { color: #0d1f3d; }
 .er-bc-lbl    { font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; margin-top: 2px; }
 
 .er-bc-bar {
@@ -364,7 +364,7 @@
 .er-table-header h2 {
   font-size: 15px;
   font-weight: 800;
-  color: #1a0a2e;
+  color: #081427;
   margin: 0;
 }
 
@@ -413,7 +413,7 @@
 
 .er-tag {
   background: #ede9fe;
-  color: #402070;
+  color: #0d1f3d;
   padding: 2px 10px;
   border-radius: 20px;
   font-size: 12px;

@@ -26,8 +26,8 @@ export default function AdminInsights() {
               <div className="dash-card-body">
                 {loading ? <div className="dash-loading">Loading...</div> : top ? (
                   <>
-                    <div style={{ fontSize: 18, fontWeight: 800, color: '#402070' }}>🏆 {top.name}</div>
-                    <div style={{ fontSize: 26, fontWeight: 900, color: '#c02040', margin: '6px 0' }}>{fmtVal(top.value)}</div>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: '#0d1f3d' }}>🏆 {top.name}</div>
+                    <div style={{ fontSize: 26, fontWeight: 900, color: '#1a365d', margin: '6px 0' }}>{fmtVal(top.value)}</div>
                     <div style={{ fontSize: 13, color: '#9ca3af' }}>{top.txn} transactions · {fmtVal(top.profit)} profit</div>
                   </>
                 ) : <div style={{ color: '#9ca3af', fontSize: 13 }}>No data yet</div>}

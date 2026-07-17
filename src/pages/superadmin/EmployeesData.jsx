@@ -52,7 +52,7 @@ export default function EmployeesData() {
                     </div>
                     <div className="sa-form-group">
                       <label>Email *</label>
-                      <input required type="email" placeholder="employee@moneyspot.com" value={form.email} onChange={e => set('email', e.target.value)} />
+                      <input required type="email" placeholder="employee@1stepfinancecare.com" value={form.email} onChange={e => set('email', e.target.value)} />
                     </div>
                     <div className="sa-form-group">
                       <label>Mobile Number *</label>

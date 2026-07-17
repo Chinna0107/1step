@@ -254,9 +254,9 @@
 }
 
 .req-doc-btn {
-  background: linear-gradient(135deg, rgba(64,32,112,0.08), rgba(192,32,64,0.08));
-  border: 1.5px solid rgba(64,32,112,0.2);
-  color: #402070;
+  background: linear-gradient(135deg, rgba(13,31,61,0.08), rgba(26,54,93,0.08));
+  border: 1.5px solid rgba(13,31,61,0.2);
+  color: #0d1f3d;
   font-size: 11px;
   font-weight: 700;
   padding: 4px 10px;
@@ -267,11 +267,11 @@
 }
 
 .req-doc-btn:hover {
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   color: #fff;
   border-color: transparent;
   transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(64,32,112,0.25);
+  box-shadow: 0 4px 10px rgba(13,31,61,0.25);
 }
 
 .req-no-doc {
@@ -318,7 +318,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 13px 18px;
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   color: #fff;
   font-size: 13px;
   font-weight: 700;

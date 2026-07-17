@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { getCustomerUser, useCustomerLogin } from '../../hooks/useCustomerAuth'
-import logoImg from '../../assets/icons png/MS Logo.png'
-import nameImg from '../../assets/icons png/Money Spot Logo.png'
+import logoImg from '../../assets/logo.png'
+import nameImg from '../../assets/logo.png'
 import './CustomerSidebar.css'
 
 const nav = [
@@ -36,9 +36,9 @@ export default function CustomerSidebar() {
       {/* ── Desktop sidebar ── */}
       <aside className="csb">
         <div className="csb-brand">
-          <img src={logoImg} alt="MoneySpot" className="csb-logo" />
+          <img src={logoImg} alt="1 Step Finance Care" className="csb-logo" />
           <div>
-            <img src={nameImg} alt="MoneySpot" style={{ height: 18, width: 'auto', objectFit: 'contain', filter: 'brightness(0)', display: 'block' }} />
+            <img src={nameImg} alt="1 Step Finance Care" style={{ height: 18, width: 'auto', objectFit: 'contain', filter: 'brightness(0)', display: 'block' }} />
             <div className="csb-brand-sub">Customer Portal</div>
           </div>
         </div>
@@ -66,8 +66,8 @@ export default function CustomerSidebar() {
       {/* ── Mobile top navbar ── */}
       <header className="csb-mobile-header">
         <div className="csb-mobile-brand">
-          <img src={logoImg} alt="MoneySpot" className="csb-mobile-logo" />
-          <img src={nameImg} alt="MoneySpot" style={{ height: 20, width: 'auto', objectFit: 'contain', filter: 'brightness(0)' }} />
+          <img src={logoImg} alt="1 Step Finance Care" className="csb-mobile-logo" />
+          <img src={nameImg} alt="1 Step Finance Care" style={{ height: 20, width: 'auto', objectFit: 'contain', filter: 'brightness(0)' }} />
         </div>
         <div className="csb-mobile-user">
           <div className="csb-avatar" style={{ width: 32, height: 32, fontSize: 13 }}>

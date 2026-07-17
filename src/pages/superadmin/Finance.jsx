@@ -18,7 +18,7 @@ const monthStart = today.slice(0, 7) + '-01'
 const CATEGORIES = ['Rent','Utilities','Salary','Maintenance','Marketing','Other']
 const emptyExp   = { branch: '', category: '', amount: '', date: today, note: '' }
 
-const STAT_COLORS = ['#10b981','#d4af37','#dc2626','#059669','#402070']
+const STAT_COLORS = ['#10b981','#d4af37','#dc2626','#059669','#0d1f3d']
 
 export default function Finance() {
   const [tab, setTab]           = useState('overview')
@@ -106,7 +106,7 @@ export default function Finance() {
                   background: '#fff',
                   borderRadius: 16,
                   padding: '20px 22px',
-                  boxShadow: '0 2px 12px rgba(64,32,112,0.08)',
+                  boxShadow: '0 2px 12px rgba(13,31,61,0.08)',
                   borderLeft: `4px solid ${s.color}`,
                   display: 'flex',
                   alignItems: 'center',
@@ -114,8 +114,8 @@ export default function Finance() {
                   minWidth: 0,
                   transition: 'transform 0.2s, box-shadow 0.2s',
                 }}
-                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(64,32,112,0.13)' }}
-                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(64,32,112,0.08)' }}>
+                  onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 20px rgba(13,31,61,0.13)' }}
+                  onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(13,31,61,0.08)' }}>
                   <div style={{ width: 48, height: 48, borderRadius: 14, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
                     {s.icon}
                   </div>
@@ -144,7 +144,7 @@ export default function Finance() {
             ].map(t => (
               <button key={t.key} onClick={() => setTab(t.key)}
                 style={{ padding: '9px 18px', borderRadius: 10, border: 'none', fontWeight: 700, fontSize: 13, cursor: 'pointer',
-                  background: tab === t.key ? 'linear-gradient(135deg,#402070,#c02040)' : '#f0f2f8',
+                  background: tab === t.key ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f0f2f8',
                   color: tab === t.key ? '#fff' : '#64748b' }}>
                 {t.label}
               </button>
@@ -225,7 +225,7 @@ export default function Finance() {
                           <td>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                               <div style={{ width: 60, height: 6, background: '#f1f5f9', borderRadius: 999, overflow: 'hidden' }}>
-                                <div style={{ width: `${Math.round(l.cash_in / (totals.totalCashIn || 1) * 100)}%`, height: '100%', background: '#402070', borderRadius: 999 }} />
+                                <div style={{ width: `${Math.round(l.cash_in / (totals.totalCashIn || 1) * 100)}%`, height: '100%', background: '#0d1f3d', borderRadius: 999 }} />
                               </div>
                               <span style={{ fontSize: 12, color: '#64748b' }}>{Math.round(l.cash_in / (totals.totalCashIn || 1) * 100)}%</span>
                             </div>
@@ -293,10 +293,10 @@ export default function Finance() {
                         {new Date(d.day).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
                       </div>
                       <div style={{ flex: 1, height: 24, background: '#f1f5f9', borderRadius: 6, overflow: 'hidden' }}>
-                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg,#402070,#c02040)', borderRadius: 6, minWidth: 4, transition: 'width 0.6s ease' }} />
+                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg,#0d1f3d,#1a365d)', borderRadius: 6, minWidth: 4, transition: 'width 0.6s ease' }} />
                       </div>
                       <div style={{ width: 100, textAlign: 'right', flexShrink: 0 }}>
-                        <div style={{ fontSize: 13, fontWeight: 800, color: '#1a0a2e' }}>{fmtVal(d.amount)}</div>
+                        <div style={{ fontSize: 13, fontWeight: 800, color: '#081427' }}>{fmtVal(d.amount)}</div>
                         <div style={{ fontSize: 11, color: '#94a3b8' }}>{d.txn} txns</div>
                       </div>
                     </div>
@@ -383,7 +383,7 @@ export default function Finance() {
               {wAction && (
                 <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <div style={{ background: '#fff', borderRadius: 16, padding: 28, width: 340, boxShadow: '0 8px 32px rgba(0,0,0,0.18)' }}>
-                    <h3 style={{ margin: '0 0 16px', fontSize: 16, color: '#1a0a2e' }}>
+                    <h3 style={{ margin: '0 0 16px', fontSize: 16, color: '#081427' }}>
                       {wAction.mode === 'add' ? '➕ Add Money' : '➖ Deduct Money'} — {wAction.name}
                     </h3>
                     <input type="number" min="1" placeholder="Amount (₹)" value={wAmount} onChange={e => setWAmount(e.target.value)}

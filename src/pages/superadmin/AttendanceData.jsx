@@ -46,14 +46,14 @@ export default function AttendanceData() {
       <style>
         * { box-sizing: border-box; }
         body { font-family: system-ui, sans-serif; padding: 24px; color: #1a1a2e; }
-        h2  { color: #402070; margin-bottom: 4px; }
+        h2  { color: #0d1f3d; margin-bottom: 4px; }
         p   { color: #888; font-size: 13px; margin: 0 0 16px; }
         .summary { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
         .sum-box { background: #f5f3ff; padding: 12px 20px; border-radius: 8px; min-width: 120px; }
         .sum-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; }
-        .sum-val   { font-size: 1.6rem; font-weight: 900; color: #402070; }
+        .sum-val   { font-size: 1.6rem; font-weight: 900; color: #0d1f3d; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { background: #402070; color: #fff; padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+        th { background: #0d1f3d; color: #fff; padding: 10px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
         td { padding: 10px 12px; border-bottom: 1px solid #f0f2f8; }
         tr:last-child td { border-bottom: none; }
         .present { background: #d1fae5; color: #059669; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
@@ -122,7 +122,7 @@ export default function AttendanceData() {
                 <div style={{ display: 'flex', gap: 4, background: '#f0f2f8', borderRadius: 8, padding: 4 }}>
                   {['day','month','year'].map(v => (
                     <button key={v} onClick={() => setView(v)} className="sa-btn sa-btn-sm"
-                      style={{ background: view === v ? 'linear-gradient(135deg,#402070,#c02040)' : 'transparent',
+                      style={{ background: view === v ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : 'transparent',
                                color: view === v ? '#fff' : '#666', border: 'none' }}>
                       {v.charAt(0).toUpperCase() + v.slice(1)}
                     </button>
@@ -131,30 +131,30 @@ export default function AttendanceData() {
 
                 {view === 'day' && (
                   <input type="date" value={date} onChange={e => setDate(e.target.value)}
-                    style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', fontFamily: 'inherit', fontSize: 14 }} />
+                    style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', fontFamily: 'inherit', fontSize: 14 }} />
                 )}
                 {view === 'month' && (
                   <>
                     <select value={month} onChange={e => setMonth(e.target.value)}
-                      style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', fontFamily: 'inherit', fontSize: 14 }}>
+                      style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', fontFamily: 'inherit', fontSize: 14 }}>
                       {MONTHS.map((m, i) => <option key={m} value={String(i+1).padStart(2,'0')}>{m}</option>)}
                     </select>
                     <select value={year} onChange={e => setYear(e.target.value)}
-                      style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', fontFamily: 'inherit', fontSize: 14 }}>
+                      style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', fontFamily: 'inherit', fontSize: 14 }}>
                       {YEARS.map(y => <option key={y}>{y}</option>)}
                     </select>
                   </>
                 )}
                 {view === 'year' && (
                   <select value={year} onChange={e => setYear(e.target.value)}
-                    style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', fontFamily: 'inherit', fontSize: 14 }}>
+                    style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', fontFamily: 'inherit', fontSize: 14 }}>
                     {YEARS.map(y => <option key={y}>{y}</option>)}
                   </select>
                 )}
 
                 {/* Employee filter */}
                 <select value={empFilter} onChange={e => setEmpFilter(e.target.value)}
-                  style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(64,32,112,0.2)', fontFamily: 'inherit', fontSize: 14 }}>
+                  style={{ padding: '8px 12px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', fontFamily: 'inherit', fontSize: 14 }}>
                   <option value="">All Employees</option>
                   {empNames.map(n => <option key={n} value={n}>{n}</option>)}
                 </select>
@@ -172,7 +172,7 @@ export default function AttendanceData() {
             {loading ? <SkeletonStats count={5} /> : (
               <>
                 {[
-                  { label: 'Total Records', value: filtered.length,  color: '#402070' },
+                  { label: 'Total Records', value: filtered.length,  color: '#0d1f3d' },
                   { label: 'Present',       value: present,          color: '#059669' },
                   { label: 'Absent',        value: absent,           color: '#dc2626' },
                   { label: 'Late Mark',     value: late,             color: '#d97706' },

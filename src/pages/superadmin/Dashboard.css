@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #e8eaf0;
-  box-shadow: 0 2px 8px rgba(64,32,112,0.06);
+  box-shadow: 0 2px 8px rgba(13,31,61,0.06);
   position: sticky;
   top: 0;
   z-index: 50;
@@ -20,7 +20,7 @@
 .dash-topbar-title {
   font-size: 1.35rem;
   font-weight: 900;
-  color: #402070;
+  color: #0d1f3d;
   margin: 0 0 2px;
   letter-spacing: -0.02em;
 }
@@ -39,7 +39,7 @@
   display: flex; align-items: center; justify-content: center;
   transition: all 0.2s;
 }
-.dash-icon-btn:hover { background: #ede9fe; color: #402070; border-color: rgba(64,32,112,0.2); }
+.dash-icon-btn:hover { background: #ede9fe; color: #0d1f3d; border-color: rgba(13,31,61,0.2); }
 
 .dash-user-chip {
   display: flex;
@@ -57,7 +57,7 @@
 .dash-user-avatar {
   width: 28px; height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   color: #fff;
   font-size: 12px;
   font-weight: 800;
@@ -70,7 +70,7 @@
   gap: 3px;
   font-size: 10px;
   font-weight: 700;
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   color: #fff;
   padding: 3px 8px;
   border-radius: 999px;
@@ -111,31 +111,31 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  box-shadow: 0 2px 12px rgba(64,32,112,0.07);
-  border-left: 4px solid var(--c, #402070);
+  box-shadow: 0 2px 12px rgba(13,31,61,0.07);
+  border-left: 4px solid var(--c, #0d1f3d);
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.dash-stat:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(64,32,112,0.12); }
+.dash-stat:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(13,31,61,0.12); }
 
 .dash-stat-icon {
   width: 44px; height: 44px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--c, #402070) 12%, transparent);
-  color: var(--c, #402070);
+  background: color-mix(in srgb, var(--c, #0d1f3d) 12%, transparent);
+  color: var(--c, #0d1f3d);
   font-size: 22px;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
 }
 
 .dash-stat-label { font-size: 11px; font-weight: 700; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
-.dash-stat-value { font-size: 1.8rem; font-weight: 900; color: var(--c, #402070); line-height: 1; display: block; }
+.dash-stat-value { font-size: 1.8rem; font-weight: 900; color: var(--c, #0d1f3d); line-height: 1; display: block; }
 .dash-stat-sub   { font-size: 11px; color: #9ca3af; display: block; margin-top: 4px; }
 
 /* ── Section Card ── */
 .dash-card {
   background: #fff;
   border-radius: 14px;
-  box-shadow: 0 2px 12px rgba(64,32,112,0.07);
+  box-shadow: 0 2px 12px rgba(13,31,61,0.07);
   overflow: hidden;
   margin-bottom: 16px;
 }
@@ -146,7 +146,7 @@
   gap: 10px;
   padding: 16px 20px;
   border-bottom: 1px solid #f0f2f8;
-  background: linear-gradient(135deg, rgba(64,32,112,0.03), rgba(192,32,64,0.02));
+  background: linear-gradient(135deg, rgba(13,31,61,0.03), rgba(26,54,93,0.02));
 }
 
 .dash-card-icon { font-size: 18px; }
@@ -154,7 +154,7 @@
 .dash-card-head h3 {
   font-size: 14px;
   font-weight: 800;
-  color: #402070;
+  color: #0d1f3d;
   margin: 0;
   flex: 1;
 }
@@ -162,11 +162,11 @@
 .dash-card-badge {
   font-size: 11px;
   font-weight: 700;
-  background: rgba(64,32,112,0.08);
-  color: #402070;
+  background: rgba(13,31,61,0.08);
+  color: #0d1f3d;
   padding: 3px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(64,32,112,0.15);
+  border: 1px solid rgba(13,31,61,0.15);
 }
 
 .dash-card-body { padding: 16px 20px; }
@@ -177,7 +177,7 @@
 
 /* ── Table ── */
 .dash-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.dash-table thead tr { background: linear-gradient(135deg, #402070, #c02040); }
+.dash-table thead tr { background: linear-gradient(135deg, #0d1f3d, #1a365d); }
 .dash-table th { padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
 .dash-table td { padding: 11px 14px; border-bottom: 1px solid #f0f2f8; color: #374151; }
 .dash-table tbody tr:hover { background: #faf5ff; }
@@ -188,7 +188,7 @@
 .badge-gold   { background: rgba(212,175,55,0.12); color: #b8860b; border: 1px solid rgba(212,175,55,0.3); }
 .badge-green  { background: #d1fae5; color: #059669; }
 .badge-red    { background: #fee2e2; color: #dc2626; }
-.badge-purple { background: #ede9fe; color: #402070; }
+.badge-purple { background: #ede9fe; color: #0d1f3d; }
 
 /* ── Platform bars ── */
 .dash-platform-list { display: flex; flex-direction: column; gap: 12px; }
@@ -196,13 +196,13 @@
 .dash-platform-name { font-size: 13px; font-weight: 700; color: #374151; width: 70px; flex-shrink: 0; }
 .dash-platform-bar-wrap { flex: 1; height: 8px; background: #f0f2f8; border-radius: 999px; overflow: hidden; }
 .dash-platform-bar  { height: 100%; border-radius: 999px; transition: width 0.6s ease; }
-.dash-platform-val  { font-size: 12px; font-weight: 700; color: #402070; width: 52px; text-align: right; flex-shrink: 0; }
+.dash-platform-val  { font-size: 12px; font-weight: 700; color: #0d1f3d; width: 52px; text-align: right; flex-shrink: 0; }
 .dash-platform-val2 { font-size: 12px; color: #059669; font-weight: 700; width: 56px; text-align: right; flex-shrink: 0; }
 
 /* ── Highlight box ── */
 .dash-highlight-box { display: flex; flex-direction: column; gap: 4px; padding: 8px 0; }
-.dash-highlight-name { font-size: 16px; font-weight: 800; color: #402070; }
-.dash-highlight-val  { font-size: 2rem; font-weight: 900; color: #c02040; line-height: 1.1; }
+.dash-highlight-name { font-size: 16px; font-weight: 800; color: #0d1f3d; }
+.dash-highlight-val  { font-size: 2rem; font-weight: 900; color: #1a365d; line-height: 1.1; }
 .dash-highlight-sub  { font-size: 12px; color: #9ca3af; }
 
 /* ── Alerts ── */
@@ -210,7 +210,7 @@
 .dash-alert { font-size: 12.5px; font-weight: 600; padding: 9px 12px; border-radius: 8px; }
 .dash-alert-warn  { background: #fef3c7; color: #d97706; border-left: 3px solid #f59e0b; }
 .dash-alert-error { background: #fee2e2; color: #dc2626; border-left: 3px solid #ef4444; }
-.dash-alert-info  { background: #ede9fe; color: #402070; border-left: 3px solid #402070; }
+.dash-alert-info  { background: #ede9fe; color: #0d1f3d; border-left: 3px solid #0d1f3d; }
 
 /* ── KV list ── */
 .dash-kv-list { display: flex; flex-direction: column; gap: 10px; }
@@ -223,12 +223,12 @@
 /* ── Chips ── */
 .dash-chip-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .dash-chip { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 999px; cursor: default; }
-.dash-chip-purple { background: rgba(64,32,112,0.1);  color: #402070; border: 1px solid rgba(64,32,112,0.2); }
+.dash-chip-purple { background: rgba(13,31,61,0.1);  color: #0d1f3d; border: 1px solid rgba(13,31,61,0.2); }
 .dash-chip-blue   { background: rgba(59,130,246,0.1); color: #1d4ed8; border: 1px solid rgba(59,130,246,0.2); }
-.dash-chip-crimson{ background: rgba(192,32,64,0.1);  color: #c02040; border: 1px solid rgba(192,32,64,0.2); }
+.dash-chip-crimson{ background: rgba(26,54,93,0.1);  color: #1a365d; border: 1px solid rgba(26,54,93,0.2); }
 .dash-chip-gold   { background: rgba(212,175,55,0.12);color: #b8860b; border: 1px solid rgba(212,175,55,0.25); }
-.dash-chip-add    { background: #f4f5fb; color: #402070; border: 1.5px dashed rgba(64,32,112,0.3); cursor: pointer; transition: all 0.2s; }
-.dash-chip-add:hover { background: rgba(64,32,112,0.08); }
+.dash-chip-add    { background: #f4f5fb; color: #0d1f3d; border: 1.5px dashed rgba(13,31,61,0.3); cursor: pointer; transition: all 0.2s; }
+.dash-chip-add:hover { background: rgba(13,31,61,0.08); }
 
 /* ── Reports ── */
 .dash-reports-grid {
@@ -242,14 +242,14 @@
   background: #fff;
   border-radius: 14px;
   padding: 20px;
-  box-shadow: 0 2px 12px rgba(64,32,112,0.07);
+  box-shadow: 0 2px 12px rgba(13,31,61,0.07);
   display: flex;
   flex-direction: column;
   gap: 8px;
-  border-top: 3px solid #402070;
+  border-top: 3px solid #0d1f3d;
   transition: transform 0.2s, box-shadow 0.2s;
 }
-.dash-report-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(64,32,112,0.12); }
+.dash-report-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(13,31,61,0.12); }
 
 .dash-report-icon { font-size: 24px; }
 .dash-report-label { font-size: 13px; font-weight: 700; color: #374151; }
@@ -261,14 +261,14 @@
   font-weight: 700;
   padding: 5px 10px;
   border-radius: 6px;
-  border: 1px solid rgba(64,32,112,0.2);
-  background: rgba(64,32,112,0.06);
-  color: #402070;
+  border: 1px solid rgba(13,31,61,0.2);
+  background: rgba(13,31,61,0.06);
+  color: #0d1f3d;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
 }
-.dash-dl-btn:hover { background: #402070; color: #fff; border-color: #402070; }
+.dash-dl-btn:hover { background: #0d1f3d; color: #fff; border-color: #0d1f3d; }
 
 /* ── Action buttons ── */
 .dash-action-btn {
@@ -329,7 +329,7 @@
 }
 .dash-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(64,32,112,0.12);
+  box-shadow: 0 8px 28px rgba(13,31,61,0.12);
 }
 
 /* Topbar gradient line */
@@ -338,7 +338,7 @@
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #402070, #c02040, #d4af37, #c02040, #402070);
+  background: linear-gradient(90deg, #0d1f3d, #1a365d, #d4af37, #1a365d, #0d1f3d);
   background-size: 200% 100%;
   animation: line-sweep 3s linear infinite;
 }
@@ -389,7 +389,7 @@
   position: absolute;
   inset: 0;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(64,32,112,0.05), rgba(192,32,64,0.03));
+  background: linear-gradient(135deg, rgba(13,31,61,0.05), rgba(26,54,93,0.03));
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -407,7 +407,7 @@
 
 /* Highlight box value counter */
 .dash-highlight-val {
-  background: linear-gradient(135deg, #402070, #c02040);
+  background: linear-gradient(135deg, #0d1f3d, #1a365d);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -424,8 +424,8 @@
 
 /* User chip glow */
 .dash-user-chip:hover {
-  border-color: rgba(64,32,112,0.3);
-  box-shadow: 0 0 0 3px rgba(64,32,112,0.08);
+  border-color: rgba(13,31,61,0.3);
+  box-shadow: 0 0 0 3px rgba(13,31,61,0.08);
 }
 
 /* Refresh button spin on hover */

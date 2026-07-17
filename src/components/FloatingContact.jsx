@@ -1,8 +1,8 @@
 import { FaWhatsapp, FaPhone } from 'react-icons/fa'
 import './FloatingContact.css'
 
-const PHONE = '+919866440477'
-const WA_LINK = `https://wa.me/${PHONE}?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20your%20services.`
+const PHONE = '+919581611711'
+const WA_LINK = `https://wa.me/${PHONE}?text=Hi%201 Step Finance Care%2C%20I%20need%20help%20with%20your%20services.`
 
 export default function FloatingContact({ hidden }) {
   return (

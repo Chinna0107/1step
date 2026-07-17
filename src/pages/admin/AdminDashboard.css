@@ -76,7 +76,7 @@
 }
 .dash-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 28px rgba(64,32,112,0.12);
+  box-shadow: 0 8px 28px rgba(13,31,61,0.12);
 }
 
 /* Topbar animated bottom border */
@@ -88,7 +88,7 @@
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #402070, #c02040, #d4af37, #c02040, #402070);
+  background: linear-gradient(90deg, #0d1f3d, #1a365d, #d4af37, #1a365d, #0d1f3d);
   background-size: 200% 100%;
   animation: adm-line 3s linear infinite;
 }

@@ -30,7 +30,7 @@ function BalanceModal({ wallets, onClose, onDone }) {
   return (
     <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
       <div onClick={e => e.stopPropagation()} style={{ background:'#fff', borderRadius:16, width:'100%', maxWidth:420, boxShadow:'0 24px 60px rgba(0,0,0,0.2)', overflow:'hidden' }}>
-        <div style={{ background:'linear-gradient(135deg,#402070,#c02040)', padding:'16px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+        <div style={{ background:'linear-gradient(135deg,#0d1f3d,#1a365d)', padding:'16px 20px', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
           <div style={{ color:'#fff', fontWeight:800, fontSize:15 }}>💰 Add Balance</div>
           <button onClick={onClose} style={{ background:'rgba(255,255,255,0.15)', border:'none', color:'#fff', width:30, height:30, borderRadius:'50%', cursor:'pointer', fontSize:16 }}>✕</button>
         </div>
@@ -43,7 +43,7 @@ function BalanceModal({ wallets, onClose, onDone }) {
             {[
               { key:'cash',   label:'💵 Cash',   color:'#059669' },
               { key:'bank',   label:'🏦 Bank',   color:'#2563eb' },
-              { key:'wallet', label:'💼 Wallet', color:'#402070' },
+              { key:'wallet', label:'💼 Wallet', color:'#0d1f3d' },
             ].map(t => (
               <button key={t.key} type="button" onClick={() => setMode(t.key)}
                 style={{ flex:1, padding:'10px 0', borderRadius:10, border:`2px solid ${mode===t.key ? t.color : '#e2e8f0'}`,
@@ -75,7 +75,7 @@ function BalanceModal({ wallets, onClose, onDone }) {
             <input placeholder="Optional" value={remarks} onChange={e => setRemarks(e.target.value)} />
           </div>
           <button type="submit" disabled={busy}
-            style={{ padding:'12px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:800, fontSize:14, cursor:'pointer' }}>
+            style={{ padding:'12px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0d1f3d,#1a365d)', color:'#fff', fontWeight:800, fontSize:14, cursor:'pointer' }}>
             {busy ? 'Processing...' : '✅ Add Balance'}
           </button>
         </form>
@@ -161,7 +161,7 @@ export default function FinanceDashboard() {
                 background: '#fff',
                 borderRadius: 16,
                 padding: '20px 22px',
-                boxShadow: '0 2px 12px rgba(64,32,112,0.08)',
+                boxShadow: '0 2px 12px rgba(13,31,61,0.08)',
                 borderLeft: `4px solid ${s.color}`,
                 display: 'flex',
                 alignItems: 'center',
@@ -169,8 +169,8 @@ export default function FinanceDashboard() {
                 minWidth: 0,
                 transition: 'transform 0.2s, box-shadow 0.2s',
               }}
-                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 6px 20px rgba(64,32,112,0.13)` }}
-                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(64,32,112,0.08)' }}>
+                onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 6px 20px rgba(13,31,61,0.13)` }}
+                onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = '0 2px 12px rgba(13,31,61,0.08)' }}>
                 {/* Icon bubble */}
                 <div style={{ width: 48, height: 48, borderRadius: 14, background: s.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, flexShrink: 0 }}>
                   {s.icon}
@@ -194,7 +194,7 @@ export default function FinanceDashboard() {
               {wallets.map(w => (
                 <div key={w.id} style={{ background:'#f8fafc', borderRadius:12, padding:'14px 16px', border:'1.5px solid #e2e8f0' }}>
                   <div style={{ fontSize:11, fontWeight:700, color:'#9ca3af', textTransform:'uppercase', marginBottom:4 }}>{w.name}</div>
-                  <div style={{ fontSize:20, fontWeight:900, color:'#402070' }}>₹{fmt(w.balance)}</div>
+                  <div style={{ fontSize:20, fontWeight:900, color:'#0d1f3d' }}>₹{fmt(w.balance)}</div>
                   <div style={{ fontSize:11, color:'#94a3b8', marginTop:4 }}>
                     ↑ ₹{fmt(w.today_inflow)} today · ↓ ₹{fmt(w.today_outflow)} today
                   </div>
@@ -213,7 +213,7 @@ export default function FinanceDashboard() {
             ].map(t => (
               <button key={t.key} onClick={() => setTab(t.key)}
                 style={{ padding:'9px 18px', borderRadius:10, border:'none', fontWeight:700, fontSize:13, cursor:'pointer',
-                  background: tab===t.key ? 'linear-gradient(135deg,#402070,#c02040)' : '#f0f2f8',
+                  background: tab===t.key ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f0f2f8',
                   color: tab===t.key ? '#fff' : '#64748b' }}>
                 {t.label}
               </button>
@@ -227,7 +227,7 @@ export default function FinanceDashboard() {
                 <div className="dash-card-header"><h2>📊 Period Summary</h2><span style={{ fontSize:12, color:'#9ca3af' }}>{from} → {to}</span></div>
                 <div className="dash-card-body" style={{ display:'flex', flexDirection:'column', gap:12 }}>
                   {[
-                    { label:'Total Transactions', value: ledger.reduce((s,l) => s+l.txn, 0),          color:'#402070' },
+                    { label:'Total Transactions', value: ledger.reduce((s,l) => s+l.txn, 0),          color:'#0d1f3d' },
                     { label:'Total Amount',        value:`₹${fmt(totals.totalCashIn   ?? 0)}`,         color:'#059669' },
                     { label:'Customer Charges',    value:`₹${fmt(totals.totalCharges  ?? 0)}`,         color:'#d97706' },
                     { label:'Gross Profit',        value:`₹${fmt(totals.totalProfit   ?? 0)}`,         color:'#d4af37' },
@@ -248,7 +248,7 @@ export default function FinanceDashboard() {
                   {loading ? <div className="dash-loading">Loading...</div> : expSummary.length === 0 ? (
                     <div className="dash-empty">No expenses in this period</div>
                   ) : expSummary.map((s, i) => {
-                    const colors = ['#402070','#c02040','#d4af37','#059669','#0ea5e9','#f59e0b']
+                    const colors = ['#0d1f3d','#1a365d','#d4af37','#059669','#0ea5e9','#f59e0b']
                     const pct = Math.round(s.total / (totals.totalExpenses || 1) * 100)
                     return (
                       <div key={s.category} style={{ marginBottom:14 }}>
@@ -308,10 +308,10 @@ export default function FinanceDashboard() {
                         {new Date(d.day).toLocaleDateString('en-IN', { day:'2-digit', month:'short' })}
                       </div>
                       <div style={{ flex:1, height:24, background:'#f1f5f9', borderRadius:6, overflow:'hidden' }}>
-                        <div style={{ width:`${pct}%`, height:'100%', background:'linear-gradient(90deg,#402070,#c02040)', borderRadius:6, minWidth:4 }} />
+                        <div style={{ width:`${pct}%`, height:'100%', background:'linear-gradient(90deg,#0d1f3d,#1a365d)', borderRadius:6, minWidth:4 }} />
                       </div>
                       <div style={{ width:110, textAlign:'right', flexShrink:0 }}>
-                        <div style={{ fontSize:13, fontWeight:800, color:'#1a0a2e' }}>{fmtVal(d.amount)}</div>
+                        <div style={{ fontSize:13, fontWeight:800, color:'#081427' }}>{fmtVal(d.amount)}</div>
                         <div style={{ fontSize:11, color:'#94a3b8' }}>{d.txn} txns · ₹{fmt(d.profit)} profit</div>
                       </div>
                     </div>
@@ -356,7 +356,7 @@ export default function FinanceDashboard() {
                           <input placeholder="Optional" value={expForm.note} onChange={e => setExpForm(f => ({...f, note:e.target.value}))} />
                         </div>
                       </div>
-                      <div style={{ fontSize:12, color:'#9ca3af', marginBottom:10 }}>🏦 Branch: <strong style={{ color:'#402070' }}>{user?.branch}</strong> (auto-assigned)</div>
+                      <div style={{ fontSize:12, color:'#9ca3af', marginBottom:10 }}>🏦 Branch: <strong style={{ color:'#0d1f3d' }}>{user?.branch}</strong> (auto-assigned)</div>
                       <button type="submit" className="dash-btn dash-btn-primary" disabled={saving}>{saving ? 'Saving...' : '✅ Add Expense'}</button>
                     </form>
                   </div>
@@ -369,7 +369,7 @@ export default function FinanceDashboard() {
                         {expenses.map(e => (
                           <tr key={e.id}>
                             <td style={{ fontSize:12 }}>{new Date(e.date).toLocaleDateString('en-IN')}</td>
-                            <td><span style={{ background:'#ede9fe', color:'#402070', padding:'2px 8px', borderRadius:20, fontSize:11, fontWeight:700 }}>{e.category}</span></td>
+                            <td><span style={{ background:'#ede9fe', color:'#0d1f3d', padding:'2px 8px', borderRadius:20, fontSize:11, fontWeight:700 }}>{e.category}</span></td>
                             <td style={{ color:'#dc2626', fontWeight:700 }}>₹{fmt(e.amount)}</td>
                             <td style={{ color:'#9ca3af', fontSize:12 }}>{e.note || '—'}</td>
                           </tr>

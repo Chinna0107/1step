@@ -1,14 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { FaCheckCircle, FaUser, FaBuilding, FaKey } from 'react-icons/fa'
-import logoImg from '../assets/icons png/MS Logo.png'
-import fullLogoImg from '../assets/icons png/Full Logo.png'
-import nameImg from '../assets/icons png/Money Spot Logo.png'
+import logoImg from '../assets/logo.png'
+import fullLogoImg from '../assets/logo.png'
+import nameImg from '../assets/logo.png'
 import './Header.css'
 
 const trustItems = [
   '120+ Bank & NBFC Partners',
-  '10,000+ Happy Customers',
+  '5,000+ Happy Customers',
   'Authorised Fintech Service Provider',
   'Instant Cash Transfers 24/7',
   '100% Secure & Trusted',
@@ -59,8 +59,8 @@ export default function Header({ menuOpen, setMenuOpen }) {
       <header className="header">
         <div className="header-inner">
           <Link to="/" className="logo">
-            <img src={logoImg} alt="MoneySpot" className="logo-full-img" />
-            <img src={nameImg} alt="MoneySpot" className="logo-name-img" />
+            <img src={logoImg} alt="1 Step Finance Care" className="logo-full-img" />
+            <span className="logo-name-text">1 Step Finance Care</span>
           </Link>
 
           {/* ── Desktop nav ── */}
@@ -99,8 +99,8 @@ export default function Header({ menuOpen, setMenuOpen }) {
         {/* Drawer header */}
         <div className="nav-mobile-header">
           <div className="nav-mobile-brand">
-            <img src={logoImg} alt="MoneySpot" className="nav-mobile-full-logo" />
-            <img src={nameImg} alt="MoneySpot" className="nav-mobile-name-img" />
+            <img src={logoImg} alt="1 Step Finance Care" className="nav-mobile-full-logo" />
+            <span className="logo-name-text">1 Step Finance Care</span>
           </div>
           <button className="nav-mobile-close" onClick={close}>✕</button>
         </div>

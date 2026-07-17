@@ -63,7 +63,7 @@ export default function Tracking() {
             <button className="dash-icon-btn" onClick={load} title="Refresh"><MdRefresh size={18} /></button>
             {['employees', 'branches', 'alerts'].map(t => (
               <button key={t} className="sa-btn sa-btn-sm"
-                style={{ background: tab === t ? 'linear-gradient(135deg,#402070,#c02040)' : '#f4f5fb', color: tab === t ? '#fff' : '#666', border: '1px solid #e8eaf0' }}
+                style={{ background: tab === t ? 'linear-gradient(135deg,#0d1f3d,#1a365d)' : '#f4f5fb', color: tab === t ? '#fff' : '#666', border: '1px solid #e8eaf0' }}
                 onClick={() => setTab(t)}>
                 {t === 'employees' ? <><MdPeople size={13} /> Employees</> : t === 'branches' ? <><MdStorefront size={13} /> Branches</> : <><MdWarning size={13} /> Alerts</>}
               </button>
@@ -163,8 +163,8 @@ export default function Tracking() {
                           <tr key={e.id}>
                             <td style={{ color: '#94a3b8', fontSize: 12 }}>{i + 1}</td>
                             <td><strong>{e.name}</strong></td>
-                            <td><span style={{ background: '#ede9fe', color: '#402070', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{e.branch}</span></td>
-                            <td><strong style={{ color: e.txn === 0 ? '#dc2626' : '#1a0a2e' }}>{e.txn}</strong></td>
+                            <td><span style={{ background: '#ede9fe', color: '#0d1f3d', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{e.branch}</span></td>
+                            <td><strong style={{ color: e.txn === 0 ? '#dc2626' : '#081427' }}>{e.txn}</strong></td>
                             <td style={{ color: '#64748b' }}>{e.target}</td>
                             <td style={{ minWidth: 160 }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -204,7 +204,7 @@ export default function Tracking() {
                         {filteredBranches.map(b => (
                           <tr key={b.name}>
                             <td><strong>{b.name}</strong></td>
-                            <td><strong style={{ color: b.txn === 0 ? '#dc2626' : '#1a0a2e' }}>{b.txn}</strong></td>
+                            <td><strong style={{ color: b.txn === 0 ? '#dc2626' : '#081427' }}>{b.txn}</strong></td>
                             <td style={{ color: '#64748b' }}>{b.target}</td>
                             <td style={{ minWidth: 160 }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

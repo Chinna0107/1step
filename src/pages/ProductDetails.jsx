@@ -81,7 +81,7 @@ const products = [
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',
     gradient: 'linear-gradient(135deg,#060d1a,#065f46 60%,#0d7a58)',
     accent: '#10b981',
-    detailedDesc: 'MoneySpot clears your credit card bills instantly — any amount, any bank, zero hassle. Never miss your due date again. Protect your CIBIL score and avoid late payment penalties. We offer 100% pure non-utility transactions with bank hidden charges reversal support. Fast • Transparent • Trusted by Customers. Your Bill. Our Responsibility.',
+    detailedDesc: '1 Step Finance Care clears your credit card bills instantly — any amount, any bank, zero hassle. Never miss your due date again. Protect your CIBIL score and avoid late payment penalties. We offer 100% pure non-utility transactions with bank hidden charges reversal support. Fast • Transparent • Trusted by Customers. Your Bill. Our Responsibility.',
     benefits: [
       'Instant Bill Payment — any amount',
       'Any bank, any credit card supported',
@@ -123,7 +123,7 @@ const products = [
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png',
     gradient: 'linear-gradient(135deg,#060d1a,#3b1a7a 60%,#5b21b6)',
     accent: '#8b5cf6',
-    detailedDesc: 'Send money anywhere in India in seconds with MoneySpot DMT service. No waiting in bank queues, no delays — instant bank transfer via IMPS. Available 24×7 including holidays. Fast • Secure • Reliable. Contact us for instant support.',
+    detailedDesc: 'Send money anywhere in India in seconds with 1 Step Finance Care DMT service. No waiting in bank queues, no delays — instant bank transfer via IMPS. Available 24×7 including holidays. Fast • Secure • Reliable. Contact us for instant support.',
     benefits: [
       'Instant transfers via IMPS — seconds',
       'Available 24×7 including holidays',
@@ -161,7 +161,7 @@ const products = [
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png',
     gradient: 'linear-gradient(135deg,#060d1a,#7a3200 60%,#92400e)',
     accent: '#f59e0b',
-    detailedDesc: 'Access your bank account without an ATM card using just your Aadhaar number and biometric authentication. This service is perfect for those who have lost their cards or prefer not to carry them. Available at all MoneySpot branches across Kadapa, Anantapur & Bangalore.',
+    detailedDesc: 'Access your bank account without an ATM card using just your Aadhaar number and biometric authentication. This service is perfect for those who have lost their cards or prefer not to carry them. Available at all 1 Step Finance Care branches across Kadapa, Anantapur & Bangalore.',
     benefits: [
       'No ATM card required',
       'Biometric fingerprint authentication',
@@ -171,7 +171,7 @@ const products = [
       'No additional charges',
     ],
     howItWorks: [
-      'Visit nearest MoneySpot center',
+      'Visit nearest 1 Step Finance Care center',
       'Provide Aadhaar number',
       'Biometric fingerprint verification',
       'Enter withdrawal amount',
@@ -276,7 +276,7 @@ const products = [
     Icon: FaShieldAlt,
     title: 'Insurance Services',
     tagline: 'Protect What Matters Most',
-    desc: 'At Money Spot, we help you secure your future with trusted insurance solutions through our partnerships with IRDA-certified insurance providers. We offer a wide range of policies tailored to your needs — ensuring financial protection, peace of mind, and long-term security.',
+    desc: 'At 1 Step Finance Care, we help you secure your future with trusted insurance solutions through our partnerships with IRDA-certified insurance providers. We offer a wide range of policies tailored to your needs — ensuring financial protection, peace of mind, and long-term security.',
     features: [
       { Icon: FaShieldAlt,    label: 'Health Insurance' },
       { Icon: FaCheckCircle,  label: 'Life Insurance' },
@@ -286,7 +286,7 @@ const products = [
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_23_ebzlts.png',
     gradient: 'linear-gradient(135deg,#060d1a,#065f46 60%,#0d7a58)',
     accent: '#10b981',
-    detailedDesc: 'At Money Spot, we help you secure your future with trusted insurance solutions through our partnerships with IRDA-certified insurance providers. We offer a wide range of policies tailored to your needs — ensuring financial protection, peace of mind, and long-term security.\n\n🏥 Health Insurance — Cashless Hospitalization, Family & Individual Plans, Coverage for Major Illnesses, Affordable Premium Options.\n\n❤️ Life Insurance — Financial Protection for Loved Ones, Long-Term Wealth Security, Flexible Coverage Options, Trusted Plans from Top Insurers.\n\n🌐 General Insurance — Vehicle Insurance (Bike & Car), Property & Asset Protection, Travel Insurance, Business Insurance Solutions.\n\n📈 Term Insurance — Maximum Protection at Minimal Cost, Ideal for Income Protection, Long-Term Financial Planning, Simple & Transparent Policies.\n\nYour Safety. Your Future. Our Responsibility.',
+    detailedDesc: 'At 1 Step Finance Care, we help you secure your future with trusted insurance solutions through our partnerships with IRDA-certified insurance providers. We offer a wide range of policies tailored to your needs — ensuring financial protection, peace of mind, and long-term security.\n\n🏥 Health Insurance — Cashless Hospitalization, Family & Individual Plans, Coverage for Major Illnesses, Affordable Premium Options.\n\n❤️ Life Insurance — Financial Protection for Loved Ones, Long-Term Wealth Security, Flexible Coverage Options, Trusted Plans from Top Insurers.\n\n🌐 General Insurance — Vehicle Insurance (Bike & Car), Property & Asset Protection, Travel Insurance, Business Insurance Solutions.\n\n📈 Term Insurance — Maximum Protection at Minimal Cost, Ideal for Income Protection, Long-Term Financial Planning, Simple & Transparent Policies.\n\nYour Safety. Your Future. Our Responsibility.',
     benefits: [
       'Partnered with IRDA Approved Companies',
       'Expert Guidance & Policy Comparison',
@@ -367,7 +367,7 @@ const products = [
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986813/Layer_26_nxw11o.png',
     gradient: 'linear-gradient(135deg,#060d1a,#7a0a2a 60%,#9b1239)',
     accent: '#f43f5e',
-    detailedDesc: 'Loan rejected? Low CIBIL score? Facing credit issues? Don\'t worry — MoneySpot fixes it professionally. We analyze all major credit bureaus: CIBIL (TransUnion), Experian, Equifax & CRIF High Mark for complete multi-bureau credit analysis. Fast • Transparent • Result-Oriented Solutions. Trusted Support. 100% Guided Process. Quick Improvements Possible.',
+    detailedDesc: 'Loan rejected? Low CIBIL score? Facing credit issues? Don\'t worry — 1 Step Finance Care fixes it professionally. We analyze all major credit bureaus: CIBIL (TransUnion), Experian, Equifax & CRIF High Mark for complete multi-bureau credit analysis. Fast • Transparent • Result-Oriented Solutions. Trusted Support. 100% Guided Process. Quick Improvements Possible.',
     benefits: [
       'CIBIL (TransUnion) Analysis',
       'Experian Credit Report Check',
@@ -474,7 +474,7 @@ const products = [
 
 const stats = [
   { value: '2 Min', label: 'Processing Time' },
-  { value: '10K+', label: 'Happy Customers' },
+  { value: '5K+', label: 'Happy Customers' },
   { value: '100%', label: 'Secure & Trusted' },
   { value: '24/7', label: 'Support Available' },
 ]
@@ -547,8 +547,8 @@ export default function ProductDetails() {
             <div className="product-hero-actions">
               <Link to="/contact" className="btn-primary">Get Started <FaArrowRight size={13} /></Link>
               <Link to="/what-we-do" className="btn-outline">All Services</Link>
-              <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20your%20services." target="_blank" rel="noopener noreferrer" className="btn-wa"><FaWhatsapp size={16} /> WhatsApp</a>
-              <a href="tel:+919866440477" className="btn-call"><FaPhone size={14} /> Call Now</a>
+              <a href="https://wa.me/919581611711?text=Hi%201 Step Finance Care%2C%20I%20need%20help%20with%20your%20services." target="_blank" rel="noopener noreferrer" className="btn-wa"><FaWhatsapp size={16} /> WhatsApp</a>
+              <a href="tel:+919581611711" className="btn-call"><FaPhone size={14} /> Call Now</a>
             </div>
           </div>
 
@@ -557,11 +557,11 @@ export default function ProductDetails() {
               {/* Outer ring — half purple half crimson with dots */}
               <svg className="product-hero-ring-svg" viewBox="0 0 380 380" fill="none" xmlns="http://www.w3.org/2000/svg">
                 {/* Half purple arc */}
-                <path d="M 190 10 A 180 180 0 0 1 370 190" stroke="#402070" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9"/>
-                <path d="M 370 190 A 180 180 0 0 1 190 370" stroke="#402070" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.5"/>
+                <path d="M 190 10 A 180 180 0 0 1 370 190" stroke="#0d1f3d" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9"/>
+                <path d="M 370 190 A 180 180 0 0 1 190 370" stroke="#0d1f3d" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.5"/>
                 {/* Half crimson arc */}
-                <path d="M 190 370 A 180 180 0 0 1 10 190" stroke="#c02040" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9"/>
-                <path d="M 10 190 A 180 180 0 0 1 190 10" stroke="#c02040" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.5"/>
+                <path d="M 190 370 A 180 180 0 0 1 10 190" stroke="#1a365d" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.9"/>
+                <path d="M 10 190 A 180 180 0 0 1 190 10" stroke="#1a365d" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.5"/>
                 {/* Connecting dots */}
                 {[0,30,60,90,120,150,180,210,240,270,300,330].map((angle, i) => {
                   const rad = (angle * Math.PI) / 180
@@ -570,7 +570,7 @@ export default function ProductDetails() {
                   const isPurple = angle >= 0 && angle < 180
                   return (
                     <circle key={i} cx={x} cy={y} r={angle % 90 === 0 ? 5 : 3}
-                      fill={isPurple ? '#7c3aed' : '#e03060'}
+                      fill={isPurple ? '#7c3aed' : '#254a7c'}
                       opacity={angle % 90 === 0 ? 1 : 0.7}
                     />
                   )
@@ -722,8 +722,8 @@ export default function ProductDetails() {
                   <p>Kadapa &nbsp;·&nbsp; Anantapur &nbsp;·&nbsp; Bangalore</p>
                 </div>
                 <div className="pd-branch-actions">
-                  <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20want%20to%20visit%20your%20branch." target="_blank" rel="noopener noreferrer" className="pd-branch-btn pd-branch-wa">💬 WhatsApp</a>
-                  <a href="tel:+919866440477" className="pd-branch-btn pd-branch-call">📞 Call Now</a>
+                  <a href="https://wa.me/919581611711?text=Hi%201 Step Finance Care%2C%20I%20want%20to%20visit%20your%20branch." target="_blank" rel="noopener noreferrer" className="pd-branch-btn pd-branch-wa">💬 WhatsApp</a>
+                  <a href="tel:+919581611711" className="pd-branch-btn pd-branch-call">📞 Call Now</a>
                 </div>
               </div>
             </div>
@@ -733,8 +733,8 @@ export default function ProductDetails() {
             <p>Contact us today and experience the convenience of our services</p>
             <div className="cta-actions">
               <Link to="/contact" className="btn-primary">Contact Us Now</Link>
-              <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20your%20services." target="_blank" rel="noopener noreferrer" className="btn-wa btn-wa-lg"><FaWhatsapp size={18} /> Chat on WhatsApp</a>
-              <a href="tel:+919866440477" className="btn-call btn-call-lg"><FaPhone size={15} /> Call Us Now</a>
+              <a href="https://wa.me/919581611711?text=Hi%201 Step Finance Care%2C%20I%20need%20help%20with%20your%20services." target="_blank" rel="noopener noreferrer" className="btn-wa btn-wa-lg"><FaWhatsapp size={18} /> Chat on WhatsApp</a>
+              <a href="tel:+919581611711" className="btn-call btn-call-lg"><FaPhone size={15} /> Call Us Now</a>
               <Link to="/what-we-do" className="btn-outline">View All Services</Link>
             </div>
           </div>

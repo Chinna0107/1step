@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { useSuperAdminAuth } from '../hooks/useSuperAdminAuth'
 import { useRoleBasedAuth } from '../hooks/useRoleBasedAuth'
-import logoImg from '../assets/icons png/MS Logo.png'
-import fullLogoImg from '../assets/icons png/Full Logo.png'
-import nameImg from '../assets/icons png/Money Spot Logo.png'
-import bannerImg from '../assets/icons png/MS Logo.png'
+import logoImg from '../assets/logo.png'
+import fullLogoImg from '../assets/logo.png'
+import nameImg from '../assets/logo.png'
+import bannerImg from '../assets/logo.png'
 import './Login.css'
 
 const particles = [
@@ -74,17 +74,17 @@ export default function LoginSuperAdmin() {
 
       <div className="login-layout">
         <div className="login-image-panel">
-          <img src={bannerImg} alt="MoneySpot" className="login-banner-img" />
+          <img src={bannerImg} alt="1 Step Finance Care" className="login-banner-img" />
           <div className="login-image-overlay">
-            <img src={fullLogoImg} alt="MoneySpot" className="login-image-logo" />
+            <img src={fullLogoImg} alt="1 Step Finance Care" className="login-image-logo" />
             <p className="login-image-tagline">Your trusted financial partner</p>
           </div>
         </div>
 
       <div className="login-card superadmin-card">
         <div className="login-logo">
-          <img src={logoImg} alt="MoneySpot" className="login-logo-img" />
-          <img src={nameImg} alt="MoneySpot" className="login-name-img" />
+          <img src={logoImg} alt="1 Step Finance Care" className="login-logo-img" />
+          <img src={nameImg} alt="1 Step Finance Care" className="login-name-img" />
         </div>
 
         <div className="superadmin-badge">
@@ -101,7 +101,7 @@ export default function LoginSuperAdmin() {
             <p className="login-sub">Create a new Super Admin account</p>
             <form onSubmit={handleRegister}>
               <div className="form-group"><label>Full Name</label><input required placeholder="Admin Name" value={reg.name} onChange={e => setReg({ ...reg, name: e.target.value })} /></div>
-              <div className="form-group"><label>Email</label><input required type="email" placeholder="admin@moneyspotfintech.com" value={reg.email} onChange={e => setReg({ ...reg, email: e.target.value })} /></div>
+              <div className="form-group"><label>Email</label><input required type="email" placeholder="1stepcreditcard@gmail.com" value={reg.email} onChange={e => setReg({ ...reg, email: e.target.value })} /></div>
               <div className="form-group"><label>Password</label><input required type="password" placeholder="Create password" value={reg.password} onChange={e => setReg({ ...reg, password: e.target.value })} /></div>
               <div className="form-group"><label>6-Digit MPIN</label><input required type="password" inputMode="numeric" maxLength={6} placeholder="••••••" className="mpin-input" value={reg.mpin} onChange={e => setReg({ ...reg, mpin: e.target.value.replace(/\D/g, '').slice(0, 6) })} /></div>
               <div className="form-group"><label>Secret Key</label><input required type="password" placeholder="Enter secret registration key" value={reg.secretKey} onChange={e => setReg({ ...reg, secretKey: e.target.value })} /></div>
@@ -124,7 +124,7 @@ export default function LoginSuperAdmin() {
               <>
                 <p className="login-sub">Restricted access — authorized personnel only</p>
                 <form onSubmit={handleStep1}>
-                  <div className="form-group"><label>Admin Email</label><input required type="email" placeholder="admin@moneyspotfintech.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
+                  <div className="form-group"><label>Admin Email</label><input required type="email" placeholder="1stepcreditcard@gmail.com" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} /></div>
                   <div className="form-group"><label>Password</label><input required type="password" placeholder="Enter your password" value={form.password} onChange={e => setForm({ ...form, password: e.target.value })} /></div>
                   <button type="submit" className="btn-login-submit superadmin-btn" disabled={loading}>{loading ? 'Verifying...' : 'Continue →'}</button>
                 </form>
@@ -143,8 +143,8 @@ export default function LoginSuperAdmin() {
         )}
 {/* 
         <div className="login-contact-strip">
-          <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
-          <a href="tel:+919866440477" className="lcs-btn lcs-call">📞 Call Us</a>
+          <a href="https://wa.me/919581611711?text=Hi%201 Step Finance Care%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
+          <a href="tel:+919581611711" className="lcs-btn lcs-call">📞 Call Us</a>
         </div> */}
       </div>
       </div>

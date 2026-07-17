@@ -19,7 +19,7 @@ const SERVICE_ICONS = {
   'Only Bill Payment':     '🧾',
 }
 
-const COLORS = ['#402070','#c02040','#d4af37','#059669','#0ea5e9','#f59e0b','#8b5cf6','#ec4899']
+const COLORS = ['#0d1f3d','#1a365d','#d4af37','#059669','#0ea5e9','#f59e0b','#8b5cf6','#ec4899']
 
 // ── Txn Detail Modal ────────────────────────────────────────────────────
 function TxnDetailModal({ txn, onClose }) {
@@ -57,7 +57,7 @@ function TxnDetailModal({ txn, onClose }) {
     <div onClick={e => e.target === e.currentTarget && onClose()}
       style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.5)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
       <div style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:540, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
-        <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+        <div style={{ background:'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
           <div>
             <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>Transaction Details</div>
             <div style={{ color:'#fff', fontWeight:900, fontSize:18, marginTop:2 }}>{SERVICE_ICONS[txn.service_type] || '📋'} {txn.service_type || 'Transaction'}</div>
@@ -69,13 +69,13 @@ function TxnDetailModal({ txn, onClose }) {
             {fields.map(f => (
               <div key={f.label} style={{ background:'#f8fafc', borderRadius:10, padding:'10px 14px' }}>
                 <div style={{ fontSize:10, fontWeight:700, color:'#94a3b8', textTransform:'uppercase', letterSpacing:0.5, marginBottom:4 }}>{f.label}</div>
-                <div style={{ fontSize:14, fontWeight:700, color: f.color || '#1a0a2e', wordBreak:'break-all' }}>{f.value}</div>
+                <div style={{ fontSize:14, fontWeight:700, color: f.color || '#081427', wordBreak:'break-all' }}>{f.value}</div>
               </div>
             ))}
           </div>
         </div>
         <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', justifyContent:'flex-end', flexShrink:0 }}>
-          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0d1f3d,#1a365d)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
         </div>
       </div>
     </div>
@@ -89,7 +89,7 @@ function GroupTxnsModal({ label, name, txns, onClose, onViewTxn }) {
     <div onClick={e => e.target === e.currentTarget && onClose()}
       style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.55)', zIndex:1000, display:'flex', alignItems:'center', justifyContent:'center', padding:16 }}>
       <div style={{ background:'#fff', borderRadius:20, width:'100%', maxWidth:680, maxHeight:'90vh', overflow:'hidden', display:'flex', flexDirection:'column', boxShadow:'0 24px 64px rgba(0,0,0,0.2)' }}>
-        <div style={{ background:'linear-gradient(135deg,#1a0a2e,#402070,#c02040)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
+        <div style={{ background:'linear-gradient(135deg,#081427,#0d1f3d,#1a365d)', padding:'20px 24px', display:'flex', justifyContent:'space-between', alignItems:'center', flexShrink:0 }}>
           <div>
             <div style={{ color:'rgba(255,255,255,0.6)', fontSize:11, fontWeight:700, textTransform:'uppercase', letterSpacing:1 }}>{label} Transactions</div>
             <div style={{ color:'#fff', fontWeight:900, fontSize:18, marginTop:2 }}>{SERVICE_ICONS[name] || '📋'} {name} · {txns.length} records</div>
@@ -118,15 +118,15 @@ function GroupTxnsModal({ label, name, txns, onClose, onViewTxn }) {
                     <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
                     <div style={{ color:'#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit' })}</div>
                   </td>
-                  <td style={{ padding:'11px 16px', fontWeight:700, color:'#1a0a2e' }}>
+                  <td style={{ padding:'11px 16px', fontWeight:700, color:'#081427' }}>
                     {t.cust_name || '—'}
                     <div style={{ fontSize:11, color:'#9ca3af', fontWeight:400 }}>{t.cust_pan || ''}</div>
                   </td>
                   <td style={{ padding:'11px 16px', color:'#059669', fontWeight:700 }}>₹{fmt(t.amount)}</td>
-                  <td style={{ padding:'11px 16px', color:'#402070', fontWeight:700 }}>₹{fmt(t.settled_amount || 0)}</td>
+                  <td style={{ padding:'11px 16px', color:'#0d1f3d', fontWeight:700 }}>₹{fmt(t.settled_amount || 0)}</td>
                   <td style={{ padding:'11px 16px' }}>
                     <button onClick={() => onViewTxn(t)}
-                      style={{ background:'#ede9fe', border:'none', color:'#402070', borderRadius:6, padding:'4px 12px', cursor:'pointer', fontSize:12, fontWeight:700 }}>
+                      style={{ background:'#ede9fe', border:'none', color:'#0d1f3d', borderRadius:6, padding:'4px 12px', cursor:'pointer', fontSize:12, fontWeight:700 }}>
                       View
                     </button>
                   </td>
@@ -136,7 +136,7 @@ function GroupTxnsModal({ label, name, txns, onClose, onViewTxn }) {
           </table>
         </div>
         <div style={{ padding:'14px 24px', borderTop:'1px solid #f1f5f9', display:'flex', justifyContent:'flex-end', flexShrink:0 }}>
-          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#402070,#c02040)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
+          <button onClick={onClose} style={{ padding:'10px 24px', borderRadius:10, border:'none', background:'linear-gradient(135deg,#0d1f3d,#1a365d)', color:'#fff', fontWeight:700, cursor:'pointer', fontSize:14 }}>Close</button>
         </div>
       </div>
     </div>
@@ -222,7 +222,7 @@ export default function EmployeeReports() {
       const rows = filteredTxns.map(t =>
         `<tr><td>${new Date(t.created_at).toLocaleDateString('en-IN')} ${new Date(t.created_at).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'})}</td><td>${t.cust_name||''}</td><td>${t.cust_pan||''}</td><td>${t.service_type||''}</td><td>${t.platform||t.bill_platform||''}</td><td>₹${fmt(t.amount)}</td><td>₹${fmt(t.charges_amount||0)}</td><td>₹${fmt(t.settled_amount||0)}</td></tr>`
       ).join('')
-      const html = `<html><head><title>Transactions</title><style>body{font-family:Arial;padding:24px;color:#1a0a2e}h2{color:#402070}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#402070;color:#fff;padding:8px 12px;text-align:left}td{padding:7px 12px;border-bottom:1px solid #e2e8f0}tr:nth-child(even)td{background:#f8fafc}</style></head><body><h2>MoneySpot — All Transactions</h2><p>Period: ${from} to ${to} · ${filteredTxns.length} records</p><table><thead><tr><th>Date & Time</th><th>Customer</th><th>PAN</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr></thead><tbody>${rows}</tbody></table></body></html>`
+      const html = `<html><head><title>Transactions</title><style>body{font-family:Arial;padding:24px;color:#081427}h2{color:#0d1f3d}table{width:100%;border-collapse:collapse;font-size:12px}th{background:#0d1f3d;color:#fff;padding:8px 12px;text-align:left}td{padding:7px 12px;border-bottom:1px solid #e2e8f0}tr:nth-child(even)td{background:#f8fafc}</style></head><body><h2>1 Step Finance Care — All Transactions</h2><p>Period: ${from} to ${to} · ${filteredTxns.length} records</p><table><thead><tr><th>Date & Time</th><th>Customer</th><th>PAN</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th></tr></thead><tbody>${rows}</tbody></table></body></html>`
       const w = window.open('', '_blank'); w.document.write(html); w.document.close(); w.focus(); setTimeout(() => { w.print(); w.close() }, 400)
       return
     }
@@ -233,19 +233,19 @@ export default function EmployeeReports() {
     const html = `
       <html><head><title>${label} Report</title>
       <style>
-        body { font-family: Arial, sans-serif; padding: 24px; color: #1a0a2e; }
-        h2   { color: #402070; margin-bottom: 4px; }
+        body { font-family: Arial, sans-serif; padding: 24px; color: #081427; }
+        h2   { color: #0d1f3d; margin-bottom: 4px; }
         p    { color: #64748b; font-size: 13px; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        th { background: #402070; color: #fff; padding: 10px 14px; text-align: left; }
+        th { background: #0d1f3d; color: #fff; padding: 10px 14px; text-align: left; }
         td { padding: 9px 14px; border-bottom: 1px solid #e2e8f0; }
         tr:nth-child(even) td { background: #f8fafc; }
         .summary { display: flex; gap: 24px; margin-bottom: 20px; }
         .s-box { background: #f0f2f8; border-radius: 8px; padding: 12px 20px; }
         .s-label { font-size: 11px; color: #64748b; text-transform: uppercase; }
-        .s-val   { font-size: 20px; font-weight: 800; color: #402070; }
+        .s-val   { font-size: 20px; font-weight: 800; color: #0d1f3d; }
       </style></head><body>
-      <h2>MoneySpot — ${label}-wise Report</h2>
+      <h2>1 Step Finance Care — ${label}-wise Report</h2>
       <p>Period: ${from} to ${to}</p>
       <div class="summary">
         <div class="s-box"><div class="s-label">Total Transactions</div><div class="s-val">${fmt(totals.count ?? 0)}</div></div>
@@ -305,10 +305,10 @@ export default function EmployeeReports() {
         {/* ── Summary Cards ── */}
         <div className="er-summary">
           {[
-            { label: 'Total Transactions', value: fmt(totals.count ?? 0),    color: '#402070', icon: '📊' },
+            { label: 'Total Transactions', value: fmt(totals.count ?? 0),    color: '#0d1f3d', icon: '📊' },
             { label: 'Total Value',        value: fmtVal(totals.amount ?? 0), color: '#059669', icon: '💰' },
             { label: 'Total Charges',       value: fmtVal(totals.profit ?? 0), color: '#d4af37', icon: '📈' },
-            { label: 'Services Used',      value: serviceRows.length,         color: '#c02040', icon: '🔧' },
+            { label: 'Services Used',      value: serviceRows.length,         color: '#1a365d', icon: '🔧' },
             { label: 'Platforms Used',     value: platformRows.length,        color: '#0ea5e9', icon: '📱' },
           ].map(c => (
             <div key={c.label} className="er-sum-card" style={{ '--c': c.color }}>
@@ -356,7 +356,7 @@ export default function EmployeeReports() {
                   <input placeholder="Search customer, PAN, mobile, platform..."
                     value={search} onChange={e => setSearch(e.target.value)}
                     style={{ width:'100%', padding:'8px 12px 8px 32px', borderRadius:8, border:'1.5px solid #e2e8f0', fontSize:13, fontFamily:'inherit', boxSizing:'border-box', outline:'none' }}
-                    onFocus={e => e.target.style.borderColor='#402070'}
+                    onFocus={e => e.target.style.borderColor='#0d1f3d'}
                     onBlur={e => e.target.style.borderColor='#e2e8f0'} />
                 </div>
                 <select value={svcFilter} onChange={e => setSvcFilter(e.target.value)}

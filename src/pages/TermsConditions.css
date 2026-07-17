@@ -19,7 +19,7 @@
   position: absolute;
   top: -80px; left: -80px;
   width: 420px; height: 420px;
-  background: radial-gradient(circle, rgba(64,32,112,0.28), transparent 65%);
+  background: radial-gradient(circle, rgba(13,31,61,0.28), transparent 65%);
   filter: blur(40px);
   animation: tc-orb-drift 9s ease-in-out infinite alternate;
   pointer-events: none;
@@ -30,7 +30,7 @@
   position: absolute;
   bottom: -60px; right: -60px;
   width: 360px; height: 360px;
-  background: radial-gradient(circle, rgba(192,32,64,0.22), transparent 65%);
+  background: radial-gradient(circle, rgba(26,54,93,0.22), transparent 65%);
   filter: blur(40px);
   animation: tc-orb-drift 12s ease-in-out infinite alternate-reverse;
   pointer-events: none;
@@ -47,7 +47,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(64,32,112,0.4);
+  background: rgba(13,31,61,0.4);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(212,175,55,0.3);
   padding: 8px 20px;
@@ -135,7 +135,7 @@
 .tc-section:last-child { border-bottom: none; }
 
 .tc-section:hover {
-  background: rgba(64,32,112,0.15);
+  background: rgba(13,31,61,0.15);
 }
 
 .tc-section h2 {

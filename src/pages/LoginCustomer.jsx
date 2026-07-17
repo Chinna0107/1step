@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { useCustomerLogin } from '../hooks/useCustomerAuth'
-import logoImg from '../assets/icons png/MS Logo.png'
-import fullLogoImg from '../assets/icons png/Full Logo.png'
-import nameImg from '../assets/icons png/Money Spot Logo.png'
-import bannerImg from '../assets/icons png/MS Logo.png'
+import logoImg from '../assets/logo.png'
+import fullLogoImg from '../assets/logo.png'
+import nameImg from '../assets/logo.png'
+import bannerImg from '../assets/logo.png'
 import './Login.css'
 
 const particles = [
@@ -49,17 +49,17 @@ export default function LoginCustomer() {
 
       <div className="login-layout">
         <div className="login-image-panel">
-          <img src={bannerImg} alt="MoneySpot" className="login-banner-img" />
+          <img src={bannerImg} alt="1 Step Finance Care" className="login-banner-img" />
           <div className="login-image-overlay">
-            <img src={fullLogoImg} alt="MoneySpot" className="login-image-logo" />
+            <img src={fullLogoImg} alt="1 Step Finance Care" className="login-image-logo" />
             <p className="login-image-tagline">Your trusted financial partner</p>
           </div>
         </div>
 
         <div className="login-card">
           <div className="login-logo">
-            <img src={logoImg} alt="MoneySpot" className="login-logo-img" />
-            <img src={nameImg} alt="MoneySpot" className="login-name-img" />
+            <img src={logoImg} alt="1 Step Finance Care" className="login-logo-img" />
+            <img src={nameImg} alt="1 Step Finance Care" className="login-name-img" />
           </div>
 
           <h2>Customer Login</h2>
@@ -84,8 +84,8 @@ export default function LoginCustomer() {
           </form>
 
           <div className="login-contact-strip" style={{ marginTop: 16 }}>
-            <a href="https://wa.me/919866440477?text=Hi%20MoneySpot%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
-            <a href="tel:+919866440477" className="lcs-btn lcs-call">📞 Call Us</a>
+            <a href="https://wa.me/919581611711?text=Hi%201 Step Finance Care%2C%20I%20need%20help%20with%20login." target="_blank" rel="noopener noreferrer" className="lcs-btn lcs-wa">💬 WhatsApp</a>
+            <a href="tel:+919581611711" className="lcs-btn lcs-call">📞 Call Us</a>
           </div>
         </div>
       </div>

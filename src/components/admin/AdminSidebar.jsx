@@ -11,8 +11,8 @@ import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import NotificationBell from '../NotificationBell'
-import logoImg from '../../assets/icons png/MS Logo.png'
-import nameImg from '../../assets/icons png/Money Spot Logo.png'
+import logoImg from '../../assets/logo.png'
+import nameImg from '../../assets/logo.png'
 import '../../pages/dashboard.css'
 
 const FINANCE_ITEMS = [
@@ -75,9 +75,9 @@ export default function AdminSidebar() {
   return (
     <aside className="adm-sidebar" style={{ width: 220, overflowY: 'auto' }}>
       <div className="adm-sidebar-brand">
-        <img src={logoImg} alt="MoneySpot" className="adm-brand-logo" />
+        <img src={logoImg} alt="1 Step Finance Care" className="adm-brand-logo" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <img src={nameImg} alt="MoneySpot" className="adm-brand-name" />
+          <img src={nameImg} alt="1 Step Finance Care" className="adm-brand-name" />
           <span className="adm-brand-role">Admin Panel</span>
         </div>
       </div>
