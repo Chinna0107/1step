@@ -10,7 +10,7 @@ import '../../pages/dashboard.css'
 
 const fmt    = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
-const today  = new Date().toISOString().split('T')[0]
+const today  = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 
 const BILL_WITHDRAWAL = 'Bill Pay + Withdrawal'
 
@@ -222,6 +222,9 @@ export default function AdminTransactions() {
                       <th>Charges %</th>
                       <th>Charges ₹</th>
                       <th>Settled</th>
+                      <th>Collectable</th>
+                      <th>Collected</th>
+                      <th>Balance Due</th>
                       <th>Profit</th>
                       <th>Mode</th>
                       <th>Note</th>
@@ -260,6 +263,13 @@ export default function AdminTransactions() {
                         <td style={{ color: '#d97706', fontSize: 12 }}>{t.charges_pct || 0}%</td>
                         <td style={{ color: '#dc2626', fontSize: 12 }}>₹{fmt(t.charges_amount || 0)}</td>
                         <td style={{ color: '#0d1f3d', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.service_type === 'Bill Pay + Withdrawal' ? (t.total_collected || t.settled_amount || 0) : (t.settled_amount || 0))}</td>
+                        <td style={{ color: '#0d1f3d', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.total_collected || t.settled_amount || 0)}</td>
+                        <td style={{ color: '#059669', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.amount_collected || 0)}</td>
+                        <td style={{ whiteSpace: 'nowrap' }}>
+                          {parseFloat(t.balance_due) > 0
+                            ? <span style={{ background: '#fee2e2', color: '#dc2626', fontWeight: 800, padding: '2px 8px', borderRadius: 8, fontSize: 12 }}>₹{fmt(t.balance_due)}</span>
+                            : <span style={{ background: '#d1fae5', color: '#059669', fontWeight: 700, padding: '2px 8px', borderRadius: 8, fontSize: 11 }}>✅ Paid</span>}
+                        </td>
                         <td style={{ color: '#7c3aed', fontWeight: 700, whiteSpace: 'nowrap' }}>₹{fmt(t.profit || 0)}</td>
                         <td style={{ fontSize: 11 }}>{t.payment_mode || t.received_mode || '—'}</td>
                         <td style={{ fontSize: 11, color: '#9ca3af', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.note || '—'}</td>

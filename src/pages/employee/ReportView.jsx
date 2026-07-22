@@ -6,7 +6,7 @@ import { MdPrint } from 'react-icons/md'
 
 const fmt    = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n) || 0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
-const today  = new Date().toISOString().split('T')[0]
+const today  = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 const monthStart = today.slice(0, 7) + '-01'
 
 const SERVICE_ICONS = {
@@ -31,7 +31,7 @@ function TxnDetailModal({ txn, onClose, showFinancials }) {
     { label: 'Customer Mobile',     value: txn.cust_mobile || '—' },
     { label: 'Customer Aadhar',     value: txn.cust_aadhar || '—' },
     { label: 'Account No.',         value: txn.acc_no || '—' },
-    { label: 'Customer Coins',      value: txn.customer_coins != null ? `🪙 ${txn.customer_coins}` : '—' },
+    { label: 'Customer Coins',      value: txn.customer_coins != null ? <><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {txn.customer_coins}</> : '—' },
     { label: 'Service',             value: txn.service_type || '—' },
     { label: 'Platform',            value: txn.platform || txn.bill_platform || '—' },
     { label: 'Bill Platform',       value: txn.bill_platform || '—' },
@@ -512,7 +512,7 @@ export default function ReportView({ authHeader, showFinancials = true, branches
                       <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}</strong></td>
                       <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_pan || '—'}</td>
                       <td style={{ fontSize: 11 }}>{t.cust_mobile || '—'}</td>
-                      <td style={{ color: '#d4af37', fontWeight: 700, fontSize: 12 }}>🪙 {t.customer_coins ?? 0}</td>
+                      <td style={{ color: '#d4af37', fontWeight: 700, fontSize: 12 }}><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {t.customer_coins ?? 0}</td>
                       <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
                       <td>{t.platform || '—'}</td>
                       <td style={{ fontSize: 11, color: '#64748b' }}>{t.bill_platform || '—'}</td>

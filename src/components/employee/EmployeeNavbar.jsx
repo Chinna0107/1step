@@ -15,6 +15,7 @@ import '../../pages/dashboard.css'
 const links = [
   { to: '/employee/dashboard',     icon: <MdDashboard />,             label: 'Dashboard' },
   { to: '/employee/services',      icon: <MdMiscellaneousServices />, label: 'New Transaction' },
+  { to: '/employee/cibil-repair', icon: <MdLeaderboard />,           label: '🔧 CIBIL Repair' },
   { to: '/employee/leads',         icon: <MdLeaderboard />,           label: '🎯 Leads' },
   { to: '/employee/customer-info', icon: <MdPeople />,                label: 'Customers' },
   { to: '/employee/add-customer',  icon: <MdPersonAdd />,             label: 'Add Customer' },
@@ -41,7 +42,7 @@ export default function EmployeeNavbar() {
     <nav className="emp-navbar">
       <div className="emp-navbar-brand">
         <img src={logoImg} alt="1 Step Finance Care" style={{ height: 32, width: 32, objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(26,54,93,0.5))' }} />
-        <img src={nameImg} alt="1 Step Finance Care" style={{ height: 24, width: 'auto', objectFit: 'contain' }} />
+        <span style={{ fontWeight: 700, fontSize: 15, color: '#ffffff', letterSpacing: 0.3 }}>1 Step Finance Care</span>
         <span>Employee Portal</span>
       </div>
       <div className="emp-navbar-links">

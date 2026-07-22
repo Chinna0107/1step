@@ -110,7 +110,7 @@ export default function SuperAdminCustomers() {
       const downloadUrl = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = downloadUrl
-      a.download = `customers_${new Date().toISOString().split('T')[0]}.${format === 'excel' ? 'xlsx' : 'pdf'}`
+      a.download = `customers_${new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]}.${format === 'excel' ? 'xlsx' : 'pdf'}`
       document.body.appendChild(a)
       a.click()
       document.body.removeChild(a)
@@ -276,7 +276,7 @@ export default function SuperAdminCustomers() {
                           </td>
                           <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.pan}</td>
                           <td><span style={{ background: '#ede9fe', color: '#0d1f3d', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{c.branch || '—'}</span></td>
-                          <td style={{ fontWeight: 700, color: '#d4af37', fontSize: 13 }}>🪙 {c.coins ?? 0}</td>
+                          <td style={{ fontWeight: 700, color: '#d4af37', fontSize: 13 }}><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {c.coins ?? 0}</td>
                           <td>
                             <div className="ci-doc-thumbs">
                               {c.aadhar_img_url
@@ -336,7 +336,7 @@ export default function SuperAdminCustomers() {
                 {[
                   { label: 'Phone',      value: viewCustomer.phone      || '—' },
                   { label: 'Email',      value: viewCustomer.email      || '—' },
-                  { label: 'Coins',      value: `🪙 ${viewCustomer.coins ?? 0}`, color: '#d4af37' },
+                  { label: 'Coins',      value: <><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {viewCustomer.coins ?? 0}</>, color: '#d4af37' },
                   { label: 'PAN',        value: viewCustomer.pan        || '—' },
                   { label: 'Aadhar',     value: viewCustomer.aadhar ? viewCustomer.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—' },
                   { label: 'Account No', value: viewCustomer.acc_number || '—' },

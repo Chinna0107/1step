@@ -136,7 +136,7 @@ export default function AdminsData() {
                         <td>{a.pan || '—'}</td>
                         <td><span className="sa-status admin">{a.branch || '—'}</span></td>
                         <td><span className="sa-status admin">{a.is_superadmin ? 'SuperAdmin' : 'Admin'}</span></td>
-                        <td>🪙 {a.coins ?? 0}</td>
+                        <td><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {a.coins ?? 0}</td>
                         <td><span className={`sa-status ${a.is_active ? 'active' : 'inactive'}`}>{a.is_active ? 'Active' : 'Inactive'}</span></td>
                         <td>{new Date(a.created_at).toLocaleDateString()}</td>
                         <td style={{ display: 'flex', gap: 6 }}>

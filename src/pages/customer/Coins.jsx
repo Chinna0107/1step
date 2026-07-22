@@ -38,11 +38,11 @@ export default function CustomerCoins() {
           <div className="coins-hero-inner">
             <div>
               <div className="coins-hero-label">1 Step Finance Care Rewards</div>
-              <h1 className="coins-hero-title">🪙 Your Coins</h1>
+              <h1 className="coins-hero-title"><img src="/logo.png" style={{width: 36, height: 36, objectFit: 'contain', verticalAlign: 'bottom', marginRight: 8}} alt="coin"/>Your Coins</h1>
               <div className="coins-hero-sub">Earn coins on every transaction · Redeem 10 coins = ₹1 discount</div>
             </div>
             <div className="coins-balance-pill">
-              <div className="coins-balance-icon">🪙</div>
+              <div className="coins-balance-icon"><img src="/logo.png" style={{width: 44, height: 44, objectFit: 'contain'}} alt="coin"/></div>
               <div>
                 <div className="coins-balance-val">{loading ? '...' : fmt(balance)}</div>
                 <div className="coins-balance-lbl">Available Coins</div>
@@ -78,7 +78,7 @@ export default function CustomerCoins() {
               <p className="coins-gifts-sub">Earn coins on every transaction and unlock amazing gifts. The more you transact, the bigger the reward!</p>
             </div>
             <div className="coins-gifts-balance-chip">
-              <span className="coins-gifts-chip-icon">🪙</span>
+              <span className="coins-gifts-chip-icon"><img src="/logo.png" style={{width: 20, height: 20, objectFit: 'contain'}} alt="coin"/></span>
               <div>
                 <div className="coins-gifts-chip-val">{fmt(balance)}</div>
                 <div className="coins-gifts-chip-lbl">Your Coins</div>
@@ -143,7 +143,7 @@ export default function CustomerCoins() {
                       ? <div className="gift-status gift-status-unlocked">🎉 Unlocked!</div>
                       : <div className="gift-status gift-status-locked">🔒 {remaining.toLocaleString('en-IN')} more coins</div>
                     }
-                    <div className="gift-coins-badge">🪙 {g.coins.toLocaleString('en-IN')}</div>
+                    <div className="gift-coins-badge"><img src="/logo.png" style={{width: 14, height: 14, objectFit: 'contain', verticalAlign: 'middle', marginRight: 4}} alt="coin"/>{g.coins.toLocaleString('en-IN')}</div>
                   </div>
                   <div className="gift-body">
                     <div className="gift-name">{g.name}</div>
@@ -236,7 +236,7 @@ export default function CustomerCoins() {
                       <td style={{ fontSize: 12, color: '#64748b' }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
                       <td><strong>{t.service_type || '—'}</strong></td>
                       <td><span style={{ color: '#059669', fontWeight: 700 }}>₹{fmt(t.amount)}</span></td>
-                      <td><span className="coins-earned-tag">🪙 +{fmt(Math.floor(parseFloat(t.amount || 0) / 10))}</span></td>
+                      <td><span className="coins-earned-tag"><img src="/logo.png" style={{width: 14, height: 14, objectFit: 'contain', verticalAlign: 'middle', marginRight: 2}} alt="coin"/> +{fmt(Math.floor(parseFloat(t.amount || 0) / 10))}</span></td>
                     </tr>
                   ))}
                 </tbody>

@@ -5,6 +5,7 @@ export const api = async (endpoint, options = {}) => {
 
   const res = await fetch(`${config.API_URL}${endpoint}`, {
     ...rest,
+    cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
       ...extraHeaders,
@@ -20,13 +21,17 @@ export const api = async (endpoint, options = {}) => {
 
   // Auto-redirect on 401 — token expired or missing
   if (res.status === 401) {
-    const isCustomer  = endpoint.startsWith('/customer')
+    const isCustomer  = endpoint.startsWith('/customer') || window.location.pathname.startsWith('/customer')
     const isSuperAdmin = endpoint.startsWith('/auth/superadmin') || localStorage.getItem('current_role') === 'superadmin'
     if (isCustomer) {
       localStorage.removeItem('customer_auth')
       window.location.href = '/login/customer'
-    } else if (!isSuperAdmin) {
+    } else if (isSuperAdmin) {
+      localStorage.removeItem('superadmin_auth')
+      window.location.href = '/login/superadmin'
+    } else {
       localStorage.removeItem('employee_auth')
+      localStorage.removeItem('admin_auth')
       window.location.href = '/login/employee'
     }
     throw new Error(data.error || 'Session expired. Please log in again.')

@@ -175,7 +175,7 @@ export default function EmployeesData() {
                             : <span style={{ color: '#9ca3af' }}>—</span>}
                         </td>
                         <td><span className="sa-status admin">{emp.is_admin ? 'Admin' : 'Employee'}</span></td>
-                        <td>🪙 {emp.coins ?? 0}</td>
+                        <td><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {emp.coins ?? 0}</td>
                         <td><span className={`sa-status ${emp.is_active ? 'active' : 'inactive'}`}>{emp.is_active ? 'Active' : 'Inactive'}</span></td>
                         <td>{new Date(emp.created_at).toLocaleDateString()}</td>
                         <td style={{ display: 'flex', gap: 6 }}>

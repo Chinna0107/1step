@@ -12,7 +12,6 @@ import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import NotificationBell from '../NotificationBell'
 import logoImg from '../../assets/logo.png'
-import nameImg from '../../assets/logo.png'
 import '../../pages/dashboard.css'
 
 const FINANCE_ITEMS = [
@@ -77,7 +76,7 @@ export default function AdminSidebar() {
       <div className="adm-sidebar-brand">
         <img src={logoImg} alt="1 Step Finance Care" className="adm-brand-logo" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-          <img src={nameImg} alt="1 Step Finance Care" className="adm-brand-name" />
+          <span className="adm-brand-name" style={{ fontWeight: 700, fontSize: 13, color: '#fff', lineHeight: 1.2 }}>1 Step Finance Care</span>
           <span className="adm-brand-role">Admin Panel</span>
         </div>
       </div>

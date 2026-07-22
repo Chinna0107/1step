@@ -82,7 +82,7 @@ export default function EmployeeDashboard() {
     setAttLoading(true); setAttMsg(''); setAttErr('')
     try {
       const r = await api('/dashboard/attendance/mark', { method: 'POST', headers: auth(), body: JSON.stringify({ type }) })
-      setAttMsg(r.coinsEarned > 0 ? `${r.message} 🪙 +${r.coinsEarned} coins!` : r.message)
+      setAttMsg(r.coinsEarned > 0 ? <>{r.message} <img src="/logo.png" style={{width:16,height:16,objectFit:'contain',verticalAlign:'middle'}} alt="coin" /> +{r.coinsEarned} coins!</> : r.message)
       refetch()
     } catch (e) { setAttErr(e.message) }
     setAttLoading(false)
@@ -116,7 +116,7 @@ export default function EmployeeDashboard() {
             </div>
             <div className="ed-hero-actions">
               <button className="ed-refresh-btn" onClick={refetch}><MdRefresh size={18} /></button>
-              <div className="ed-coins-pill">🪙 {loading ? '...' : fmt(profile.coins ?? 0)} coins</div>
+              <div className="ed-coins-pill"><img src="/logo.png" style={{width:16,height:16,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {loading ? '...' : fmt(profile.coins ?? 0)} coins</div>
             </div>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function EmployeeDashboard() {
                 label="Transactions This Month" value={<AnimatedNumber value={s.txnMonth ?? 0} />}
                 sub={`Today: ${fmt(s.txnToday ?? 0)}`} />
               <StatCard icon={<MdStar />}                 color="#059669" delay={300}
-                label="1 Step Finance Care Coins" value={<AnimatedNumber value={profile.coins ?? 0} prefix="🪙 " />}
+                label="1step Coins" value={<AnimatedNumber value={profile.coins ?? 0} prefix={<><img src="/logo.png" style={{width:24,height:24,objectFit:'contain',verticalAlign:'middle',marginRight:6}} alt="coin"/> </>} />}
                 sub="Earn more by working longer" />
             </>
           )}
@@ -249,7 +249,7 @@ export default function EmployeeDashboard() {
                   </div>
                   {att.coins_earned > 0 && (
                     <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginTop:6 }}>
-                      <span style={{ color:'#d97706', fontWeight:700 }}>🪙 Coins Earned</span>
+                      <span style={{ color:'#d97706', fontWeight:700 }}><img src="/logo.png" style={{width:16,height:16,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> Coins Earned</span>
                       <strong style={{ color:'#d97706' }}>+{fmt(att.coins_earned)}</strong>
                     </div>
                   )}
@@ -293,7 +293,7 @@ export default function EmployeeDashboard() {
               </div>
             ) : (
               <table className="ed-table">
-                <thead><tr><th>Date & Time</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th><th>🪙 Coins</th></tr></thead>
+                <thead><tr><th>Date & Time</th><th>Customer</th><th>Service</th><th>Platform</th><th>Amount</th><th>Charges</th><th>Settled</th><th><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> Coins</th></tr></thead>
                 <tbody>
                   {txns.map((t, i) => (
                     <tr key={t.id} style={{ animationDelay: `${i * 40}ms` }} className="ed-tr">
@@ -325,9 +325,9 @@ export default function EmployeeDashboard() {
           <div className="ed-coins-bg" />
           <div className="ed-coins-orb" />
           <div className="ed-coins-inner">
-            <div className="ed-coins-icon">🪙</div>
+            <div className="ed-coins-icon"><img src="/logo.png" style={{width:48,height:48,objectFit:'contain'}} alt="coin"/></div>
             <div style={{ flex: 1 }}>
-              <div className="ed-coins-label">1 Step Finance Care Coins Balance</div>
+              <div className="ed-coins-label">1step Coins Balance</div>
               <div className="ed-coins-value">{loading ? '...' : fmt(profile.coins ?? 0)}</div>
               <div className="ed-coins-hint">📈 Txn coins: 40 for Bill Pay+Withdrawal · 20 for others</div>
               <div className="ed-coins-hint" style={{ marginTop: 4 }}>⏱ Attendance coins: 5 per min beyond 500 min/day</div>

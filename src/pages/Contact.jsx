@@ -73,9 +73,9 @@ export default function Contact() {
 
       {/* Hero Section */}
       <section className="cv3-hero">
-        <div className="cv3-hero-badge">Get In Touch</div>
-        <h1 className="cv3-hero-title">We're Here to <span className="cv3-text-gold">Help You.</span></h1>
-        <p className="cv3-hero-subtitle">Have a question about our financial services? Reach out to our experts directly.</p>
+        <div className="cv3-hero-badge">Connect With Us</div>
+        <h1 className="cv3-hero-title">We’re Ready to <span className="cv3-text-gold">Assist You.</span></h1>
+        <p className="cv3-hero-subtitle">Got inquiries regarding our monetary solutions? Contact our specialists without hesitation.</p>
       </section>
 
       <main className="cv3-main-content">
@@ -84,21 +84,21 @@ export default function Contact() {
         <div className="cv3-info-grid">
           <a href={`tel:${PHONE}`} className="cv3-info-card">
             <div className="cv3-card-icon"><FaPhoneAlt /></div>
-            <h3>Call Us</h3>
+            <h3>Phone Us</h3>
             <p>{PHONE_DISPLAY}</p>
             <span className="cv3-card-link">Tap to Call &rarr;</span>
           </a>
 
           <a href={`https://wa.me/${KADAPA_BRANCH.whatsapp}`} target="_blank" rel="noopener noreferrer" className="cv3-info-card cv3-wa-card">
             <div className="cv3-card-icon"><FaWhatsapp /></div>
-            <h3>WhatsApp</h3>
-            <p>Instant 24/7 Support</p>
+            <h3>WhatsApp Support</h3>
+            <p>Round-the-Clock Assistance</p>
             <span className="cv3-card-link">Chat Now &rarr;</span>
           </a>
 
           <a href={`mailto:${EMAIL}`} className="cv3-info-card">
             <div className="cv3-card-icon"><FaEnvelope /></div>
-            <h3>Email</h3>
+            <h3>Electronic Mail</h3>
             <p>{EMAIL}</p>
             <span className="cv3-card-link">Send Email &rarr;</span>
           </a>
@@ -107,8 +107,8 @@ export default function Contact() {
         {/* Contact Form Section */}
         <div className="cv3-form-wrapper">
           <div className="cv3-form-info">
-            <h2>Send us a Message</h2>
-            <p>Fill out the form below and we'll redirect you directly to our WhatsApp support team with your details pre-filled.</p>
+            <h2>Drop Us a Line</h2>
+            <p>Complete the fields below, and we will seamlessly route you to our WhatsApp desk with your information pre-loaded.</p>
             
             <div className="cv3-socials">
               <p>Follow us on Social Media:</p>
@@ -176,8 +176,8 @@ export default function Contact() {
       {/* Map Section */}
       <section className="cv3-map-section">
         <div className="cv3-map-header">
-          <h2>Visit Our Branch</h2>
-          <p>Walk in for instant cash, credit card services, and financial advice.</p>
+          <h2>Drop By Our Office</h2>
+          <p>Come in person for immediate liquidity, card solutions, and professional guidance.</p>
         </div>
         
         <div className="cv3-map-container">

@@ -8,7 +8,7 @@ import './EmployeeReports.css'
 const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('employee')}` })
 const fmt    = n => Number(n).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n); if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
-const today  = new Date().toISOString().split('T')[0]
+const today  = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 const monthStart = today.slice(0, 7) + '-01'
 
 const SERVICE_ICONS = {
@@ -30,7 +30,7 @@ function TxnDetailModal({ txn, onClose }) {
     { label: 'Customer',        value: txn.cust_name   || '—' },
     { label: 'Customer PAN',    value: txn.cust_pan    || '—' },
     { label: 'Customer Mobile', value: txn.cust_mobile || '—' },
-    { label: 'Customer Coins',  value: txn.customer_coins != null ? `🪙 ${txn.customer_coins}` : '—' },
+    { label: 'Customer Coins',  value: txn.customer_coins != null ? <><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {txn.customer_coins}</> : '—' },
     { label: 'Aadhar',          value: txn.cust_aadhar || '—' },
     { label: 'Service',        value: txn.service_type || '—' },
     { label: 'Platform',       value: txn.platform || txn.bill_platform || '—' },

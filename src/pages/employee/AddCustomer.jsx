@@ -1,41 +1,98 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { useAddCustomer, useMyCustomers } from '../../hooks/useCustomers'
 import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
+import config from '../../config'
 import '../../pages/dashboard.css'
 
 const empty = {
   name: '', email: '', phone: '', pan: '', aadhar: '', acc_number: '',
   branch: '', aadhar_img_url: '', pan_img_url: '', card_front_img_url: '',
-  referral_name: '', referral_phone: ''
+  referral_name: '', referral_phone: '', customer_type: 'general'
 }
 
-const ImgField = ({ label, icon, field, value, onChange }) => (
-  <div className="dash-form-group">
-    <label>{icon} {label}</label>
-    <div style={{ display: 'flex', gap: 8 }}>
-      <input
-        type="url"
-        placeholder="Paste image URL here after uploading"
-        value={value}
-        onChange={e => onChange(field, e.target.value)}
-        style={{ flex: 1 }}
-      />
-      <a href="https://cloudinary.com/console/media_library" target="_blank" rel="noopener noreferrer"
-        style={{ padding: '0 14px', background: '#3448c5', color: '#fff', borderRadius: 8, fontWeight: 700, fontSize: 12, display: 'flex', alignItems: 'center', gap: 6, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>
-        ☁️ Upload
-      </a>
-    </div>
-    {value && (
-      <div style={{ marginTop: 8 }}>
-        <img src={value} alt={label} onError={e => e.target.style.display='none'}
-          style={{ width: '100%', maxHeight: 120, objectFit: 'cover', borderRadius: 8, border: '1px solid #e2e8f0' }} />
+function ImgUploadField({ label, icon, fieldKey, value, onChange }) {
+  const inputRef = useRef()
+  const [uploading, setUploading] = useState(false)
+  const [uploadErr, setUploadErr] = useState('')
+  const token = getTokenByRole('employee') || getTokenByRole('admin')
+
+  const handleFile = async e => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    setUploadErr('')
+    try {
+      const fd = new FormData()
+      fd.append(fieldKey, file)
+      const res = await fetch(`${config.API_URL}/customers/upload-kyc`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Upload failed')
+      const urlKey = fieldKey + '_url'
+      onChange(urlKey, data[urlKey])
+    } catch (err) {
+      setUploadErr(err.message)
+    }
+    setUploading(false)
+    e.target.value = ''
+  }
+
+  return (
+    <div className="dash-form-group">
+      <label>{icon} {label}</label>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*,.pdf"
+          style={{ display: 'none' }}
+          onChange={handleFile}
+        />
+        <button
+          type="button"
+          onClick={() => inputRef.current.click()}
+          disabled={uploading}
+          style={{
+            padding: '8px 16px', background: uploading ? '#94a3b8' : '#3448c5',
+            color: '#fff', border: 'none', borderRadius: 8, fontWeight: 700,
+            fontSize: 13, cursor: uploading ? 'not-allowed' : 'pointer', whiteSpace: 'nowrap'
+          }}>
+          {uploading ? '⏳ Uploading...' : '☁️ Upload File'}
+        </button>
+        {value && (
+          <span style={{ fontSize: 12, color: '#059669', fontWeight: 600 }}>✅ Uploaded</span>
+        )}
+        {!value && !uploading && (
+          <span style={{ fontSize: 12, color: '#9ca3af' }}>No file chosen</span>
+        )}
       </div>
-    )}
-  </div>
-)
+      {uploadErr && <span style={{ fontSize: 11, color: '#dc2626', marginTop: 4, display: 'block' }}>❌ {uploadErr}</span>}
+      {value && (
+        <div style={{ marginTop: 8, position: 'relative', display: 'inline-block' }}>
+          <img
+            src={value} alt={label}
+            onError={e => e.target.style.display = 'none'}
+            style={{ width: '100%', maxHeight: 120, objectFit: 'cover', borderRadius: 8, border: '1px solid #e2e8f0', display: 'block' }}
+          />
+          <button
+            type="button"
+            onClick={() => onChange(fieldKey + '_url', '')}
+            style={{
+              position: 'absolute', top: 4, right: 4, background: '#dc2626', color: '#fff',
+              border: 'none', borderRadius: '50%', width: 22, height: 22, cursor: 'pointer',
+              fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center'
+            }}>✕</button>
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default function AddCustomer() {
   const navigate = useNavigate()
@@ -43,8 +100,8 @@ export default function AddCustomer() {
   const { customers, loading: listLoading, refetch } = useMyCustomers()
   const currentUser = getUserByRole('employee') || getUserByRole('admin')
   const branch = currentUser?.branch || ''
-  const [form, setForm]         = useState({ ...empty, branch })
-  const [showForm, setShowForm] = useState(false)
+  const [form, setForm]             = useState({ ...empty, branch })
+  const [showForm, setShowForm]     = useState(false)
   const [fraudAlert, setFraudAlert] = useState(null)
   const [checkingFraud, setCheckingFraud] = useState(false)
 
@@ -115,6 +172,18 @@ export default function AddCustomer() {
             </div>
             <div className="dash-card-body">
               <form onSubmit={handleSubmit}>
+
+                {/* ── Customer Type ── */}
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Customer Type</div>
+                <div className="dash-form-grid" style={{ marginBottom: 20 }}>
+                  <div className="dash-form-group">
+                    <label>Customer Type *</label>
+                    <select required value={form.customer_type} onChange={e => set('customer_type', e.target.value)}>
+                      <option value="general">General</option>
+                      <option value="credit_repair">CIBIL Repair</option>
+                    </select>
+                  </div>
+                </div>
 
                 {/* ── Personal Info ── */}
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Personal Information</div>
@@ -189,11 +258,11 @@ export default function AddCustomer() {
                 </div>
 
                 {/* ── Document Images ── */}
-                <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Document Images (paste URL after uploading)</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Document Images</div>
                 <div className="dash-form-grid">
-                  <ImgField label="Aadhar Card Image"    icon="🪪" field="aadhar_img_url"      value={form.aadhar_img_url}      onChange={set} />
-                  <ImgField label="PAN Card Image"       icon="💳" field="pan_img_url"         value={form.pan_img_url}         onChange={set} />
-                  <ImgField label="Card Front Image"     icon="🏧" field="card_front_img_url"  value={form.card_front_img_url}  onChange={set} />
+                  <ImgUploadField label="Aadhar Card Image"  icon="🪪" fieldKey="aadhar_img"      value={form.aadhar_img_url}      onChange={set} />
+                  <ImgUploadField label="PAN Card Image"     icon="💳" fieldKey="pan_img"         value={form.pan_img_url}         onChange={set} />
+                  <ImgUploadField label="Card Front Image"   icon="🏧" fieldKey="card_front_img"  value={form.card_front_img_url}  onChange={set} />
                 </div>
 
                 <div style={{ marginTop: 20, display: 'flex', gap: 10 }}>
@@ -223,7 +292,7 @@ export default function AddCustomer() {
             ) : (
               <table className="dash-table">
                 <thead>
-                  <tr><th>Name</th><th>Email</th><th>Phone</th><th>PAN</th><th>Branch</th><th>Status</th><th>Submitted</th></tr>
+                  <tr><th>Name</th><th>Email</th><th>Phone</th><th>PAN</th><th>Type</th><th>Branch</th><th>Status</th><th>Submitted</th></tr>
                 </thead>
                 <tbody>
                   {customers.map(c => (
@@ -232,6 +301,15 @@ export default function AddCustomer() {
                       <td>{c.email}</td>
                       <td>{c.phone}</td>
                       <td>{c.pan}</td>
+                      <td>
+                        <span style={{
+                          padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700,
+                          background: c.customer_type === 'credit_repair' ? '#ede9fe' : '#e0f2fe',
+                          color: c.customer_type === 'credit_repair' ? '#7c3aed' : '#0369a1',
+                        }}>
+                          {c.customer_type === 'credit_repair' ? 'CIBIL Repair' : 'General'}
+                        </span>
+                      </td>
                       <td>{c.branch || '—'}</td>
                       <td><span style={statusStyle(c.status)}>{c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></td>
                       <td>{new Date(c.created_at).toLocaleDateString('en-IN')}</td>

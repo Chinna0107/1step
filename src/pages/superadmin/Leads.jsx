@@ -78,7 +78,7 @@ export default function SuperAdminLeads() {
     ].join(','))
     const blob = new Blob([header + '\n' + rows.join('\n')], { type: 'text/csv' })
     const a = document.createElement('a'); a.href = URL.createObjectURL(blob)
-    a.download = `leads_all_branches_${new Date().toISOString().split('T')[0]}.csv`; a.click()
+    a.download = `leads_all_branches_${new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]}.csv`; a.click()
   }
 
   const exportPDF = () => {

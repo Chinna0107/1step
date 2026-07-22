@@ -44,12 +44,15 @@
   overflow: hidden;
 }
 
-.sa-brand-name-img {
-  height: 22px;
-  width: auto;
-  object-fit: contain;
+.sa-brand-name {
   display: block;
-  filter: brightness(0);
+  font-size: 13px;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .sa-brand-title {

@@ -263,6 +263,11 @@ export default function CustomerInfo() {
                           {parseFloat(t.charges_amount) > 0 && (
                             <div style={{ color:'#d97706', fontSize:11 }}>Charges: ₹{fmt(t.charges_amount)}</div>
                           )}
+                          <div style={{ color:'#0d1f3d', fontSize:11, fontWeight:700 }}>Collectable: ₹{fmt(t.total_collected || t.settled_amount || 0)}</div>
+                          {parseFloat(t.amount_collected) > 0 && <div style={{ color:'#059669', fontSize:11 }}>Collected: ₹{fmt(t.amount_collected)}</div>}
+                          {parseFloat(t.balance_due) > 0
+                            ? <div style={{ color:'#dc2626', fontSize:11, fontWeight:800 }}>⚠️ Due: ₹{fmt(t.balance_due)}</div>
+                            : parseFloat(t.amount_collected) > 0 && <div style={{ color:'#059669', fontSize:11 }}>✅ Fully Paid</div>}
                         </div>
                       </div>
                       {/* Extra details */}

@@ -221,7 +221,7 @@ export default function Profile({ Sidebar, isAdmin = false }) {
 
                 {/* Card Footer */}
                 <div className="id-card-footer">
-                  <div className="id-card-coins">🪙 {user?.coins ?? 0} Coins</div>
+                  <div className="id-card-coins"><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {user?.coins ?? 0} Coins</div>
                   <div className="id-card-footer-id">{empId}</div>
                   <div className={`id-card-status ${user?.is_active !== false ? 'active' : 'inactive'}`}>
                     {user?.is_active !== false ? '● Active' : '● Inactive'}
@@ -237,7 +237,7 @@ export default function Profile({ Sidebar, isAdmin = false }) {
               <button
                 onClick={() => setShowCoins(v => !v)}
                 style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', border: 'none', borderRadius: 12, padding: '12px 24px', fontWeight: 800, fontSize: 15, cursor: 'pointer', marginBottom: showCoins ? 16 : 0, width: '100%', justifyContent: 'space-between' }}>
-                <span>🪙 Coins — {fmt(coins)} balance</span>
+                <span><img src="/logo.png" style={{width:16,height:16,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> Coins — {fmt(coins)} balance</span>
                 <span style={{ fontSize: 12, opacity: 0.8 }}>{showCoins ? '▲ Hide' : '▼ Show & Redeem'}</span>
               </button>
 
@@ -252,7 +252,7 @@ export default function Profile({ Sidebar, isAdmin = false }) {
                     {/* Balance display */}
                     <div style={{ background: 'linear-gradient(135deg,#fef9e7,#fef3c7)', borderRadius: 10, padding: '12px 16px', marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: 12, color: '#d97706', fontWeight: 700 }}>Available Balance</span>
-                      <span style={{ fontSize: 22, fontWeight: 900, color: '#d97706' }}>🪙 {fmt(coins)}</span>
+                      <span style={{ fontSize: 22, fontWeight: 900, color: '#d97706' }}><img src="/logo.png" style={{width:24,height:24,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {fmt(coins)}</span>
                     </div>
 
                     {redeemMsg && <div style={{ background: '#d1fae5', color: '#059669', padding: '8px 12px', borderRadius: 8, marginBottom: 12, fontSize: 13, fontWeight: 600 }}>✅ {redeemMsg}</div>}
@@ -307,7 +307,7 @@ export default function Profile({ Sidebar, isAdmin = false }) {
                             fontWeight: 800, fontSize: 14, whiteSpace: 'nowrap',
                             color: h.type === 'earn' ? '#059669' : '#dc2626'
                           }}>
-                            {h.type === 'earn' ? '+' : '−'}{fmt(h.coins)} 🪙
+                            {h.type === 'earn' ? '+' : '−'}{fmt(h.coins)} <img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginLeft:4}} alt="coin"/>
                           </span>
                         </div>
                       ))

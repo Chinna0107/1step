@@ -131,11 +131,12 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
     { label: 'Full Name',     value: customer.name || '—' },
     { label: 'Email',         value: customer.email || '—' },
     { label: 'Phone',         value: customer.phone || '—' },
-    { label: 'Coins',         value: `🪙 ${customer.coins ?? 0}`, color: '#d4af37' },
+    { label: 'Coins',         value: <><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {customer.coins ?? 0}</>, color: '#d4af37' },
     { label: 'PAN Number',    value: customer.pan || '—',    mono: true },
     { label: 'Aadhar Number', value: customer.aadhar ? customer.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—', mono: true },
     { label: 'Account No.',   value: customer.acc_number || '—', mono: true },
     { label: 'Branch',        value: customer.branch || '—' },
+    { label: 'Category',       value: customer.customer_type === 'credit_repair' ? '🔧 CIBIL Repair' : '👤 General' },
     { label: 'Added By',      value: customer.added_by_name || '—' },
     { label: 'Reviewed By',   value: customer.reviewed_by_name || '—' },
     { label: 'Reviewed At',   value: customer.reviewed_at ? new Date(customer.reviewed_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—' },
@@ -577,7 +578,7 @@ export default function AdminCustomers() {
               {loading ? <div className="dash-loading">Loading...</div> : (
                 <table className="dash-table">
                   <thead>
-                    <tr><th>#</th><th>Name</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Branch</th><th>Coins</th><th>Documents</th><th>Status</th><th>Added By</th><th>Actions</th></tr>
+                    <tr><th>#</th><th>Name</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Branch</th><th>Category</th><th>Coins</th><th>Documents</th><th>Status</th><th>Added By</th><th>Actions</th></tr>
                   </thead>
                   <tbody>
                     {filtered.map(c => (
@@ -593,7 +594,16 @@ export default function AdminCustomers() {
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.pan}</td>
                         <td style={{ fontFamily: 'monospace', fontSize: 12 }}>{c.aadhar ? c.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—'}</td>
                         <td style={{ fontSize: 12 }}>{c.branch || '—'}</td>
-                        <td style={{ fontWeight: 700, color: '#d4af37', fontSize: 13 }}>🪙 {c.coins ?? 0}</td>
+                        <td>
+                          <span style={{
+                            background: c.customer_type === 'credit_repair' ? '#fef3c7' : '#ede9fe',
+                            color: c.customer_type === 'credit_repair' ? '#92400e' : '#4c1d95',
+                            padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700
+                          }}>
+                            {c.customer_type === 'credit_repair' ? '🔧 CIBIL Repair' : '👤 General'}
+                          </span>
+                        </td>
+                        <td style={{ fontWeight: 700, color: '#d4af37', fontSize: 13 }}><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {c.coins ?? 0}</td>
                         <td onClick={e => e.stopPropagation()}>
                           <div style={{ display: 'flex', gap: 4 }}>
                             {c.aadhar_img_url

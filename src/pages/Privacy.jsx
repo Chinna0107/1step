@@ -10,79 +10,79 @@ const sections = [
   {
     id: 'information-we-collect',
     Icon: FaDatabase,
-    category: 'Information We Collect',
+    category: 'Data We Gather',
     items: [
-      { subtitle: 'Personal Information', text: 'We collect information you provide directly to us, including your full name, mobile number, email address, Aadhaar number (for KYC), PAN card details, bank account information, and any other details required to process your financial service requests.' },
-      { subtitle: 'Transaction Data', text: 'We collect details of transactions you carry out through our services, including the amount, date, time, and nature of the transaction (credit card cash, bill payment, money transfer, etc.).' },
-      { subtitle: 'Device & Usage Information', text: 'We automatically collect information about your device, browser type, IP address, pages visited, and how you interact with our website to improve our services.' },
+      { subtitle: 'Identity Details', text: 'We assemble data supplied directly by you, which encompasses your complete name, contact number, electronic mail, Aadhaar (for verification), PAN specifics, banking details, and other necessary inputs to facilitate your requested monetary operations.' },
+      { subtitle: 'Operational Records', text: 'We record specifics of activities performed via our platform, capturing the sum, timestamp, and the category of the exchange (e.g., cash withdrawals, bill clearances, fund routing).' },
+      { subtitle: 'System & Interaction Metrics', text: 'Our systems autonomously capture data regarding your hardware, browser variant, IP footprint, navigation paths, and site engagement to refine our offerings.' },
     ],
   },
   {
     id: 'how-we-use',
     Icon: FaEye,
-    category: 'How We Use Your Information',
+    category: 'Utilization of Your Data',
     items: [
-      { subtitle: 'Service Delivery', text: 'To process your financial transactions, verify your identity through KYC, transfer funds, pay bills, and deliver all services you request from 1 Step Finance Care.' },
-      { subtitle: 'Communication', text: 'To send you transaction confirmations, OTPs, service updates, promotional offers, and important notices related to your account and transactions.' },
-      { subtitle: 'Compliance & Security', text: 'To comply with legal obligations, prevent fraud, detect suspicious activity, and ensure the security of your financial data and transactions.' },
-      { subtitle: 'Service Improvement', text: 'To analyze usage patterns, improve our website and services, and personalize your experience with 1 Step Finance Care.' },
+      { subtitle: 'Fulfilling Requests', text: 'To execute your monetary exchanges, validate your identity via KYC procedures, route funds, settle invoices, and furnish all provisions you seek from 1 Step Finance Care.' },
+      { subtitle: 'Client Correspondence', text: 'To dispatch transfer receipts, one-time passwords, platform enhancements, marketing materials, and critical alerts concerning your profile and activities.' },
+      { subtitle: 'Regulatory Adherence & Protection', text: 'To honor statutory requirements, thwart deceptive practices, identify anomalous behaviors, and guarantee the safety of your economic information.' },
+      { subtitle: 'Platform Enhancement', text: 'To examine interaction trends, upgrade our digital infrastructure, and tailor your journey with 1 Step Finance Care.' },
     ],
   },
   {
     id: 'data-sharing',
     Icon: FaShareAlt,
-    category: 'Data Sharing & Disclosure',
+    category: 'Information Distribution',
     items: [
-      { subtitle: 'Banking Partners', text: 'We share necessary information with our 120+ Bank & NBFC partners solely to process your financial transactions. All partners are bound by strict confidentiality agreements.' },
-      { subtitle: 'Regulatory Authorities', text: 'We may disclose your information to RBI, UIDAI, or other regulatory bodies as required by law, court orders, or government regulations.' },
-      { subtitle: 'No Third-Party Sale', text: 'We do not sell, rent, or trade your personal information to any third party for marketing purposes. Your data is used exclusively for service delivery.' },
+      { subtitle: 'Financial Affiliates', text: 'We distribute requisite details to our network of 120+ banks and NBFCs exclusively for executing your operations. All associates operate under rigorous non-disclosure pacts.' },
+      { subtitle: 'Governing Bodies', text: 'We might reveal your records to entities like RBI, UIDAI, or other oversight agencies when compelled by legislation, judicial decrees, or state rules.' },
+      { subtitle: 'Zero Commercialization', text: 'We absolutely never vend, lease, or barter your private information to external parties for promotional intents. Your details are leveraged purely for service provision.' },
     ],
   },
   {
     id: 'data-security',
     Icon: FaLock,
-    category: 'Data Security',
+    category: 'Information Safeguarding',
     items: [
-      { subtitle: 'Encryption', text: 'All sensitive data including Aadhaar, PAN, and bank account details are encrypted using industry-standard SSL/TLS encryption both in transit and at rest.' },
-      { subtitle: 'Access Controls', text: 'Access to your personal data is restricted to authorized 1 Step Finance Care personnel only, on a need-to-know basis, and is protected by multi-factor authentication.' },
-      { subtitle: 'KYC Compliance', text: 'All transactions are KYC-verified. We follow strict RBI guidelines for customer due diligence and anti-money laundering (AML) compliance.' },
+      { subtitle: 'Cryptographic Security', text: 'All critical inputs, such as Aadhaar, PAN, and banking data, undergo robust SSL/TLS cryptographic scrambling both during transmission and in storage.' },
+      { subtitle: 'Restricted Accessibility', text: 'Only sanctioned staff members at 1 Step Finance Care can view your private records on a strictly required basis, shielded by multi-layered verification.' },
+      { subtitle: 'Verification Protocols', text: 'Every transfer undergoes KYC validation. We adhere strictly to RBI directives regarding consumer vetting and anti-money laundering measures.' },
     ],
   },
   {
     id: 'cookies',
     Icon: FaCookieBite,
-    category: 'Cookies & Tracking',
+    category: 'Digital Tracking Mechanisms',
     items: [
-      { subtitle: 'What We Use', text: 'We use essential cookies to keep you logged in and remember your preferences, and analytics cookies to understand how visitors use our website.' },
-      { subtitle: 'Your Control', text: 'You can control cookie settings through your browser. Disabling cookies may affect some functionality of our website but will not impact your ability to use our core financial services.' },
+      { subtitle: 'Our Deployed Tools', text: 'We employ fundamental trackers to sustain your session and recall settings, alongside analytical trackers to comprehend user navigation.' },
+      { subtitle: 'User Autonomy', text: 'You possess the ability to govern tracker preferences via your browser. Deactivating them might alter certain site features, though it won’t hinder your access to principal monetary services.' },
     ],
   },
   {
     id: 'your-rights',
     Icon: FaUserEdit,
-    category: 'Your Rights',
+    category: 'User Privileges',
     items: [
-      { subtitle: 'Access & Correction', text: 'You have the right to access the personal information we hold about you and request corrections if any data is inaccurate or incomplete.' },
-      { subtitle: 'Data Deletion', text: 'You may request deletion of your personal data, subject to our legal obligations to retain certain records for regulatory compliance purposes.' },
-      { subtitle: 'Opt-Out', text: 'You can opt out of promotional communications at any time by contacting us. Note that transactional and compliance-related communications cannot be opted out of.' },
+      { subtitle: 'Retrieval & Amendment', text: 'You are entitled to view the private records we maintain regarding you and may ask for rectifications should any details be erroneous or partial.' },
+      { subtitle: 'Information Erasure', text: 'You can demand the wiping of your personal details, contingent upon our statutory duties to preserve specific logs for oversight conformity.' },
+      { subtitle: 'Communication Withdrawal', text: 'You may unsubscribe from marketing dispatches at any moment by reaching out. Please be aware that you cannot decline operational or regulatory notices.' },
     ],
   },
   {
     id: 'data-retention',
     Icon: FaDatabase,
-    category: 'Data Retention',
+    category: 'Information Preservation',
     items: [
-      { subtitle: 'Retention Period', text: 'We retain your personal data for as long as necessary to provide our services and comply with legal obligations. Transaction records are retained for a minimum of 5 years as required by RBI guidelines.' },
-      { subtitle: 'After Account Closure', text: 'Upon account closure or service termination, we retain your data for the legally required period before securely deleting it from our systems.' },
+      { subtitle: 'Storage Duration', text: 'We hold onto your private records for the duration required to deliver services and meet statutory mandates. Operational logs are kept for at least 5 years as dictated by RBI standards.' },
+      { subtitle: 'Post-Termination Protocol', text: 'Following profile deactivation or service conclusion, we maintain your records for the legally stipulated timeframe prior to permanently expunging them.' },
     ],
   },
   {
     id: 'contact-us',
     Icon: FaEnvelope,
-    category: 'Contact Us',
+    category: 'Reach Out',
     items: [
-      { subtitle: 'Privacy Concerns', text: 'If you have any questions, concerns, or requests regarding this Privacy Policy or how we handle your personal data, please contact our Data Protection Officer.' },
-      { subtitle: 'Reach Us', text: 'Email: 1stepcreditcard@gmail.com | Phone: +91 95816 11711 | Branch: Kadapa.' },
+      { subtitle: 'Data Queries', text: 'Should you harbor any questions, worries, or appeals concerning these privacy guidelines or our data management, please get in touch with our Compliance Officer.' },
+      { subtitle: 'Contact Channels', text: 'Email: 1stepcreditcard@gmail.com | Phone: +91 95816 11711 | Branch: Kadapa.' },
     ],
   },
 ]
@@ -122,9 +122,9 @@ export default function Privacy() {
       {/* Hero Section */}
       <div className="doc-hero">
         <div className="doc-hero-inner">
-          <div className="doc-pill">Legal</div>
-          <h1>Privacy <span className="doc-gold">Policy</span></h1>
-          <p>Your privacy, our responsibility. Last updated: January 2025.</p>
+          <div className="doc-pill">Compliance</div>
+          <h1>Data Privacy <span className="doc-gold">Guidelines</span></h1>
+          <p>Safeguarding your personal data is our duty. Most recent revision: January 2025.</p>
         </div>
       </div>
 

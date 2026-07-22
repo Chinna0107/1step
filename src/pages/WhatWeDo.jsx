@@ -16,59 +16,59 @@ const products = [
     slug: 'spot-cash',
     Icon: FaBolt,
     title: 'Spot Cash on Credit Card',
-    tagline: 'Instant cash from your credit limit',
-    desc: 'Convert your unused credit card limit into instant cash. Supported by all major banks with POS machine facility. Get funds instantly when you need them most.',
+    tagline: 'Immediate liquidity from your card balance',
+    desc: 'Transform your available credit into liquid capital. Compatible with all premier banking institutions via point-of-sale systems. Secure capital promptly during crucial moments.',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_14_hfozvc.png',
   },
   {
     slug: 'bill-payment',
     Icon: FaCreditCard,
     title: 'Credit Card Bill Payment',
-    tagline: 'Never miss your due date',
-    desc: 'Pay any amount on any credit card instantly. Avoid massive late fees, save on interest, and protect your CIBIL score with zero hassle.',
+    tagline: 'Always pay on time',
+    desc: 'Settle any card balance in real-time. Dodge hefty penalty charges, conserve on interest rates, and safeguard your credit rating effortlessly.',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_18_kwkkgx.png',
   },
   {
     slug: 'personal-loans',
     Icon: FaMoneyBillWave,
     title: 'Personal Loans',
-    tagline: 'Quick disbursal when you need it',
-    desc: 'Get personal loans with incredibly fast approval and minimal documentation. We offer highly competitive interest rates tailored to your profile.',
+    tagline: 'Rapid funding upon request',
+    desc: 'Acquire individual financing with exceptionally swift clearance and basic paperwork. We provide extremely attractive interest rates customized to your situation.',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/Layer_20_dpj7hw.png',
   },
   {
     slug: 'business-loans',
     Icon: FaBuilding,
     title: 'Business Loans',
-    tagline: 'Fuel your ultimate growth',
-    desc: 'Tailored business loan solutions up to ₹70 Lakhs to help you scale, expand, and achieve your entrepreneurial goals with complete ease.',
+    tagline: 'Power your enterprise expansion',
+    desc: 'Custom-built enterprise financing reaching up to ₹70 Lakhs, designed to facilitate scaling, broadening operations, and realizing your commercial ambitions smoothly.',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986810/Layer_21_rfhylr.png',
   },
   {
     slug: 'insurance',
     Icon: FaShieldAlt,
     title: 'Insurance Services',
-    tagline: 'Protect what matters most',
-    desc: 'Life, health, and vehicle insurance from top providers. We secure the absolute best rates so you and your family are fully covered.',
+    tagline: 'Safeguard your critical assets',
+    desc: 'Policies for life, medical, and automotive needs sourced from premier insurers. We lock in optimal premiums ensuring complete coverage for you and your dependents.',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_23_ebzlts.png',
   },
   {
     slug: 'cibil-score',
     Icon: FaChartBar,
     title: 'CIBIL Score Repair',
-    tagline: 'Improve your credit health',
-    desc: 'Know your exact credit score and get expert, personalized guidance to repair it. Better scores mean better loan eligibility and financial freedom.',
+    tagline: 'Enhance your borrowing capacity',
+    desc: 'Discover your precise credit rating and receive specialized, tailored advice for its restoration. Superior ratings lead to enhanced loan qualification and fiscal independence.',
     img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986813/Layer_26_nxw11o.png',
   },
 ]
 
 const moreServices = [
-  { slug: 'dmt',              Icon: FaExchangeAlt,   title: 'Instant Money Transfer', desc: 'Send money anywhere in seconds.' },
-  { slug: 'aadhaar-withdrawal', Icon: FaFingerprint, title: 'Aadhaar Withdrawal',     desc: 'Withdraw cash using your Aadhaar.' },
-  { slug: 'cash-deposit',     Icon: FaUniversity,    title: 'Cash Deposit',           desc: 'Quick cash deposits to any bank.' },
-  { slug: 'bank-account',     Icon: FaUniversity,    title: 'Bank Account Opening',   desc: 'Open a savings or current account.' },
-  { slug: 'new-credit-card',  Icon: FaCreditCard,    title: 'New Credit Card',        desc: 'Apply for the best credit cards.' },
-  { slug: 'more',             Icon: FaCheckCircle,   title: 'And Much More...',       desc: 'We are your one-stop financial hub.' },
+  { slug: 'dmt',              Icon: FaExchangeAlt,   title: 'Instant Money Transfer', desc: 'Dispatch capital anywhere swiftly.' },
+  { slug: 'aadhaar-withdrawal', Icon: FaFingerprint, title: 'Aadhaar Withdrawal',     desc: 'Extract funds via biometric ID.' },
+  { slug: 'cash-deposit',     Icon: FaUniversity,    title: 'Cash Deposit',           desc: 'Speedy deposits into any account.' },
+  { slug: 'bank-account',     Icon: FaUniversity,    title: 'Bank Account Opening',   desc: 'Establish savings or checking accounts.' },
+  { slug: 'new-credit-card',  Icon: FaCreditCard,    title: 'New Credit Card',        desc: 'File for top-tier credit cards.' },
+  { slug: 'more',             Icon: FaCheckCircle,   title: 'And Much More...',       desc: 'Your comprehensive monetary center.' },
 ]
 
 export default function WhatWeDo() {
@@ -120,13 +120,13 @@ export default function WhatWeDo() {
       {/* Hero Section */}
       <section className="wwd-hero">
         <div className="wwd-hero-inner">
-          <div className="wwd-hero-badge"><FaBolt /> Our Services</div>
+          <div className="wwd-hero-badge"><FaBolt /> Our Provisions</div>
           <h1 className="wwd-hero-title">
-            The Financial Hub<br />
-            <span className="wwd-text-gold">Built for You.</span>
+            The Monetary Center<br />
+            <span className="wwd-text-gold">Designed for You.</span>
           </h1>
           <p className="wwd-hero-sub">
-            Comprehensive financial services designed for speed, security, and simplicity. Explore our complete ecosystem below.
+            All-inclusive monetary solutions engineered for velocity, safety, and ease of use. Discover our full operational suite below.
           </p>
         </div>
       </section>
@@ -134,9 +134,9 @@ export default function WhatWeDo() {
       {/* Core Products (Massive Alternating Strips) */}
       <section className="wwd-strips-section">
         <div className="wwd-section-header">
-          <div className="wwd-pill">Flagship Services</div>
-          <h2>Everything You Need.</h2>
-          <p>Discover our suite of premium financial solutions.</p>
+          <div className="wwd-pill">Primary Offerings</div>
+          <h2>All Essential Solutions.</h2>
+          <p>Explore our portfolio of high-grade monetary services.</p>
         </div>
         
         <div className="wwd-strips-container">
@@ -164,8 +164,8 @@ export default function WhatWeDo() {
       {/* More Services Grid */}
       <section className="wwd-more-section">
         <div className="wwd-section-header">
-          <div className="wwd-pill">More Services</div>
-          <h2>A Complete Ecosystem</h2>
+          <div className="wwd-pill">Additional Offerings</div>
+          <h2>An All-Encompassing Network</h2>
         </div>
         
         <div className="wwd-more-grid">
@@ -182,8 +182,8 @@ export default function WhatWeDo() {
       {/* CTA Section */}
       <section className="wwd-cta-section">
         <div className="wwd-cta-box">
-          <h2>Ready to get started?</h2>
-          <p>Our team is available 24/7 to help you with your financial needs.</p>
+          <h2>Prepared to initiate?</h2>
+          <p>Our staff remains accessible around the clock to assist with your monetary requirements.</p>
           <Link to="/contact" className="wwd-btn-cta">
             Contact Support <FaArrowRight />
           </Link>

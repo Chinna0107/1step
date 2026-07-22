@@ -8,7 +8,7 @@ import '../../pages/dashboard.css'
 const auth = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const fmt  = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
 const fmtV = n => { const v = parseFloat(n)||0; if (v>=100000) return `₹${(v/100000).toFixed(1)}L`; if (v>=1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
-const today = new Date().toISOString().split('T')[0]
+const today = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 
 function EmployeeDetailModal({ emp, onClose }) {
   const [tab, setTab]         = useState('details')
@@ -62,7 +62,7 @@ function EmployeeDetailModal({ emp, onClose }) {
     { label: 'Aadhar Number', value: emp.aadhar ? emp.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—', mono: true },
     { label: 'Branch',        value: emp.branch || '—' },
     { label: 'Role',          value: emp.role || '—' },
-    { label: 'Coins',         value: `🪙 ${emp.coins ?? 0}` },
+    { label: 'Coins',         value: <><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {emp.coins ?? 0}</> },
     { label: 'Access Level',  value: emp.is_admin ? '🔑 Admin' : '👤 Employee' },
     { label: 'Status',        value: emp.is_active ? '✅ Active' : '❌ Inactive' },
     { label: 'Joined',        value: new Date(emp.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) },
@@ -99,7 +99,7 @@ function EmployeeDetailModal({ emp, onClose }) {
                     {emp.is_active ? '✅ Active' : '❌ Inactive'}
                   </span>
                   {emp.is_admin && <span style={{ background:'#ede9fe', color:'#7c3aed', padding:'2px 10px', borderRadius:20, fontSize:11, fontWeight:800 }}>🔑 Admin</span>}
-                  <span style={{ background:'rgba(212,175,55,0.2)', color:'#d4af37', padding:'2px 10px', borderRadius:20, fontSize:11, fontWeight:800 }}>🪙 {emp.coins ?? 0}</span>
+                  <span style={{ background:'rgba(212,175,55,0.2)', color:'#d4af37', padding:'2px 10px', borderRadius:20, fontSize:11, fontWeight:800 }}><img src="/logo.png" style={{width:12,height:12,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {emp.coins ?? 0}</span>
                 </div>
               </div>
             </div>
@@ -387,7 +387,7 @@ export default function AdminEmployeeDetails() {
                         <td style={{ fontFamily:'monospace', fontSize:12 }}>{e.aadhar ? e.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—'}</td>
                         <td style={{ fontSize:12 }}>{e.branch || '—'}</td>
                         <td style={{ fontSize:12 }}>{e.role || '—'}</td>
-                        <td style={{ color:'#b8860b', fontWeight:700, fontSize:12 }}>🪙 {e.coins ?? 0}</td>
+                        <td style={{ color:'#b8860b', fontWeight:700, fontSize:12 }}><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {e.coins ?? 0}</td>
                         <td>
                           {e.is_admin
                             ? <span style={{ background:'#ede9fe', color:'#7c3aed', padding:'2px 8px', borderRadius:20, fontSize:11, fontWeight:700 }}>🔑 Admin</span>

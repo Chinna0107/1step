@@ -24,7 +24,7 @@ const emptyForm = {
   bill_platform: '', bill_amount: '', bill_remaining: '', total_collected: '', received_mode: '',
   platform: '', card: '', card_bank: '', card_last4: '', payment_mode: '', amount: '',
   charges_pct: '', charges_amount: '', settled_amount: '',
-  bank: '', acc_no: '',
+  bank: '', acc_no: '', balance: '', amount_collected: '', balance_due: '',
 }
 
 export default function Services() {
@@ -56,27 +56,29 @@ export default function Services() {
   // Fetch today's attendance on mount
   useEffect(() => {
     setAttLoading(true)
-    api('/dashboard/employee/stats', { headers: auth() })
+    api("/dashboard/employee/stats", { headers: auth() })
       .then(d => { setAttendance(d?.attendance ?? null); setAttFetched(true); setAttLoading(false) })
       .catch(() => { setAttFetched(false); setAttLoading(false) })
   }, [])
 
   const handleCheckIn = async () => {
-    setCheckingIn(true); setError('')
+    setCheckingIn(true); setError("")
     try {
-      await api('/dashboard/attendance/mark', { method: 'POST', headers: { ...auth(), 'Content-Type': 'application/json' }, body: JSON.stringify({ type: 'check_in' }) })
-      const d = await api('/dashboard/employee/stats', { headers: auth() })
-      setAttendance(d?.attendance ?? null)
-      setAttFetched(true)
+      await api("/dashboard/attendance/mark", { method: "POST", headers: { ...auth(), "Content-Type": "application/json" }, body: JSON.stringify({ type: "check_in" }) })
     } catch (e) {
-      if (e.message?.includes('foreign key') || e.message?.includes('violates')) {
-        setError('Session error — please log out and log back in.')
-      } else {
-        setError(e.message)
+      // 409 means already checked in — still refresh attendance
+      if (!e.message?.includes('Already checked in') && !e.message?.includes('already completed')) {
+        setError(e.message); setCheckingIn(false); return
       }
     }
+    try {
+      const d = await api("/dashboard/employee/stats", { headers: auth() })
+      setAttendance(d?.attendance ?? null)
+      setAttFetched(true)
+    } catch {}
     setCheckingIn(false)
   }
+
 
   useEffect(() => {
     // Serve from cache instantly, then revalidate in background
@@ -100,7 +102,7 @@ export default function Services() {
 
     if (!cachedCustomers)
       fetches.push(
-        api('/customers/approved', { headers: auth() })
+        api('/customers/approved?type=general', { headers: auth() })
           .then(d => { setCustomers(d); cacheSet('svc:customers', d, TTL.list) })
           .catch(() => {})
       )
@@ -118,7 +120,7 @@ export default function Services() {
         .then(d => { setMaster(d); cacheSet('svc:master', d, TTL.master) }).catch(() => {})
 
     if (cachedCustomers)
-      api('/customers/approved', { headers: auth() })
+      api('/customers/approved?type=general', { headers: auth() })
         .then(d => { setCustomers(d); cacheSet('svc:customers', d, TTL.list) }).catch(() => {})
 
     if (cachedHistory)
@@ -134,7 +136,6 @@ export default function Services() {
   }, [form.service_type, form.platform, form.card, lookup])
 
   // Auto-calc derived fields
-  // Fix #5: Total Collected = Withdrawal Amount + Charges on withdrawal only (NOT bill amount)
   useEffect(() => {
     const amt     = parseFloat(form.amount)     || 0
     const billAmt = parseFloat(form.bill_amount) || 0
@@ -143,19 +144,40 @@ export default function Services() {
     const chargesAmt = parseFloat((amt * pct / 100).toFixed(2))
     const settledAmt = parseFloat((amt - chargesAmt).toFixed(2))
     const billRemain = parseFloat((billAmt > 0 && amt > 0 ? Math.max(0, billAmt - amt) : 0).toFixed(2))
-    // Total Collected = Bill Remaining + Customer Charges on withdrawal
     const totalColl  = parseFloat((billRemain + chargesAmt).toFixed(2))
-    setForm(f => ({
-      ...f,
-      charges_amount:  chargesAmt,
-      settled_amount:  settledAmt,
-      bill_remaining:  billAmt && amt ? (billRemain > 0 ? billRemain : 0) : f.bill_remaining,
-      total_collected: totalColl,
-    }))
+    setForm(f => {
+      const baseCollectable = form.service_type === BILL_WITHDRAWAL ? totalColl : settledAmt
+      const prevBal = parseFloat(f.balance) || 0
+      const collectable = baseCollectable + prevBal
+      const paid = parseFloat(f.amount_collected)
+      const balDue = !isNaN(paid) ? parseFloat(Math.max(0, collectable - paid).toFixed(2)) : ''
+      return {
+        ...f,
+        charges_amount:  chargesAmt,
+        settled_amount:  settledAmt,
+        bill_remaining:  billAmt && amt ? (billRemain > 0 ? billRemain : 0) : f.bill_remaining,
+        total_collected: totalColl,
+        balance_due: balDue,
+      }
+    })
   }, [form.amount, form.bill_amount, form.charges_pct])
 
+  // Recalc balance_due when amount_collected changes
+  useEffect(() => {
+    setForm(f => {
+      const paid = parseFloat(f.amount_collected)
+      if (isNaN(paid)) return { ...f, balance_due: '' }
+      const baseCollectable = f.service_type === BILL_WITHDRAWAL
+        ? (parseFloat(f.total_collected) || 0)
+        : (parseFloat(f.settled_amount)  || 0)
+      const prevBal = parseFloat(f.balance) || 0
+      const collectable = baseCollectable + prevBal
+      return { ...f, balance_due: parseFloat(Math.max(0, collectable - paid).toFixed(2)) }
+    })
+  }, [form.amount_collected, form.balance])
+
   const selectCustomer = async (c) => {
-    setForm(f => ({ ...f, customer_id: c.id, cust_name: c.name, cust_pan: c.pan || '', cust_aadhar: c.aadhar || '', cust_mobile: c.phone || '' }))
+    setForm(f => ({ ...f, customer_id: c.id, cust_name: c.name, cust_pan: c.pan || '', cust_aadhar: c.aadhar || '', cust_mobile: c.phone || '', balance: c.balance || '' }))
     setSearch(c.name)
     setLoadingProfile(true)
     try {
@@ -163,7 +185,10 @@ export default function Services() {
         api(`/customers/${c.id}`, { headers: auth() }),
         api(`/master/transactions?customer_id=${c.id}`, { headers: auth() }).catch(() => []),
       ])
-      setCustomerProfile({ ...profile, transactions: Array.isArray(txns) ? txns : [] })
+      const txnsArray = Array.isArray(txns) ? txns : []
+      const actualBalance = txnsArray.length > 0 ? (parseFloat(txnsArray[0].balance_due) || 0) : (parseFloat(profile.balance) || 0)
+      setCustomerProfile({ ...profile, transactions: txnsArray, balance: actualBalance })
+      setForm(f => ({ ...f, balance: actualBalance || '' }))
     } catch {
       setCustomerProfile({ ...c, transactions: [] })
     }
@@ -187,7 +212,7 @@ export default function Services() {
   useEffect(() => {
     if (search.length < 2 || form.customer_id) return
     const t = setTimeout(() => {
-      api(`/customers/approved?search=${encodeURIComponent(search)}`, { headers: auth() })
+      api(`/customers/approved?type=general&search=${encodeURIComponent(search)}`, { headers: auth() })
         .then(d => setCustomers(d))
         .catch(() => {})
     }, 300)
@@ -201,13 +226,20 @@ export default function Services() {
     setSaving(true); setMsg(''); setError('')
     try {
       const mainAmount = parseFloat(form.amount) || 0
-      const r = await api('/master/transactions', {
+      await api('/master/transactions', {
         method: 'POST', headers: auth(),
         body: JSON.stringify({ ...form, amount: mainAmount }),
       })
-      setMsg(`✅ Transaction recorded! `)
-      setForm(emptyForm); setSearch('')
-      // Bust history cache and refresh
+      // Save balance_due back to customer record
+      const balDue = parseFloat(form.balance_due)
+      if (form.customer_id && !isNaN(balDue)) {
+        await api(`/customers/${form.customer_id}/balance`, {
+          method: 'PATCH', headers: auth(),
+          body: JSON.stringify({ balance: balDue }),
+        }).catch(() => {})
+      }
+      setMsg('✅ Transaction recorded!')
+      setForm(emptyForm); setSearch(''); setCustomerProfile(null)
       cacheSet('svc:history', null, 0)
       api('/master/transactions/mine', { headers: auth() })
         .then(d => { setHistory(d); cacheSet('svc:history', d, TTL.dashboard) }).catch(() => {})
@@ -233,14 +265,11 @@ export default function Services() {
             You need to check in for today before you can record transactions.
           </p>
           {error && <div className="dash-alert dash-alert-error" style={{ marginBottom: 16 }}>{error}</div>}
-          <button
-            onClick={handleCheckIn}
-            disabled={checkingIn}
+          <button onClick={handleCheckIn} disabled={checkingIn}
             style={{ background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', color: '#fff', border: 'none', borderRadius: 12, padding: '14px 36px', fontSize: 15, fontWeight: 800, cursor: 'pointer', width: '100%' }}>
             {checkingIn ? 'Checking In...' : '✅ Check In Now'}
           </button>
-          <button
-            onClick={() => navigate('/employee/dashboard')}
+          <button onClick={() => navigate('/employee/dashboard')}
             style={{ marginTop: 12, background: 'none', border: '1.5px solid #e2e8f0', borderRadius: 12, padding: '12px 36px', fontSize: 14, fontWeight: 700, cursor: 'pointer', width: '100%', color: '#64748b' }}>
             ← Go to Dashboard
           </button>
@@ -283,6 +312,48 @@ export default function Services() {
   const roInp = (k, color) => (
     <input readOnly value={form[k] === 0 || form[k] === '' ? '' : form[k]} style={{ background: '#f8fafc', color: color || '#0d1f3d', fontWeight: 700 }} />
   )
+
+  const fmt = (val) => Number(parseFloat(val) || 0).toLocaleString('en-IN')
+
+  const collectionFields = (collectableKey) => {
+    const baseCollectable = parseFloat(form[collectableKey]) || 0
+    const prevBal = parseFloat(form.balance) || 0
+    const collectable = baseCollectable + prevBal
+    const paid        = parseFloat(form.amount_collected)
+    const balDue      = parseFloat(form.balance_due)
+    return (
+      <>
+        {prevBal > 0 && (
+          <div style={{ gridColumn: '1/-1', background: '#fff5f5', color: '#dc2626', padding: '10px 14px', borderRadius: 8, border: '1px solid #fca5a5', fontWeight: 700, fontSize: 13 }}>
+            ⚠️ Includes previous pending debt: ₹{fmt(prevBal)}
+          </div>
+        )}
+        {fg('Total Collectable (₹)',
+          <input readOnly value={collectable} style={{ background: '#f0fdf4', color: '#059669', fontWeight: 900, border: '2px solid #86efac', padding: '8px 12px', borderRadius: 8, fontSize: 14 }} />
+        )}
+        {fg('Amount Collected (₹)',
+          <input type="number" placeholder="How much was paid?" value={form.amount_collected}
+            onChange={e => set('amount_collected', e.target.value)}
+            style={{ border: '2px solid #0d1f3d', fontWeight: 700, padding: '8px 12px', borderRadius: 8 }} />
+        )}
+        {form.amount_collected !== '' && fg('Balance Due (₹)',
+          <input readOnly value={isNaN(balDue) ? '' : balDue}
+            style={{ background: balDue > 0 ? '#fff5f5' : '#f0fdf4', color: balDue > 0 ? '#dc2626' : '#059669', fontWeight: 900, fontSize: 15,
+              border: `2px solid ${balDue > 0 ? '#fca5a5' : '#86efac'}`, padding: '8px 12px', borderRadius: 8 }} />
+        )}
+        {!isNaN(balDue) && balDue > 0 && (
+          <div style={{ gridColumn: '1/-1', background: '#fee2e2', border: '1.5px solid #fca5a5', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#dc2626', fontWeight: 700 }}>
+            ⚠️ Customer still owes {fmt(balDue)} — this will be saved as pending balance.
+          </div>
+        )}
+        {!isNaN(balDue) && balDue === 0 && form.amount_collected !== '' && (
+          <div style={{ gridColumn: '1/-1', background: '#f0fdf4', border: '1.5px solid #86efac', borderRadius: 10, padding: '10px 14px', fontSize: 13, color: '#059669', fontWeight: 700 }}>
+            ✅ Fully paid — no balance due.
+          </div>
+        )}
+      </>
+    )
+  }
 
   return (
     <div className="emp-page">
@@ -401,6 +472,7 @@ export default function Services() {
                                     <div style={{ fontSize:11, color:'rgba(255,255,255,0.55)' }}>ID: #{customerProfile.id} · {customerProfile.branch || '—'}</div>
                                     <div style={{ fontSize:11, color:'rgba(255,255,255,0.55)', marginTop:2 }}>
                                       <span style={{ background:'rgba(16,185,129,0.2)', border:'1px solid rgba(16,185,129,0.3)', color:'#10b981', padding:'1px 8px', borderRadius:20, fontSize:10, fontWeight:700 }}>✅ {customerProfile.status}</span>
+                                      <span style={{ marginLeft: 6, background:'rgba(59,130,246,0.2)', border:'1px solid rgba(59,130,246,0.3)', color:'#60a5fa', padding:'1px 8px', borderRadius:20, fontSize:10, fontWeight:700 }}>🏷️ {customerProfile.customer_type === 'credit_repair' ? 'CIBIL Repair' : 'General'}</span>
                                     </div>
                                   </div>
                                   <button type="button" onClick={clearCustomer} style={{ background:'rgba(255,255,255,0.15)', color:'#fff', border:'none', borderRadius:8, padding:'5px 12px', cursor:'pointer', fontSize:12, fontWeight:700 }}>✕ Clear</button>
@@ -460,6 +532,14 @@ export default function Services() {
                                 </div>
                               )}
 
+                              {/* Balance / Debt field */}
+                              {form.balance !== undefined && (
+                                <div style={{ borderTop: '1px solid #e2e8f0', padding: '12px 14px', background: parseFloat(form.balance) > 0 ? '#fff5f5' : '#f8fafc' }}>
+                                  <div style={{ fontSize: 10, fontWeight: 700, color: parseFloat(form.balance) > 0 ? '#dc2626' : '#64748b', textTransform: 'uppercase', letterSpacing: 0.4, marginBottom: 4 }}>💰 Pending Balance (Debt)</div>
+                                  <div style={{ fontSize: 16, fontWeight: 900, color: parseFloat(form.balance) > 0 ? '#dc2626' : '#0d1f3d' }}>₹{parseFloat(form.balance || 0).toLocaleString('en-IN')}</div>
+                                </div>
+                              )}
+
                             </div>
                           )
                         })()}
@@ -490,7 +570,7 @@ export default function Services() {
                   <div className="dash-card-body">
                     <div className="dash-form-group">
                       <label>Service Type *</label>
-                      <select required value={form.service_type} onChange={e => setForm({ ...emptyForm, service_type: e.target.value, charges_pct: '', cust_name: form.cust_name, cust_pan: form.cust_pan, cust_aadhar: form.cust_aadhar, cust_mobile: form.cust_mobile, customer_id: form.customer_id })}>
+                      <select required value={form.service_type} onChange={e => setForm({ ...emptyForm, service_type: e.target.value, charges_pct: '', cust_name: form.cust_name, cust_pan: form.cust_pan, cust_aadhar: form.cust_aadhar, cust_mobile: form.cust_mobile, customer_id: form.customer_id, balance: form.balance })}>
                         <option value="">Select service</option>
                         {master?.service_types?.map(s => <option key={s.id} value={s.name}>{s.name}</option>)}
                       </select>
@@ -517,6 +597,7 @@ export default function Services() {
                         {fg('Bill Payment Remaining Balance (₹)', roInp('bill_remaining', '#555'))}
                         {fg('Total Amount Collected (₹)', roInp('total_collected', '#059669'))}
                         {fg('Receive Mode', sel('received_mode', receiveModes))}
+                        {collectionFields('total_collected')}
                         {fg('Remarks', inp('note', 'Remarks'), true)}
                       </div>
                     </div>
@@ -540,6 +621,7 @@ export default function Services() {
                         {fg('Charges %', roInp('charges_pct'))}
                         {fg('Charges Amount (₹)', roInp('charges_amount', '#555'))}
                         {fg('Settled Amount (₹)', roInp('settled_amount', '#059669'))}
+                        {collectionFields('settled_amount')}
                       </div>
                     </div>
                   </div>
@@ -561,6 +643,7 @@ export default function Services() {
                         {fg('Charges %', roInp('charges_pct'))}
                         {fg('Charges Amount (₹)', roInp('charges_amount', '#555'))}
                         {fg('Settled Amount (₹)', roInp('settled_amount', '#059669'))}
+                        {collectionFields('settled_amount')}
                       </div>
                     </div>
                   </div>
@@ -582,6 +665,7 @@ export default function Services() {
                         {fg('Charges %', roInp('charges_pct'))}
                         {fg('Charges Amount (₹)', roInp('charges_amount', '#555'))}
                         {fg('Settled Amount (₹)', roInp('settled_amount', '#059669'))}
+                        {collectionFields('settled_amount')}
                       </div>
                     </div>
                   </div>
@@ -606,6 +690,11 @@ export default function Services() {
                   <div style={{ fontWeight: 800, color: '#0d1f3d', fontSize: 15 }}>{form.cust_name}</div>
                   <div style={{ color: '#6b7280' }}>PAN: <strong>{form.cust_pan || '—'}</strong></div>
                   <div style={{ color: '#6b7280' }}>Mobile: <strong>{form.cust_mobile || '—'}</strong></div>
+                  {parseFloat(form.balance) > 0 && (
+                    <div style={{ marginTop: 6, background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 8, padding: '6px 10px' }}>
+                      <span style={{ fontSize: 12, fontWeight: 800, color: '#dc2626' }}>⚠️ Pending Balance: ₹{parseFloat(form.balance).toLocaleString('en-IN')}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -614,17 +703,39 @@ export default function Services() {
               <div className="dash-card" style={{ marginBottom: 16 }}>
                 <div className="dash-card-header"><h2>💰 Summary</h2></div>
                 <div className="dash-card-body" style={{ display: 'flex', flexDirection: 'column', gap: 10, fontSize: 13 }}>
-                  {isBillWd && <>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bill Amount</span><strong>₹{fmt(form.bill_amount || 0)}</strong></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Withdrawal</span><strong>₹{fmt(form.amount || 0)}</strong></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Charges</span><strong style={{ color: '#dc2626' }}>₹{fmt(form.charges_amount || 0)}</strong></div>
-                    <div style={{ borderTop: '2px solid #f0f2f8', paddingTop: 8, display: 'flex', justifyContent: 'space-between' }}><strong>Total Collected</strong><strong style={{ color: '#059669', fontSize: 18 }}>₹{fmt(form.total_collected || 0)}</strong></div>
-                  </>}
-                  {(isCardWd || isDMT || isAEPS || isOnlyBill) && <>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Amount</span><strong>₹{fmt(form.amount || 0)}</strong></div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Charges ({form.charges_pct || 0}%)</span><strong style={{ color: '#dc2626' }}>₹{fmt(form.charges_amount || 0)}</strong></div>
-                    <div style={{ borderTop: '2px solid #f0f2f8', paddingTop: 8, display: 'flex', justifyContent: 'space-between' }}><strong>Settled</strong><strong style={{ color: '#059669', fontSize: 18 }}>₹{fmt(form.settled_amount || 0)}</strong></div>
-                  </>}
+                  {isBillWd && (() => {
+                    const svcCollectable = parseFloat(form.total_collected) || 0
+                    const prevBal = parseFloat(form.balance) || 0
+                    const totalCollectable = svcCollectable + prevBal
+                    return (
+                      <>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Bill Amount</span><strong>₹{fmt(form.bill_amount || 0)}</strong></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Withdrawal</span><strong>₹{fmt(form.amount || 0)}</strong></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Charges</span><strong style={{ color: '#dc2626' }}>₹{fmt(form.charges_amount || 0)}</strong></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Service Collectable</span><strong style={{ color: '#059669' }}>₹{fmt(svcCollectable)}</strong></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Pending Balance</span><strong style={{ color: prevBal > 0 ? '#dc2626' : '#0d1f3d' }}>+ ₹{fmt(prevBal)}</strong></div>
+                        <div style={{ borderTop: '2px solid #f0f2f8', paddingTop: 8, display: 'flex', justifyContent: 'space-between' }}><strong>Total Collectable</strong><strong style={{ color: '#059669', fontSize: 18 }}>₹{fmt(totalCollectable)}</strong></div>
+                        {form.amount_collected !== '' && <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}><span>Collected</span><strong style={{ color: '#0d1f3d' }}>₹{fmt(form.amount_collected || 0)}</strong></div>}
+                        {form.amount_collected !== '' && <div style={{ borderTop: '2px solid #f0f2f8', paddingTop: 8, display: 'flex', justifyContent: 'space-between' }}><strong>Balance Due</strong><strong style={{ color: parseFloat(form.balance_due) > 0 ? '#dc2626' : '#059669', fontSize: 16 }}>₹{fmt(form.balance_due || 0)}</strong></div>}
+                      </>
+                    )
+                  })()}
+                  {(isCardWd || isDMT || isAEPS || isOnlyBill) && (() => {
+                    const svcCollectable = parseFloat(form.settled_amount) || 0
+                    const prevBal = parseFloat(form.balance) || 0
+                    const totalCollectable = svcCollectable + prevBal
+                    return (
+                      <>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Amount</span><strong>₹{fmt(form.amount || 0)}</strong></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Charges ({form.charges_pct || 0}%)</span><strong style={{ color: '#dc2626' }}>₹{fmt(form.charges_amount || 0)}</strong></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Service Collectable</span><strong style={{ color: '#059669' }}>₹{fmt(svcCollectable)}</strong></div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}><span>Pending Balance</span><strong style={{ color: prevBal > 0 ? '#dc2626' : '#0d1f3d' }}>+ ₹{fmt(prevBal)}</strong></div>
+                        <div style={{ borderTop: '2px solid #f0f2f8', paddingTop: 8, display: 'flex', justifyContent: 'space-between' }}><strong>Total Collectable</strong><strong style={{ color: '#059669', fontSize: 18 }}>₹{fmt(totalCollectable)}</strong></div>
+                        {form.amount_collected !== '' && <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}><span>Collected</span><strong style={{ color: '#0d1f3d' }}>₹{fmt(form.amount_collected || 0)}</strong></div>}
+                        {form.amount_collected !== '' && <div style={{ borderTop: '2px solid #f0f2f8', paddingTop: 8, display: 'flex', justifyContent: 'space-between' }}><strong>Balance Due</strong><strong style={{ color: parseFloat(form.balance_due) > 0 ? '#dc2626' : '#059669', fontSize: 16 }}>₹{fmt(form.balance_due || 0)}</strong></div>}
+                      </>
+                    )
+                  })()}
                 </div>
               </div>
             )}
@@ -654,26 +765,36 @@ export default function Services() {
                 <thead>
                   <tr>
                     <th>Date & Time</th>
-                    <th>Customer</th>
-                    <th>PAN</th>
-                    <th>Mobile</th>
-                    <th>Service</th>
+                    <th>Customer Name</th>
+                    <th>PAN Number</th>
+                    <th>Aadhar Number</th>
+                    <th>Mobile Number</th>
+                    <th>Service Type</th>
                     <th>Bill Platform</th>
                     <th>Bill Amount</th>
-                    <th>Wd. Platform</th>
-                    <th>Card</th>
+                    <th>Withdrawal Platform</th>
+                    <th>Card Type</th>
                     <th>Card Bank</th>
-                    <th>Wd. Amount</th>
-                    <th>Bill Remaining</th>
-                    <th>Total Collected</th>
+                    <th>Card Last 4</th>
+                    <th>Bank Name</th>
+                    <th>Account No.</th>
+                    <th>Total Amount</th>
+                    <th>Charges %</th>
+                    <th>Charges ₹</th>
+                    <th>Settled Amount</th>
+                    <th>Collectable</th>
+                    <th>Collected</th>
+                    <th>Balance Due</th>
+                    <th>Payment Mode</th>
                     <th>Receive Mode</th>
-                    <th>Note</th>
+                    <th>Remarks</th>
                     <th style={{ width: 60 }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {history.map(t => {
+                  {history.filter(t => !t.service_type?.includes('CIBIL Repair')).map(t => {
                     const isBW = t.service_type === BILL_WITHDRAWAL
+                    const collectable = isBW ? (parseFloat(t.total_collected) || 0) : (parseFloat(t.settled_amount) || 0)
                     return (
                     <tr key={t.id}
                       style={{ backgroundColor: t.is_edited ? '#fef2f2' : '' }}
@@ -688,32 +809,49 @@ export default function Services() {
                       </td>
                       <td><strong style={{ color: t.is_edited ? '#dc2626' : 'inherit' }}>{t.cust_name || '—'}</strong></td>
                       <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_pan || '—'}</td>
+                      <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_aadhar || '—'}</td>
                       <td style={{ fontSize: 11 }}>{t.cust_mobile || '—'}</td>
                       <td style={{ fontSize: 12 }}><strong>{t.service_type}</strong></td>
+                      
                       {/* Bill Platform */}
-                      <td style={{ fontSize: 12 }}>{isBW ? (t.bill_platform || '—') : (t.platform || '—')}</td>
+                      <td style={{ fontSize: 12 }}>{t.bill_platform || '—'}</td>
                       {/* Bill Amount */}
-                      <td style={{ fontSize: 12, color: '#dc2626', fontWeight: isBW ? 700 : 400 }}>
-                        {isBW ? (t.bill_amount > 0 ? `₹${fmt(t.bill_amount)}` : '—') : '—'}
+                      <td style={{ fontWeight: 700, color: '#059669', whiteSpace: 'nowrap' }}>
+                        {parseFloat(t.bill_amount) > 0 ? `₹${fmt(t.bill_amount)}` : (t.service_type === 'AEPS' ? `₹${fmt(t.amount)}` : '—')}
                       </td>
+                      
                       {/* Withdrawal Platform */}
-                      <td style={{ fontSize: 12 }}>{isBW ? (t.platform || '—') : '—'}</td>
-                      {/* Card */}
-                      <td style={{ fontSize: 11 }}>{t.card ? `${t.card}${t.card_last4 ? ` ****${t.card_last4}` : ''}` : '—'}</td>
-                      {/* Card Bank */}
+                      <td style={{ fontSize: 12 }}>{t.platform || '—'}</td>
+                      
+                      {/* Card Details */}
+                      <td style={{ fontSize: 11 }}>{t.card || '—'}</td>
                       <td style={{ fontSize: 11 }}>{t.card_bank || '—'}</td>
-                      {/* Withdrawal Amount */}
+                      <td style={{ fontSize: 11 }}>{t.card_last4 ? `****${t.card_last4}` : '—'}</td>
+                      
+                      {/* Bank & Account */}
+                      <td style={{ fontSize: 11 }}>{t.bank || '—'}</td>
+                      <td style={{ fontSize: 11 }}>{t.acc_no || '—'}</td>
+                      
+                      {/* Amounts & Charges */}
                       <td style={{ fontWeight: 700, color: '#059669', whiteSpace: 'nowrap' }}>₹{fmt(t.amount)}</td>
-                      {/* Bill Remaining */}
-                      <td style={{ fontSize: 12, color: '#64748b' }}>
-                        {isBW ? `₹${fmt(t.bill_remaining || 0)}` : '—'}
+                      <td style={{ fontSize: 12, color: '#d97706' }}>{t.charges_pct || 0}%</td>
+                      <td style={{ fontSize: 12, color: '#dc2626' }}>₹{fmt(t.charges_amount || 0)}</td>
+                      
+                      {/* Settlement */}
+                      <td style={{ fontWeight: 700, color: '#059669', whiteSpace: 'nowrap' }}>₹{fmt(t.settled_amount)}</td>
+                      <td style={{ fontWeight: 800, color: '#0d1f3d', whiteSpace: 'nowrap' }}>₹{fmt(collectable)}</td>
+                      <td style={{ fontWeight: 700, color: '#059669', whiteSpace: 'nowrap' }}>
+                        {parseFloat(t.amount_collected) > 0 ? `₹${fmt(t.amount_collected)}` : '—'}
                       </td>
-                      {/* Total Collected */}
-                      <td style={{ fontWeight: 800, color: '#059669', whiteSpace: 'nowrap' }}>
-                        {isBW ? `₹${fmt(t.total_collected || 0)}` : `₹${fmt(t.settled_amount || 0)}`}
+                      <td style={{ whiteSpace: 'nowrap' }}>
+                        {parseFloat(t.balance_due) > 0
+                          ? <span style={{ background: '#fee2e2', color: '#dc2626', fontWeight: 800, padding: '2px 8px', borderRadius: 8, fontSize: 12 }}>₹{fmt(t.balance_due)}</span>
+                          : <span style={{ background: '#d1fae5', color: '#059669', fontWeight: 700, padding: '2px 8px', borderRadius: 8, fontSize: 11 }}>✅ Paid</span>}
                       </td>
-                      {/* Receive Mode */}
-                      <td style={{ fontSize: 11 }}>{t.received_mode || t.payment_mode || '—'}</td>
+                      
+                      {/* Modes & Note */}
+                      <td style={{ fontSize: 11 }}>{t.payment_mode || '—'}</td>
+                      <td style={{ fontSize: 11 }}>{t.received_mode || '—'}</td>
                       <td style={{ fontSize: 11, color: '#9ca3af', maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{t.note || '—'}</td>
                       <td className="txn-action-cell">
                         <button className="txn-menu-btn" onClick={e => {
@@ -853,6 +991,28 @@ export default function Services() {
                     {eInp('settled_amount', 'Settled Amount (₹)', 'number')}
                     {isBW && eInp('bill_remaining', 'Bill Remaining (₹)', 'number')}
                     {isBW && eInp('total_collected', 'Total Collected (₹)', 'number')}
+                    {/* ── Collection fields ── */}
+                    <div className="dash-form-group">
+                      <label>Collectable Amount (₹)</label>
+                      <input readOnly value={isBW ? (parseFloat(ef.total_collected) || 0) : (parseFloat(ef.settled_amount) || 0)}
+                        style={{ background: '#f8fafc', color: '#059669', fontWeight: 700 }} />
+                    </div>
+                    <div className="dash-form-group">
+                      <label>Amount Collected (₹)</label>
+                      <input type="number" placeholder="How much was paid?" value={ef.amount_collected || ''}
+                        onChange={e => {
+                          const paid = parseFloat(e.target.value) || 0
+                          const collectable = isBW ? (parseFloat(ef.total_collected) || 0) : (parseFloat(ef.settled_amount) || 0)
+                          const due = parseFloat(Math.max(0, collectable - paid).toFixed(2))
+                          setEf({ amount_collected: e.target.value, balance_due: due })
+                        }}
+                        style={{ border: '2px solid #0d1f3d', fontWeight: 700 }} />
+                    </div>
+                    <div className="dash-form-group">
+                      <label>Balance Due (₹)</label>
+                      <input readOnly value={ef.balance_due ?? ''}
+                        style={{ background: parseFloat(ef.balance_due) > 0 ? '#fff5f5' : '#f0fdf4', color: parseFloat(ef.balance_due) > 0 ? '#dc2626' : '#059669', fontWeight: 900, border: `2px solid ${parseFloat(ef.balance_due) > 0 ? '#fca5a5' : '#86efac'}` }} />
+                    </div>
                     <div className="dash-form-group" style={{ gridColumn:'1/-1' }}>
                       <label>Note / Remarks</label>
                       <textarea rows={2} value={ef.note || ''} onChange={e => setEf({ note: e.target.value })} style={{ width:'100%', padding:'10px 14px', borderRadius:8, border:'1.5px solid rgba(13,31,61,0.2)', fontSize:14, fontFamily:'inherit', resize:'vertical', boxSizing:'border-box' }} />
@@ -879,8 +1039,10 @@ export default function Services() {
                         bill_platform:  editTxn.bill_platform,
                         bill_amount:    editTxn.bill_amount,
                         bill_remaining: editTxn.bill_remaining,
-                        total_collected:editTxn.total_collected,
-                        acc_no:         editTxn.acc_no,
+                        total_collected:  editTxn.total_collected,
+                        acc_no:           editTxn.acc_no,
+                        amount_collected: editTxn.amount_collected,
+                        balance_due:      editTxn.balance_due,
                       }
                       const updated = await api(`/master/transactions/${editTxn.id}`, { method:'PATCH', headers: auth(), body: JSON.stringify(payload) })
                       setHistory(h => {

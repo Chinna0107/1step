@@ -5,7 +5,7 @@ import '../../pages/dashboard.css'
 
 const fmt   = n => Number(parseFloat(n)||0).toLocaleString('en-IN')
 const fmtV  = n => { const v = parseFloat(n)||0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
-const today = new Date().toISOString().split('T')[0]
+const today = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 
 export default function Ledger() {
   const [from, setFrom] = useState(today)

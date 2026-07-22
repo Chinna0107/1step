@@ -8,7 +8,7 @@ import '../../pages/dashboard.css'
 const auth   = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const fmt    = n => Number(parseFloat(n) || 0).toLocaleString('en-IN')
 const fmtVal = n => { const v = parseFloat(n) || 0; if (v >= 100000) return `₹${(v/100000).toFixed(1)}L`; if (v >= 1000) return `₹${(v/1000).toFixed(1)}K`; return `₹${fmt(v)}` }
-const today      = new Date().toISOString().split('T')[0]
+const today      = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 const monthStart = today.slice(0, 7) + '-01'
 
 function Skel({ w = '100%', h = 14 }) {
@@ -245,7 +245,7 @@ export default function EmployeePerformance() {
                             <span style={{ background: att ? '#d1fae5' : '#fee2e2', color: att ? '#059669' : '#dc2626', padding: '2px 8px', borderRadius: 20, fontSize: 10, fontWeight: 700 }}>
                               {att ? '✅ Present' : '❌ Absent'}
                             </span>
-                            <span style={{ color: '#94a3b8', fontSize: 11 }}>🪙 {e.coins ?? 0}</span>
+                            <span style={{ color: '#94a3b8', fontSize: 11 }}><img src="/logo.png" style={{width:10,height:10,objectFit:'contain',verticalAlign:'middle',marginRight:2}} alt="coin"/> {e.coins ?? 0}</span>
                           </div>
                         </div>
                       </div>
@@ -298,7 +298,7 @@ export default function EmployeePerformance() {
                             <td style={{ fontWeight: 700, color: '#0d1f3d' }}>{e.txn}</td>
                             <td style={{ color: '#059669', fontWeight: 700 }}>{fmtVal(e.value)}</td>
                             <td style={{ color: '#d97706', fontWeight: 700 }}>{fmtVal(e.profit)}</td>
-                            <td style={{ color: '#b8860b', fontWeight: 700 }}>🪙 {e.coins ?? 0}</td>
+                            <td style={{ color: '#b8860b', fontWeight: 700 }}><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {e.coins ?? 0}</td>
                             <td style={{ color: e.att?.late ? '#d97706' : '#374151', fontWeight: e.att?.late ? 700 : 400, fontSize: 12 }}>{e.att?.check_in || '—'}</td>
                             <td style={{ fontSize: 12 }}>{e.att?.check_out || '—'}</td>
                             <td>

@@ -8,7 +8,7 @@ import { useAdminAttendance } from '../../hooks/useFinance'
 export default function EmployeeAttendance() {
   const [attendance, setAttendance] = useState([])
   const [loading, setLoading]       = useState(true)
-  const [date, setDate]             = useState(new Date().toISOString().split('T')[0])
+  const [date, setDate]             = useState(new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0])
 
   useEffect(() => {
     setLoading(true)
@@ -53,7 +53,7 @@ export default function EmployeeAttendance() {
                         <td>{a.check_in || '—'}</td>
                         <td>{a.check_out || '—'}</td>
                         <td><span style={{ fontWeight: 700, color: (a.minutes || 0) > 500 ? '#059669' : '#374151' }}>{a.minutes || 0} min</span></td>
-                        <td>{(a.coins_earned || 0) > 0 ? <span style={{ fontWeight: 700, color: '#b8860b' }}>🪙 +{a.coins_earned}</span> : '—'}</td>
+                        <td>{(a.coins_earned || 0) > 0 ? <span style={{ fontWeight: 700, color: '#b8860b' }}><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> +{a.coins_earned}</span> : '—'}</td>
                         <td><span className={`dash-status ${a.status?.toLowerCase()}`}>{a.status}</span></td>
                       </tr>
                     )) : <tr><td colSpan={6} className="dash-empty">No attendance records for this date</td></tr>}

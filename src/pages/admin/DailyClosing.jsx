@@ -10,7 +10,7 @@ export default function DailyClosing() {
   const { data: summary }  = useFinanceSummary()
   const { wallets, loading: wl } = useWallets()
 
-  const todayStr      = new Date().toISOString().split('T')[0]
+  const todayStr      = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
   const alreadyClosed = closings.some(h => h.date?.slice(0, 10) === todayStr)
   const last          = closings[0]
 

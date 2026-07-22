@@ -96,7 +96,7 @@ export default function Requests() {
                   ) : (
                     <table className="dash-table">
                       <thead>
-                        <tr><th>Customer</th><th>Email</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Acc No.</th><th>Branch</th><th>Documents</th><th>Submitted By</th><th>Status</th><th>Actions</th></tr>
+                        <tr><th>Customer</th><th>Email</th><th>Phone</th><th>PAN</th><th>Aadhar</th><th>Acc No.</th><th>Branch</th><th>Category</th><th>Documents</th><th>Submitted By</th><th>Status</th><th>Actions</th></tr>
                       </thead>
                       <tbody>
                         {rows.map(c => (
@@ -108,6 +108,15 @@ export default function Requests() {
                             <td>{c.aadhar}</td>
                             <td>{c.acc_number}</td>
                             <td>{c.branch || '—'}</td>
+                            <td>
+                              <span style={{
+                                background: c.customer_type === 'credit_repair' ? '#fef3c7' : '#ede9fe',
+                                color: c.customer_type === 'credit_repair' ? '#92400e' : '#4c1d95',
+                                padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700
+                              }}>
+                                {c.customer_type === 'credit_repair' ? '🔧 CIBIL Repair' : '👤 General'}
+                              </span>
+                            </td>
                             <td>
                               <div className="req-doc-thumbs">
                                 {c.aadhar_img_url

@@ -53,8 +53,9 @@ export default function CustomerDashboard() {
                 { icon: '💳', label: 'Total Transactions', value: total, color: '#0d1f3d' },
                 { icon: '₹',  label: 'Total Amount',       value: `₹${fmt(amount)}`, color: '#1a365d' },
                 { icon: '✅', label: 'Successful',          value: success, color: '#059669' },
-                { icon: '🪙', label: 'MS Coins',            value: fmt(coinsBal), color: '#b8860b' },
+                { icon: <img src="/logo.png" alt="1step" style={{ width: 22, height: 22, objectFit: 'contain' }} />, label: '1step Coins', value: fmt(coinsBal), color: '#b8860b' },
                 { icon: '🏦', label: 'Branch',              value: profile?.branch || '—', color: '#d97706', small: true },
+                { icon: '💰', label: 'Pending Due',         value: `₹${fmt(profile?.balance || 0)}`, color: '#dc2626' },
               ].map((s, i) => (
                 <div key={i} className="cd-stat" style={{ '--c': s.color, animationDelay: `${i * 80}ms` }}>
                   <div className="cd-stat-glow" />

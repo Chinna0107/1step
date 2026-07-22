@@ -34,7 +34,7 @@ function useSWR(cacheKey, fetcher, ttl = TTL.dashboard) {
 
 const authHeaders = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
 
-const NOW_DATE  = new Date().toISOString().split('T')[0]
+const NOW_DATE  = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 const NOW_MONTH = String(new Date().getMonth() + 1).padStart(2, '0')
 const NOW_YEAR  = String(new Date().getFullYear())
 

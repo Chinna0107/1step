@@ -233,8 +233,15 @@
   /* Content gets top + bottom padding for navbar & tab bar */
   .cust-content {
     padding: 16px;
-    padding-top: 72px;
-    padding-bottom: 80px;
+    padding-top: 86px !important;
+    padding-bottom: 84px !important;
+  }
+
+  .cdash-header h1 {
+    font-size: 20px;
+  }
+  .hide-on-mobile {
+    display: none !important;
   }
 
   .cust-topbar h1 { font-size: 18px; }

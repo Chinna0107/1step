@@ -10,6 +10,7 @@ export default defineConfig(({ mode }) => {
     '/customer/dashboard', '/customer/services', '/customer/transactions',
     '/customer/coins', '/customer/kyc', '/customer/offers',
     '/customer/notifications', '/customer/support', '/customer/security',
+    '/customer/cibil-repairs'
   ]
 
   return {
@@ -45,6 +46,7 @@ export default defineConfig(({ mode }) => {
         '/finance':        { target: backendUrl, changeOrigin: true },
         '/notifications':  { target: backendUrl, changeOrigin: true },
         '/visitors':       { target: backendUrl, changeOrigin: true },
+        '/cibil-repairs':  { target: backendUrl, changeOrigin: true },
       },
     },
   }

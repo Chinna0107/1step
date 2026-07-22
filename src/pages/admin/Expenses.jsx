@@ -6,7 +6,7 @@ import { getTokenByRole } from '../../utils/tokenUtils'
 import '../../pages/dashboard.css'
 
 const fmt   = n => Number(parseFloat(n)||0).toLocaleString('en-IN')
-const today = new Date().toISOString().split('T')[0]
+const today = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 const CATS  = ['Rent', 'Utilities', 'Salary', 'Maintenance', 'Marketing', 'Other']
 const empty = { date: today, amount: '', category: '', note: '' }
 

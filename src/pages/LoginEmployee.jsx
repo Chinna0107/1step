@@ -84,7 +84,6 @@ export default function LoginEmployee() {
       <div className="login-card">
         <div className="login-logo">
           <img src={logoImg} alt="1 Step Finance Care" className="login-logo-img" />
-          <img src={nameImg} alt="1 Step Finance Care" className="login-name-img" />
         </div>
 
         <h2>Employee / Admin Login</h2>

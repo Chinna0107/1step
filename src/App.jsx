@@ -32,6 +32,7 @@ import Reports from './pages/superadmin/Reports'
 import Security from './pages/superadmin/Security'
 import SuperAdminCustomers from './pages/superadmin/Customers'
 import FraudList from './pages/superadmin/FraudList'
+import PendingList from './pages/superadmin/PendingList'
 import Notifications from './pages/superadmin/Notifications'
 
 // Admin Pages
@@ -64,6 +65,7 @@ import CustomerInfo from './pages/employee/CustomerInfo'
 import AddCustomer from './pages/employee/AddCustomer'
 import Services from './pages/employee/Services'
 import EmployeeReports from './pages/employee/EmployeeReports'
+import CibilRepairTransactions from './pages/employee/CibilRepairTransactions'
 import Profile from './pages/employee/Profile'
 import Leads from './pages/employee/Leads'
 import AdminLeads from './pages/admin/Leads'
@@ -77,8 +79,9 @@ import AdminNotifications from './pages/admin/Notifications'
 import CustomerDashboard from './pages/customer/Dashboard'
 import CustomerServices from './pages/customer/Services'
 import CustomerTransactions from './pages/customer/Transactions'
-import CustomerKYC from './pages/customer/KYC'
 import CustomerCoins from './pages/customer/Coins'
+import CustomerKYC from './pages/customer/KYC'
+import CustomerCibilRepair from './pages/customer/CustomerCibilRepair'
 import { CustomerOffers, CustomerNotifications, CustomerSupport, CustomerSecurity } from './pages/customer/Misc'
 
 import './App.css'
@@ -147,6 +150,7 @@ export default function App() {
         <Route path="/superadmin/security"   element={<SuperAdminRoute><Security /></SuperAdminRoute>} />
         {/* <Route path="/admin/profile"          element={<AdminRoute><Profile Sidebar={AdminSidebar} isAdmin={true} /></AdminRoute>} /> */}
         <Route path="/superadmin/fraud"         element={<SuperAdminRoute><FraudList /></SuperAdminRoute>} />
+        <Route path="/superadmin/pending"        element={<SuperAdminRoute><PendingList /></SuperAdminRoute>} />
         <Route path="/superadmin/notifications"  element={<SuperAdminRoute><Notifications /></SuperAdminRoute>} />
 
         {/* Admin routes */}
@@ -181,6 +185,7 @@ export default function App() {
         <Route path="/employee/leads"         element={<EmployeeRoute><Leads /></EmployeeRoute>} />
         <Route path="/employee/attendance"    element={<EmployeeRoute><EmployeeAttendance /></EmployeeRoute>} />
         <Route path="/employee/reports"       element={<EmployeeRoute><EmployeeReports /></EmployeeRoute>} />
+        <Route path="/employee/cibil-repair"  element={<EmployeeRoute><CibilRepairTransactions /></EmployeeRoute>} />
         <Route path="/employee/notifications"  element={<EmployeeRoute><EmployeeNotifications /></EmployeeRoute>} />
         <Route path="/employee/profile"       element={<EmployeeRoute><Profile Sidebar={EmployeeNavbar} /></EmployeeRoute>} />
         <Route path="/admin/profile"          element={<AdminRoute><Profile Sidebar={AdminSidebar} isAdmin={true} /></AdminRoute>} />
@@ -192,6 +197,7 @@ export default function App() {
         <Route path="/customer/transactions"  element={<CustomerRoute><CustomerTransactions /></CustomerRoute>} />
         <Route path="/customer/coins"         element={<CustomerRoute><CustomerCoins /></CustomerRoute>} />
         <Route path="/customer/kyc"           element={<CustomerRoute><CustomerKYC /></CustomerRoute>} />
+        <Route path="/customer/cibil-repairs" element={<CustomerRoute><CustomerCibilRepair /></CustomerRoute>} />
         <Route path="/customer/offers"        element={<CustomerRoute><CustomerOffers /></CustomerRoute>} />
         <Route path="/customer/notifications" element={<CustomerRoute><CustomerNotifications /></CustomerRoute>} />
         <Route path="/customer/support"       element={<CustomerRoute><CustomerSupport /></CustomerRoute>} />

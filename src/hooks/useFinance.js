@@ -6,7 +6,7 @@ import { cacheGet, cacheSet, cacheClear, TTL } from '../utils/cache'
 const authAdmin = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
 const authSA    = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
 
-const getToday      = () => new Date().toISOString().split('T')[0]
+const getToday      = () => new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 const getMonthStart = () => getToday().slice(0, 7) + '-01'
 
 const today      = getToday()

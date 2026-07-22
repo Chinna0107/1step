@@ -11,17 +11,17 @@ import './About.css'
 gsap.registerPlugin(ScrollTrigger)
 
 const stats = [
-  { value: '5,000+', label: 'Happy Customers' },
-  { value: '100+',    label: 'Bank Partners' },
-  { value: '₹30Cr+',  label: 'Transactions' },
-  { value: '24/7',    label: 'Support' },
+  { value: '5,000+', label: 'Delighted Clients' },
+  { value: '100+',    label: 'Banking Affiliates' },
+  { value: '₹30Cr+',  label: 'Funds Processed' },
+  { value: '24/7',    label: 'Helpdesk' },
 ]
 
 const values = [
-  { Icon: FaLock,      title: 'Trust & Transparency',    desc: 'No hidden surprises. Honest services always.' },
-  { Icon: FaBolt,      title: 'Speed & Efficiency',      desc: 'Fast processing with minimal delays.' },
-  { Icon: FaUserCheck, title: 'Customer First',          desc: 'Your satisfaction is our absolute priority.' },
-  { Icon: FaChartBar,  title: 'Professional Excellence', desc: 'Expert team delivering reliable solutions.' },
+  { Icon: FaLock,      title: 'Reliability & Openness',    desc: 'Zero concealed elements. Consistently genuine operations.' },
+  { Icon: FaBolt,      title: 'Pace & Effectiveness',      desc: 'Rapid execution minimizing any wait times.' },
+  { Icon: FaUserCheck, title: 'Client-Centric',          desc: 'Your contentment remains our principal focus.' },
+  { Icon: FaChartBar,  title: 'Industry Competence', desc: 'Skilled professionals providing dependable outcomes.' },
 ]
 
 export default function About() {
@@ -85,13 +85,13 @@ export default function About() {
       {/* Split Hero Section */}
       <section className="a-hero-split">
         <div className="a-hero-content">
-          <div className="a-hero-badge">About One Step</div>
+          <div className="a-hero-badge">Discover One Step</div>
           <h1 className="a-hero-title">
-            Your Trusted<br/>
-            <span className="a-text-gold">Financial Partner</span>
+            Your Reliable<br/>
+            <span className="a-text-gold">Financial Ally</span>
           </h1>
           <p className="a-hero-sub">
-            We are committed to simplifying financial services for individuals and businesses across India. Connecting you with 120+ Banks & NBFCs for fast, transparent solutions.
+            We are dedicated to streamlining monetary solutions for individuals and enterprises nationwide. Bridging the gap with over 120 banking partners to offer swift and clear pathways.
           </p>
           <div className="a-hero-tags">
             <span className="a-tag"><FaCreditCard/> Credit Cards</span>
@@ -116,13 +116,13 @@ export default function About() {
       <section className="a-zigzag-section">
         <div className="a-zigzag-container">
           <div className="a-zigzag-text a-zigzag-left">
-            <div className="a-section-label">Our Mission</div>
-            <h2>Simplify, Access,<br/>and <span className="a-text-gold">Transact.</span></h2>
-            <p>Our mission is to make financial services simple, accessible, and transparent for every customer. We break down the complex barriers of banking to provide you with seamless solutions.</p>
+            <div className="a-section-label">Our Core Objective</div>
+            <h2>Streamline, Connect,<br/>and <span className="a-text-gold">Execute.</span></h2>
+            <p>Our primary goal is to render monetary operations straightforward, reachable, and clear for all clients. We dismantle traditional banking obstacles to deliver frictionless experiences.</p>
             <ul className="a-zigzag-list">
-              <li><div className="a-list-dot"/> Provide quick and hassle-free solutions</li>
-              <li><div className="a-list-dot"/> Ensure safe & secure transactions</li>
-              <li><div className="a-list-dot"/> Educate customers for better decisions</li>
+              <li><div className="a-list-dot"/> Deliver rapid and effortless outcomes</li>
+              <li><div className="a-list-dot"/> Guarantee protected and verified exchanges</li>
+              <li><div className="a-list-dot"/> Inform clients to foster smarter choices</li>
             </ul>
           </div>
           <div className="a-zigzag-visual a-zigzag-right">
@@ -139,13 +139,13 @@ export default function About() {
       <section className="a-zigzag-section reverse">
         <div className="a-zigzag-container">
           <div className="a-zigzag-text a-zigzag-right">
-            <div className="a-section-label">Our Vision</div>
-            <h2>India's Most<br/><span className="a-text-gold">Trusted Network.</span></h2>
-            <p>To become India's most trusted and customer-friendly financial service network. We aim to set the gold standard for how financial services are delivered to the everyday consumer.</p>
+            <div className="a-section-label">Our Future Perspective</div>
+            <h2>The Nation’s Most<br/><span className="a-text-gold">Reliable Platform.</span></h2>
+            <p>To evolve into the country’s most dependable and user-centric financial network. We strive to establish the benchmark for delivering monetary support to everyday users.</p>
             <ul className="a-zigzag-list">
-              <li><div className="a-list-dot"/> Expand across multiple locations</li>
-              <li><div className="a-list-dot"/> Empower customers with financial growth</li>
-              <li><div className="a-list-dot"/> Become the first choice for every need</li>
+              <li><div className="a-list-dot"/> Broaden our presence across diverse regions</li>
+              <li><div className="a-list-dot"/> Enable clients to achieve economic advancement</li>
+              <li><div className="a-list-dot"/> Emerge as the primary preference for all requirements</li>
             </ul>
           </div>
           <div className="a-zigzag-visual a-zigzag-left">
@@ -161,8 +161,8 @@ export default function About() {
       {/* Core Values */}
       <section className="a-values-section">
         <div className="a-values-header">
-          <h2>Core <span className="a-text-gold">Values</span></h2>
-          <p>The principles that guide every single service we deliver.</p>
+          <h2>Fundamental <span className="a-text-gold">Principles</span></h2>
+          <p>The foundational beliefs directing all the services we provide.</p>
         </div>
         <div className="a-values-grid">
           {values.map(v => (
@@ -178,10 +178,10 @@ export default function About() {
       {/* Final CTA */}
       <section className="a-cta-section">
         <div className="a-cta-box">
-          <h2>Experience the Difference</h2>
-          <p>Join the thousands who trust 1 Step Finance Care.</p>
+          <h2>Feel the Distinction</h2>
+          <p>Become part of the multitudes relying on 1 Step Finance Care.</p>
           <Link to="/contact" className="a-btn-cta">
-            Contact Us Today <FaArrowRight />
+            Reach Out Now <FaArrowRight />
           </Link>
         </div>
       </section>

@@ -47,6 +47,7 @@ import CustomerInfo from './pages/employee/CustomerInfo';
 import AddCustomer from './pages/employee/AddCustomer';
 import Services from './pages/employee/Services';
 import EmployeeReports from './pages/employee/EmployeeReports';
+import CibilRepairTransactions from './pages/employee/CibilRepairTransactions';
 import Profile from './pages/employee/Profile';
 import EmployeeNotifications from './pages/employee/Notifications';
 import AdminNotifications from './pages/admin/Notifications';
@@ -100,6 +101,7 @@ export default function AppRoutes() {
       <Route path="/employee/customer-info" element={<EmployeeRoute><CustomerInfo /></EmployeeRoute>} />
       <Route path="/employee/add-customer" element={<EmployeeRoute><AddCustomer /></EmployeeRoute>} />
       <Route path="/employee/services"     element={<EmployeeRoute><Services /></EmployeeRoute>} />
+      <Route path="/employee/cibil-repair"    element={<EmployeeRoute><CibilRepairTransactions /></EmployeeRoute>} />
       <Route path="/employee/reports"      element={<EmployeeRoute><EmployeeReports /></EmployeeRoute>} />
       <Route path="/employee/notifications" element={<EmployeeRoute><EmployeeNotifications /></EmployeeRoute>} />
       <Route path="/employee/profile"       element={<EmployeeRoute><Profile Sidebar={EmployeeNavbar} /></EmployeeRoute>} />

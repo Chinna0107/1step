@@ -68,7 +68,7 @@ export default function AttendanceData() {
         <div class="sum-box"><div class="sum-label">Absent</div><div class="sum-val" style="color:#dc2626">${absent}</div></div>
         <div class="sum-box"><div class="sum-label">Late</div><div class="sum-val" style="color:#d97706">${late}</div></div>
         <div class="sum-box"><div class="sum-label">Total Mins</div><div class="sum-val">${totalMins}</div></div>
-        <div class="sum-box"><div class="sum-label">Coins Earned</div><div class="sum-val" style="color:#b8860b">🪙${totalCoins}</div></div>
+        <div class="sum-box"><div class="sum-label">Coins Earned</div><div class="sum-val" style="color:#b8860b"><img src="/logo.png" style="width:18px;height:18px;vertical-align:middle;margin-right:4px;" alt="coin"/> ${totalCoins}</div></div>
       </div>
       <table>
         <thead><tr>
@@ -82,7 +82,7 @@ export default function AttendanceData() {
             <td>${a.check_in || '—'}</td>
             <td>${a.check_out || '—'}</td>
             <td>${a.minutes || 0} min</td>
-            <td>${(a.coins_earned || 0) > 0 ? `🪙 +${a.coins_earned}` : '—'}</td>
+            <td>${(a.coins_earned || 0) > 0 ? `<img src="/logo.png" style="width:14px;height:14px;vertical-align:middle;margin-right:4px;" alt="coin"/> +${a.coins_earned}` : '—'}</td>
             <td><span class="${a.status?.toLowerCase()}">${a.status}</span></td>
           </tr>`).join('')}
         </tbody>
@@ -176,7 +176,7 @@ export default function AttendanceData() {
                   { label: 'Present',       value: present,          color: '#059669' },
                   { label: 'Absent',        value: absent,           color: '#dc2626' },
                   { label: 'Late Mark',     value: late,             color: '#d97706' },
-                  { label: 'Coins Earned',  value: `🪙 ${totalCoins}`, color: '#b8860b' },
+                  { label: 'Coins Earned',  value: <><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> {totalCoins}</>, color: '#b8860b' },
                 ].map(s => (
                   <div key={s.label} className="dash-stat" style={{ '--c': s.color }}>
                     <div className="dash-stat-body">
@@ -238,7 +238,7 @@ export default function AttendanceData() {
                         </td>
                         <td>
                           {(a.coins_earned || 0) > 0
-                            ? <span style={{ fontWeight: 700, color: '#b8860b' }}>🪙 +{a.coins_earned}</span>
+                            ? <span style={{ fontWeight: 700, color: '#b8860b' }}><img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> +{a.coins_earned}</span>
                             : <span style={{ color: '#9ca3af' }}>—</span>}
                         </td>
                         <td><span className={`sa-status ${a.status?.toLowerCase()}`}>{a.status}</span></td>
@@ -253,7 +253,7 @@ export default function AttendanceData() {
           </div>
 
           <div style={{ background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 10, padding: '12px 20px', fontSize: 13, color: '#92400e', marginTop: 8 }}>
-            🪙 <strong>Coins Rule:</strong> Employees earn <strong>5 coins/min</strong> for every minute worked beyond 500 minutes. &nbsp;|&nbsp;
+            <img src="/logo.png" style={{width:14,height:14,objectFit:'contain',verticalAlign:'middle',marginRight:4}} alt="coin"/> <strong>Coins Rule:</strong> Employees earn <strong>5 coins/min</strong> for every minute worked beyond 500 minutes. &nbsp;|&nbsp;
             ⏰ <strong>Late Mark:</strong> Check-in after <strong>09:15 AM</strong> is marked late.
           </div>
         </div>

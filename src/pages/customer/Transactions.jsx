@@ -169,6 +169,12 @@ export default function CustomerTransactions() {
   // Force fresh data every time this page mounts (bypass 5-min cache)
   useEffect(() => { refetch(true) }, [])
 
+  useEffect(() => {
+    if (txns && txns.length > 0) {
+      console.log('FIRST TXN DATA:', txns[0])
+    }
+  }, [txns])
+
   const openPrint = (t) => {
     const win = window.open('', '_blank', 'width=480,height=820')
     win.document.write(buildReceiptHTML(t))
@@ -195,26 +201,81 @@ export default function CustomerTransactions() {
               ) : (
                 <table className="cust-table">
                   <thead>
-                    <tr><th>#</th><th>Date</th><th>Service</th><th>Txn Amount</th><th>Charges %</th><th>Charges</th><th>Settled Amount</th><th>Receipt</th></tr>
+                    <tr>
+                      <th>Date & Time</th>
+                      <th>Customer Name</th>
+                      <th>PAN Number</th>
+                      <th>Aadhar Number</th>
+                      <th>Mobile Number</th>
+                      <th>Service Type</th>
+                      <th>Bill Platform</th>
+                      <th>Bill Amount</th>
+                      <th>Withdrawal Platform</th>
+                      <th>Card Type</th>
+                      <th>Card Bank</th>
+                      <th>Card Last 4</th>
+                      <th>Bank Name</th>
+                      <th>Account No.</th>
+                      <th>Total Amount</th>
+                      <th>Charges %</th>
+                      <th>Charges ₹</th>
+                      <th>Settled Amount</th>
+                      <th>Collectable</th>
+                      <th>Collected</th>
+                      <th>Balance Due</th>
+                      <th>Payment Mode</th>
+                      <th>Receive Mode</th>
+                      <th>Remarks</th>
+                      <th>Receipt</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    {txns.map(t => (
-                      <tr key={t.id}>
-                        <td style={{ color: '#94a3b8', fontSize: 12 }}>#{t.id}</td>
-                        <td style={{ fontSize: 12 }}>{new Date(t.created_at).toLocaleDateString('en-IN')}</td>
-                        <td style={{ fontSize: 12 }}>{t.service_type || '—'}</td>
-                        <td><strong style={{ color: '#081427' }}>₹{fmt(t.amount)}</strong></td>
-                        <td style={{ color: '#d97706', fontWeight: 700 }}>{parseFloat(t.charges_pct || 0)}%</td>
-                        <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt(t.charges_amount)}</td>
-        <td><strong style={{ color: '#059669', fontSize: 15, background: '#d1fae5', padding: '4px 10px', borderRadius: 8 }}>₹{fmt(t.settled_amount)}</strong></td>
-                        <td>
-                          <button onClick={() => openPrint(t)}
-                            style={{ background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', border: 'none', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer' }}>
-                            🖨️ Print
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {txns.map(t => {
+                      const isBW = t.service_type === 'Bill Pay + Withdrawal'
+                      const collectable = isBW ? (parseFloat(t.total_collected) || 0) : (parseFloat(t.settled_amount) || 0)
+                      return (
+                        <tr key={t.id}>
+                          <td style={{ fontSize: 11, whiteSpace: 'nowrap' }}>
+                            <div style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 11, color: '#0d1f3d' }}>#{t.id}</div>
+                            <div>{new Date(t.created_at).toLocaleDateString('en-IN')}</div>
+                            <div style={{ color: '#9ca3af' }}>{new Date(t.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}</div>
+                          </td>
+                          <td><strong>{t.cust_name || '—'}</strong></td>
+                          <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_pan || '—'}</td>
+                          <td style={{ fontSize: 11, color: '#64748b' }}>{t.cust_aadhar || '—'}</td>
+                          <td style={{ fontSize: 11 }}>{t.cust_mobile || '—'}</td>
+                          <td style={{ fontWeight: 600, color: '#1e293b', fontSize: 12 }}>{t.service_type || '—'}</td>
+                          <td style={{ fontSize: 11 }}>{t.bill_platform || '—'}</td>
+                          <td style={{ fontWeight: 600 }}>{parseFloat(t.bill_amount) > 0 ? `₹${fmt(t.bill_amount)}` : (t.service_type === 'AEPS' ? `₹${fmt(t.amount)}` : '—')}</td>
+                          <td style={{ fontSize: 11 }}>{t.platform || '—'}</td>
+                          <td style={{ fontSize: 11 }}>{t.card || '—'}</td>
+                          <td style={{ fontSize: 11 }}>{t.card_bank || '—'}</td>
+                          <td style={{ fontSize: 11 }}>{t.card_last4 || '—'}</td>
+                          <td style={{ fontSize: 11 }}>{t.bank || '—'}</td>
+                          <td style={{ fontSize: 11, fontFamily: 'monospace' }}>{t.acc_no || '—'}</td>
+                          <td><strong style={{ color: '#0d1f3d' }}>₹{fmt(t.amount)}</strong></td>
+                          <td style={{ color: '#d97706', fontWeight: 700, fontSize: 12 }}>{parseFloat(t.charges_pct || 0)}%</td>
+                          <td style={{ color: '#dc2626', fontWeight: 700 }}>₹{fmt(t.charges_amount)}</td>
+                          <td><strong style={{ color: '#059669', fontSize: 14, background: '#d1fae5', padding: '2px 6px', borderRadius: 6 }}>₹{fmt(t.settled_amount)}</strong></td>
+                          <td style={{ color: '#0d1f3d', fontWeight: 700 }}>₹{fmt(collectable)}</td>
+                          <td style={{ color: '#059669', fontWeight: 700 }}>{parseFloat(t.amount_collected) > 0 ? `₹${fmt(t.amount_collected)}` : '—'}</td>
+                          <td>
+                            {parseFloat(t.balance_due) > 0
+                              ? <span style={{ background: '#fee2e2', color: '#dc2626', fontWeight: 800, padding: '2px 8px', borderRadius: 8, fontSize: 12 }}>₹{fmt(t.balance_due)}</span>
+                              : <span style={{ background: '#d1fae5', color: '#059669', fontWeight: 700, padding: '2px 8px', borderRadius: 8, fontSize: 11 }}>✅ Paid</span>}
+                          </td>
+                          <td style={{ fontSize: 11 }}>{t.payment_mode || '—'}</td>
+                          <td style={{ fontSize: 11 }}>{t.received_mode || '—'}</td>
+                          <td style={{ fontSize: 11, maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={t.note}>{t.note || '—'}</td>
+                          <td>
+                            <button onClick={() => openPrint(t)}
+                              style={{ background: 'linear-gradient(135deg,#0d1f3d,#1a365d)', border: 'none', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                              🖨️ Print
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               )}

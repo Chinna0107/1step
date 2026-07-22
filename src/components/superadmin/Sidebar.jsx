@@ -9,7 +9,6 @@ import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { api } from '../../utils/api'
 import { getTokenByRole, getUserByRole } from '../../utils/tokenUtils'
 import logoImg from '../../assets/logo.png'
-import nameImg from '../../assets/logo.png'
 import './Sidebar.css'
 
 const NAV = [
@@ -42,6 +41,7 @@ const NAV = [
     group: 'Reports',
     items: [
       { to: '/superadmin/customers',    icon: <MdPeople />,       label: 'Customers (All)' },
+      { to: '/superadmin/pending',       icon: <MdAccountBalance />, label: 'Pending Balance' },
       { to: '/superadmin/fraud',         icon: <MdGppBad />,       label: 'Fraud List' },
       { to: '/superadmin/reports',      icon: <MdAssessment />,   label: 'Reports & Downloads' },
       { to: '/superadmin/security',     icon: <MdSecurity />,     label: 'Security & Control' },
@@ -74,7 +74,7 @@ export default function Sidebar() {
         <img src={logoImg} alt="1 Step Finance Care" className="sa-brand-logo" />
         {!collapsed && (
           <div className="sa-brand-text">
-            <img src={nameImg} alt="1 Step Finance Care" className="sa-brand-name-img" />
+            <span className="sa-brand-name">1 Step Finance Care</span>
             <span className="sa-brand-role">
               <MdLock size={10} style={{ marginRight: 4 }} />Super Admin
             </span>

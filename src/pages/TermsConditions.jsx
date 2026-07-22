@@ -5,121 +5,121 @@ import './FAQ.css'
 const sections = [
   {
     id: 'acceptance',
-    title: '1. Acceptance of Terms',
-    content: `By accessing or using 1 Step Finance Care's website and services, you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our services. 1 Step Finance Care reserves the right to update these terms at any time without prior notice.`,
+    title: '1. Agreement to Provisions',
+    content: `By navigating or employing the 1 Step Finance Care portal and provisions, you consent to be obligated by these Terms of Service. If these stipulations are unacceptable, kindly refrain from using our system. We retain the authority to modify these rules whenever necessary without advance warning.`,
   },
   {
     id: 'services',
-    title: '2. Services Offered',
+    title: '2. Available Provisions',
     content: `1 Step Finance Care provides the following financial services:
-• Spot Cash on Credit Card — Instant cash against your credit card limit
-• Credit Card Bill Payment — Pay any credit card bill instantly
-• Domestic Money Transfer (DMT) — Send money to any bank account via IMPS
-• Aadhaar Cash Withdrawal — Biometric-based cash withdrawal
-• Personal & Business Loans — Through partner banks and NBFCs
-• Insurance Services — Life, health, and vehicle insurance
-• CIBIL Score Check & Repair — Credit score analysis and improvement
-• Bank Account Opening — Savings and current account facilitation
-• New Credit Card Applications — Card recommendations and applications`,
+• Instant Credit Card Cash — Immediate funds drawn from your card balance
+• Card Dues Settlement — Clear your credit card invoices in real-time
+• Fund Remittance (DMT) — Transfer capital to any bank via IMPS protocols
+• Aadhaar Banking — Cash outs facilitated by biometric authentication
+• Individual & Commercial Financing — Sourced via our allied banks and NBFCs
+• Protective Coverage — Policies for life, medical, and automotive needs
+• Credit Profiling & Restoration — Evaluation and enhancement of credit ratings
+• Account Creation — Assistance with establishing savings and current accounts
+• Credit Card Procurement — Guidance and filing for new cards`,
   },
   {
     id: 'eligibility',
-    title: '3. Eligibility',
-    content: `To use 1 Step Finance Care services, you must:
-• Be at least 18 years of age
-• Be a resident of India
-• Possess valid government-issued identification (Aadhaar, PAN, etc.)
-• Have a valid and active bank account
-• Provide accurate and truthful information during registration and transactions`,
+    title: '3. Qualifying Criteria',
+    content: `To interact with our provisions, you are required to:
+• Have attained the age of 18
+• Hold Indian residency
+• Maintain legitimate state-issued ID (such as Aadhaar or PAN)
+• Operate a functioning and recognized bank account
+• Supply precise and honest details during enrollment and operational activities`,
   },
   {
     id: 'responsibilities',
-    title: '4. User Responsibilities',
-    content: `You agree to:
-• Provide accurate, current, and complete information
-• Maintain the confidentiality of your account credentials
-• Not use our services for any illegal, fraudulent, or unauthorized purpose
-• Not attempt to reverse-engineer, hack, or disrupt our systems
-• Comply with all applicable laws and regulations
-• Immediately notify us of any unauthorized use of your account`,
+    title: '4. Client Obligations',
+    content: `You commit to:
+• Furnish precise, up-to-date, and exhaustive data
+• Safeguard the secrecy of your login particulars
+• Refrain from leveraging our platform for illicit, deceptive, or unsanctioned motives
+• Abstain from attempting to decompile, breach, or interfere with our infrastructure
+• Adhere to all pertinent legislation and mandates
+• Promptly alert us regarding any unsanctioned access to your profile`,
   },
   {
     id: 'fees',
-    title: '5. Fees & Charges',
-    content: `1 Step Finance Care charges service fees for certain transactions. All applicable fees are:
-• Clearly communicated before you confirm any transaction
-• Non-refundable once a transaction is successfully processed
-• Subject to change with prior notice on our website
-• Inclusive of applicable taxes as per government regulations
+    title: '5. Pricing & Tariffs',
+    content: `We levy operational tariffs on specific activities. All relevant charges are:
+• Explicitly stated prior to your authorization of any operation
+• Ineligible for refund after an activity has been conclusively executed
+• Prone to revision, accompanied by preliminary announcements on our portal
+• Incorporating mandatory levies as dictated by state directives
 
-We do not charge any hidden fees. What you see is what you pay.`,
+We maintain a strict no-hidden-cost policy. The displayed figure is your final obligation.`,
   },
   {
     id: 'processing',
-    title: '6. Transaction Processing',
-    content: `All transactions are subject to:
-• Verification and authentication procedures
-• Availability of funds in the source account
-• Compliance with RBI guidelines and applicable regulations
-• Network availability and third-party service provider uptime
+    title: '6. Operational Execution',
+    content: `Every activity is contingent upon:
+• Rigorous validation and identity checks
+• Sufficient balance existing in the originating account
+• Strict alignment with RBI protocols and relevant legislative codes
+• Systemic stability and the operational status of external partners
 
-1 Step Finance Care is not liable for delays caused by bank processing times, network outages, or force majeure events.`,
+We bear no liability for postponements resulting from banking lags, connectivity failures, or acts of God.`,
   },
   {
     id: 'privacy',
-    title: '7. Privacy & Data Protection',
-    content: `1 Step Finance Care is committed to protecting your personal information. We:
-• Collect only the data necessary to provide our services
-• Do not sell or share your personal data with unauthorized third parties
-• Use bank-grade SSL encryption for all data transmission
-• Comply with applicable data protection laws
-• Retain data only as long as required by law or business necessity
+    title: '7. Confidentiality & Information Safeguarding',
+    content: `We are staunchly dedicated to shielding your private details. We:
+• Gather merely the information essential to deliver our provisions
+• Never vend or distribute your private records to unsanctioned external entities
+• Employ banking-standard SSL scrambling for all information transit
+• Abide by all relevant information security statutes
+• Preserve records exclusively for durations necessitated by legislation or operational needs
 
-Please refer to our Privacy Policy for detailed information on data handling.`,
+Kindly consult our Data Privacy Guidelines for comprehensive specifics on information management.`,
   },
   {
     id: 'liability',
-    title: '8. Limitation of Liability',
-    content: `1 Step Finance Care shall not be liable for:
-• Any indirect, incidental, or consequential damages
-• Loss of profits, data, or business opportunities
-• Unauthorized access to your account due to your negligence
-• Failures caused by third-party service providers (banks, payment gateways)
-• Delays or failures due to circumstances beyond our reasonable control
+    title: '8. Liability Constraints',
+    content: `We shall not be held accountable for:
+• Any secondary, circumstantial, or resultant harm
+• Deprivation of earnings, information, or commercial prospects
+• Unapproved entry to your profile stemming from your oversight
+• Breakdowns triggered by external partners (such as banking institutions or payment processors)
+• Lags or collapses arising from situations outside our sensible purview
 
-Our total liability in any case shall not exceed the amount of the transaction in dispute.`,
+Our maximum accountability under any circumstance will not surpass the value of the contested operation.`,
   },
   {
     id: 'intellectual-property',
-    title: '9. Intellectual Property',
-    content: `All content on the 1 Step Finance Care website including logos, text, graphics, and software is the exclusive property of 1 Step Finance Care and is protected by applicable intellectual property laws. You may not reproduce, distribute, or create derivative works without our express written permission.`,
+    title: '9. Proprietary Rights',
+    content: `Every element present on this portal, encompassing emblems, copy, visuals, and code, remains the sole asset of 1 Step Finance Care and is shielded by relevant proprietary statutes. You are forbidden from copying, disseminating, or forging derivative materials lacking our explicit written consent.`,
   },
   {
     id: 'termination',
-    title: '10. Termination',
-    content: `1 Step Finance Care reserves the right to suspend or terminate your access to our services at any time, without notice, if:
-• You violate these Terms and Conditions
-• We suspect fraudulent or illegal activity
-• Required by law or regulatory authorities
-• You provide false or misleading information
+    title: '10. Account Suspension',
+    content: `We possess the prerogative to halt or permanently revoke your entry to our provisions instantaneously, without warning, should:
+• You breach these established Terms of Service
+• We harbor suspicions of deceptive or unlawful conduct
+• Mandated by legislation or oversight bodies
+• You furnish inaccurate or deceptive details
 
-Upon termination, all pending transactions will be processed or refunded as applicable.`,
+Following revocation, any unresolved operations will either reach conclusion or trigger a reimbursement, as appropriate.`,
   },
   {
     id: 'governing-law',
-    title: '11. Governing Law',
-    content: `These Terms and Conditions are governed by the laws of India. Any disputes arising from the use of 1 Step Finance Care services shall be subject to the exclusive jurisdiction of the courts in India. We encourage users to first contact our support team to resolve disputes amicably before pursuing legal action.`,
+    title: '11. Jurisdiction & Legislation',
+    content: `These stipulations are regulated by Indian jurisprudence. Any conflicts emerging from the utilization of our provisions will fall under the exclusive purview of Indian judicial courts. We urge clients to initially engage our helpdesk to settle disagreements peacefully prior to initiating formal litigation.`,
   },
   {
     id: 'contact',
-    title: '12. Contact Us',
-    content: `For any questions, concerns, or complaints regarding these Terms and Conditions, please contact us:
+    title: '12. Reach Out',
+    content: `For inquiries, worries, or grievances related to these Provisions, kindly connect with us:
 
 Email: 1stepcreditcard@gmail.com
 Phone: +91 95816 11711
 Address: As listed on our official website
 
-We aim to respond to all queries within 2 business hours during working days.`,
+We strive to address all communications within a two-hour window during standard business days.`,
   },
 ]
 
@@ -159,7 +159,7 @@ export default function TermsConditions() {
       <div className="doc-hero">
         <div className="doc-hero-inner">
           <div className="doc-pill">Legal</div>
-          <h1>Terms & <span className="doc-gold">Conditions</span></h1>
+          <h1>Terms of <span className="doc-gold">Service</span></h1>
           <p>Last updated: August 2026 &nbsp;·&nbsp; Effective immediately</p>
         </div>
       </div>
@@ -190,7 +190,7 @@ export default function TermsConditions() {
           
           <div className="doc-section-card" style={{ paddingBottom: '20px' }}>
              <p style={{ fontSize: '1.1rem', lineHeight: '1.7', color: 'rgba(255,255,255,0.8)' }}>
-               Welcome to 1 Step Finance Care. Please read these Terms and Conditions carefully before using our services. These terms constitute a legally binding agreement between you and 1 Step Finance Care Fintech.
+               Greetings from 1 Step Finance Care. Kindly review these Terms of Service thoroughly prior to utilizing our platform. These provisions form a lawful contract between you and 1 Step Finance Care.
              </p>
           </div>
 

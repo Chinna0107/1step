@@ -18,8 +18,8 @@ const products = [
   {
     slug: 'spot-cash',
     title: 'Spot Cash on Credit Card',
-    tagline: 'Convert your credit limit into instant cash',
-    desc: 'Unlock the power of your credit card. Get instant cash transferred directly to your bank account within minutes using your existing credit limit.',
+    tagline: 'Turn your available credit limit into liquid cash immediately',
+    desc: 'Maximize your credit card potential. We facilitate immediate cash transfers to your bank account in just a few minutes by utilizing your unused credit limit.',
     features: [
       { icon: FaExchangeAlt, label: 'Instant Bank Transfer' },
       { icon: FaBolt,        label: 'Cash in Minutes' },
@@ -37,8 +37,8 @@ const products = [
   {
     slug: 'bill-payment',
     title: 'Credit Card Bill Payment',
-    tagline: "Don't miss your due date!",
-    desc: 'Pay any credit card bill instantly — any amount, any bank, zero hassle. Avoid late fees and protect your CIBIL score with on-time payments.',
+    tagline: 'Stay ahead of your payment deadlines!',
+    desc: 'Settle your credit card statements in real-time, regardless of the bank or amount. Prevent penalty charges and maintain a healthy credit profile through punctual repayments.',
     features: [
       { icon: FaBolt,          label: 'Instant Bill Clearance' },
       { icon: FaMoneyBillWave, label: 'Any Amount – No Limits' },
@@ -51,8 +51,8 @@ const products = [
   {
     slug: 'personal-loans',
     title: 'Personal Loans',
-    tagline: 'Quick disbursal with minimal docs',
-    desc: 'Get personal loans with fast approval and minimal documentation. Competitive interest rates tailored to your profile.',
+    tagline: 'Rapid funding with minimal paperwork',
+    desc: 'Secure a personal loan with swift processing and basic documentation. Enjoy attractive interest rates customized to suit your financial background.',
     features: [
       { icon: FaBolt,        label: 'Fast Approval' },
       { icon: FaCheckCircle, label: 'Minimal Documentation' },
@@ -64,8 +64,8 @@ const products = [
   {
     slug: 'business-loans',
     title: 'Business Loans',
-    tagline: 'Fuel your business growth',
-    desc: 'Tailored business loan solutions to help you scale, expand, and achieve your entrepreneurial goals with ease.',
+    tagline: 'Accelerate your enterprise expansion',
+    desc: 'Custom-built commercial financing designed to assist you in scaling operations and reaching your business milestones effortlessly.',
     features: [
       { icon: FaMoneyBillWave, label: 'Loan up to ₹70 Lakhs' },
       { icon: FaBolt,          label: 'Fast Approval & Disbursal' },
@@ -77,8 +77,8 @@ const products = [
   {
     slug: 'insurance',
     title: 'Insurance Services',
-    tagline: 'Protect what matters most',
-    desc: 'Life, health, and vehicle insurance from top providers at the best rates. Comprehensive coverage for you and your family.',
+    tagline: 'Safeguard your most valuable assets',
+    desc: 'Premium life, medical, and auto insurance policies from leading insurers at competitive premiums. Complete safety nets for you and your loved ones.',
     features: [
       { icon: FaShieldAlt,   label: 'Life Insurance' },
       { icon: FaCheckCircle, label: 'Health Insurance' },
@@ -90,8 +90,8 @@ const products = [
   {
     slug: 'cibil-score',
     title: 'CIBIL Score Check',
-    tagline: 'Know & improve your credit score',
-    desc: 'Know your credit score and get expert guidance to improve it for better loan eligibility and financial health.',
+    tagline: 'Understand and enhance your credit rating',
+    desc: 'Discover your current credit standing and receive professional advice on elevating it to secure better borrowing terms and overall financial stability.',
     features: [
       { icon: FaBolt,        label: 'Instant Score Check' },
       { icon: FaChartLine,   label: 'Expert Guidance' },
@@ -102,9 +102,9 @@ const products = [
   },
   {
     slug: 'credit-repair',
-    title: 'Credit Card Score Repair',
-    tagline: 'Fix bad credit & rebuild trust',
-    desc: 'Professional credit repair services to help you remove negative remarks, dispute errors, and rebuild your financial credibility.',
+    title: 'CIBIL Repair',
+    tagline: 'Resolve negative credit and restore confidence',
+    desc: 'Expert credit rehabilitation assistance aimed at eliminating derogatory marks, contesting inaccuracies, and re-establishing your financial reputation.',
     features: [
       { icon: FaShieldAlt,   label: 'Dispute Resolution' },
       { icon: FaChartLine,   label: 'Rapid Score Boost' },
@@ -117,26 +117,26 @@ const products = [
 ]
 
 const whyUs = [
-  { Icon: FaHandshake,    title: '120+ Bank & NBFC Partnerships', desc: 'Tied up with 120+ banks and NBFCs to bring you the best financial options.' },
-  { Icon: FaBolt,         title: 'Instant Processing & Quick Disbursal', desc: 'Transactions completed in under 2 minutes. No waiting, no delays.' },
-  { Icon: FaCheckCircle,  title: '100% Transparent Charges',     desc: 'Transparent pricing with zero hidden fees. What you see is what you pay.' },
-  { Icon: FaShieldAlt,    title: 'No Hidden Fees Guarantee',     desc: 'We guarantee no surprise charges — ever. Full clarity before every transaction.' },
-  { Icon: FaLock,         title: 'Secure & Verified Transactions',desc: 'Bank-grade encryption and secure payment gateways protect every transaction.' },
-  { Icon: FaTrophy,       title: 'Expert Financial Assistance',  desc: 'Our trained experts guide you through every step of your financial journey.' },
+  { Icon: FaHandshake,    title: 'Over 120 Banking & NBFC Alliances', desc: 'Partnered with an extensive network of financial institutions to offer you premium choices.' },
+  { Icon: FaBolt,         title: 'Immediate Processing & Swift Funding', desc: 'Operations finalized within couple of minutes. Zero wait times and absolutely no delays.' },
+  { Icon: FaCheckCircle,  title: 'Fully Transparent Pricing',     desc: 'Clear fee structures without any concealed costs. The quoted price is exactly what you incur.' },
+  { Icon: FaShieldAlt,    title: 'Zero Concealed Costs Assurance',     desc: 'Our pledge: absolutely no unexpected fees at any point. Complete transparency prior to all dealings.' },
+  { Icon: FaLock,         title: 'Safe & Authenticated Transfers',desc: 'Enterprise-level security protocols and fortified payment channels safeguard all your transfers.' },
+  { Icon: FaTrophy,       title: 'Specialized Financial Guidance',  desc: 'Our qualified professionals support you across every phase of your financial endeavors.' },
 ]
 
 const moreServices = [
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png', label: 'Aadhaar Services',    desc: 'Aadhaar-based cash withdrawal',      slug: 'aadhaar-withdrawal' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png', label: 'Cash Deposit',   desc: 'Quick & secure cash deposits',       slug: 'cash-deposit' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_25_z5scod.png', label: 'Bank Account Opening', desc: 'Zero-hassle account setup',         slug: 'bank-account' },
-  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',   label: 'New Credit Cards',    desc: 'Best cards for your profile',       slug: 'new-credit-card' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_22_dxp4lv.png', label: 'Aadhaar Withdrawal',    desc: 'Cash out using Aadhaar',      slug: 'aadhaar-withdrawal' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986807/Cash_Deposit_iqi1gr.png', label: 'Cash Deposit',   desc: 'Fast & safe money deposits',       slug: 'cash-deposit' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986811/Layer_25_z5scod.png', label: 'Bank Account Opening', desc: 'Effortless account creation',         slug: 'bank-account' },
+  { img: 'https://res.cloudinary.com/dgyykbmt6/image/upload/q_auto/f_auto/v1775986809/copy_8_khzlf7.png',   label: 'New Credit Card',    desc: 'Ideal cards matching your needs',       slug: 'new-credit-card' },
 ]
 
 const testimonials = [
-  { name: 'Ravi Kumar',    role: 'Business Owner',        text: 'Got ₹50,000 cash from my credit card in just 10 minutes! 1 Step Finance Care is a lifesaver.', rating: 5 },
-  { name: 'Priya Sharma',  role: 'Salaried Professional', text: 'Paid my credit card bill instantly. No more late fees. Highly recommend!', rating: 5 },
-  { name: 'Mohammed Ali',  role: 'Freelancer',            text: 'DMT service is super fast. Sent money to my family at midnight — worked perfectly!', rating: 5 },
-  { name: 'Sunita Reddy',  role: 'Homemaker',             text: 'Aadhaar withdrawal saved me when I forgot my ATM card. Amazing service!', rating: 5 },
+  { name: 'Ravi Kumar',    role: 'Business Owner',        text: 'Received ₹50,000 liquidity from my card in a mere 10 minutes! 1 Step Finance Care truly rescued me.', rating: 5 },
+  { name: 'Priya Sharma',  role: 'Salaried Professional', text: 'Cleared my card dues in real-time. Say goodbye to late penalties. I strongly suggest their services!', rating: 5 },
+  { name: 'Mohammed Ali',  role: 'Freelancer',            text: 'The money transfer is incredibly swift. Remitted funds to my relatives late at night without a hitch!', rating: 5 },
+  { name: 'Sunita Reddy',  role: 'Homemaker',             text: 'Taking out cash via Aadhaar was a lifesaver when I left my debit card behind. Phenomenal platform!', rating: 5 },
 ]
 
 export default function Home() {
@@ -186,11 +186,11 @@ export default function Home() {
           <div className="home-hero-text">
             <div className="home-hero-badge"><FaRocket size={14} /> Authorised Fintech Service Provider</div>
             <h1>
-              One Spot For All Your <br/>
-              <span className="home-gold-gradient">Financial Needs</span>
+              The Ultimate Hub For Your <br/>
+              <span className="home-gold-gradient">Financial Solutions</span>
             </h1>
             <p>
-              India's trusted Business Correspondent & Financial Service Partner. Connecting you with 120+ Banks & NBFCs for instant cash, bill payments, and loans. All under one roof, 24×7.
+              India’s premier Business Correspondent and Financial Ally. Bridging the gap to over 120 Banks & NBFCs for immediate liquidity, utility settlements, and credit facilities. Everything in one place, around the clock.
             </p>
             <div className="home-hero-actions">
               <Link to="/what-we-do" className="home-btn-primary">Explore Services <FaArrowRight /></Link>
@@ -253,7 +253,7 @@ export default function Home() {
                     { id: 'cibil-score',    Icon: FaChartBar,      label: 'CIBIL Score',    color: '#f43f5e' },
                     { id: 'aadhaar-cash',   Icon: FaFingerprint,   label: 'Aadhaar Cash',   color: '#f59e0b' },
                     { id: 'cash-deposit',   Icon: FaUniversity,    label: 'Cash Deposit',   color: '#2b77e6' },
-                    { id: 'credit-repair',  Icon: FaChartLine,     label: 'Credit Repair',  color: '#8b5cf6' },
+                    { id: 'credit-repair',  Icon: FaChartLine,     label: 'CIBIL Repair',  color: '#8b5cf6' },
                   ].map(({ id, Icon, label, color }, i) => (
                     <Link to={`/product/${id}`} className="hbc-svc" key={label} style={{ '--i': i, '--svc-color': color }}>
                       <div className="hbc-svc-counter">
@@ -335,8 +335,8 @@ export default function Home() {
       {/* ── WHY US GRID ── */}
       <section className="home-why">
         <div className="home-section-header">
-          <div className="home-badge">Why Choose Us?</div>
-          <h2>Your Bill. <span className="home-gold-gradient">Our Responsibility.</span></h2>
+          <div className="home-badge">Why Partner With Us?</div>
+          <h2>Your Dues. <span className="home-gold-gradient">Our Commitment.</span></h2>
         </div>
         <div className="hw-grid">
           {whyUs.map((w, i) => (
@@ -354,7 +354,7 @@ export default function Home() {
       <section className="home-more">
         <div className="home-section-header">
           <div className="home-badge">Complete Ecosystem</div>
-          <h2>Everything you need <span className="home-gold-gradient">under one roof</span></h2>
+          <h2>All your essentials in <span className="home-gold-gradient">a single platform</span></h2>
         </div>
         <div className="hm-grid">
           {moreServices.map(s => (
@@ -379,8 +379,8 @@ export default function Home() {
       {/* ── TESTIMONIALS ── */}
       <section className="home-testimonials">
         <div className="home-section-header">
-          <div className="home-badge">Real Stories</div>
-          <h2>What Our <span className="home-gold-gradient">Customers Say</span></h2>
+          <div className="home-badge">Client Experiences</div>
+          <h2>Hear From Our <span className="home-gold-gradient">Patrons</span></h2>
         </div>
         <div className="ht-grid">
           {testimonials.map((t, i) => (
@@ -406,8 +406,8 @@ export default function Home() {
       <section className="home-cta">
         <div className="home-cta-inner">
           <div className="home-cta-glow" />
-          <h2>Ready to <span className="home-gold-gradient">Get Started?</span></h2>
-          <p>Join 5,000+ satisfied customers. Fast, secure, and always available.</p>
+          <h2>Prepared to <span className="home-gold-gradient">Begin?</span></h2>
+          <p>Become one of our 5,000+ delighted clients. Rapid, protected, and accessible at all times.</p>
           <div className="home-cta-actions">
             <Link to="/what-we-do" className="home-btn-primary">Get Started Now</Link>
             <Link to="/contact" className="home-btn-outline">Talk to Us</Link>

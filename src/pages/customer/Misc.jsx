@@ -1,34 +1,39 @@
 import { useState } from 'react'
 import CustomerSidebar from '../../components/customer/CustomerSidebar'
 import '../../components/customer/CustomerSidebar.css'
+import './Misc.css'
+
+import { 
+  MdCardGiftcard, MdGroupAdd, MdStar, MdEmojiEvents, 
+  MdCheckCircle, MdInfo, MdLocalOffer, MdNotifications,
+  MdChat, MdPhone, MdSend, MdSupportAgent,
+  MdVpnKey, MdSecurity, MdVisibility, MdDevices
+} from 'react-icons/md'
 
 export function CustomerOffers() {
   const offers = [
-    { icon: '💰', title: 'Cashback on DMT', desc: 'Get 0.5% cashback on every money transfer above ₹5,000', tag: 'Active' },
-    { icon: '🎁', title: 'Referral Bonus', desc: 'Refer a friend and earn ₹100 credit on their first transaction', tag: 'Active' },
-    { icon: '🃏', title: 'Scratch Card', desc: 'Complete 5 transactions this month to unlock a scratch card', tag: 'Eligible' },
-    { icon: '🏆', title: 'Loyalty Reward', desc: 'Customers with 20+ transactions get priority service', tag: 'Coming Soon' },
+    { icon: <MdCardGiftcard />, title: 'Cashback on DMT', desc: 'Get 0.5% cashback on every money transfer above ₹5,000', tag: 'Active', color: '#0ea5e9', shadow: 'rgba(14,165,233,0.3)' },
+    { icon: <MdGroupAdd />, title: 'Referral Bonus', desc: 'Refer a friend and earn ₹100 credit on their first transaction', tag: 'Active', color: '#10b981', shadow: 'rgba(16,185,129,0.3)' },
+    { icon: <MdStar />, title: 'Scratch Card', desc: 'Complete 5 transactions this month to unlock a scratch card', tag: 'Eligible', color: '#f59e0b', shadow: 'rgba(245,158,11,0.3)' },
+    { icon: <MdEmojiEvents />, title: 'Loyalty Reward', desc: 'Customers with 20+ transactions get priority service', tag: 'Coming Soon', color: '#6366f1', shadow: 'rgba(99,102,241,0.3)' },
   ]
 
   return (
     <div className="cust-page">
       <CustomerSidebar />
       <div className="cust-content">
-        <div className="cust-topbar"><h1>💰 Offers & Benefits</h1><p>Exclusive rewards for 1 Step Finance Care customers</p></div>
-        <div className="cust-grid" style={{ marginBottom: 20 }}>
+        <div className="cust-topbar">
+          <h1><MdLocalOffer color="#3b82f6" /> Offers & Benefits</h1>
+          <p>Exclusive rewards for 1 Step Finance Care customers</p>
+        </div>
+        <div className="offers-grid">
           {offers.map((o, i) => (
-            <div key={i} className="cust-card" style={{ margin: 0 }}>
-              <div className="cust-card-body">
-                <div style={{ fontSize: 28, marginBottom: 10 }}>{o.icon}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-                  <strong style={{ fontSize: 14, color: '#081427' }}>{o.title}</strong>
-                  <span className={`cust-badge ${o.tag === 'Active' ? 'cust-badge-success' : o.tag === 'Eligible' ? 'cust-badge-pending' : ''}`}
-                    style={o.tag === 'Coming Soon' ? { background: '#f1f5f9', color: '#64748b' } : {}}>
-                    {o.tag}
-                  </span>
-                </div>
-                <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>{o.desc}</p>
-              </div>
+            <div key={i} className="offer-card" style={{ '--c': o.color, '--c-shadow': o.shadow }}>
+              <div className="offer-bg-glow" />
+              <div className="offer-icon-wrap">{o.icon}</div>
+              <div className={`offer-tag ${o.tag.replace(' ', '')}`}>{o.tag}</div>
+              <h3 className="offer-title">{o.title}</h3>
+              <p className="offer-desc">{o.desc}</p>
             </div>
           ))}
         </div>
@@ -39,32 +44,35 @@ export function CustomerOffers() {
 
 export function CustomerNotifications() {
   const notifs = [
-    { icon: '✅', title: 'Account Approved', msg: 'Your 1 Step Finance Care account has been approved successfully.', time: 'Today', type: 'success' },
-    { icon: '💳', title: 'New Service Available', msg: 'CIBIL Check & Repair service is now available at your branch.', time: 'Yesterday', type: 'info' },
-    { icon: '🎁', title: 'Cashback Offer', msg: 'Get 0.5% cashback on DMT transactions this week!', time: '2 days ago', type: 'offer' },
+    { icon: <MdCheckCircle />, title: 'Account Approved', msg: 'Your 1 Step Finance Care account has been approved successfully.', time: 'Today', type: 'success' },
+    { icon: <MdInfo />, title: 'New Service Available', msg: 'CIBIL Check & Repair service is now available at your branch.', time: 'Yesterday', type: 'info' },
+    { icon: <MdLocalOffer />, title: 'Cashback Offer', msg: 'Get 0.5% cashback on DMT transactions this week!', time: '2 days ago', type: 'offer' },
   ]
 
-  const colors = { success: '#d1fae5', info: '#dbeafe', offer: '#fef3c7' }
-  const textColors = { success: '#059669', info: '#1d4ed8', offer: '#d97706' }
+  const colors = { success: '#059669', info: '#3b82f6', offer: '#d97706' }
+  const bgColors = { success: '#d1fae5', info: '#dbeafe', offer: '#fef3c7' }
 
   return (
     <div className="cust-page">
       <CustomerSidebar />
       <div className="cust-content">
-        <div className="cust-topbar"><h1>🔔 Notifications</h1><p>{notifs.length} notifications</p></div>
-        <div className="cust-card">
-          <div className="cust-card-body" style={{ padding: 0 }}>
-            {notifs.map((n, i) => (
-              <div key={i} style={{ display: 'flex', gap: 14, padding: '16px 20px', borderBottom: i < notifs.length - 1 ? '1px solid #f1f5f9' : 'none', alignItems: 'flex-start' }}>
-                <div style={{ width: 38, height: 38, borderRadius: '50%', background: colors[n.type], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{n.icon}</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: 13, color: '#081427' }}>{n.title}</div>
-                  <div style={{ fontSize: 12, color: '#64748b', marginTop: 2 }}>{n.msg}</div>
-                </div>
-                <div style={{ fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap' }}>{n.time}</div>
+        <div className="cust-topbar">
+          <h1><MdNotifications color="#3b82f6" /> Notifications</h1>
+          <p>You have {notifs.length} new alerts</p>
+        </div>
+        <div className="notif-card">
+          {notifs.map((n, i) => (
+            <div key={i} className="notif-item">
+              <div className="notif-icon" style={{ '--c': colors[n.type], '--c-light': bgColors[n.type] }}>
+                {n.icon}
               </div>
-            ))}
-          </div>
+              <div style={{ flex: 1 }}>
+                <div className="notif-title">{n.title}</div>
+                <div className="notif-msg">{n.msg}</div>
+              </div>
+              <div className="notif-time">{n.time}</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -100,34 +108,28 @@ Please assist me at the earliest.`
     <div className="cust-page">
       <CustomerSidebar />
       <div className="cust-content">
-        <div className="cust-topbar"><h1>📞 Support</h1><p>We're here to help you</p></div>
-
-        <div className="cust-grid" style={{ marginBottom: 20 }}>
-          <div className="cust-card" style={{ margin: 0 }}>
-            <div className="cust-card-body" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 36, marginBottom: 10 }}>💬</div>
-              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>WhatsApp Support</div>
-              <p style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>Chat with us instantly on WhatsApp for quick help</p>
-              <a href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi%201 Step Finance Care%2C%20I%20need%20support.`} target="_blank" rel="noopener noreferrer" className="cust-btn cust-btn-primary" style={{ display: 'inline-block', textDecoration: 'none' }}>
-                Open WhatsApp
-              </a>
-            </div>
-          </div>
-          <div className="cust-card" style={{ margin: 0 }}>
-            <div className="cust-card-body" style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 36, marginBottom: 10 }}>📞</div>
-              <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6 }}>Call Branch</div>
-              <p style={{ fontSize: 12, color: '#64748b', marginBottom: 14 }}>Speak directly with your branch representative</p>
-              <a href={`tel:+${WHATSAPP_NUMBER}`} className="cust-btn" style={{ display: 'inline-block', textDecoration: 'none', background: '#f1f5f9', color: '#0d1f3d', border: '1.5px solid rgba(13,31,61,0.2)', padding: '11px 22px', borderRadius: 8, fontSize: 13, fontWeight: 700 }}>
-                Call Now
-              </a>
-            </div>
-          </div>
+        <div className="cust-topbar">
+          <h1><MdSupportAgent color="#3b82f6" /> Support</h1>
+          <p>We're here to help you anytime</p>
         </div>
 
-        <div className="cust-card">
-          <div className="cust-card-header"><h2>Raise a Support Ticket</h2></div>
-          <div className="cust-card-body">
+        <div className="support-grid">
+          <div className="support-contact-card whatsapp" onClick={() => window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=Hi%201 Step Finance Care%2C%20I%20need%20support.`, '_blank')}>
+            <div className="support-icon"><MdChat /></div>
+            <h3 style={{ fontSize: 18, margin: '0 0 8px', color: '#0f172a' }}>WhatsApp Support</h3>
+            <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 20px' }}>Chat with us instantly on WhatsApp</p>
+            <span className="support-btn whatsapp">Open WhatsApp</span>
+          </div>
+          
+          <a href={`tel:+${WHATSAPP_NUMBER}`} className="support-contact-card call" style={{ textDecoration: 'none', color: 'inherit' }}>
+            <div className="support-icon"><MdPhone /></div>
+            <h3 style={{ fontSize: 18, margin: '0 0 8px', color: '#0f172a' }}>Call Branch</h3>
+            <p style={{ color: '#64748b', fontSize: 14, margin: '0 0 20px' }}>Speak directly with a representative</p>
+            <span className="support-btn call">Call Now</span>
+          </a>
+
+          <div className="support-form-card">
+            <h2 style={{ fontSize: 20, margin: '0 0 20px', color: '#0f172a' }}>Raise a Support Ticket</h2>
             <div className="cust-form-group">
               <label>Full Name</label>
               <input placeholder="Your full name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} />
@@ -142,9 +144,9 @@ Please assist me at the earliest.`
             </div>
             <div className="cust-form-group">
               <label>Message</label>
-              <textarea rows={4} placeholder="Describe your issue in detail..." style={{ resize: 'vertical' }} value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} />
+              <textarea rows={4} placeholder="Describe your issue in detail..." value={form.message} onChange={e => setForm(p => ({ ...p, message: e.target.value }))} />
             </div>
-            <button className="cust-btn cust-btn-primary" onClick={handleSubmit}>💬 Submit via WhatsApp</button>
+            <button className="submit-btn" onClick={handleSubmit}><MdSend size={18}/> Submit via WhatsApp</button>
           </div>
         </div>
       </div>
@@ -157,37 +159,36 @@ export function CustomerSecurity() {
     <div className="cust-page">
       <CustomerSidebar />
       <div className="cust-content">
-        <div className="cust-topbar"><h1>🔐 Security</h1><p>Your account security settings</p></div>
+        <div className="cust-topbar">
+          <h1><MdSecurity color="#3b82f6" /> Security</h1>
+          <p>Your account security and privacy settings</p>
+        </div>
 
-        <div className="cust-grid">
+        <div className="sec-grid">
           {[
-            { icon: '🔑', title: 'PAN + Mobile Login', desc: 'Your account is secured with PAN number and registered mobile verification.', status: 'Active' },
-            { icon: '🛡️', title: 'Secure Transactions', desc: 'All transactions are processed through encrypted and verified channels.', status: 'Active' },
-            { icon: '👁️', title: 'Account Protection', desc: 'Suspicious login attempts are automatically blocked and flagged.', status: 'Active' },
-            { icon: '📱', title: 'Session Management', desc: 'Your session expires automatically after 8 hours of inactivity.', status: 'Active' },
+            { icon: <MdVpnKey />, title: 'PAN + Mobile Login', desc: 'Secured with PAN number and registered mobile verification.', status: 'Active' },
+            { icon: <MdSecurity />, title: 'Secure Transactions', desc: 'All transactions are processed through encrypted channels.', status: 'Active' },
+            { icon: <MdVisibility />, title: 'Account Protection', desc: 'Suspicious login attempts are blocked and flagged.', status: 'Active' },
+            { icon: <MdDevices />, title: 'Session Management', desc: 'Your session expires automatically after 8 hours.', status: 'Active' },
           ].map((s, i) => (
-            <div key={i} className="cust-card" style={{ margin: 0 }}>
-              <div className="cust-card-body">
-                <div style={{ fontSize: 28, marginBottom: 10 }}>{s.icon}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
-                  <strong style={{ fontSize: 14, color: '#081427' }}>{s.title}</strong>
-                  <span className="cust-badge cust-badge-success">{s.status}</span>
-                </div>
-                <p style={{ fontSize: 12, color: '#64748b', margin: 0 }}>{s.desc}</p>
+            <div key={i} className="sec-card">
+              <div className="sec-icon-wrap">{s.icon}</div>
+              <div>
+                <div className="sec-title">{s.title} <span className="sec-status">{s.status}</span></div>
+                <p className="sec-desc">{s.desc}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="cust-card" style={{ marginTop: 20 }}>
-          <div className="cust-card-header"><h2>Security Tips</h2></div>
-          <div className="cust-card-body">
-            {['Never share your PAN or mobile OTP with anyone.', 'Always log out after using the portal on shared devices.', 'Report any suspicious activity immediately to your branch.', 'Keep your registered mobile number updated with us.'].map((tip, i) => (
-              <div key={i} style={{ display: 'flex', gap: 10, padding: '10px 0', borderBottom: i < 3 ? '1px solid #f1f5f9' : 'none', fontSize: 13, color: '#334155' }}>
-                <span style={{ color: '#059669', fontWeight: 700 }}>✓</span> {tip}
-              </div>
-            ))}
-          </div>
+        <div className="sec-tips">
+          <h2 style={{ fontSize: 20, margin: '0 0 20px', color: '#fff' }}>Security Tips</h2>
+          {['Never share your PAN or mobile OTP with anyone.', 'Always log out after using the portal on shared devices.', 'Report any suspicious activity immediately to your branch.', 'Keep your registered mobile number updated with us.'].map((tip, i) => (
+            <div key={i} className="sec-tip-item">
+              <MdCheckCircle className="sec-tip-icon" />
+              <span>{tip}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
