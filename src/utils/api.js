@@ -3,13 +3,16 @@ import config from '../config'
 export const api = async (endpoint, options = {}) => {
   const { headers: extraHeaders, ...rest } = options
 
+  const isFormData = rest.body instanceof FormData
+  const headers = { ...extraHeaders }
+  if (!isFormData && !headers['Content-Type']) {
+    headers['Content-Type'] = 'application/json'
+  }
+
   const res = await fetch(`${config.API_URL}${endpoint}`, {
     ...rest,
     cache: 'no-store',
-    headers: {
-      'Content-Type': 'application/json',
-      ...extraHeaders,
-    },
+    headers,
   })
 
   const contentType = res.headers.get('content-type') || ''

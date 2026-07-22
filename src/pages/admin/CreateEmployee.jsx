@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import AdminSidebar from '../../components/admin/AdminSidebar'
+import DocUpload from '../../components/common/DocUpload'
 import { getTokenByRole, getUserByRole } from '../../utils/tokenUtils'
 import { api } from '../../utils/api'
 import '../../pages/dashboard.css'
@@ -113,29 +114,19 @@ export default function CreateEmployee() {
                     </label>
                   </div>
                   <div className="dash-form-group">
-                    <label>PAN Card Image URL</label>
-                    <input type="url" placeholder="Paste PAN card image URL" value={form.pan_img_url}
-                      onChange={e => set('pan_img_url', e.target.value)} />
+                    <DocUpload label="PAN Card Image" url={form.pan_img_url} onChange={url => set('pan_img_url', url)} endpoint="/dashboard/employees/upload" role="admin" />
                   </div>
                   <div className="dash-form-group">
-                    <label>Aadhar Card Image URL</label>
-                    <input type="url" placeholder="Paste Aadhar card image URL" value={form.aadhar_img_url}
-                      onChange={e => set('aadhar_img_url', e.target.value)} />
+                    <DocUpload label="Aadhar Card Image" url={form.aadhar_img_url} onChange={url => set('aadhar_img_url', url)} endpoint="/dashboard/employees/upload" role="admin" />
                   </div>
                   <div className="dash-form-group">
-                    <label>Document / ID Proof URL</label>
-                    <input type="url" placeholder="Paste document image URL" value={form.docx_url}
-                      onChange={e => set('docx_url', e.target.value)} />
+                    <DocUpload label="Document / ID Proof" url={form.docx_url} onChange={url => set('docx_url', url)} endpoint="/dashboard/employees/upload" role="admin" />
                   </div>
                   <div className="dash-form-group">
-                    <label>Resume URL</label>
-                    <input type="url" placeholder="Paste resume URL" value={form.resume_url}
-                      onChange={e => set('resume_url', e.target.value)} />
+                    <DocUpload label="Resume" url={form.resume_url} onChange={url => set('resume_url', url)} endpoint="/dashboard/employees/upload" role="admin" />
                   </div>
                   <div className="dash-form-group">
-                    <label>Employee Photo URL</label>
-                    <input type="url" placeholder="Paste photo URL" value={form.photo_url}
-                      onChange={e => set('photo_url', e.target.value)} />
+                    <DocUpload label="Employee Photo" url={form.photo_url} onChange={url => set('photo_url', url)} endpoint="/dashboard/employees/upload" role="admin" />
                   </div>
                 </div>
                 <button type="submit" className="dash-btn dash-btn-primary"

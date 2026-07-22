@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import EmployeeNavbar from '../../components/employee/EmployeeNavbar'
 import { useLeads } from '../../hooks/useLeads'
+import DocUpload from '../../components/common/DocUpload'
 import '../../pages/dashboard.css'
 import './Leads.css'
 const fmt  = n => Number(parseFloat(n)||0).toLocaleString('en-IN')
@@ -38,15 +39,7 @@ function StatCard({ icon, label, value, color }) {
 function DocField({ label, icon, field, value, onChange }) {
   return (
     <div className="dash-form-group">
-      <label>{icon} {label}</label>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <input type="url" placeholder="Paste URL after uploading" value={value}
-          onChange={e => onChange(field, e.target.value)} style={{ flex: 1 }} />
-        <a href="https://cloudinary.com/console/media_library" target="_blank" rel="noopener noreferrer"
-          style={{ padding: '0 12px', background: '#3448c5', color: '#fff', borderRadius: 8, fontWeight: 700, fontSize: 12, display: 'flex', alignItems: 'center', gap: 4, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-          ☁️ Upload
-        </a>
-      </div>
+      <DocUpload label={`${icon} ${label}`} url={value} onChange={url => onChange(field, url)} endpoint="/leads/upload-doc" role="employee" />
     </div>
   )
 }

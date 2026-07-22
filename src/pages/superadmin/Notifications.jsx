@@ -25,8 +25,31 @@ export default function Notifications() {
   const [msg, setMsg]       = useState('')
   const [error, setError]   = useState('')
   const [preview, setPreview] = useState('')
+  const [uploading, setUploading] = useState(false)
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    setUploading(true)
+    setError('')
+    try {
+      const fd = new FormData()
+      fd.append('image', file)
+      const r = await api('/notifications/upload-image', {
+        method: 'POST',
+        headers: auth(),
+        body: fd
+      })
+      set('image_url', r.url)
+      setPreview(r.url)
+    } catch (err) {
+      setError('Image upload failed: ' + err.message)
+    }
+    setUploading(false)
+  }
 
   const handleSend = async (e) => {
     e.preventDefault()
@@ -95,11 +118,10 @@ export default function Notifications() {
                       style={{ resize: 'vertical', fontFamily: 'inherit', fontSize: 14, padding: '10px 12px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', width: '100%' }} />
                   </div>
                   <div className="sa-form-group" style={{ gridColumn: '1 / -1' }}>
-                    <label>Image URL <span style={{ fontWeight: 400, color: '#9ca3af' }}>(optional)</span></label>
-                    <input placeholder="https://example.com/image.jpg"
-                      value={form.image_url}
-                      onChange={e => { set('image_url', e.target.value); setPreview(e.target.value.trim()) }}
-                      style={{ fontFamily: 'monospace', fontSize: 13 }} />
+                    <label>Image Attachment <span style={{ fontWeight: 400, color: '#9ca3af' }}>(optional)</span></label>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} style={{ padding: '8px 12px' }} />
+                    {uploading && <div style={{ fontSize: 13, color: '#3b82f6', marginTop: 4 }}>Uploading image...</div>}
+                    <input type="hidden" value={form.image_url} />
                     {preview && (
                       <div style={{ marginTop: 10, borderRadius: 10, overflow: 'hidden', border: '1.5px solid rgba(13,31,61,0.15)', maxWidth: 360, position: 'relative' }}>
                         <img src={preview} alt="preview"

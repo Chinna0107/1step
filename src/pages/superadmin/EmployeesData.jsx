@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import Sidebar from '../../components/superadmin/Sidebar'
 import { useEmployees, useBranches } from '../../hooks/useSuperAdmin'
+import DocUpload from '../../components/common/DocUpload'
 import './superadmin.css'
 
 const empty = { name: '', email: '', mobile: '', pan: '', aadhar: '', branch: '', password: '', confirm_password: '', mpin: '', is_admin: false, role: '', pan_img_url: '', aadhar_img_url: '', docx_url: '', resume_url: '', photo_url: '' }
@@ -117,29 +118,19 @@ export default function EmployeesData() {
                       </label>
                     </div>
                     <div className="sa-form-group">
-                      <label>PAN Card Image URL</label>
-                      <input type="url" placeholder="Paste PAN card image URL" value={form.pan_img_url}
-                        onChange={e => set('pan_img_url', e.target.value)} />
+                      <DocUpload label="PAN Card Image" url={form.pan_img_url} onChange={url => set('pan_img_url', url)} endpoint="/dashboard/employees/upload" role="superadmin" />
                     </div>
                     <div className="sa-form-group">
-                      <label>Aadhar Card Image URL</label>
-                      <input type="url" placeholder="Paste Aadhar card image URL" value={form.aadhar_img_url}
-                        onChange={e => set('aadhar_img_url', e.target.value)} />
+                      <DocUpload label="Aadhar Card Image" url={form.aadhar_img_url} onChange={url => set('aadhar_img_url', url)} endpoint="/dashboard/employees/upload" role="superadmin" />
                     </div>
                     <div className="sa-form-group">
-                      <label>Document / ID Proof URL</label>
-                      <input type="url" placeholder="Paste document image URL" value={form.docx_url}
-                        onChange={e => set('docx_url', e.target.value)} />
+                      <DocUpload label="Document / ID Proof" url={form.docx_url} onChange={url => set('docx_url', url)} endpoint="/dashboard/employees/upload" role="superadmin" />
                     </div>
                     <div className="sa-form-group">
-                      <label>Resume URL</label>
-                      <input type="url" placeholder="Paste resume URL" value={form.resume_url}
-                        onChange={e => set('resume_url', e.target.value)} />
+                      <DocUpload label="Resume" url={form.resume_url} onChange={url => set('resume_url', url)} endpoint="/dashboard/employees/upload" role="superadmin" />
                     </div>
                     <div className="sa-form-group">
-                      <label>Employee Photo URL</label>
-                      <input type="url" placeholder="Paste photo URL" value={form.photo_url}
-                        onChange={e => set('photo_url', e.target.value)} />
+                      <DocUpload label="Employee Photo" url={form.photo_url} onChange={url => set('photo_url', url)} endpoint="/dashboard/employees/upload" role="superadmin" />
                     </div>
                   </div>
                   <button type="submit" className="sa-btn sa-btn-primary"
