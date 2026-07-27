@@ -34,6 +34,7 @@ const NAV = [
     group: 'Configuration',
     items: [
       { to: '/superadmin/config',         icon: <MdSettings />,      label: 'Configuration' },
+      { to: '/superadmin/careers',        icon: <MdPeople />,        label: 'Careers Management' },
       { to: '/superadmin/notifications',  icon: <MdNotificationsNone />, label: 'Notifications' },
     ],
   },

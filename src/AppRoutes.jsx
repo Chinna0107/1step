@@ -17,6 +17,7 @@ import Reports from './pages/superadmin/Reports';
 import Security from './pages/superadmin/Security';
 import FraudList from './pages/superadmin/FraudList';
 import Notifications from './pages/superadmin/Notifications';
+import CareersData from './pages/superadmin/CareersData';
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard';
@@ -72,6 +73,7 @@ export default function AppRoutes() {
       <Route path="/superadmin/reports"    element={<SuperAdminRoute><Reports /></SuperAdminRoute>} />
       <Route path="/superadmin/security"   element={<SuperAdminRoute><Security /></SuperAdminRoute>} />
       <Route path="/superadmin/fraud"      element={<SuperAdminRoute><FraudList /></SuperAdminRoute>} />
+      <Route path="/superadmin/careers"    element={<SuperAdminRoute><CareersData /></SuperAdminRoute>} />
 
       {/* Admin Routes */}
       <Route path="/admin/dashboard"       element={<AdminRoute><AdminDashboard /></AdminRoute>} />

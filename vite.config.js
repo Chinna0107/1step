@@ -47,6 +47,15 @@ export default defineConfig(({ mode }) => {
         '/notifications':  { target: backendUrl, changeOrigin: true },
         '/visitors':       { target: backendUrl, changeOrigin: true },
         '/cibil-repairs':  { target: backendUrl, changeOrigin: true },
+        '/careers': {
+          target: backendUrl,
+          changeOrigin: true,
+          bypass(req) {
+            if (req.method === 'GET' && req.headers.accept?.includes('text/html')) {
+              return '/index.html'
+            }
+          }
+        },
       },
     },
   }

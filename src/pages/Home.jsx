@@ -270,13 +270,13 @@ export default function Home() {
               <div className="hbc-trust">
                 <span><FaLock size={10} /> KYC Verified</span>
                 <span><FaBolt size={10} /> Instant</span>
-                <span><FaUsers size={10} /> 10K+ Customers</span>
+                <span><FaUsers size={10} /> 5K+ Customers</span>
                 <span><FaTrophy size={10} /> 120+ Partners</span>
               </div>
             </div>
 
             <div className="hero-adv hero-adv-tl"><span className="hero-adv-icon"><FaLock size={11} /></span><span>100% Secure</span></div>
-            <div className="hero-adv hero-adv-ml"><span className="hero-adv-icon"><FaUsers size={11} /></span><span>10K+ Customers</span></div>
+            <div className="hero-adv hero-adv-ml"><span className="hero-adv-icon"><FaUsers size={11} /></span><span>5K+ Customers</span></div>
             <div className="hero-adv hero-adv-bl"><span className="hero-adv-icon"><FaClock size={11} /></span><span>24/7 Support</span></div>
             <div className="hero-adv hero-adv-tr"><span className="hero-adv-icon"><FaBolt size={11} /></span><span>Instant Cash</span></div>
             <div className="hero-adv hero-adv-mr"><span className="hero-adv-icon"><FaTrophy size={11} /></span><span>120+ Partners</span></div>
