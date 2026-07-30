@@ -112,7 +112,7 @@ export default function CustomerInfo() {
             ) : (
               <table className="dash-table">
                 <thead>
-                  <tr><th>Name</th><th>Phone</th><th>PAN</th><th>Branch</th><th>Documents</th><th>Status</th><th>Date</th></tr>
+                  <tr><th>Name</th><th>Phone</th><th>PAN</th><th>Bank</th><th>Cards</th><th>Branch</th><th>Documents</th><th>Status</th><th>Date</th></tr>
                 </thead>
                 <tbody>
                   {filtered.map(c => (
@@ -123,6 +123,14 @@ export default function CustomerInfo() {
                       <td><strong style={{ color:'#0d1f3d' }}>{c.name}</strong></td>
                       <td style={{ fontSize:12 }}>{c.phone}</td>
                       <td style={{ fontSize:12 }}>{c.pan}</td>
+                      <td style={{ fontSize:12 }}>{c.bank_name || '—'}</td>
+                      <td style={{ fontSize:12 }}>
+                        {Array.isArray(c.cards) && c.cards.length > 0
+                          ? <span style={{ background:'#ede9fe', color:'#4c1d95', padding:'2px 8px', borderRadius:20, fontSize:11, fontWeight:700 }}>
+                              {c.cards.length} card{c.cards.length > 1 ? 's' : ''}
+                            </span>
+                          : '—'}
+                      </td>
                       <td style={{ fontSize:12 }}>{c.branch || '—'}</td>
                       <td>
                         <div className="ci-doc-thumbs">
@@ -213,6 +221,34 @@ export default function CustomerInfo() {
                         <span style={{ fontSize: 10, fontWeight: 700, color: '#64748b' }}>{d.label}</span>
                       </div>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Bank & Cards */}
+              {(selected.bank_name || selected.mpin || (Array.isArray(selected.cards) && selected.cards.length > 0)) && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Bank & Cards</div>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    {selected.bank_name && (
+                      <div style={{ background: '#f8fafc', borderRadius: 8, padding: '8px 12px', fontSize: 13, fontWeight: 700, color: '#0d1f3d' }}>
+                        🏦 Bank: {selected.bank_name}
+                      </div>
+                    )}
+                    {selected.mpin && (
+                      <div style={{ background: '#f8fafc', borderRadius: 8, padding: '8px 12px', fontSize: 13, fontWeight: 700, color: '#0d1f3d' }}>
+                        🔐 MPIN: {selected.mpin}
+                      </div>
+                    )}
+                    {Array.isArray(selected.cards) && selected.cards.length > 0 && (
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                        {selected.cards.map((card, i) => (
+                          <span key={i} style={{ background: '#ede9fe', color: '#4c1d95', padding: '4px 12px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>
+                            💳 {card.bank}{card.last4 ? ` ****${card.last4}` : ''}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

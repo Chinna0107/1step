@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../utils/api'
-import { getTokenByRole } from '../utils/tokenUtils'
+import { getTokenByRole, getAuthHeader } from '../utils/tokenUtils'
 import { cacheGet, cacheSet, cacheClear, TTL } from '../utils/cache'
 
-const authAdmin = () => ({ Authorization: `Bearer ${getTokenByRole('admin')}` })
-const authSA    = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
+const authAdmin = () => getAuthHeader('admin')
+const authSA    = () => getAuthHeader('superadmin')
 
 const getToday      = () => new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 const getMonthStart = () => getToday().slice(0, 7) + '-01'

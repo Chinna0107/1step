@@ -1,12 +1,21 @@
+# 1 Step Finance Care — robots.txt
+# https://1stepfinancecare.com
+
 User-agent: *
 Allow: /
 Allow: /what-we-do
 Allow: /about
 Allow: /contact
+Allow: /careers
+Allow: /gallery
 Allow: /faq
 Allow: /privacy
 Allow: /terms
 Allow: /product/
+Allow: /logo.png
+Allow: /icon-192.png
+Allow: /icon-512.png
+Allow: /manifest.json
 
 # Block private/auth routes
 Disallow: /login
@@ -17,15 +26,29 @@ Disallow: /login/superadmin
 Disallow: /admin/
 Disallow: /superadmin/
 Disallow: /employee/
+Disallow: /customer/
 
-# Block query strings
+# Block API routes
+Disallow: /auth/
+Disallow: /customers/
+Disallow: /finance/
+Disallow: /leads/
+Disallow: /dashboard/
+
+# Block query strings on public pages
 Disallow: /*?*
 
 Sitemap: https://1stepfinancecare.com/sitemap.xml
 
-# Crawl-delay for bots
+# Slow down aggressive crawlers
 User-agent: AhrefsBot
 Crawl-delay: 10
 
 User-agent: SemrushBot
 Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: DotBot
+Disallow: /

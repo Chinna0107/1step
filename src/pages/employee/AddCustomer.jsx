@@ -10,7 +10,8 @@ import '../../pages/dashboard.css'
 const empty = {
   name: '', email: '', phone: '', pan: '', aadhar: '', acc_number: '',
   branch: '', aadhar_img_url: '', pan_img_url: '', card_front_img_url: '',
-  referral_name: '', referral_phone: '', customer_type: 'general'
+  referral_name: '', referral_phone: '', customer_type: 'general',
+  bank_name: '', mpin: '', cards: []
 }
 
 function ImgUploadField({ label, icon, fieldKey, value, onChange }) {
@@ -179,7 +180,7 @@ export default function AddCustomer() {
                   <div className="dash-form-group">
                     <label>Customer Type *</label>
                     <select required value={form.customer_type} onChange={e => set('customer_type', e.target.value)}>
-                      <option value="general">General</option>
+                      <option value="general">Credit Card</option>
                       <option value="credit_repair">CIBIL Repair</option>
                     </select>
                   </div>
@@ -240,6 +241,57 @@ export default function AddCustomer() {
                   </div>
                 </div>
 
+                {/* ── Bank & Security ── */}
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12, marginTop: 20 }}>Bank & Security</div>
+                <div className="dash-form-grid" style={{ marginBottom: 20 }}>
+                  <div className="dash-form-group">
+                    <label>Bank Name</label>
+                    <input placeholder="e.g. HDFC Bank" value={form.bank_name} onChange={e => set('bank_name', e.target.value)} />
+                  </div>
+                  <div className="dash-form-group">
+                    <label>MPIN</label>
+                    <input placeholder="4–6 digit MPIN" maxLength={6} value={form.mpin}
+                      onChange={e => set('mpin', e.target.value.replace(/\D/g, '').slice(0, 6))} />
+                  </div>
+                </div>
+
+                {/* ── Credit Cards ── */}
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12 }}>Credit Cards</div>
+                <div style={{ marginBottom: 20 }}>
+                  {form.cards.map((card, i) => (
+                    <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 10, marginBottom: 10, alignItems: 'end' }}>
+                      <div className="dash-form-group" style={{ marginBottom: 0 }}>
+                        <label>Card {i + 1} — Bank Name</label>
+                        <input placeholder="e.g. ICICI Bank" value={card.bank}
+                          onChange={e => {
+                            const updated = [...form.cards]
+                            updated[i] = { ...updated[i], bank: e.target.value }
+                            set('cards', updated)
+                          }} />
+                      </div>
+                      <div className="dash-form-group" style={{ marginBottom: 0 }}>
+                        <label>Card Number (last 4 digits)</label>
+                        <input placeholder="e.g. 4521" maxLength={4} value={card.last4}
+                          onChange={e => {
+                            const updated = [...form.cards]
+                            updated[i] = { ...updated[i], last4: e.target.value.replace(/\D/g, '').slice(0, 4) }
+                            set('cards', updated)
+                          }} />
+                      </div>
+                      <button type="button"
+                        onClick={() => set('cards', form.cards.filter((_, j) => j !== i))}
+                        style={{ padding: '10px 14px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontSize: 13, marginBottom: 0 }}>
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  <button type="button"
+                    onClick={() => set('cards', [...form.cards, { bank: '', last4: '' }])}
+                    style={{ padding: '9px 18px', background: '#ede9fe', color: '#4c1d95', border: 'none', borderRadius: 8, fontWeight: 700, cursor: 'pointer', fontSize: 13 }}>
+                    + Add Card
+                  </button>
+                </div>
+
                 {/* ── Referral Details ── */}
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#0d1f3d', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 12, marginTop: 20 }}>Referral Details (Optional)</div>
                 <div className="dash-form-grid" style={{ marginBottom: 20 }}>
@@ -292,15 +344,20 @@ export default function AddCustomer() {
             ) : (
               <table className="dash-table">
                 <thead>
-                  <tr><th>Name</th><th>Email</th><th>Phone</th><th>PAN</th><th>Type</th><th>Branch</th><th>Status</th><th>Submitted</th></tr>
+                  <tr><th>Name</th><th>Phone</th><th>PAN</th><th>Bank</th><th>Cards</th><th>Type</th><th>Branch</th><th>Status</th><th>Submitted</th></tr>
                 </thead>
                 <tbody>
                   {customers.map(c => (
                     <tr key={c.id}>
                       <td><strong>{c.name}</strong></td>
-                      <td>{c.email}</td>
-                      <td>{c.phone}</td>
-                      <td>{c.pan}</td>
+                      <td style={{ fontSize: 12 }}>{c.phone}</td>
+                      <td style={{ fontSize: 12 }}>{c.pan}</td>
+                      <td style={{ fontSize: 12 }}>{c.bank_name || '—'}</td>
+                      <td style={{ fontSize: 12 }}>
+                        {Array.isArray(c.cards) && c.cards.length > 0
+                          ? <span style={{ background: '#ede9fe', color: '#4c1d95', padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700 }}>{c.cards.length} card{c.cards.length > 1 ? 's' : ''}</span>
+                          : '—'}
+                      </td>
                       <td>
                         <span style={{
                           padding: '2px 8px', borderRadius: 20, fontSize: 11, fontWeight: 700,
@@ -310,9 +367,9 @@ export default function AddCustomer() {
                           {c.customer_type === 'credit_repair' ? 'CIBIL Repair' : 'General'}
                         </span>
                       </td>
-                      <td>{c.branch || '—'}</td>
+                      <td style={{ fontSize: 12 }}>{c.branch || '—'}</td>
                       <td><span style={statusStyle(c.status)}>{c.status.charAt(0).toUpperCase() + c.status.slice(1)}</span></td>
-                      <td>{new Date(c.created_at).toLocaleDateString('en-IN')}</td>
+                      <td style={{ fontSize: 12 }}>{new Date(c.created_at).toLocaleDateString('en-IN')}</td>
                     </tr>
                   ))}
                 </tbody>

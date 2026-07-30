@@ -1,0 +1,5 @@
+Add New Customer
+http://localhost:5173/employee/add-customer
+addd some more columns called
+bank name , and mpin and also no.of cards (means if a customer have 5 cards then ask all the card bank names and numbers )
+and update where the customer details are showing

@@ -4,58 +4,59 @@ import react from '@vitejs/plugin-react'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   const backendUrl = env.VITE_API_URL || 'http://localhost:3000'
-
-  // Customer page routes — must NOT be proxied to backend
-  const customerPageRoutes = [
-    '/customer/dashboard', '/customer/services', '/customer/transactions',
-    '/customer/coins', '/customer/kyc', '/customer/offers',
-    '/customer/notifications', '/customer/support', '/customer/security',
-    '/customer/cibil-repairs'
+  // React page prefixes — GET requests to these must serve index.html
+  const reactPagePrefixes = [
+    '/superadmin/', '/admin/', '/employee/', '/customer/',
+    '/login/', '/about', '/what-we-do', '/careers', '/contact',
+    '/gallery', '/faq', '/terms', '/privacy', '/product/'
   ]
+
+  // API-only prefixes — always proxy regardless of method
+  const apiOnlyPrefixes = [
+    '/auth/', '/customers/', '/master/', '/leads/', '/fraud/',
+    '/finance/', '/notifications/', '/visitors/', '/cibil-repairs/',
+    '/gallery/', '/careers/', '/dashboard/'
+  ]
+
+  const bypass = (req) => {
+    // Always proxy non-GET (POST/PATCH/DELETE) — API calls
+    if (req.method !== 'GET') return null
+    // Always proxy if Authorization header present — authenticated API call
+    if (req.headers.authorization) return null
+    // Serve React app for page navigations (browser requests without auth)
+    const path = req.url.split('?')[0]
+    const isReactPage = reactPagePrefixes.some(p => path.startsWith(p) || path === p.replace(/\/$/, ''))
+    if (isReactPage) return '/index.html'
+    return null
+  }
 
   return {
     plugins: [react()],
     server: {
-      historyApiFallback: true,
       proxy: {
-        '/auth':      { target: backendUrl, changeOrigin: true },
-        '/dashboard': {
-          target: backendUrl,
-          changeOrigin: true,
-          bypass(req) {
-            // Only bypass GET requests with no Authorization header (page navigations)
-            if (req.method === 'GET' && !req.headers.authorization) {
-              return '/index.html'
-            }
-          },
-        },
-        '/customers': { target: backendUrl, changeOrigin: true },
-        '/customer': {
-          target: backendUrl,
-          changeOrigin: true,
-          bypass(req) {
-            // If it's a page navigation (no Authorization header), serve React app
-            if (customerPageRoutes.includes(req.url) && !req.headers.authorization) {
-              return '/index.html'
-            }
-          },
-        },
-        '/master':         { target: backendUrl, changeOrigin: true },
-        '/leads':          { target: backendUrl, changeOrigin: true },
-        '/fraud':          { target: backendUrl, changeOrigin: true },
-        '/finance':        { target: backendUrl, changeOrigin: true },
-        '/notifications':  { target: backendUrl, changeOrigin: true },
-        '/visitors':       { target: backendUrl, changeOrigin: true },
-        '/cibil-repairs':  { target: backendUrl, changeOrigin: true },
-        '/careers': {
-          target: backendUrl,
-          changeOrigin: true,
-          bypass(req) {
-            if (req.method === 'GET' && req.headers.accept?.includes('text/html')) {
-              return '/index.html'
-            }
-          }
-        },
+        '/auth':         { target: backendUrl, changeOrigin: true },
+        '/customers':    { target: backendUrl, changeOrigin: true },
+        '/master':       { target: backendUrl, changeOrigin: true },
+        '/leads':        { target: backendUrl, changeOrigin: true },
+        '/fraud':        { target: backendUrl, changeOrigin: true },
+        '/finance':      { target: backendUrl, changeOrigin: true },
+        '/notifications':{ target: backendUrl, changeOrigin: true },
+        '/visitors':     { target: backendUrl, changeOrigin: true },
+        '/cibil-repairs':{ target: backendUrl, changeOrigin: true },
+        '/careers':      { target: backendUrl, changeOrigin: true },
+        '/gallery':      { target: backendUrl, changeOrigin: true, bypass: (req) => {
+          // /gallery exact path: proxy if has auth header or non-GET, else serve React page
+          if (req.method !== 'GET') return null
+          if (req.headers.authorization) return null
+          const path = req.url.split('?')[0]
+          if (path === '/gallery') return '/index.html'
+          return null
+        } },
+        '/dashboard':    { target: backendUrl, changeOrigin: true, bypass },
+        '/superadmin':   { target: backendUrl, changeOrigin: true, bypass },
+        '/admin':        { target: backendUrl, changeOrigin: true, bypass },
+        '/employee':     { target: backendUrl, changeOrigin: true, bypass },
+        '/customer':     { target: backendUrl, changeOrigin: true, bypass },
       },
     },
   }

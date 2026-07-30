@@ -8,6 +8,10 @@ export const api = async (endpoint, options = {}) => {
   if (!isFormData && !headers['Content-Type']) {
     headers['Content-Type'] = 'application/json'
   }
+  // Strip invalid auth headers (e.g. "Bearer null" when not logged in)
+  if (headers['Authorization'] === 'Bearer null' || headers['Authorization'] === 'Bearer undefined') {
+    delete headers['Authorization']
+  }
 
   const res = await fetch(`${config.API_URL}${endpoint}`, {
     ...rest,
@@ -24,6 +28,10 @@ export const api = async (endpoint, options = {}) => {
 
   // Auto-redirect on 401 — token expired or missing
   if (res.status === 401) {
+    // Public auth endpoints — show error inline, never redirect
+    const isPublicAuthEndpoint = ['/customer/verify', '/customer/login', '/auth/login', '/auth/superadmin/login'].includes(endpoint)
+    if (isPublicAuthEndpoint) throw new Error(data.error || 'Authentication failed')
+
     const isCustomer  = endpoint.startsWith('/customer') || window.location.pathname.startsWith('/customer')
     const isSuperAdmin = endpoint.startsWith('/auth/superadmin') || localStorage.getItem('current_role') === 'superadmin'
     if (isCustomer) {

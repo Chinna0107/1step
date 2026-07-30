@@ -28,12 +28,20 @@ export function useCustomerLogin() {
   const [loading, setLoading] = useState(false)
   const [error, setError]     = useState('')
 
-  const login = async ({ pan, phone }) => {
+  const verify = async ({ pan, phone }) => {
     setLoading(true); setError('')
     try {
-      const data = await api('/customer/login', { method: 'POST', body: JSON.stringify({ pan, phone }) })
+      const data = await api('/customer/verify', { method: 'POST', body: JSON.stringify({ pan, phone }) })
+      return data
+    } catch (e) { setError(e.message); return null }
+    finally { setLoading(false) }
+  }
+
+  const login = async ({ pan, phone, mpin }) => {
+    setLoading(true); setError('')
+    try {
+      const data = await api('/customer/login', { method: 'POST', body: JSON.stringify({ pan, phone, mpin }) })
       localStorage.setItem(KEY, JSON.stringify({ ...data, timestamp: new Date().toISOString() }))
-      // clear cache on new login
       cache.profile = null; cache.txns = null
       cache.profileTs = 0;  cache.txnsTs = 0
       return data
@@ -48,7 +56,7 @@ export function useCustomerLogin() {
     cache.profileTs = 0;  cache.txnsTs = 0
   }
 
-  return { login, logout, loading, error, setError }
+  return { verify, login, logout, loading, error, setError }
 }
 
 // ── Profile — cached, no repeat hits ─────────────────────────

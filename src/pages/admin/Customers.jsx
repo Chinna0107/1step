@@ -29,6 +29,9 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
     acc_number: c.acc_number || '',
     referral_name: c.referral_name || '',
     referral_phone: c.referral_phone || '',
+    bank_name: c.bank_name || '',
+    mpin: c.mpin || '',
+    cards: Array.isArray(c.cards) ? c.cards : [],
   })
   const [editError, setEditError] = useState('')
 
@@ -80,11 +83,14 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
         phone: editForm.phone.trim(),
         aadhar: editForm.aadhar?.trim() || null,
         referral_phone: editForm.referral_phone?.trim() || null,
+        bank_name: editForm.bank_name?.trim() || null,
+        mpin: editForm.mpin?.trim() || null,
+        cards: editForm.cards,
       })
       setCustomer(prev => ({ ...prev, ...editForm }))
       setEditingDetails(false)
       setSaveMsg('Customer details updated successfully!')
-      setTimeout(() => setSaveMsg(''), 3000) // Clear message after 3 seconds
+      setTimeout(() => setSaveMsg(''), 3000)
     } catch (err) {
       setEditError(err.message || 'Failed to update customer')
     } finally {
@@ -141,6 +147,8 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
     { label: 'Reviewed By',   value: customer.reviewed_by_name || '—' },
     { label: 'Reviewed At',   value: customer.reviewed_at ? new Date(customer.reviewed_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) : '—' },
     { label: 'Member Since',  value: new Date(customer.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }) },
+    ...(customer.bank_name ? [{ label: 'Bank Name', value: customer.bank_name }] : []),
+    ...(customer.mpin ? [{ label: 'MPIN', value: customer.mpin, mono: true }] : []),
     ...(customer.referral_name || customer.referral_phone ? [
       { label: 'Referred By (Name)',   value: customer.referral_name  || '—' },
       { label: 'Referred By (Phone)',  value: customer.referral_phone || '—' },
@@ -216,6 +224,9 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
                             acc_number: customer.acc_number || '',
                             referral_name: customer.referral_name || '',
                             referral_phone: customer.referral_phone || '',
+                            bank_name: customer.bank_name || '',
+                            mpin: customer.mpin || '',
+                            cards: Array.isArray(customer.cards) ? customer.cards : [],
                           })
                         }}
                         style={{ padding: '6px 12px', borderRadius: 6, border: '1px solid #d1d5db', background: '#fff', color: '#6b7280', fontSize: 12, fontWeight: 600, cursor: 'pointer' }}
@@ -344,6 +355,64 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
                         maxLength={10}
                       />
                     </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(13,31,61,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Bank Name</div>
+                      <input
+                        type="text"
+                        value={editForm.bank_name}
+                        onChange={e => handleEditChange('bank_name', e.target.value)}
+                        placeholder="e.g. HDFC Bank"
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#081427', outline: 'none' }}
+                      />
+                    </div>
+                    <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(13,31,61,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>MPIN</div>
+                      <input
+                        type="text"
+                        value={editForm.mpin}
+                        onChange={e => handleEditChange('mpin', e.target.value.replace(/\D/g, '').slice(0, 6))}
+                        placeholder="4–6 digit MPIN"
+                        maxLength={6}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#081427', outline: 'none', fontFamily: 'monospace' }}
+                      />
+                    </div>
+                    {/* Cards — full width */}
+                    <div style={{ gridColumn: '1 / -1', background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(13,31,61,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Credit Cards</div>
+                      {editForm.cards.map((card, i) => (
+                        <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: 8, marginBottom: 8, alignItems: 'center' }}>
+                          <input
+                            placeholder="Bank name (e.g. ICICI)"
+                            value={card.bank}
+                            onChange={e => {
+                              const updated = [...editForm.cards]
+                              updated[i] = { ...updated[i], bank: e.target.value }
+                              handleEditChange('cards', updated)
+                            }}
+                            style={{ padding: '6px 10px', borderRadius: 6, border: '1.5px solid #e2e8f0', fontSize: 12, fontWeight: 600, outline: 'none' }}
+                          />
+                          <input
+                            placeholder="Last 4 digits"
+                            maxLength={4}
+                            value={card.last4}
+                            onChange={e => {
+                              const updated = [...editForm.cards]
+                              updated[i] = { ...updated[i], last4: e.target.value.replace(/\D/g, '').slice(0, 4) }
+                              handleEditChange('cards', updated)
+                            }}
+                            style={{ padding: '6px 10px', borderRadius: 6, border: '1.5px solid #e2e8f0', fontSize: 12, fontWeight: 600, outline: 'none', fontFamily: 'monospace' }}
+                          />
+                          <button type="button"
+                            onClick={() => handleEditChange('cards', editForm.cards.filter((_, j) => j !== i))}
+                            style={{ padding: '6px 10px', background: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: 6, fontWeight: 700, cursor: 'pointer', fontSize: 12 }}>✕</button>
+                        </div>
+                      ))}
+                      <button type="button"
+                        onClick={() => handleEditChange('cards', [...editForm.cards, { bank: '', last4: '' }])}
+                        style={{ padding: '6px 14px', background: '#ede9fe', color: '#4c1d95', border: 'none', borderRadius: 6, fontWeight: 700, cursor: 'pointer', fontSize: 12 }}>
+                        + Add Card
+                      </button>
+                    </div>
                   </>
                 ) : (
                   // Display Mode
@@ -355,6 +424,20 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
                   ))
                 )}
               </div>
+
+              {/* Cards */}
+              {!editingDetails && Array.isArray(customer.cards) && customer.cards.length > 0 && (
+                <div style={{ marginTop: 12 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 8 }}>Credit Cards ({customer.cards.length})</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {customer.cards.map((card, i) => (
+                      <span key={i} style={{ background: '#ede9fe', color: '#4c1d95', padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 700 }}>
+                        💳 {card.bank}{card.last4 ? ` ****${card.last4}` : ''}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

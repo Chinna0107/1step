@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   MdDashboard, MdInsights, MdStorefront, MdEmojiEvents,
   MdAccountBalance, MdPeople, MdSettings, MdAssessment, MdSecurity, MdLogout, MdChevronRight,
-  MdLock, MdFactCheck, MdGppBad, MdNotificationsNone
+  MdLock, MdFactCheck, MdGppBad, MdNotificationsNone, MdPhotoLibrary
 } from 'react-icons/md'
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { api } from '../../utils/api'
@@ -35,6 +35,7 @@ const NAV = [
     items: [
       { to: '/superadmin/config',         icon: <MdSettings />,      label: 'Configuration' },
       { to: '/superadmin/careers',        icon: <MdPeople />,        label: 'Careers Management' },
+      { to: '/superadmin/gallery',         icon: <MdPhotoLibrary />,  label: 'Gallery' },
       { to: '/superadmin/notifications',  icon: <MdNotificationsNone />, label: 'Notifications' },
     ],
   },

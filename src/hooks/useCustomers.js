@@ -32,18 +32,14 @@ export function useAddCustomer() {
 // Employee: view their submitted customers
 export function useMyCustomers() {
   const CACHE_KEY = 'my_customers'
-  const [customers, setCustomers] = useState(() => cacheGet(CACHE_KEY) || [])
-  const [loading, setLoading]     = useState(!cacheGet(CACHE_KEY))
+  const [customers, setCustomers] = useState([])
+  const [loading, setLoading]     = useState(true)
   const [error, setError]         = useState('')
 
-  const refetch = useCallback((force = false) => {
-    if (!force) {
-      const cached = cacheGet(CACHE_KEY)
-      if (cached) { setCustomers(cached); setLoading(false); return }
-    }
+  const refetch = useCallback(() => {
     setLoading(true)
     api('/customers/my', { headers: empHeaders() })
-      .then(d => { cacheSet(CACHE_KEY, d, TTL.list); setCustomers(d); setLoading(false) })
+      .then(d => { setCustomers(d); setLoading(false) })
       .catch(e => { setError(e.message); setLoading(false) })
   }, [])
 

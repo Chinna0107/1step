@@ -19,8 +19,9 @@ const navLinks = [
   { to: '/',           label: 'Home',      icon: '🏠' },
   { to: '/what-we-do', label: 'What We Do', icon: '💼' },
   { to: '/about',      label: 'About Us',   icon: '👥' },
+  { to: '/gallery',    label: 'Gallery',    icon: '🖼️' },
   { to: '/careers',    label: 'Careers',    icon: '🚀' },
-  { to: '/contact',    label: 'Contact Us',    icon: '📞' },
+  { to: '/contact',    label: 'Contact Us', icon: '📞' },
   // { to: '/faq',        label: 'FAQ',        icon: '❓' },
   // { to: '/terms',      label: 'T&C',        icon: '📄' },
 ]

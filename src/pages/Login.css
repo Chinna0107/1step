@@ -122,7 +122,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 12px;
   padding: 2rem;
   padding-top: 2.5rem;
@@ -584,4 +584,31 @@
     max-width: none;
     padding: 32px 24px;
   }
+}
+
+/* ── Install App Button ── */
+.btn-install-app {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.15);
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: all 0.25s ease;
+  font-family: inherit;
+  letter-spacing: 0.3px;
+}
+
+.btn-install-app:hover {
+  background: rgba(255,255,255,0.28);
+  border-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }

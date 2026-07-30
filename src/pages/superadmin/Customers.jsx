@@ -342,6 +342,8 @@ export default function SuperAdminCustomers() {
                   { label: 'Account No', value: viewCustomer.acc_number || '—' },
                   { label: 'Branch',     value: viewCustomer.branch     || '—' },
                   { label: 'Status',     value: viewCustomer.status,    color: STATUS_STYLE[viewCustomer.status]?.color },
+                  { label: 'Bank Name',  value: viewCustomer.bank_name  || '—' },
+                  { label: 'MPIN',       value: viewCustomer.mpin       || '—', mono: true },
                   { label: 'Added',      value: new Date(viewCustomer.created_at).toLocaleDateString('en-IN') },
                   { label: 'Added By',   value: viewCustomer.added_by_name   || '—' },
                   { label: 'Reviewed By',value: viewCustomer.reviewed_by_name || '—' },

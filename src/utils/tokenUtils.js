@@ -20,5 +20,5 @@ export function verifyToken(role) {
 
 export function getAuthHeader(role) {
   const token = getTokenByRole(role)
-  return token ? { Authorization: `Bearer ${token}` } : {}
+  return token && token !== 'null' ? { Authorization: `Bearer ${token}` } : {}
 }

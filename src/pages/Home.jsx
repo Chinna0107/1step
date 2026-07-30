@@ -10,7 +10,9 @@ import {
   FaFingerprint, FaMapMarkerAlt, FaChartBar, FaBuilding
 } from 'react-icons/fa'
 import bannerImg from '../assets/logo.png'
+import cibilImg from '../assets/icons png/cibil.png'
 import './Home.css'
+// import cibil from '../assets/icons png/cibil.png'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -98,7 +100,7 @@ const products = [
       { icon: FaCheckCircle, label: 'Score Improvement' },
       { icon: FaClock,       label: 'Free Consultation' },
     ],
-    img: '/images/v2_cibil_score_1784285639978.png',
+    img: cibilImg,
   },
   {
     slug: 'credit-repair',

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { api } from '../utils/api'
-import { getTokenByRole } from '../utils/tokenUtils'
+import { getTokenByRole, getAuthHeader } from '../utils/tokenUtils'
 import { cacheGet, cacheSet, cacheClear, TTL } from '../utils/cache'
 
 // helper: stale-while-revalidate — shows cached data instantly, fetches fresh in background
@@ -32,7 +32,7 @@ function useSWR(cacheKey, fetcher, ttl = TTL.dashboard) {
   return { data, loading, revalidating, refetch: (force = true) => run(force), setData }
 }
 
-const authHeaders = () => ({ Authorization: `Bearer ${getTokenByRole('superadmin')}` })
+const authHeaders = () => getAuthHeader('superadmin')
 
 const NOW_DATE  = new Date(Date.now() + 5.5 * 3600000).toISOString().split('T')[0]
 const NOW_MONTH = String(new Date().getMonth() + 1).padStart(2, '0')

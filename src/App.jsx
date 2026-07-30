@@ -12,6 +12,7 @@ import LoginCustomer from './pages/LoginCustomer'
 import LoginEmployee from './pages/LoginEmployee'
 import LoginSuperAdmin from './pages/LoginSuperAdmin'
 import NotFound from './pages/NotFound'
+import Gallery from './pages/Gallery'
 import FAQ from './pages/FAQ'
 import TermsConditions from './pages/TermsConditions'
 import Privacy from './pages/Privacy'
@@ -36,6 +37,7 @@ import FraudList from './pages/superadmin/FraudList'
 import PendingList from './pages/superadmin/PendingList'
 import Notifications from './pages/superadmin/Notifications'
 import CareersData from './pages/superadmin/CareersData'
+import SuperAdminGallery from './pages/superadmin/Gallery'
 
 // Admin Pages
 import AdminDashboard from './pages/admin/Dashboard'
@@ -126,6 +128,7 @@ export default function App() {
         <Route path="/about" element={<Layout><About /></Layout>} />
         <Route path="/careers" element={<Layout><Careers /></Layout>} />
         <Route path="/contact" element={<Layout><Contact /></Layout>} />
+        <Route path="/gallery" element={<Layout><Gallery /></Layout>} />
         <Route path="/faq" element={<Layout><FAQ /></Layout>} />
         <Route path="/terms" element={<Layout><TermsConditions /></Layout>} />
         <Route path="/privacy" element={<Layout><Privacy /></Layout>} />
@@ -156,6 +159,7 @@ export default function App() {
         <Route path="/superadmin/pending"        element={<SuperAdminRoute><PendingList /></SuperAdminRoute>} />
         <Route path="/superadmin/notifications"  element={<SuperAdminRoute><Notifications /></SuperAdminRoute>} />
         <Route path="/superadmin/careers"        element={<SuperAdminRoute><CareersData /></SuperAdminRoute>} />
+        <Route path="/superadmin/gallery"         element={<SuperAdminRoute><SuperAdminGallery /></SuperAdminRoute>} />
 
         {/* Admin routes */}
         <Route path="/admin/dashboard"       element={<AdminRoute><AdminDashboard /></AdminRoute>} />

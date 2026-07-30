@@ -868,6 +868,9 @@
   .hbc-ring-2 { width: 80px; height: 80px; }
   
   .hp-text h2 { font-size: 2.2rem; }
+  .hp-inner { grid-template-columns: 1fr; gap: 30px; }
+  .hp-visual { order: -1; }
+  .home-product-section.reversed .hp-inner { direction: ltr; }
   .home-cta-inner { padding: 50px 20px; }
   .home-scroll-indicator { display: none; }
   .home-hero-actions { flex-direction: row; flex-wrap: nowrap; width: 100%; gap: 10px; }
