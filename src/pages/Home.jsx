@@ -188,11 +188,11 @@ export default function Home() {
           <div className="home-hero-text">
             <div className="home-hero-badge"><FaRocket size={14} /> Authorised Fintech Service Provider</div>
             <h1>
-              The Ultimate Hub For Your <br/>
-              <span className="home-gold-gradient">Financial Solutions</span>
+              1 Step Finance Care &mdash; <br/>
+              <span className="home-gold-gradient">Your Financial Solutions</span>
             </h1>
             <p>
-              India’s premier Business Correspondent and Financial Ally. Bridging the gap to over 120 Banks & NBFCs for immediate liquidity, utility settlements, and credit facilities. Everything in one place, around the clock.
+              <strong>1stepfinancecare.com</strong> &mdash; India’s trusted fintech, also known as OneStep Finance Care &amp; 1Step Finance. Instant cash on credit cards, loans, DMT, CIBIL repair &amp; more. 120+ bank tie-ups, around the clock.
             </p>
             <div className="home-hero-actions">
               <Link to="/what-we-do" className="home-btn-primary">Explore Services <FaArrowRight /></Link>
