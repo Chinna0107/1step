@@ -270,11 +270,11 @@ export default function AddCustomer() {
                           }} />
                       </div>
                       <div className="dash-form-group" style={{ marginBottom: 0 }}>
-                        <label>Card Number (last 4 digits)</label>
-                        <input placeholder="e.g. 4521" maxLength={4} value={card.last4}
+                        <label>Card Number (16 digits)</label>
+                        <input placeholder="e.g. 4111111111114521" maxLength={16} value={card.last4}
                           onChange={e => {
                             const updated = [...form.cards]
-                            updated[i] = { ...updated[i], last4: e.target.value.replace(/\D/g, '').slice(0, 4) }
+                            updated[i] = { ...updated[i], last4: e.target.value.replace(/\D/g, '').slice(0, 16) }
                             set('cards', updated)
                           }} />
                       </div>
