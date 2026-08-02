@@ -1,9 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { FaCheckCircle, FaUser, FaBuilding, FaKey } from 'react-icons/fa'
+import { FaCheckCircle, FaUser, FaBuilding, FaKey, FaHome, FaBriefcase, FaUsers, FaImages, FaRocket, FaPhoneAlt, FaTimes, FaChevronRight } from 'react-icons/fa'
 import logoImg from '../assets/logo.png'
-import fullLogoImg from '../assets/logo.png'
-import nameImg from '../assets/logo.png'
 import './Header.css'
 
 const trustItems = [
@@ -16,14 +14,12 @@ const trustItems = [
 ]
 
 const navLinks = [
-  { to: '/',           label: 'Home',      icon: '🏠' },
-  { to: '/what-we-do', label: 'What We Do', icon: '💼' },
-  { to: '/about',      label: 'About Us',   icon: '👥' },
-  { to: '/gallery',    label: 'Gallery',    icon: '🖼️' },
-  { to: '/careers',    label: 'Careers',    icon: '🚀' },
-  { to: '/contact',    label: 'Contact Us', icon: '📞' },
-  // { to: '/faq',        label: 'FAQ',        icon: '❓' },
-  // { to: '/terms',      label: 'T&C',        icon: '📄' },
+  { to: '/',           label: 'Home',      icon: FaHome },
+  { to: '/what-we-do', label: 'What We Do', icon: FaBriefcase },
+  { to: '/about',      label: 'About Us',   icon: FaUsers },
+  { to: '/gallery',    label: 'Gallery',    icon: FaImages },
+  { to: '/careers',    label: 'Careers',    icon: FaRocket },
+  { to: '/contact',    label: 'Contact Us', icon: FaPhoneAlt },
 ]
 
 export default function Header({ menuOpen, setMenuOpen }) {
@@ -61,7 +57,7 @@ export default function Header({ menuOpen, setMenuOpen }) {
       <header className="header">
         <div className="header-inner">
           <Link to="/" className="logo">
-            <img src={logoImg} alt="1 Step Finance Care" className="logo-full-img" />
+            <img src={logoImg} alt="1 Step Finance Care" className="logo-full-img" width="285" height="130" loading="eager" decoding="async" />
             <span className="logo-name-text">1 Step Finance Care</span>
           </Link>
 
@@ -101,10 +97,10 @@ export default function Header({ menuOpen, setMenuOpen }) {
         {/* Drawer header */}
         <div className="nav-mobile-header">
           <div className="nav-mobile-brand">
-            <img src={logoImg} alt="1 Step Finance Care" className="nav-mobile-full-logo" />
+            <img src={logoImg} alt="1 Step Finance Care" className="nav-mobile-full-logo" width="160" height="73" loading="lazy" decoding="async" />
             <span className="logo-name-text">1 Step Finance Care</span>
           </div>
-          <button className="nav-mobile-close" onClick={close}>✕</button>
+          <button className="nav-mobile-close" onClick={close}><FaTimes size={16} /></button>
         </div>
 
         {/* Nav links */}
@@ -117,9 +113,9 @@ export default function Header({ menuOpen, setMenuOpen }) {
               style={{ animationDelay: `${i * 0.06}s` }}
               onClick={close}
             >
-              <span className="nav-link-icon">{l.icon}</span>
+              <span className="nav-link-icon"><l.icon size={16} /></span>
               <span className="nav-link-label">{l.label}</span>
-              <span className="nav-link-arrow">›</span>
+              <FaChevronRight className="nav-link-arrow" size={12} />
             </Link>
           ))}
         </div>
@@ -132,7 +128,7 @@ export default function Header({ menuOpen, setMenuOpen }) {
               className="nav-login-opt--customer"
               onClick={() => { navigate('/login/customer'); close() }}
             >
-              <span className="opt-icon">👤</span> Customer Login
+              <FaUser size={14} /> Customer Login
             </button>
           </div>
         </div>

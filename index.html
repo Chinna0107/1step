@@ -213,6 +213,19 @@
     <meta name="apple-mobile-web-app-title" content="1 Step Finance Care" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- ═══ Performance hints ═══ -->
+    <link rel="preconnect" href="https://res.cloudinary.com" crossorigin />
+    <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+    <style>
+      /* Critical above-fold CSS to prevent FOUC */
+      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      html{scroll-behavior:smooth}
+      body{background:#081427;color:#fff;font-family:'Inter',system-ui,sans-serif;overflow-x:hidden}
+      #root{min-height:100vh}
+      .header{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(8,20,39,0.95);backdrop-filter:blur(20px)}
+      .trust-bar{background:#060e1c;overflow:hidden;white-space:nowrap;padding:8px 0;font-size:12px}
+    </style>
   </head>
   <body>
     <div id="root"></div>

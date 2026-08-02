@@ -241,7 +241,7 @@ export default function Home() {
                 <div className="hbc-logo-ring hbc-ring-1" />
                 <div className="hbc-logo-ring hbc-ring-2" />
                 <div className="hbc-logo-wrap">
-                  <img src={bannerImg} alt="1 Step Finance Care" />
+                  <img src={bannerImg} alt="1 Step Finance Care" width="72" height="72" loading="eager" decoding="async" />
                 </div>
 
                 <div className="hbc-services">
@@ -316,14 +316,14 @@ export default function Home() {
                 </div>
 
                 <div className="hp-actions">
-                  <Link to={`/product/${p.slug}`} className="home-btn-primary">Learn More</Link>
+                  <Link to={`/product/${p.slug}`} className="home-btn-primary">Explore {p.title} <FaArrowRight /></Link>
                   <Link to="/contact" className="home-btn-outline">Contact Now</Link>
                 </div>
               </div>
 
               <div className="hp-visual">
                 <div className="hp-img-wrapper">
-                  <img src={p.img} alt={p.title} className="hp-img" />
+                  <img src={p.img} alt={p.title} className="hp-img" width="600" height="450" loading="lazy" decoding="async" />
                   <div className="hp-img-overlay" />
                 </div>
               </div>
@@ -362,7 +362,7 @@ export default function Home() {
           {moreServices.map(s => (
             <Link to={`/product/${s.slug}`} className="hm-card" key={s.slug}>
               <div className="hm-img-wrap">
-                <img src={s.img} alt={s.label} />
+                <img src={s.img} alt={s.label} width="240" height="180" loading="lazy" decoding="async" />
               </div>
               <div className="hm-card-content">
                 <h3>{s.label}</h3>

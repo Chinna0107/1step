@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { ViteImageOptimizer } from 'vite-plugin-image-optimizer'
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -31,7 +32,30 @@ export default defineConfig(({ mode }) => {
   }
 
   return {
-    plugins: [react()],
+    plugins: [
+      react(),
+      ViteImageOptimizer({
+        png:  { quality: 70 },
+        jpeg: { quality: 70 },
+        jpg:  { quality: 70 },
+        webp: { lossless: false, quality: 70 },
+      }),
+      // Make non-critical CSS (PDF viewer) load asynchronously to unblock render
+      {
+        name: 'async-non-critical-css',
+        apply: 'build',
+        transformIndexHtml(html) {
+          // Convert vendor-pdf CSS to async load using print media trick
+          return html.replace(
+            /(<link[^>]*vendor-pdf[^>]*\.css[^>]*)(\s*\/>|>)/g,
+            (match, before) => {
+              const href = match.match(/href="([^"]+)"/)?.[1] || ''
+              return `<link rel="preload" href="${href}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${href}"></noscript>`
+            }
+          )
+        },
+      },
+    ],
     build: {
       chunkSizeWarningLimit: 1000,
       rollupOptions: {
