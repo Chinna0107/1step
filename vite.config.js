@@ -32,6 +32,20 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    build: {
+      chunkSizeWarningLimit: 1000,
+      rollupOptions: {
+        output: {
+          manualChunks: (id) => {
+            if (id.includes('node_modules/react-pdf') || id.includes('node_modules/jspdf') || id.includes('node_modules/pdfjs')) return 'vendor-pdf'
+            if (id.includes('node_modules/xlsx')) return 'vendor-xlsx'
+            if (id.includes('node_modules/gsap')) return 'vendor-gsap'
+            if (id.includes('node_modules/react-icons')) return 'vendor-icons'
+            if (id.includes('node_modules/react-router') || id.includes('node_modules/react-dom') || id.includes('node_modules/react/')) return 'vendor-react'
+          },
+        },
+      },
+    },
     server: {
       proxy: {
         '/auth':         { target: backendUrl, changeOrigin: true },
