@@ -35,10 +35,12 @@ const RECEIPT_CSS = `
     background: #fff;
     border-radius: 50% 50% 0 0 / 100% 100% 0 0;
   }
+  .brand-logo-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 4px; }
+  .brand-logo-img { width: 40px; height: 40px; object-fit: contain; }
   .brand-logo {
-    font-size: 26px;
+    font-size: 20px;
     font-weight: 900;
-    letter-spacing: 4px;
+    letter-spacing: 1px;
     color: #fff;
     text-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
@@ -221,8 +223,11 @@ function buildReceiptHTML(txn) {
 </head><body>
 <div class="receipt">
   <div class="receipt-header">
-    <div class="brand-logo">MONEY<span>SPOT</span></div>
-    <div class="brand-sub">Fintech Services</div>
+    <div class="brand-logo-wrap">
+      <img class="brand-logo-img" src="/logo.png" alt="One Step Finance Care" onerror="this.style.display='none'" />
+      <div class="brand-logo">One <span>Step</span> Finance Care</div>
+    </div>
+
     <div class="receipt-badge">✓ Transaction Receipt</div>
   </div>
 
@@ -351,10 +356,13 @@ export default function PrintReceipt({ txn, onClose, showFinancials = false }) {
 
             {/* Header */}
             <div style={{ background: 'linear-gradient(135deg,#081427 0%,#0d1f3d 50%,#1a365d 100%)', padding: '22px 20px 28px', textAlign: 'center', position: 'relative' }}>
-              <div style={{ fontSize: 24, fontWeight: 900, letterSpacing: 4, color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
-                MONEY<span style={{ color: '#d4af37' }}>SPOT</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, marginBottom: 4 }}>
+                <img src="/logo.png" alt="One Step Finance Care" style={{ width: 40, height: 40, objectFit: 'contain' }} onError={e => e.target.style.display='none'} />
+                <div style={{ fontSize: 18, fontWeight: 900, letterSpacing: 1, color: '#fff', textShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+                  One <span style={{ color: '#d4af37' }}>Step</span> Finance Care
+                </div>
               </div>
-              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.65)', letterSpacing: 2, textTransform: 'uppercase', marginTop: 4 }}>Fintech Services</div>
+
               <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 12px', borderRadius: 20, marginTop: 10, letterSpacing: 0.5 }}>
                 ✓ Transaction Receipt
               </div>

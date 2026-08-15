@@ -503,6 +503,7 @@ export default function Services() {
                                   { icon:'✉️',  label:'Email',      value: customerProfile.email || '—' },
                                   { icon:'🏦', label:'Account No', value: customerProfile.acc_number || '—' },
                                   { icon:'🏢', label:'Branch',     value: customerProfile.branch || '—' },
+                                  ...(customerProfile.address ? [{ icon:'📍', label:'Address', value: customerProfile.address }] : []),
                                   { icon:'👤', label:'Added By',   value: customerProfile.added_by_name || '—' },
                                   { icon:'📅', label:'Member Since',value: customerProfile.created_at ? new Date(customerProfile.created_at).toLocaleDateString('en-IN') : '—' },
                                   ...(customerProfile.reviewed_by_name ? [{ icon:'✅', label:'Approved By', value: customerProfile.reviewed_by_name }] : []),

@@ -20,7 +20,7 @@ const RECEIPT_CSS = `
   }
   .logo-wrap { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px; }
   .logo-img { width: 44px; height: 44px; object-fit: contain; }
-  .brand-name { font-size: 28px; font-weight: 900; letter-spacing: 2px; color: #fff; }
+  .brand-name { font-size: 20px; font-weight: 900; letter-spacing: 1px; color: #fff; }
   .brand-name span { color: #d4af37; }
   .brand-sub { font-size: 11px; color: rgba(255,255,255,0.65); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
   .receipt-badge {
@@ -111,10 +111,10 @@ function buildReceiptHTML(t) {
 <div class="receipt">
   <div class="receipt-header">
     <div class="logo-wrap">
-      <img class="logo-img" src="https://1stepfinancecare.com/favicon.png" alt="1 Step Finance Care" onerror="this.style.display='none'" />
-      <div class="brand-name">MONEY<span>SPOT</span></div>
+      <img class="logo-img" src="/logo.png" alt="One Step Finance Care" onerror="this.style.display='none'" />
+      <div class="brand-name">One <span>Step</span> Finance Care</div>
     </div>
-    <div class="brand-sub">Fintech Services</div>
+
     <div class="receipt-badge">✓ Transaction Receipt</div>
     <div class="txn-id-chip">#${t.id}</div>
   </div>

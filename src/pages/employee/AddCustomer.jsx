@@ -9,7 +9,7 @@ import '../../pages/dashboard.css'
 
 const empty = {
   name: '', email: '', phone: '', pan: '', aadhar: '', acc_number: '',
-  branch: '', aadhar_img_url: '', pan_img_url: '', card_front_img_url: '',
+  branch: '', address: '', aadhar_img_url: '', pan_img_url: '', card_front_img_url: '',
   referral_name: '', referral_phone: '', customer_type: 'general',
   bank_name: '', mpin: '', cards: []
 }
@@ -238,6 +238,17 @@ export default function AddCustomer() {
                   <div className="dash-form-group">
                     <label>Branch</label>
                     <input readOnly value={form.branch} style={{ background: '#f8fafc', color: '#0d1f3d', fontWeight: 700, cursor: 'not-allowed' }} />
+                  </div>
+                  <div className="dash-form-group" style={{ gridColumn: '1 / -1' }}>
+                    <label>Address *</label>
+                    <textarea
+                      required
+                      placeholder="House/Flat No., Street, City, State, PIN code"
+                      rows={3}
+                      value={form.address}
+                      onChange={e => set('address', e.target.value)}
+                      style={{ resize: 'vertical', minHeight: 80 }}
+                    />
                   </div>
                 </div>
 

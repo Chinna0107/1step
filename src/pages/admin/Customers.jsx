@@ -27,6 +27,7 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
     pan: c.pan || '',
     aadhar: c.aadhar || '',
     acc_number: c.acc_number || '',
+    address: c.address || '',
     referral_name: c.referral_name || '',
     referral_phone: c.referral_phone || '',
     bank_name: c.bank_name || '',
@@ -82,6 +83,7 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
         pan: editForm.pan.trim().toUpperCase(),
         phone: editForm.phone.trim(),
         aadhar: editForm.aadhar?.trim() || null,
+        address: editForm.address?.trim() || null,
         referral_phone: editForm.referral_phone?.trim() || null,
         bank_name: editForm.bank_name?.trim() || null,
         mpin: editForm.mpin?.trim() || null,
@@ -142,6 +144,7 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
     { label: 'Aadhar Number', value: customer.aadhar ? customer.aadhar.replace(/(\d{4})(\d{4})(\d{4})/, '$1 $2 $3') : '—', mono: true },
     { label: 'Account No.',   value: customer.acc_number || '—', mono: true },
     { label: 'Branch',        value: customer.branch || '—' },
+    ...(customer.address ? [{ label: 'Address', value: customer.address }] : []),
     { label: 'Category',       value: customer.customer_type === 'credit_repair' ? '🔧 CIBIL Repair' : '👤 General' },
     { label: 'Added By',      value: customer.added_by_name || '—' },
     { label: 'Reviewed By',   value: customer.reviewed_by_name || '—' },
@@ -222,6 +225,7 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
                             pan: customer.pan || '',
                             aadhar: customer.aadhar || '',
                             acc_number: customer.acc_number || '',
+                            address: customer.address || '',
                             referral_name: customer.referral_name || '',
                             referral_phone: customer.referral_phone || '',
                             bank_name: customer.bank_name || '',
@@ -331,6 +335,16 @@ function CustomerDetailModal({ customer: c, onClose, onUpdate }) {
                         value={editForm.acc_number}
                         onChange={e => handleEditChange('acc_number', e.target.value)}
                         style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#081427', outline: 'none', fontFamily: 'monospace' }}
+                      />
+                    </div>
+                    <div style={{ gridColumn: '1 / -1', background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(13,31,61,0.1)' }}>
+                      <div style={{ fontSize: 10, fontWeight: 700, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 }}>Address</div>
+                      <textarea
+                        value={editForm.address}
+                        onChange={e => handleEditChange('address', e.target.value)}
+                        placeholder="House/Flat No., Street, City, State, PIN code"
+                        rows={2}
+                        style={{ width: '100%', border: 'none', background: 'transparent', fontSize: 13, fontWeight: 700, color: '#081427', outline: 'none', resize: 'vertical', fontFamily: 'inherit' }}
                       />
                     </div>
                     <div style={{ background: '#f8fafc', borderRadius: 10, padding: '10px 14px', border: '2px solid rgba(13,31,61,0.1)' }}>

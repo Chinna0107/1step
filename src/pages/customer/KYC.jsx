@@ -42,6 +42,7 @@ export default function CustomerKYC() {
                 <div className="cust-info-row"><span className="cust-info-label">Aadhar Number</span><span className="cust-info-value">{profile?.aadhar}</span></div>
                 <div className="cust-info-row"><span className="cust-info-label">Account Number</span><span className="cust-info-value">{profile?.acc_number}</span></div>
                 <div className="cust-info-row"><span className="cust-info-label">Branch</span><span className="cust-info-value">{profile?.branch || '—'}</span></div>
+                {profile?.address && <div className="cust-info-row"><span className="cust-info-label">Address</span><span className="cust-info-value">{profile.address}</span></div>}
                 <div className="cust-info-row"><span className="cust-info-label">KYC Status</span><span className="cust-info-value"><span className="cust-badge cust-badge-success">✅ Approved</span></span></div>
                 <div className="cust-info-row"><span className="cust-info-label">Member Since</span><span className="cust-info-value">{profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-IN') : '—'}</span></div>
               </div>
