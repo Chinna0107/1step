@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   MdDashboard, MdInsights, MdStorefront, MdEmojiEvents,
   MdAccountBalance, MdPeople, MdSettings, MdAssessment, MdSecurity, MdLogout, MdChevronRight,
-  MdLock, MdFactCheck, MdGppBad, MdNotificationsNone, MdPhotoLibrary
+  MdLock, MdFactCheck, MdGppBad, MdNotificationsNone, MdPhotoLibrary, MdCalendarToday
 } from 'react-icons/md'
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { api } from '../../utils/api'
@@ -22,12 +22,13 @@ const NAV = [
   {
     group: 'Operations',
     items: [
-      { to: '/superadmin/branches',     icon: <MdStorefront />,   label: 'Branch Management' },
-      { to: '/superadmin/tracking',     icon: <MdEmojiEvents />,  label: 'Performance Tracking' },
-      { to: '/superadmin/finance',      icon: <MdAccountBalance />,label: 'Financial Control' },
-      { to: '/superadmin/employees',    icon: <MdPeople />,       label: 'Employee Management' },
-      { to: '/superadmin/attendance',   icon: <MdFactCheck />,    label: 'Attendance' },
-      { to: '/superadmin/leads',        icon: <MdAssessment />,   label: 'Lead Management' },
+      { to: '/superadmin/branches',       icon: <MdStorefront />,     label: 'Branch Management' },
+      { to: '/superadmin/bill-due-dates', icon: <MdCalendarToday />,  label: 'Bill Due Dates' },
+      { to: '/superadmin/tracking',       icon: <MdEmojiEvents />,    label: 'Performance Tracking' },
+      { to: '/superadmin/finance',        icon: <MdAccountBalance />, label: 'Financial Control' },
+      { to: '/superadmin/employees',      icon: <MdPeople />,         label: 'Employee Management' },
+      { to: '/superadmin/attendance',     icon: <MdFactCheck />,      label: 'Attendance' },
+      { to: '/superadmin/leads',          icon: <MdAssessment />,     label: 'Lead Management' },
     ],
   },
   {

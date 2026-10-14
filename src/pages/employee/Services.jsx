@@ -25,6 +25,7 @@ const emptyForm = {
   platform: '', card: '', card_bank: '', card_last4: '', payment_mode: '', amount: '',
   charges_pct: '', charges_amount: '', settled_amount: '',
   bank: '', acc_no: '', balance: '', amount_collected: '', balance_due: '',
+  bill_due_date: '',
 }
 
 export default function Services() {
@@ -588,6 +589,35 @@ export default function Services() {
                       <div className="dash-form-grid">
                         {fg('Bill Payment Platform', sel('bill_platform', platforms))}
                         {fg('Bill Paid Amount (₹)', inp('bill_amount', '₹', 'number'))}
+                        {fg('Bill Due Date (Base / Current Month)', (
+                          <div>
+                            <input
+                              type="date"
+                              value={form.entered_bill_date || ''}
+                              onChange={e => {
+                                const val = e.target.value
+                                if (!val) {
+                                  setForm(f => ({ ...f, entered_bill_date: '', bill_due_date: '' }))
+                                  return
+                                }
+                                const [y, m, d] = val.split('-').map(Number)
+                                const dt = new Date(y, m - 1, d)
+                                dt.setMonth(dt.getMonth() + 1)
+                                const nextY = dt.getFullYear()
+                                const nextM = String(dt.getMonth() + 1).padStart(2, '0')
+                                const nextD = String(dt.getDate()).padStart(2, '0')
+                                const nextFormatted = `${nextY}-${nextM}-${nextD}`
+                                setForm(f => ({ ...f, entered_bill_date: val, bill_due_date: nextFormatted }))
+                              }}
+                              style={{ width: '100%', padding: '10px 14px', borderRadius: 8, border: '1.5px solid rgba(13,31,61,0.2)', fontSize: 14 }}
+                            />
+                            {form.bill_due_date && (
+                              <div style={{ fontSize: 11, color: '#2563eb', fontWeight: 700, marginTop: 4 }}>
+                                📅 Next Month Due Date: {form.bill_due_date.split('-').reverse().join('/')}
+                              </div>
+                            )}
+                          </div>
+                        ))}
                         {fg('Withdrawal Platform', sel('platform', platforms))}
                         {fg('Card Type', sel('card', cards))}
                         {fg('Withdrawal Amount (₹)', <input required type="number" placeholder="₹" value={form.amount} onChange={e => set('amount', e.target.value)} />)}
@@ -908,6 +938,7 @@ export default function Services() {
                       { label:'Bill Platform',  value: viewTxn.bill_platform || '—' },
                       { label:'Bill Amount',    value: `₹${fmt(viewTxn.bill_amount || 0)}` },
                       { label:'Bill Remaining', value: `₹${fmt(viewTxn.bill_remaining || 0)}` },
+                      { label:'Bill Due Date',  value: viewTxn.bill_due_date ? new Date(viewTxn.bill_due_date).toLocaleDateString('en-IN') : '—', color: '#2563eb' },
                       { label:'Total Collected',value: `₹${fmt(viewTxn.total_collected || 0)}`, color:'#059669' },
                       { label:'Receive Mode',   value: viewTxn.received_mode || '—' },
                     ] : []),
@@ -984,6 +1015,7 @@ export default function Services() {
                     {(isDM || isOB) && eInp('acc_no', 'Account No.')}
                     {isBW && eSel('bill_platform', 'Bill Platform', platforms)}
                     {isBW && eInp('bill_amount', 'Bill Amount (₹)', 'number')}
+                    {isBW && eInp('bill_due_date', 'Bill Due Date', 'date')}
                     {eSel('payment_mode', 'Payment Mode', paymentModes)}
                     {isBW && eSel('received_mode', 'Receive Mode', receiveModes)}
                     {eInp('amount', 'Amount (₹) *', 'number')}

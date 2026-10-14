@@ -2,7 +2,8 @@ import React from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
   MdDashboard, MdPeople, MdPersonAdd,
-  MdMiscellaneousServices, MdPerson, MdLogout, MdBarChart, MdLeaderboard
+  MdMiscellaneousServices, MdPerson, MdLogout, MdBarChart, MdLeaderboard,
+  MdCalendarToday
 } from 'react-icons/md'
 import { useRoleBasedAuth } from '../../hooks/useRoleBasedAuth'
 import { getUserByRole, getTokenByRole } from '../../utils/tokenUtils'
@@ -13,14 +14,15 @@ import logoImg from '../../assets/logo.png'
 import '../../pages/dashboard.css'
 
 const links = [
-  { to: '/employee/dashboard',     icon: <MdDashboard />,             label: 'Dashboard' },
-  { to: '/employee/services',      icon: <MdMiscellaneousServices />, label: 'New Transaction' },
-  { to: '/employee/cibil-repair', icon: <MdLeaderboard />,           label: '🔧 CIBIL Repair' },
-  { to: '/employee/leads',         icon: <MdLeaderboard />,           label: '🎯 Leads' },
-  { to: '/employee/customer-info', icon: <MdPeople />,                label: 'Customers' },
-  { to: '/employee/add-customer',  icon: <MdPersonAdd />,             label: 'Add Customer' },
-  { to: '/employee/reports',       icon: <MdBarChart />,              label: 'Reports' },
-  { to: '/employee/profile',       icon: <MdPerson />,                label: 'Profile' },
+  { to: '/employee/dashboard',      icon: <MdDashboard />,             label: 'Dashboard' },
+  { to: '/employee/services',       icon: <MdMiscellaneousServices />, label: 'New Transaction' },
+  { to: '/employee/bill-due-dates', icon: <MdCalendarToday />,         label: '📅 Bill Due Dates' },
+  { to: '/employee/cibil-repair',  icon: <MdLeaderboard />,           label: '🔧 CIBIL Repair' },
+  { to: '/employee/leads',          icon: <MdLeaderboard />,           label: '🎯 Leads' },
+  { to: '/employee/customer-info',  icon: <MdPeople />,                label: 'Customers' },
+  { to: '/employee/add-customer',   icon: <MdPersonAdd />,             label: 'Add Customer' },
+  { to: '/employee/reports',        icon: <MdBarChart />,              label: 'Reports' },
+  { to: '/employee/profile',        icon: <MdPerson />,                label: 'Profile' },
 ]
 
 export default function EmployeeNavbar() {
